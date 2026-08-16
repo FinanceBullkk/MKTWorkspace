@@ -1,7 +1,7 @@
 ---
 title: "Full Codebase Deep Audit — Subsystems Not Covered by the 16 Aug Sweep"
 description: "Close the coverage gaps declared in audit-260816-0452 by auditing each remaining subsystem to a declared depth, with executable proof for trust boundaries."
-status: draft
+status: in_progress
 priority: P1
 effort: "6 phases; phases 01-02 carry most of the risk"
 issue: null
@@ -17,6 +17,16 @@ created: 2026-08-16
 Follow-on to [`audit-260816-0452`](../reports/audit-260816-0452-mktworkspace-quality-and-security.md).
 That pass was breadth-first: all gates run, whole-tree pattern sweeps, ~25 of ~700 source files read
 in depth. It declared 13 unexamined areas. This plan audits them.
+
+## Execution snapshot - 16 August 2026
+
+- Phase 00 completed as remediate-then-verify; unresolved items remain explicit in the findings register.
+- Phase 01 completed at D4: all 20 hypotheses were closed or subsumed by a recorded finding.
+- Phase 02 is in progress: 17 of 20 hypotheses are closed after the H24/H25/H35-H37 continuation.
+  H28, H38, and H39 remain explicitly open; C10 remains carried into Phase 03.
+- Phase 03-06 have not started.
+- Current merged status lives in [`findings-register.md`](./findings-register.md). Phase reports remain
+  the detailed evidence record.
 
 ## Depth model
 
@@ -37,15 +47,15 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 
 ## Phases
 
-| Phase | Area | Depth | Why this rank |
-| --- | --- | --- | --- |
-| 00 | [Fix Re-Verification](./phase-00-fix-reverification.md) | D2 | Cheap. Confirms F1-F15 fixes landed before new work builds on them. |
-| 01 | [Cryptographic Protocols](./phase-01-cryptographic-protocol-audit.md) | **D4** | Bespoke multi-generation protocol. Silent failure = trust collapse, unrecoverable. |
-| 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
-| 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 | Plan classifies installer/update/rollback P0. Crash-consistency is the risk. |
-| 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 | Trust root. Small code, high blast radius. |
-| 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | 671-line schema, 12 migrations, rules engine. Failure mode is silent wrong answers. |
-| 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Frontend, redaction, deps, concurrency, docs accuracy. |
+| Phase | Area | Depth | Status | Why this rank |
+| --- | --- | --- | --- | --- |
+| 00 | [Fix Re-Verification](./phase-00-fix-reverification.md) | D2 | Completed | Cheap. Confirms F1-F15 fixes landed before new work builds on them. |
+| 01 | [Cryptographic Protocols](./phase-01-cryptographic-protocol-audit.md) | **D4** | Completed | Bespoke multi-generation protocol. Silent failure = trust collapse, unrecoverable. |
+| 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | In progress | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
+| 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 | Not started | Plan classifies installer/update/rollback P0. Crash-consistency is the risk. |
+| 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 | Not started | Trust root. Small code, high blast radius. |
+| 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | Not started | 671-line schema, 12 migrations, rules engine. Failure mode is silent wrong answers. |
+| 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Not started | Frontend, redaction, deps, concurrency, docs accuracy. |
 
 ## Non-negotiable rules
 
@@ -57,6 +67,16 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 - Where a defect is only reachable in theory, say so — rank it, do not inflate it.
 
 ## Severity model
+
+Verification integrity rules:
+
+- Read a command's own exit status. Do not pipe a required gate through `tail`, `Select-String`, or
+  another command whose success can mask the gate's failure.
+- Do not use `gh run watch --exit-status` as the authoritative CI verdict. Read the run's `status`
+  and `conclusion` directly, then inspect the relevant step log.
+- Every test-owned process, socket, and temporary directory must have deterministic teardown. Windows
+  cleanup retries must be bounded and must still fail when the release window is exhausted.
+- A CI rerun is diagnostic evidence, never closure. A pass-after-fail result is a flakiness finding.
 
 Inherited from [`pre-mkb04` plan](../260813-1546-pre-mkb04-system-quality-audit/plan.md) so findings
 merge into one register: P0 credential exposure / authz bypass / destructive loss / trust collapse;
@@ -77,5 +97,4 @@ GO/NO-GO; it feeds Phase 02 of the pre-MKB-04 audit.
 
 ## Unresolved questions
 
-1. Should D4 tests land on the feature branches now, or wait for the audit baseline freeze?
-2. Is Phase 06 (docs accuracy) in scope for audit, or does it belong to `docs-manager`?
+1. Is Phase 06 (docs accuracy) in scope for audit, or does it belong to a dedicated documentation pass?

@@ -1,10 +1,15 @@
 # Phase 02 — Local Control Surface & Proxy Containment
 
-Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: Not started · Effort: 2 full sessions
+Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: In progress · Effort: 2 full sessions
+
+Execution snapshot: 17 of 20 hypotheses closed after the H24/H25/H35-H37 continuation. Closed:
+H21-H27, H29-H37, H40. Open: H28, H38, H39. C10 remains a Phase 03 lifecycle finding.
 
 ## Context
 
 - 16 Aug findings F3 (no behavioral tests on these modules), F2 (security contract is regex-based).
+  The Relay authorization and proxy-containment invariants now have behavioral coverage; the
+  remaining gaps are the second SSE stream and the extension/IPC inventories.
 
 ## Why D4
 
@@ -15,20 +20,19 @@ Two invariants meet here, and both are absolute for the product:
 2. **A proxied profile never egresses on the host IP.** A leak here is identity disclosure, which is
    the one failure the product exists to prevent.
 
-Neither invariant currently has a behavioral test. `security-contract.test.ts` asserts the *strings*
-`isMcpToolAllowed(tool.name, accessPolicy)` and `!isMcpToolAllowed(name, accessPolicy)` appear in
-`server.ts` — it proves the source contains that text, not that a denied tool is denied.
+The original `security-contract.test.ts` only asserted the *strings*; the real HTTP/MCP fixture and
+local proxy harness now exercise authorization and containment.
 
 ## Scope — file inventory
 
 | File | Lines | Current test coverage |
 | --- | --- | --- |
-| `packages/mcp-server/src/server.ts` | 1326 | string assertions only |
-| `packages/mcp-server/src/HttpTransport.ts` | 303 | **none** |
+| `packages/mcp-server/src/server.ts` | 1326 | behavioral MCP fixture + structural guards |
+| `packages/mcp-server/src/HttpTransport.ts` | 303 | real HTTP auth tests; H28 remains |
 | `packages/mcp-server/src/tool-exposure-policy.ts` | — | real unit tests |
-| `apps/desktop/src/main/socks5Bridge.ts` | — | **none** |
-| `packages/cdp-driver/src/CdpSession.ts` | 624 | **none** |
-| `apps/desktop/src/main/proxyGeo.ts` | — | **none** |
+| `apps/desktop/src/main/socks5Bridge.ts` | — | controlled SOCKS5/HTTP harness |
+| `packages/cdp-driver/src/CdpSession.ts` | 624 | safe-mode regression tests |
+| `apps/desktop/src/main/proxyGeo.ts` | — | launch fallback seam; network probe itself remains external |
 | `apps/desktop/src/main/extensions/*` (5 files) | — | **none** |
 | `apps/desktop/src/preload/index.ts` | — | string assertions only |
 | Relay handlers unread on 16 Aug: `handle-profiles`, `handle-compatibility-update/rollback`, `handle-read-bootstrap-completion`, `launch-profile`, `create-profile`, `relay-antidetect` | — | mixed |
@@ -49,8 +53,9 @@ Neither invariant currently has a behavioral test. `security-contract.test.ts` a
 - `this.sseTransport` is a single slot; a second `GET /sse` overwrites without closing the first.
 - Proxy handling is genuinely thoughtful — the SOCKS5 bridge exists precisely because Chromium's
   `--proxy-server=` leaks DNS. That reasoning is sound; what is untested is the failure path.
-- `ChromiumBrowserDriver` fails closed if WebRTC containment cannot be verified (line 193). Verified by
-  reading. Not verified by test.
+- `ChromiumBrowserDriver` fails closed if WebRTC containment cannot be verified, and the H35 test
+  now proves the exact runtime firewall identity. A proxy-geo outage still launches, but the
+  fallback disables WebRTC, clears stale proxy-country state, and emits `PROXY_GEO_UNAVAILABLE`.
 
 ## Attack hypotheses — written before reading
 
@@ -103,15 +108,18 @@ Neither invariant currently has a behavioral test. `security-contract.test.ts` a
 
 ## Todo
 
-- [ ] MCP client fixture over real HTTP
-- [ ] H21–H25 tool authorization tests
-- [ ] H26–H30 transport auth tests
-- [ ] Proxy harness (controlled upstream + egress echo)
-- [ ] H31–H37 containment tests
-- [ ] D2 read `server.ts`, `socks5Bridge.ts`, `CdpSession.ts`
+- [x] MCP client fixture over real HTTP
+- [x] H21-H23 tool authorization tests
+- [x] H24-H25 tool authorization tests
+- [x] H26, H27, H29, H30 transport auth tests
+- [ ] H28 deterministic multi-SSE fixture
+- [x] Proxy harness (controlled upstream + egress echo)
+- [x] H31-H35 containment tests
+- [x] H36-H37 containment tests
+- [x] D2 read `server.ts`, `socks5Bridge.ts`, `CdpSession.ts`
 - [ ] D2 read extensions pipeline + unread relay handlers
 - [ ] H38–H39 tests
-- [ ] `plans/reports/audit-{date}-local-control-surface.md`
+- [x] `plans/reports/audit-260816-1344-phase-02-high-risk-continuation.md`
 
 ## Success criteria
 

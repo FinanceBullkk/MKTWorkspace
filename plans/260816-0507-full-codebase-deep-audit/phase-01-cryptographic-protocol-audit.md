@@ -1,6 +1,10 @@
 # Phase 01 — Cryptographic Protocols
 
-Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: Not started · Effort: 2–3 full sessions
+Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: Completed · Effort: 2–3 full sessions
+
+Execution result: 20 of 20 hypotheses closed or subsumed by a recorded finding, with D4 evidence.
+See [`audit-260816-1015-phase-01-complete.md`](../reports/audit-260816-1015-phase-01-complete.md)
+and [`findings-register.md`](./findings-register.md).
 
 ## Context
 
@@ -116,14 +120,14 @@ Each becomes a test. H-numbers carry into the findings register.
 
 ## Todo
 
-- [ ] Write H01–H20 as tests
-- [ ] D2 read of ticket core
-- [ ] D2 read of enrollment/grant
-- [ ] D2 read of retirement
-- [ ] D2 read of relay handlers
-- [ ] Cross-protocol signature matrix
-- [ ] Red-then-green verification of every new test
-- [ ] `plans/reports/audit-{date}-crypto-protocols.md`
+- [x] Write H01-H20 as tests
+- [x] D2 read of ticket core
+- [x] D2 read of enrollment/grant
+- [x] D2 read of retirement
+- [x] D2 read of relay handlers
+- [x] Cross-protocol signature matrix
+- [x] Red-then-green verification of every new test
+- [x] `plans/reports/audit-260816-1015-phase-01-complete.md`
 
 ## Success criteria
 

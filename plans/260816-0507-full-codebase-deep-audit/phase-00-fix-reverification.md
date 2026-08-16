@@ -1,6 +1,10 @@
 # Phase 00 — Fix Re-Verification
 
-Depth: **D2** · Priority: P2 · Status: Not started · Effort: ~1 short session
+Depth: **D2** · Priority: P2 · Status: Completed · Effort: ~1 short session
+
+Execution result: completed as remediate-then-verify. Detailed evidence is in
+[`audit-260816-0803-fix-reverification.md`](../reports/audit-260816-0803-fix-reverification.md);
+carried items are tracked in [`findings-register.md`](./findings-register.md).
 
 ## Context
 
@@ -48,11 +52,11 @@ Confirm each of F1–F15 is fixed, deliberately accepted, or still open. No new 
 
 ## Todo
 
-- [ ] Re-run all MKTTool gates
-- [ ] Re-run all MKTBrowser gates
-- [ ] Walk F1–F15, classify each
-- [ ] Re-run unused-export scan, diff
-- [ ] Write `plans/reports/audit-{date}-fix-reverification.md`
+- [x] Re-run all MKTTool gates
+- [x] Re-run all MKTBrowser gates
+- [x] Walk F1-F15, classify each
+- [x] Re-run unused-export scan, diff
+- [x] Write `plans/reports/audit-260816-0803-fix-reverification.md`
 
 ## Success criteria
 

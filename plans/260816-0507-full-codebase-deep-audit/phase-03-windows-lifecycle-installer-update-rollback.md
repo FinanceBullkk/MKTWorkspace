@@ -43,6 +43,13 @@ Phase 04), not here. This phase makes that human rehearsal cheaper by naming exa
   is the invariant to trace.
 - `compatibility-transition-preparation-lock.ts` exists, so concurrent transitions were considered.
   Trace whether the lock survives process death.
+- **C10 is demonstrated, not hypothetical:** the installer suite changes result depending on whether
+  a real MKT Browser process is running. Phase 03 must separate fixture state from operator-machine
+  state instead of teaching developers to close the product or rerun the suite.
+- **C14 is fixed but remains lifecycle evidence:** the packaged contract passed while immediate
+  `userData` deletion failed with transient Windows `EBUSY` locks. The verifier now uses bounded
+  retries, but this phase must still trace Electron's process tree and distinguish contract failure
+  from teardown failure in diagnostics.
 
 ## Failure hypotheses
 
