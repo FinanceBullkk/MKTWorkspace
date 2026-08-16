@@ -1,0 +1,15 @@
+# Deny by default.
+#
+# This workspace holds two independent git repositories (MKTTool, MKTBrowser) alongside relay
+# identity material — DPAPI-sealed operator domain keys and device private keys live in
+# local-test-artifacts/ and relay-identity-backup-*/. An allowlist is the only safe shape here: a
+# denylist would need updating every time a new kind of secret appears beside it, and the cost of
+# missing one is publishing an operator key.
+#
+# Tracked here: the cross-repo audit plans and reports, which belong to neither repository because
+# they span both, and which otherwise exist only on one disk.
+*
+
+!.gitignore
+!plans/
+!plans/**
