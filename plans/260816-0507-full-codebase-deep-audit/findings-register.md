@@ -32,7 +32,7 @@ product's safety case.
 | --- | --- | --- | --- |
 | C1 | P3 | Open | Add protocol domain separation through a coordinated wire-format change; Phase 04. |
 | C2 | P3 | Open | Define signing-seed quality policy; Phase 04. |
-| C3 | P3 | Open | Reject low-order Ed25519 points in both key import implementations; Phase 04. |
+| C3 | P3 | Fixed | Both `publicKeyFromHex` implementations reject small-order and non-canonical Ed25519 public keys via `src/lib/crypto/ed25519-point-validation.mjs`. Blocked coordinates are derived from the curve equation, not copied, and each was confirmed forgeable against Node (identity 200/200, weakest order-8 point 19/200; 64 real keys 0/64). `ed25519-point-validation.test.ts` re-derives the table every run. The Phase 01 `it.fails` gates flipped red on contact and are now plain assertions. |
 | C4 | P2 | Fixed | Non-canonical X25519 device keys rejected; `relay-device-key-point-validation.test.ts`. |
 | C5 | P3 | Open | Sealed-box envelope binding folds into C1 remediation. |
 | C6 | P3 | Fixed | Migration read-back and post-deletion guards have sabotage-backed tests. |
@@ -52,8 +52,8 @@ product's safety case.
 | C20 | P3 | Fixed | Source-regex IPC checks could miss runtime preload/main drift; the executable preload covers 33 invoke and 5 event channels, and main startup fails on missing, duplicate, or foreign registrations. |
 | C21 | P1 | Fixed | Rollback activation failure restores the newer current tuple and engine pin, clears pending, restarts owned processes, consumes the failed authorization id, and requires fresh ADMIN approval. Covered by `local-updater.test.ts`. |
 | C22 | P2 | Closed for supported topology | Installer preflight and elevated install/uninstall reject firewall rules owned by another per-user engine path before mutation. Deterministic regression passes. The product supports one Windows user per PC; the owner waived the unsupported two-account VM exercise on 17 August 2026. |
-| C23 | P3 | Open | Pinned release root imported from `plans/…/root-public.json`. `release-root-trust.test.ts` is a genuine tripwire (re-derives the fingerprint, requires the root to verify the recorded delegation, pins the delegated key id as a literal), so this is review-surface and robustness, not a live trust weakness. Move the JSON under `src/lib/release/`; the existing test should pass unchanged. |
-| C24 | P3 | Open | Artifact download route compares the manifest hash against stored R2 object metadata rather than the bytes it streams. Contained: the device hashes every downloaded byte and re-verifies at activation, so the effect is a failed update, not a compromised one. Decide whether metadata-trust is a deliberate cost trade-off and say so in code, or hash on the way out. |
+| C23 | P3 | Fixed | Ceremony public evidence moved to `src/lib/release/release-authority-public-evidence/`; the trust root no longer sits behind a `plans/` path. `release-root-trust.test.ts` passes unchanged. |
+| C24 | P3 | Closed by decision | The metadata comparison is a publication sanity check, not an integrity control: whoever can replace the bytes in the bucket holds the credentials that also set the metadata, so hashing on the way out would stop nobody while costing a full re-read of a 280 MB engine per request. The integrity control is the device-side hash. Recorded in `relay-compatibility-artifact-source.ts` so it stops reading as an oversight. |
 | C25 | P3 | Accepted residual | Hand-rolled SigV4 has no known-answer vector and none is obtainable — no independent SigV4 implementation exists in the dependency tree, and adding one defeats the module's purpose. Hand-traced clean for the single-PUT/no-query shape in use. Cannot fail silently: a canonicalization error is an HTTP 403 on first upload, recorded as a failed job. Revisit if this ever signs query strings, presigned URLs, or streaming uploads. |
 
 ## Current Phase 03 Coverage
@@ -92,8 +92,8 @@ choice, not a defect; leaving them open was costing a line in every report.
    different reason — it is the system's only copy and must survive config-file exfiltration, whereas
    the Browser token has a second copy in the Browser data root and is rotatable. Consistent with the
    H53/C22 one-Windows-user-per-PC boundary.
-   Residual work (P3, Phase 06): no test asserts the `config-override` branch of the status page
-   renders its warning. Add one assertion; do not claim coverage until it exists.
+   Residual closed 17 August 2026: `relay-status-page.test.ts` now asserts both branches and was
+   proven red by sabotage. The F6 argument has a test behind it.
 2. **F10 — CI triggers stay as they are.** `push: [master, main]` plus `pull_request` already covers
    every merge path at minimum runner cost. Per-branch push CI would pay for every intermediate
    commit on branches that are rewritten anyway. Residual: commits on a long-lived branch are
@@ -113,18 +113,26 @@ not belong to a separate pass either.
 
 1. Phase 05 — data layer and business logic. Unrelated risk area; nothing blocks it.
 2. Phase 06 — breadth completion, including H107, H108, and the C23/C24 decisions.
-3. C1, C2, C3, C5 did not fold into Phase 04 the way the plan expected, and the reason is worth
+3. C3 was closed on 17 August 2026 in the debt pass after Phase 04 — see the register row. Phase 01
+   had asked whether `compatibility-manifest-crypto.ts:37` was "a more reachable instance of C3"
+   because it feeds `publicKeyFromHex` a key taken from data. It is not: root endorsement is proved
+   before that key is ever imported, so an attacker cannot choose it. The reachable site was the
+   relay's `serverPublicKey`, and it now rejects.
+4. C1, C2, C5 did not fold into Phase 04 the way the plan expected, and the reason is worth
    recording. The server Ed25519 key **is** reused across protocols: it signs tickets, compatibility
    update authorizations, and rollback authorizations. The two authorization protocols carry explicit
    domain prefixes; the ticket protocol does not — it signs the base64url envelope string directly
    (`ticket-verifier.ts:98-103`). Cross-protocol confusion is nevertheless unreachable, because a
    base64url string cannot contain the space and newline characters that every release domain prefix
    begins with, so the two byte-spaces are disjoint. That separation is incidental to the encoding,
-   not designed, which is precisely C1's point. C1/C2/C3/C5 now have no phase left to inherit them —
-   schedule the coordinated wire-format decision deliberately rather than deferring it a fifth time.
+   not designed, which is precisely C1's point. C1, C2, and C5 now have no phase left to inherit
+   them — schedule the coordinated wire-format decision deliberately rather than deferring it again.
+   C2 is independent of that decision and is cheap: it is a seed-content policy, and its four
+   `it.fails` gates in `server-signing-key-seed-hardening.test.ts` are now the only expected-fail
+   tests left in the suite.
 
 ## Unresolved Questions
 
-1. C24 — is the R2 metadata checksum a deliberate cost trade-off against hashing 280 MB per request?
-   The code does not say, and the answer decides comment-versus-fix.
-2. C23 — move the trust anchor into `src/`, or keep provenance-by-location?
+1. C1 and C5 — the wire-format break. The only structural finding still without a decision, carried
+   since Phase 01.
+2. C2 — reject placeholder signing seeds, or record acceptance? A one-line policy either way.

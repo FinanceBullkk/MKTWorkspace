@@ -70,9 +70,8 @@ security or lifecycle property the code does not have. Prose quality, comment tr
   renders "Cấu hình đang dùng" beside "Setup is incomplete"). Bounded strings-only pass over
   user-facing labels and error messages; legacy source comments stay as they are. This is the whole
   of what survives from F15 — the policy half closed at `AGENTS.md:25`.
-- H108 The status page's `config-override` branch of `describeMktBrowserToken` has no test. F6 was
-  closed on the argument that a development override is visibly labelled; that argument needs one
-  assertion behind it.
+- ~~H108 The status page's `config-override` branch of `describeMktBrowserToken` has no test.~~
+  Closed 17 August 2026 ahead of this phase: both branches asserted, sabotage-proven.
 
 ## Method
 
