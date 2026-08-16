@@ -22,8 +22,8 @@ in depth. It declared 13 unexamined areas. This plan audits them.
 
 - Phase 00 completed as remediate-then-verify; unresolved items remain explicit in the findings register.
 - Phase 01 completed at D4: all 20 hypotheses were closed or subsumed by a recorded finding.
-- Phase 02 is in progress: 17 of 20 hypotheses are closed after the H24/H25/H35-H37 continuation.
-  H28, H38, and H39 remain explicitly open; C10 remains carried into Phase 03.
+- Phase 02 completed at D4: all 20 hypotheses H21-H40 are closed with executable evidence.
+  C10 remains carried into Phase 03 as a lifecycle-hermeticity finding.
 - Phase 03-06 have not started.
 - Current merged status lives in [`findings-register.md`](./findings-register.md). Phase reports remain
   the detailed evidence record.
@@ -51,7 +51,7 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 | --- | --- | --- | --- | --- |
 | 00 | [Fix Re-Verification](./phase-00-fix-reverification.md) | D2 | Completed | Cheap. Confirms F1-F15 fixes landed before new work builds on them. |
 | 01 | [Cryptographic Protocols](./phase-01-cryptographic-protocol-audit.md) | **D4** | Completed | Bespoke multi-generation protocol. Silent failure = trust collapse, unrecoverable. |
-| 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | In progress | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
+| 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | Completed | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
 | 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 | Not started | Plan classifies installer/update/rollback P0. Crash-consistency is the risk. |
 | 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 | Not started | Trust root. Small code, high blast radius. |
 | 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | Not started | 671-line schema, 12 migrations, rules engine. Failure mode is silent wrong answers. |

@@ -1,15 +1,16 @@
 # Phase 02 — Local Control Surface & Proxy Containment
 
-Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: In progress · Effort: 2 full sessions
+Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: Completed · Effort: 2 full sessions
 
-Execution snapshot: 17 of 20 hypotheses closed after the H24/H25/H35-H37 continuation. Closed:
-H21-H27, H29-H37, H40. Open: H28, H38, H39. C10 remains a Phase 03 lifecycle finding.
+Execution snapshot: all 20 hypotheses H21-H40 are closed. H28, H38, and H39 completed the
+phase with deterministic SSE lifecycle, signed/path-contained CRX handling, and runtime IPC parity
+evidence. C10 remains a Phase 03 lifecycle finding.
 
 ## Context
 
 - 16 Aug findings F3 (no behavioral tests on these modules), F2 (security contract is regex-based).
-  The Relay authorization and proxy-containment invariants now have behavioral coverage; the
-  remaining gaps are the second SSE stream and the extension/IPC inventories.
+  Both are now fixed: Relay authorization, proxy containment, SSE lifecycle, extension identity and
+  path containment, and IPC registration all have executable coverage.
 
 ## Why D4
 
@@ -28,13 +29,13 @@ local proxy harness now exercise authorization and containment.
 | File | Lines | Current test coverage |
 | --- | --- | --- |
 | `packages/mcp-server/src/server.ts` | 1326 | behavioral MCP fixture + structural guards |
-| `packages/mcp-server/src/HttpTransport.ts` | 303 | real HTTP auth tests; H28 remains |
+| `packages/mcp-server/src/HttpTransport.ts` | 303 | real HTTP auth and deterministic multi-SSE lifecycle tests |
 | `packages/mcp-server/src/tool-exposure-policy.ts` | — | real unit tests |
 | `apps/desktop/src/main/socks5Bridge.ts` | — | controlled SOCKS5/HTTP harness |
 | `packages/cdp-driver/src/CdpSession.ts` | 624 | safe-mode regression tests |
 | `apps/desktop/src/main/proxyGeo.ts` | — | launch fallback seam; network probe itself remains external |
-| `apps/desktop/src/main/extensions/*` (5 files) | — | **none** |
-| `apps/desktop/src/preload/index.ts` | — | string assertions only |
+| `apps/desktop/src/main/extensions/*` (5 files) | — | signed CRX2/CRX3 identity and path-containment tests |
+| `apps/desktop/src/preload/index.ts` | — | executable preload API plus runtime main-registration parity tests |
 | Relay handlers unread on 16 Aug: `handle-profiles`, `handle-compatibility-update/rollback`, `handle-read-bootstrap-completion`, `launch-profile`, `create-profile`, `relay-antidetect` | — | mixed |
 
 **24 MCP tools.** Profile management (expected allowed): `list_profiles`, `create_profile`,
@@ -50,12 +51,17 @@ local proxy harness now exercise authorization and containment.
   warning (line 121). Deliberate and documented, but untested in either direction.
 - Stateless `/mcp` uses the SDK's `enableDnsRebindingProtection`; legacy `/sse` and `/messages` enforce
   a hand-rolled Host allowlist. Two mechanisms, one of them hand-rolled, neither tested.
-- `this.sseTransport` is a single slot; a second `GET /sse` overwrites without closing the first.
+- `this.sseTransport` is deliberately a single slot; a second `GET /sse` now returns `409` without
+  replacing the active stream, and a new stream can open after deterministic close.
 - Proxy handling is genuinely thoughtful — the SOCKS5 bridge exists precisely because Chromium's
   `--proxy-server=` leaks DNS. That reasoning is sound; what is untested is the failure path.
 - `ChromiumBrowserDriver` fails closed if WebRTC containment cannot be verified, and the H35 test
   now proves the exact runtime firewall identity. A proxy-geo outage still launches, but the
   fallback disables WebRTC, clears stale proxy-country state, and emits `PROXY_GEO_UNAVAILABLE`.
+- CRX installs now require a valid CRX2/CRX3 publisher signature, verify the requested Web Store ID,
+  and reject ZIP, manifest-version, and persisted-path escapes.
+- IPC parity is asserted against the executable preload API and the actual main registration path:
+  33 invoke channels and 5 event channels are classified, reachable, and complete at startup.
 
 ## Attack hypotheses — written before reading
 
@@ -112,14 +118,15 @@ local proxy harness now exercise authorization and containment.
 - [x] H21-H23 tool authorization tests
 - [x] H24-H25 tool authorization tests
 - [x] H26, H27, H29, H30 transport auth tests
-- [ ] H28 deterministic multi-SSE fixture
+- [x] H28 deterministic multi-SSE fixture
 - [x] Proxy harness (controlled upstream + egress echo)
 - [x] H31-H35 containment tests
 - [x] H36-H37 containment tests
 - [x] D2 read `server.ts`, `socks5Bridge.ts`, `CdpSession.ts`
-- [ ] D2 read extensions pipeline + unread relay handlers
-- [ ] H38–H39 tests
+- [x] D2 read extensions pipeline + unread relay handlers
+- [x] H38–H39 tests
 - [x] `plans/reports/audit-260816-1344-phase-02-high-risk-continuation.md`
+- [x] `plans/reports/audit-260816-1438-phase-02-complete.md`
 
 ## Success criteria
 
@@ -148,3 +155,8 @@ proxy, never a real account. No observed IPs in reports. Extension tests use syn
 
 Phase 03 — the packaged installer wires this same token and firewall state, so findings here change
 what Phase 03 must check.
+
+## Unresolved questions
+
+None for Phase 02. Phase 03 must resolve the pre-existing hypothesis-ID collision before execution:
+Phase 02 now owns H40, while the Phase 03 draft also starts at H40.

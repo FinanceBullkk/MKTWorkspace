@@ -11,8 +11,8 @@ product's safety case.
 | ID | Severity | Status | Current evidence or next owner |
 | --- | --- | --- | --- |
 | F1 | P2 | Fixed | MKTBrowser CI runs the aggregate installer/runtime suite. |
-| F2 | P2 | Partial | Renderer security is structurally tested; safe-CDP and managed-launch guards are now behavioral; H28/H38/H39 remain. |
-| F3 | P2 | Partial | MCP auth, dispatch, and proxy containment gained behavioral tests; H28/H38/H39 remain. |
+| F2 | P2 | Fixed | Renderer security, safe-CDP, managed launch, executable preload API, and runtime IPC registration have behavioral parity guards. |
+| F3 | P2 | Fixed | MCP auth/dispatch, SSE lifecycle, proxy containment, and extension install boundaries have behavioral tests. |
 | F4 | P2 | Fixed | `/encrypt-for-vault` enforces the trusted Origin with sabotage-backed tests. |
 | F5 | P2 | Fixed | Relay capability enforcement is tested against real handlers and hostile origins. |
 | F6 | P3 | Open | Plaintext Browser token behavior is partly legacy/optional; document or redesign deliberately. |
@@ -47,18 +47,20 @@ product's safety case.
 | C15 | P3 | Fixed | Safe CDP rejects untracked `*.enable` commands; `cdp-safe-mode.test.ts` and MCP safe-mode forwarding test. |
 | C16 | P3 | Mitigated/accepted residual | Proxy-geo outage is leak-safe: stale country is cleared, a stable diagnostic is logged, and WebRTC is disabled; launch may still retain a timezone mismatch until the probe recovers. |
 | C17 | P3 | Fixed | Removing an existing unmanaged proxy now requires explicit confirmation before autosave; `proxy-removal-safety.test.ts`. |
+| C18 | P2 | Fixed | A second legacy SSE connection could replace the active transport slot; it now receives `409`, preserves the first stream, and permits replacement only after deterministic close. |
+| C19 | P2 | Fixed | CRX installs accepted unverifiable identity and path-derived escape risk; CRX2/CRX3 signatures, Web Store ID matching, and owned-root containment are enforced. |
+| C20 | P3 | Fixed | Source-regex IPC checks could miss runtime preload/main drift; the executable preload covers 33 invoke and 5 event channels, and main startup fails on missing, duplicate, or foreign registrations. |
 
 ## Current Phase 02 Coverage
 
 | State | Hypotheses |
 | --- | --- |
-| Closed | H21-H27, H29-H37, H40 |
-| Open, high priority | None in the selected continuation scope |
-| Open, lower priority | H28, H38, H39 |
+| Closed | H21-H40 (20/20) |
+| Open | None |
 
 ## Next Sequence
 
-1. Close or explicitly defer H28, H38, and H39 with executable evidence.
+1. Start Phase 03 Windows lifecycle analysis, first resolving its H40 identifier collision.
 2. Carry C10/C14/C16 evidence into Phase 03 Windows lifecycle analysis.
 3. Complete Phase 04 before any operational release decision.
 
