@@ -4,12 +4,13 @@ Depth: **D3 audit + targeted D4 remediation** · Priority: P1 · Status: Complet
 
 Execution snapshot: H41-H54 are classified in
 [`audit-260816-1453-windows-lifecycle.md`](../reports/audit-260816-1453-windows-lifecycle.md).
-C21 and C10 are fixed with executable regression evidence. C22 is remediated in source: foreign
-per-user firewall paths are rejected in preflight and rechecked before elevated install/uninstall
-mutation; the two-account Windows VM gate remains unrun. Power-loss, ACL, Authenticode, and
-withdrawn-installer claims remain explicit human/Phase 04 gates. No operational install ran.
-Owner decisions: support one Windows user per PC; consume rollback authorization on the first
-attempt, including failure, and require fresh ADMIN approval before retry.
+C21 and C10 are fixed with executable regression evidence. C22 is closed for the supported topology:
+foreign per-user firewall paths are rejected in preflight and rechecked before elevated
+install/uninstall mutation, while multiple Windows users on one PC are unsupported. The owner waived
+the disposable two-account Windows exercise on 17 August 2026; it is not a release gate. Power-loss,
+Authenticode, and withdrawn-installer claims remain explicit Phase 04 gates. No operational install
+ran. Rollback authorization is consumed on the first attempt, including failure, and retry requires
+fresh ADMIN approval.
 
 ## Context
 
@@ -122,7 +123,7 @@ Phase 04), not here. This phase makes that human rehearsal cheaper by naming exa
 - [x] C21 rollback-smoke recovery and one-use authorization regression
 - [x] C22 single-Windows-user firewall ownership guard and deterministic regression
 - [x] C10 injected inventory fixture and opt-in live-machine integration gate
-- Human gate pending: C22 disposable two-account Windows install/uninstall verification
+- [x] C22 disposable two-account Windows exercise waived as unsupported product topology
 
 ## Success criteria
 

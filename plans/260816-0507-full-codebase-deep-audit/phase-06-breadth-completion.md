@@ -62,8 +62,17 @@ Cross-check `docs/` against implementation: `system-architecture.md`, `codebase-
 - H105 Roadmap phase status disagrees with code reality.
 - H106 `codebase-summary.md` references modules that moved or no longer exist.
 
-Note: F15 (language-policy contradiction) is a documentation finding already open from 16 Aug —
-resolve it here rather than re-raising it.
+Scope decided 17 August 2026: documentation accuracy is audit work only where a doc asserts a
+security or lifecycle property the code does not have. Prose quality, comment translation, and
+`docs/archive/` are out of scope for this phase and are not deferred to another pass either.
+
+- H107 The user-facing surface mixes languages inside one rendered view (`relay-status-page.ts`
+  renders "Cấu hình đang dùng" beside "Setup is incomplete"). Bounded strings-only pass over
+  user-facing labels and error messages; legacy source comments stay as they are. This is the whole
+  of what survives from F15 — the policy half closed at `AGENTS.md:25`.
+- H108 The status page's `config-override` branch of `describeMktBrowserToken` has no test. F6 was
+  closed on the argument that a development override is visibly labelled; that argument needs one
+  assertion behind it.
 
 ## Method
 
@@ -79,7 +88,8 @@ resolve it here rather than re-raising it.
 - [ ] Secret × sink table
 - [ ] `yarn npm audit` MKTBrowser + pinning review
 - [ ] Concurrency read (3 paths)
-- [ ] Docs accuracy diff
+- [ ] Docs accuracy diff (safety-case claims only)
+- [ ] H107 user-facing string language pass; H108 `config-override` status-page assertion
 - [ ] `plans/reports/audit-{date}-breadth-completion.md`
 
 ## Success criteria

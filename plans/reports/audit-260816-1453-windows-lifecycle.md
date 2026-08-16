@@ -3,7 +3,7 @@
 Date: 2026-08-16
 Plan: [`260816-0507-full-codebase-deep-audit`](../260816-0507-full-codebase-deep-audit/plan.md)
 Depth achieved: **D3 adversarial trace**
-Status: **COMPLETE - H41-H54 classified; C21/C10 fixed, C22 source-remediated with its Windows VM gate pending. No install, uninstall, firewall mutation, or publish performed.**
+Status: **COMPLETE - H41-H54 classified; C21/C10 fixed, C22 closed for the supported single-user topology. No install, uninstall, firewall mutation, or publish performed.**
 
 ## Findings
 
@@ -44,7 +44,7 @@ processes restart, the failed authorization id is rejected as already used, and 
 authorization can prepare another attempt. Include the currently missing rollback-smoke-failure
 regression.
 
-### C22 - P2 - Per-user installs share machine-wide firewall ownership (source-remediated; VM gate pending)
+### C22 - P2 - Per-user installs share machine-wide firewall ownership (closed for supported topology)
 
 Boundary: Windows firewall lifecycle across multiple local Windows accounts.
 
@@ -109,9 +109,9 @@ preconditions and a distinct result.
 | H48 | Closed | `RelayOwned` is derived before Relay install, preserved through legacy-upgrade repair, and controls exact Relay executable/shortcut cleanup. A pre-existing Relay is preserved. |
 | H49 | Closed | Relay writes a DPAPI-protected receipt before secret deletion. The server stores the signed finalization authorization in the same transaction that erases the one-use seed. Local finalization verifies against the per-retirement public key retained in the receipt, then deletes the receipt. |
 | H50 | Closed | Pinned Relay fetch requires positive version and size, lowercase SHA-256, HTTPS URL ending in `/v{version}`, and verifies local, cached, resumed, and downloaded bytes. No latest fallback exists. |
-| H51 | Source-remediated; VM gate pending (C22) | Foreign per-user engine paths are rejected in preflight and again before elevated install/uninstall mutation. |
-| H52 | Could not close statically | `rcedit` runs in `afterPack`, before any future signing step, so its ordering does not invalidate a later signature. Current Windows signing is disabled, so Authenticode validity belongs to Phase 04. Final installed ACLs require a two-account human check. |
-| H53 | Accepted same-user residual; cross-user ACL requires human gate | Install and engine roots are per-user LocalAppData. Launch checks the stable exact path and firewall rule but deliberately does not hash the 280 MB engine on every launch. Same-user tampering is outside the documented boundary; a second standard account must be proven unable to write the Browser, `app.asar`, Relay, and engine files. |
+| H51 | Closed for supported topology (C22) | Foreign per-user engine paths are rejected in preflight and again before elevated install/uninstall mutation. Multiple Windows users on one PC are unsupported. |
+| H52 | Authenticode deferred; cross-user ACL exercise waived | `rcedit` runs in `afterPack`, before any future signing step, so its ordering does not invalidate a later signature. Current Windows signing is disabled, so Authenticode validity belongs to Phase 04. Cross-user ACL verification is outside the supported one-user-per-PC topology. |
+| H53 | Accepted supported-topology residual | Install and engine roots are per-user LocalAppData. Launch checks the stable exact path and firewall rule but deliberately does not hash the 280 MB engine on every launch. Same-user tampering is outside the documented boundary, and cross-user operation is outside the supported one-user-per-PC topology. No second-account isolation claim is made. |
 | H54 | Existing-install path closed; clean-machine withdrawal deferred to Phase 04 | Protected compatibility state is initialized once, survives repair/uninstall/retirement, and is not lowered by a later installer. Missing state plus identity data routes to ADMIN repair. A truly clean machine running a withdrawn older installer has only that installer's embedded floor and bundled revocations; distribution/revocation authority must close this in Phase 04. |
 
 ## State Transition and Interruption Trace
@@ -151,13 +151,12 @@ is not implied by either operation.
    executable and exact shortcuts differ; config/protected secrets and Browser data remain.
 4. Complete retirement, rotate the normal ticket key, restart, retrieve server finalization after
    the one-use seed is erased, and finish local finalization. Browser data must remain unchanged.
-5. Use two standard Windows accounts to verify C22 remediation: account B must stop before mutation and leave account A's rules intact.
-6. From a second standard account, attempt writes to installed Browser, `app.asar`, Relay executable,
-   both engine `chrome.exe` paths, and identity roots. Executable writes must be denied; identity
-   roots must not be readable or writable cross-account.
-7. After Phase 04 signing, run `Get-AuthenticodeSignature` on installer and installed executables.
+5. Waived by owner on 17 August 2026: the two-account C22 and cross-user ACL exercises are outside
+   the supported one-Windows-user-per-PC topology. The deterministic foreign-owner rejection remains
+   a regression gate; no cross-user isolation claim is made.
+6. After Phase 04 signing, run `Get-AuthenticodeSignature` on installer and installed executables.
    Every required signature must be valid after all resource edits.
-8. Reinstall an older installer over a device with retained state and try a withdrawn installer on a
+7. Reinstall an older installer over a device with retained state and try a withdrawn installer on a
    truly clean VM. Existing state must refuse downgrade; clean-VM withdrawal is a Phase 04 release
    authority observable.
 
@@ -190,6 +189,10 @@ This snapshot records the original read-only audit before the remediation follow
 2. A rollback authorization is consumed by the first rollback attempt, including a failed attempt.
    After restoring the current tuple, another attempt requires fresh ADMIN approval.
 
+On 17 August 2026, the owner waived the disposable two-account Windows exercise. This is a scope
+decision, not a claim that the scenario passed. C22 remains protected by deterministic regression
+coverage and the fail-before-mutation guard.
+
 ## Remediation Follow-up
 
 Authorized after the read-only audit on 2026-08-16.
@@ -197,7 +200,7 @@ Authorized after the read-only audit on 2026-08-16.
 | Finding | Result | Regression evidence |
 | --- | --- | --- |
 | C21 | Fixed | Shutdown failure, every artifact-restore failure, and rollback smoke failure restore the original current tuple and sequence-2 engine pin, clear pending, restart owned processes, consume the failed authorization, reject its reuse, and accept only a fresh authorization. |
-| C22 | Source-remediated; VM gate pending | Firewall ownership is checked in installer preflight and again inside elevated install/uninstall before mutation. A foreign per-user engine path exits with code 17. |
+| C22 | Closed for supported topology | Firewall ownership is checked in installer preflight and again inside elevated install/uninstall before mutation. A foreign per-user engine path exits with code 17; multi-user operation is unsupported. |
 | C10 | Fixed | Default packaging fixtures inject process, listener, and shortcut inventory. Live-machine inspection is separated behind `test:packaging:windows-machine`. |
 
 Follow-up verification:
@@ -210,7 +213,7 @@ Follow-up verification:
 | MKTBrowser W02 | PASS - 8/8 |
 | MKTBrowser MKB03 | PASS - 30/30 under pinned Node 22 |
 | MKTBrowser desktop lint | PASS |
-| Installer/uninstaller/firewall execution | Not performed; disposable two-account Windows VM gate remains |
+| Installer/uninstaller/firewall execution | Not performed; two-account exercise waived as unsupported topology |
 
 ## Unresolved Questions
 
