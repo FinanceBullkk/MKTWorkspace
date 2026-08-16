@@ -29,7 +29,11 @@ in depth. It declared 13 unexamined areas. This plan audits them.
   two-account Windows exercise was waived on 17 August 2026 and is not a release gate. Power-loss,
   Authenticode, and clean-machine installer withdrawal remain named Phase 04 gates. Failed rollback
   attempts require fresh ADMIN approval.
-- Phase 04-06 have not started.
+- Phase 04 completed at D3 with D4 on the verification logic. No P0/P1/P2. Three P3 findings
+  (C23-C25). Ten regression tests added and sabotage-proven; six sabotages showed a forged or
+  out-of-window payload being fully accepted with the guard removed. No ceremony, no R2 access, no
+  publish.
+- Phase 05-06 have not started.
 - Current merged status lives in [`findings-register.md`](./findings-register.md). Phase reports remain
   the detailed evidence record.
 
@@ -58,7 +62,7 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 | 01 | [Cryptographic Protocols](./phase-01-cryptographic-protocol-audit.md) | **D4** | Completed | Bespoke multi-generation protocol. Silent failure = trust collapse, unrecoverable. |
 | 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | Completed | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
 | 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 + targeted D4 | Completed | C21/C10 fixed; C22 closed for the supported single-user topology; cross-user VM exercise waived. |
-| 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 | Not started | Trust root. Small code, high blast radius. |
+| 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 + D4 on verification | Completed | Trust root proved load-bearing by sabotage; three P3 residuals. |
 | 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | Not started | 671-line schema, 12 migrations, rules engine. Failure mode is silent wrong answers. |
 | 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Not started | Frontend, redaction, deps, concurrency, docs accuracy. |
 

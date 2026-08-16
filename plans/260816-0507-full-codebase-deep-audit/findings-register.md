@@ -52,6 +52,9 @@ product's safety case.
 | C20 | P3 | Fixed | Source-regex IPC checks could miss runtime preload/main drift; the executable preload covers 33 invoke and 5 event channels, and main startup fails on missing, duplicate, or foreign registrations. |
 | C21 | P1 | Fixed | Rollback activation failure restores the newer current tuple and engine pin, clears pending, restarts owned processes, consumes the failed authorization id, and requires fresh ADMIN approval. Covered by `local-updater.test.ts`. |
 | C22 | P2 | Closed for supported topology | Installer preflight and elevated install/uninstall reject firewall rules owned by another per-user engine path before mutation. Deterministic regression passes. The product supports one Windows user per PC; the owner waived the unsupported two-account VM exercise on 17 August 2026. |
+| C23 | P3 | Open | Pinned release root imported from `plans/…/root-public.json`. `release-root-trust.test.ts` is a genuine tripwire (re-derives the fingerprint, requires the root to verify the recorded delegation, pins the delegated key id as a literal), so this is review-surface and robustness, not a live trust weakness. Move the JSON under `src/lib/release/`; the existing test should pass unchanged. |
+| C24 | P3 | Open | Artifact download route compares the manifest hash against stored R2 object metadata rather than the bytes it streams. Contained: the device hashes every downloaded byte and re-verifies at activation, so the effect is a failed update, not a compromised one. Decide whether metadata-trust is a deliberate cost trade-off and say so in code, or hash on the way out. |
+| C25 | P3 | Accepted residual | Hand-rolled SigV4 has no known-answer vector and none is obtainable — no independent SigV4 implementation exists in the dependency tree, and adding one defeats the module's purpose. Hand-traced clean for the single-PUT/no-query shape in use. Cannot fail silently: a canonicalization error is an HTTP 403 on first upload, recorded as a failed job. Revisit if this ever signs query strings, presigned URLs, or streaming uploads. |
 
 ## Current Phase 03 Coverage
 
@@ -61,7 +64,20 @@ product's safety case.
 | Closed by remediation | H45 (C21) |
 | Closed by remediation and scope decision | H51 (C22) |
 | Accepted by supported-topology decision | H53 |
-| Human/Phase 04 gate | H42, H52, H54 |
+| Human gate, carried past Phase 04 | H42, H52, H54 |
+
+## Current Phase 04 Coverage
+
+| State | Hypotheses |
+| --- | --- |
+| Closed statically | H58, H59, H60, H61, H62, H63, H64, H65, H66, H67, H68, H69, H70 |
+| Closed by new executable proof | H55, H56, H57 |
+| Accepted residual | H71 (C25) |
+| Partly closed; contained by client verification | H72 (C24) |
+
+Phase 04 closed H42/H52/H54 as far as code can: Authenticode and clean-machine withdrawal are
+release-rehearsal observables, not code defects. They stay open as human gates and do not block
+Phase 05.
 
 ## Decisions - 17 August 2026
 
@@ -95,11 +111,20 @@ not belong to a separate pass either.
 
 ## Next Sequence
 
-1. Complete Phase 04 release-authority analysis before any operational release decision. It also
-   carries C1, C2, C3, and C5, which all sit on the same Ed25519 signing path.
-2. Phase 05, then Phase 06 including the two P3 residuals recorded above.
+1. Phase 05 — data layer and business logic. Unrelated risk area; nothing blocks it.
+2. Phase 06 — breadth completion, including H107, H108, and the C23/C24 decisions.
+3. C1, C2, C3, C5 did not fold into Phase 04 the way the plan expected, and the reason is worth
+   recording. The server Ed25519 key **is** reused across protocols: it signs tickets, compatibility
+   update authorizations, and rollback authorizations. The two authorization protocols carry explicit
+   domain prefixes; the ticket protocol does not — it signs the base64url envelope string directly
+   (`ticket-verifier.ts:98-103`). Cross-protocol confusion is nevertheless unreachable, because a
+   base64url string cannot contain the space and newline characters that every release domain prefix
+   begins with, so the two byte-spaces are disjoint. That separation is incidental to the encoding,
+   not designed, which is precisely C1's point. C1/C2/C3/C5 now have no phase left to inherit them —
+   schedule the coordinated wire-format decision deliberately rather than deferring it a fifth time.
 
 ## Unresolved Questions
 
-None outstanding. The three long-carried questions were settled on 17 August 2026 and are recorded
-above with their residuals.
+1. C24 — is the R2 metadata checksum a deliberate cost trade-off against hashing 280 MB per request?
+   The code does not say, and the answer decides comment-versus-fix.
+2. C23 — move the trust anchor into `src/`, or keep provenance-by-location?

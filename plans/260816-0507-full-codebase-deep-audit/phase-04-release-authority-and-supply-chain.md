@@ -1,6 +1,14 @@
 # Phase 04 — Release Authority & Supply Chain
 
-Depth: **D3**, escalating to **D4** for verification logic · Priority: P1 · Status: Not started · Effort: 1 session
+Depth: **D3**, escalating to **D4** for verification logic · Priority: P1 · Status: Completed · Effort: 1 session
+
+Execution snapshot: H55–H72 classified in
+[`audit-260817-0244-release-authority.md`](../reports/audit-260817-0244-release-authority.md).
+No P0/P1/P2. Three P3 findings: C23 trust anchor imported from `plans/`, C24 artifact route trusts
+stored R2 metadata rather than served bytes, C25 hand-rolled SigV4 has no obtainable known-answer
+vector. Ten regression tests added; nine proven red by sabotage, six of those showing a forged or
+out-of-window payload fully accepted with the guard removed. No ceremony executed, no R2 access, no
+publish.
 
 ## Context
 
@@ -96,12 +104,12 @@ The offline root ceremony has its own tests (`offline-root-ceremony.test.ts`,
 
 ## Todo
 
-- [ ] Write H55–H72
-- [ ] D2 read trust chain
-- [ ] D4 tampered-input tests for H55–H64
-- [ ] D3 trace of ceremony key custody
-- [ ] Distribution/immutability trace
-- [ ] `plans/reports/audit-{date}-release-authority.md`
+- [x] Write H55–H72 (written 16 Aug, before any code was read)
+- [x] D2 read trust chain
+- [x] D4 tampered-input tests for H55–H64, each sabotage-proven
+- [x] D3 trace of ceremony key custody
+- [x] Distribution/immutability trace
+- [x] [`plans/reports/audit-260817-0244-release-authority.md`](../reports/audit-260817-0244-release-authority.md)
 
 ## Success criteria
 
