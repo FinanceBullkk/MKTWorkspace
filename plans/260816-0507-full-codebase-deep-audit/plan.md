@@ -23,8 +23,12 @@ in depth. It declared 13 unexamined areas. This plan audits them.
 - Phase 00 completed as remediate-then-verify; unresolved items remain explicit in the findings register.
 - Phase 01 completed at D4: all 20 hypotheses were closed or subsumed by a recorded finding.
 - Phase 02 completed at D4: all 20 hypotheses H21-H40 are closed with executable evidence.
-  C10 remains carried into Phase 03 as a lifecycle-hermeticity finding.
-- Phase 03-06 have not started.
+  C10 was fixed during the Phase 03 remediation follow-up with deterministic injected inventory.
+- Phase 03 completed at D3 with targeted D4 remediation. C21 is fixed; C22 is remediated in source
+  with its disposable two-account Windows gate still pending. Power-loss, ACL, Authenticode, and
+  clean-machine installer withdrawal remain named human/Phase 04 gates. Owner decisions are one
+  Windows user per PC and fresh ADMIN approval after every failed rollback attempt.
+- Phase 04-06 have not started.
 - Current merged status lives in [`findings-register.md`](./findings-register.md). Phase reports remain
   the detailed evidence record.
 
@@ -52,14 +56,15 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 | 00 | [Fix Re-Verification](./phase-00-fix-reverification.md) | D2 | Completed | Cheap. Confirms F1-F15 fixes landed before new work builds on them. |
 | 01 | [Cryptographic Protocols](./phase-01-cryptographic-protocol-audit.md) | **D4** | Completed | Bespoke multi-generation protocol. Silent failure = trust collapse, unrecoverable. |
 | 02 | [Local Control Surface & Proxy Containment](./phase-02-local-control-surface-and-proxy-containment.md) | **D4** | Completed | 24 MCP tools + SOCKS5 bridge. Failure = full browser control or identity leak. |
-| 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 | Not started | Plan classifies installer/update/rollback P0. Crash-consistency is the risk. |
+| 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 + targeted D4 | Completed | C21/C10 fixed; C22 source-remediated with two-account VM gate pending; non-static gates named. |
 | 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 | Not started | Trust root. Small code, high blast radius. |
 | 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | Not started | 671-line schema, 12 migrations, rules engine. Failure mode is silent wrong answers. |
 | 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Not started | Frontend, redaction, deps, concurrency, docs accuracy. |
 
 ## Non-negotiable rules
 
-- Read-only against source, except Phase 00 re-verification and D4 test files.
+- Read-only against source during audit execution, except Phase 00 re-verification and D4 test files.
+  Phase 03 product remediation was later explicitly authorized and is recorded as a follow-up.
 - New tests must fail first on the vulnerable path. A test that never went red proves nothing.
 - No test may be weakened or skipped to go green. A legitimate red is a finding.
 - No real credentials, no operational database, no publish/deploy, no migration runs.

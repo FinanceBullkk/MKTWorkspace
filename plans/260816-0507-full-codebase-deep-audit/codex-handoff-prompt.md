@@ -56,15 +56,17 @@ fixed. None have been. So Phase 00 for you is: **remediate, then verify.**
   evidence), F9 (oversized files), F10 (MKTTool CI branch filter), F15 (doc language policy).
 - Then run the full verification table from the phase file.
 
-Phase 00 is the only phase where you modify production code. Phases 01–06 are read-only against source;
-the only files you create are new test files (D4 phases) and reports.
+The original audit execution is read-only against production source outside Phase 00. On 16 Aug the
+owner explicitly authorized a Phase 03 remediation follow-up for C21, C22, and C10; preserve those
+source changes and their regression tests. Future audit phases remain read-only unless separately
+authorized.
 
 ## Audit discipline — non-negotiable
 
 These are the difference between an audit and a reading exercise.
 
 1. **Write attack hypotheses before reading the implementation.** Each phase file lists numbered
-   hypotheses (H01–H105). Write them as tests or as a written trace *first*. If you read the code first
+   hypotheses (H01–H106). Write them as tests or as a written trace *first*. If you read the code first
    you will produce a list of what the code already handles, which is the exact failure this plan was
    designed to avoid.
 2. **Red-then-green is mandatory in D4 phases.** Every new test must be shown to fail on a deliberately

@@ -39,7 +39,7 @@ product's safety case.
 | C7 | P3 | Fixed | Grant substitution is covered by `operator-key-grant-substitution.test.ts`. |
 | C8 | P3 | Fixed | Bootstrap take-and-clear ordering and concurrency are covered. |
 | C9 | P3 | Fixed | MCP dispatch deny check is covered by `mcp-tool-authorization.test.ts`. |
-| C10 | P3 | Open | Installer suite depends on live machine state; Phase 03 hermeticity work. |
+| C10 | P3 | Fixed | Packaging ownership classification uses injected process/listener/shortcut inventory. Live machine inspection is an explicit opt-in gate: `test:packaging:windows-machine`. |
 | C11 | P2 | Fixed | SOCKS5 bridge is loadable by the repository's Node test runner. |
 | C12 | P2 | Fixed | Invalid HTTP-CONNECT destinations rejected; `socks5-bridge-http-upstream.test.ts`. |
 | C13 | P3 | Fixed | WebRTC runtime-identity guard covered by commit `4ebb8d5`. |
@@ -50,19 +50,22 @@ product's safety case.
 | C18 | P2 | Fixed | A second legacy SSE connection could replace the active transport slot; it now receives `409`, preserves the first stream, and permits replacement only after deterministic close. |
 | C19 | P2 | Fixed | CRX installs accepted unverifiable identity and path-derived escape risk; CRX2/CRX3 signatures, Web Store ID matching, and owned-root containment are enforced. |
 | C20 | P3 | Fixed | Source-regex IPC checks could miss runtime preload/main drift; the executable preload covers 33 invoke and 5 event channels, and main startup fails on missing, duplicate, or foreign registrations. |
+| C21 | P1 | Fixed | Rollback activation failure restores the newer current tuple and engine pin, clears pending, restarts owned processes, consumes the failed authorization id, and requires fresh ADMIN approval. Covered by `local-updater.test.ts`. |
+| C22 | P2 | Remediated; VM gate pending | Installer preflight and elevated install/uninstall reject firewall rules owned by another per-user engine path before mutation. Deterministic owner regression passes; two-account Windows VM verification remains. |
 
-## Current Phase 02 Coverage
+## Current Phase 03 Coverage
 
 | State | Hypotheses |
 | --- | --- |
-| Closed | H21-H40 (20/20) |
-| Open | None |
+| Closed statically | H41, H43, H44, H46-H50 |
+| Closed by remediation | H45 (C21) |
+| Remediated; human verification | H51 (C22) |
+| Human/Phase 04 gate | H42, H52-H54 |
 
 ## Next Sequence
 
-1. Start Phase 03 Windows lifecycle analysis, first resolving its H40 identifier collision.
-2. Carry C10/C14/C16 evidence into Phase 03 Windows lifecycle analysis.
-3. Complete Phase 04 before any operational release decision.
+1. Run the C22 two-account install/uninstall gate and the remaining Phase 03 watch list only in disposable Windows accounts/VMs.
+2. Complete Phase 04 release-authority analysis before any operational release decision.
 
 ## Unresolved Questions
 

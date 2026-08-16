@@ -20,47 +20,47 @@ rather than reading.
 MKTTool `src/app/**` + `src/components/**`; MKTBrowser `apps/desktop/src/renderer/**`
 (largest: `ProfileTile.tsx` 542, `App.tsx` 474, `McpPanel.tsx` 445, `ProfileRow.tsx` 434).
 
-- H90 `dangerouslySetInnerHTML` or equivalent on user/remote content.
-- H91 A secret reaches the browser as props or client state — the architecture says secrets never
+- H91 `dangerouslySetInnerHTML` or equivalent on user/remote content.
+- H92 A secret reaches the browser as props or client state — the architecture says secrets never
   enter the hosted page; verify no server component passes one down.
-- H92 A client component calls a server action with attacker-controllable arguments the action assumes
+- H93 A client component calls a server action with attacker-controllable arguments the action assumes
   are UI-constrained (dropdown values, ids).
-- H93 MKTBrowser renderer trusts main-process data unsanitised (profile names, proxy labels, extension
+- H94 MKTBrowser renderer trusts main-process data unsanitised (profile names, proxy labels, extension
   names) into a DOM sink.
 
 ### 6.2 Global redaction (D3)
 
-- H94 Proxy password, token, or credential reaches a thrown error, a provider error body, or a Next.js
+- H95 Proxy password, token, or credential reaches a thrown error, a provider error body, or a Next.js
   error boundary. `redactTokens` exists in `facebook-graph-client.ts`; find every path that *should*
   use it and does not.
-- H95 A secret is written to disk in a log, crash dump, or Electron `ActivityLog`.
+- H96 A secret is written to disk in a log, crash dump, or Electron `ActivityLog`.
   (`activity-log-redaction.test.ts` exists for the MCP side — confirm the relay/web side has an equivalent.)
-- H96 An error message echoes a decrypted value, ciphertext, or key material back to the UI.
+- H97 An error message echoes a decrypted value, ciphertext, or key material back to the UI.
 
 Method: enumerate every secret-typed value from the schema and registry, then trace each one outward
 to every sink (throw, log, response body, file write). Table of value × sink.
 
 ### 6.3 Dependency and supply-chain hygiene (D2)
 
-- H97 `yarn npm audit` on MKTBrowser (never run) surfaces advisories in Electron-adjacent packages.
-- H98 A dependency is unpinned where reproducibility matters (Electron is exact-pinned; check
+- H98 `yarn npm audit` on MKTBrowser (never run) surfaces advisories in Electron-adjacent packages.
+- H99 A dependency is unpinned where reproducibility matters (Electron is exact-pinned; check
   `electron-builder`, `@electron/rebuild`, native modules).
-- H99 `postinstall` scripts in the dependency tree execute at install time on build machines.
+- H100 `postinstall` scripts in the dependency tree execute at install time on build machines.
 
 ### 6.4 Concurrency (D2)
 
-- H100 `health-check-lock` expiry allows two holders at a boundary (tests exist; read the expiry path).
-- H101 `daily-backup-scheduler` and `daily-health-check-scheduler` can double-fire across restarts.
-- H102 `cleanStaleSingletonLocks` deletes a live lock, killing a running browser.
+- H101 `health-check-lock` expiry allows two holders at a boundary (tests exist; read the expiry path).
+- H102 `daily-backup-scheduler` and `daily-health-check-scheduler` can double-fire across restarts.
+- H103 `cleanStaleSingletonLocks` deletes a live lock, killing a running browser.
 
 ### 6.5 Documentation accuracy (D2)
 
 Cross-check `docs/` against implementation: `system-architecture.md`, `codebase-summary.md`,
 `development-roadmap.md`, `project-changelog.md`, `code-standards.md`, `domain-glossary.md`.
 
-- H103 Docs claim a verification or gate that never ran.
-- H104 Roadmap phase status disagrees with code reality.
-- H105 `codebase-summary.md` references modules that moved or no longer exist.
+- H104 Docs claim a verification or gate that never ran.
+- H105 Roadmap phase status disagrees with code reality.
+- H106 `codebase-summary.md` references modules that moved or no longer exist.
 
 Note: F15 (language-policy contradiction) is a documentation finding already open from 16 Aug —
 resolve it here rather than re-raising it.

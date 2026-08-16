@@ -51,54 +51,54 @@ The offline root ceremony has its own tests (`offline-root-ceremony.test.ts`,
 ## Failure hypotheses
 
 **Chain of trust**
-- H54 Client verifies the delegated key's signature but not the root's signature *over* the delegation —
+- H55 Client verifies the delegated key's signature but not the root's signature *over* the delegation —
   i.e. any delegated key is accepted, not only root-endorsed ones.
-- H55 Delegation expiry is not checked, or is checked against a client-supplied timestamp.
-- H56 Revocation check **fails open**: missing/unreachable revocations file → treated as "nothing
+- H56 Delegation expiry is not checked, or is checked against a client-supplied timestamp.
+- H57 Revocation check **fails open**: missing/unreachable revocations file → treated as "nothing
   revoked". The most likely real bug in this phase.
-- H57 A revoked delegated key still validates artifacts signed before revocation, with no cutoff rule.
-- H58 Root key is overridable by env var or config file, so a compromised machine repoints its own trust root.
+- H58 A revoked delegated key still validates artifacts signed before revocation, with no cutoff rule.
+- H59 Root key is overridable by env var or config file, so a compromised machine repoints its own trust root.
 
 **Manifest and artifacts**
-- H59 Manifest signature covers metadata but not artifact hashes, so artifacts are swappable under a
+- H60 Manifest signature covers metadata but not artifact hashes, so artifacts are swappable under a
   valid signature.
-- H60 Artifact hash is computed but not compared, or compared with `==` on differing encodings.
-- H61 Manifest version is not monotonic — an old signed manifest is replayable to force a downgrade to
+- H61 Artifact hash is computed but not compared, or compared with `==` on differing encodings.
+- H62 Manifest version is not monotonic — an old signed manifest is replayable to force a downgrade to
   a known-vulnerable engine.
-- H62 `compatibility-manifest-schema` accepts unknown fields that later code trusts.
-- H63 Rollback authorization has no floor, permitting rollback to a revoked release (couples to H53).
+- H63 `compatibility-manifest-schema` accepts unknown fields that later code trusts.
+- H64 Rollback authorization has no floor, permitting rollback to a revoked release (couples to H54).
 
 **Ceremony and key custody**
-- H64 Offline root private key touches disk unencrypted at any point, or reaches a temp file.
-- H65 `ROOT_BACKUP_SCRYPT` parameters are below current guidance.
-- H66 Recovery rehearsal does not actually prove recoverability — verifies a receipt rather than a
+- H65 Offline root private key touches disk unencrypted at any point, or reaches a temp file.
+- H66 `ROOT_BACKUP_SCRYPT` parameters are below current guidance.
+- H67 Recovery rehearsal does not actually prove recoverability — verifies a receipt rather than a
   restored key.
-- H67 DPAPI wrapping is machine-scoped rather than user-scoped, widening who can unwrap.
-- H68 Ceremony verifier accepts a self-signed receipt (no independent root check).
+- H68 DPAPI wrapping is machine-scoped rather than user-scoped, widening who can unwrap.
+- H69 Ceremony verifier accepts a self-signed receipt (no independent root check).
 
 **Distribution**
-- H69 R2 objects are mutable — a published version can be replaced in place. (`publish-*.ts` mentions
+- H70 R2 objects are mutable — a published version can be replaced in place. (`publish-*.ts` mentions
   immutability; prove it is enforced server-side, not just asserted by the publisher.)
-- H70 `s3-signature-v4.ts` is a hand-rolled SigV4 with a canonicalization flaw.
-- H71 Download route serves an artifact without verifying the stored hash matches the manifest.
+- H71 `s3-signature-v4.ts` is a hand-rolled SigV4 with a canonicalization flaw.
+- H72 Download route serves an artifact without verifying the stored hash matches the manifest.
 
 ## Method
 
-1. Write H54–H71 before reading.
+1. Write H55–H72 before reading.
 2. D2 read in trust order: root trust → ceremony → delegation → manifest schema → manifest crypto →
    client verification → distribution.
-3. **D4 for verification logic** (H54–H63): these are pure functions over signed inputs — cheap to
+3. **D4 for verification logic** (H55–H64): these are pure functions over signed inputs — cheap to
    test properly, and the highest-value tests in the phase. Feed each a tampered artifact: wrong
    signer, expired delegation, revoked key, swapped hash, replayed old version.
 4. Carry Phase 01's domain-separation matrix result here; if key reuse lacks separation, every
    hypothesis above escalates.
-5. Ceremony hypotheses (H64–H68) are D3 — the real ceremony is offline and out of scope to execute.
+5. Ceremony hypotheses (H65–H69) are D3 — the real ceremony is offline and out of scope to execute.
 
 ## Todo
 
-- [ ] Write H54–H71
+- [ ] Write H55–H72
 - [ ] D2 read trust chain
-- [ ] D4 tampered-input tests for H54–H63
+- [ ] D4 tampered-input tests for H55–H64
 - [ ] D3 trace of ceremony key custody
 - [ ] Distribution/immutability trace
 - [ ] `plans/reports/audit-{date}-release-authority.md`

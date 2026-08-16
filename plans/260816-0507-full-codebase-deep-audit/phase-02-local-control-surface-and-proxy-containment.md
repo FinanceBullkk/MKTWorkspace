@@ -4,7 +4,8 @@ Depth: **D4 (executable proof)** · Priority: P0-risk area · Status: Completed 
 
 Execution snapshot: all 20 hypotheses H21-H40 are closed. H28, H38, and H39 completed the
 phase with deterministic SSE lifecycle, signed/path-contained CRX handling, and runtime IPC parity
-evidence. C10 remains a Phase 03 lifecycle finding.
+evidence. C10 was carried into Phase 03 and fixed by separating deterministic inventory fixtures from
+the opt-in live-machine integration gate.
 
 ## Context
 
@@ -101,6 +102,10 @@ local proxy harness now exercise authorization and containment.
 - H39 An IPC channel exists in main but not in the preload inventory, or vice versa — the current test
   compares source-extracted names, not runtime registrations.
 
+**Additional hypothesis introduced during execution**
+- H40 A SOCKS5 destination hostname containing CR/LF is interpolated into the HTTP-CONNECT request,
+  injecting attacker-controlled headers into the upstream proxy hop.
+
 ## Method
 
 1. Write H21–H39 as failing-first tests.
@@ -158,5 +163,4 @@ what Phase 03 must check.
 
 ## Unresolved questions
 
-None for Phase 02. Phase 03 must resolve the pre-existing hypothesis-ID collision before execution:
-Phase 02 now owns H40, while the Phase 03 draft also starts at H40.
+None for Phase 02. Phase 03 starts at H41 after preserving the execution-time H40 assignment here.
