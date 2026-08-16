@@ -123,10 +123,27 @@ changelog line even though exploitation needed enrollment access.
 - **Did not run the MKTBrowser packaging or release workflows**, only the test aggregates.
 - **Did not push anything.**
 
-## Unresolved questions
+## Resolved after this review (16 Aug, 11:45)
 
-1. **Changelog entries for C12 and C4** — do any released builds contain the affected code?
-2. **Push now, or hold to the end of the audit?** Twenty commits is a large unpushed surface, and the
+- **C12/C4 disclosure — answered from the repository, not deferred.** The SOCKS5 bridge landed
+  13 May 2026 and **16 tags contain it, `v0.2.0` through `v0.3.1`**, so the unfixed bridge has
+  shipped. The changelog records both fixes with that build range stated, and the roadmap carries the
+  operationally actionable line: machines on an older build stay affected until they update. The
+  audience is the internal fleet, not the public — the project publishes no versions of MKTTool.
+- **Audit evidence is now version-controlled.** Moving it into either repository would have broken
+  its cross-references — `MKTTool/plans/` has no copy of the `pre-mkb04` plan the severity model
+  inherits from — and would have deepened a split that already exists. The workspace root became a
+  git repository instead, with a **deny-by-default** ignore rule: 34 files tracked, all markdown,
+  zero secrets, with `MKTTool/`, `MKTBrowser/`, `local-test-artifacts/` and
+  `relay-identity-backup-*/` each verified ignored. Local only; no remote.
+- **MKTBrowser changelog — deliberately not created.** It is tagged and released but has no
+  changelog, and starting one at `v0.3.1` would imply coverage of sixteen undocumented releases. Its
+  README now points at the product-wide changelog and notes that build ranges name *its* tags.
+- **A broken link I introduced, caught and fixed.** The roadmap reference resolved to
+  `MKTTool/plans/reports/` — a real directory holding unrelated material — rather than the audit's.
+
+## Unresolved questions
+1. **Push now, or hold to the end of the audit?** Twenty commits is a large unpushed surface, and the
    two P2 fixes are the kind of thing worth having in the remote's history sooner. My recommendation
    is to push once you have decided the changelog question, so the disclosure and the fix land
    together.
