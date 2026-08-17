@@ -260,6 +260,45 @@ separation is *checked* rather than coincidental. Note the old trigger ("before 
 signs with the server key") had already fired unnoticed — there are six. A trigger nobody counts
 against is not a trigger, so the count is now written down.
 
+## Decisions — 17 August 2026, third pass
+
+**5. No eager key validation, on either side. The principle behind it is worth more than the answer.**
+
+Asked because C33's guard fires lazily: nothing validates keys at startup, so a bad key on Railway
+lets the deploy succeed and breaks the first vault operation instead. Both plausible places to add a
+check were examined and both were rejected, and — this is the useful part — for the *same* reason.
+
+*Server, at boot.* The project already answered this for the structurally identical case.
+`collect-ops-alerts.ts:36` records that `no-server-key` deliberately raises no tray warning, because
+`loadVaultKey` "already throws loudly at the first encryption" and adding a line for something
+already failing noisily just dilutes the tray. C33 moved placeholder keys into exactly that
+category: before the guard they were silent and dangerous, after it they fail like a missing key,
+with a message that names the variable and both recovery paths. Overturning a recorded decision
+needs new information, and there is none — only the same information. Two further costs: a boot
+check would turn every config error, including a merely *absent* key, into a crash-loop that takes
+the whole site down over something that today only disables vault operations; and `VAULT_KEY_OPERATOR`
+is **supposed** to be absent on the server in the finished GĐ3 posture, with a test asserting the app
+runs fully without it, so a naive "validate the keys at startup" would break the architecture's own
+goal.
+
+*Relay, at config load.* Tempting, because a placeholder pasted before the guard existed stays in
+protected storage and keeps working, silently weak, and the intake guard never sees it again.
+`reviewRelayConfig` already validates that key's length and charset, so the check would cost one
+line. It was rejected on evidence: `main.ts:102-103` sets `config = null` whenever the review reports
+a problem, and every real operation is gated on `problems.length === 0`. Adding the check would take
+a relay that is working today and turn it into an unconfigured one that refuses all work — the
+catastrophic form of the false rejection this guard was shaped to avoid, inflicted on a machine whose
+key is weak but functioning. The population at risk is plausibly zero; the cost of being wrong is a
+bricked operator machine.
+
+**The rule both answers come from, stated so the next instance is mechanical:** *check a secret at the
+moment it is **adopted**, never at the moment it is **used**.* Adoption is where a human chooses a
+value and where rejecting costs nothing but a re-paste. Use is where rejecting costs someone their
+working machine or their data. Every decision this session follows it — `parseVaultKey` guards the
+env-to-process adoption while `allowPlaceholder` exempts the retirement read; the Relay guards the
+paste box but not the sealed device-to-device transfer, and not the stored key at load; and boot is
+use, not adoption.
+
 ## Unresolved Questions
 
 1. C1's remaining half and C5 — real domain prefixes on all six protocols, a coordinated
