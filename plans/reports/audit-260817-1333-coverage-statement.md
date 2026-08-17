@@ -55,14 +55,17 @@ Every phase closed. No phase was skipped or silently downgraded.
 32 deep-audit findings (C1–C32) plus 15 from the 16 August sweep (F1–F15).
 
 - **No P0 remains.** No P1 remains. No P2 remains.
+- **One P3 opened after this statement was first written:** C33, the vault-key parser having the
+  same missing content check that C2 closed for the signing seed. Found while writing the closing
+  handoff, recorded rather than quietly carried.
 - **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26, C27, C28, C29, C30, C31, and F1–F5,
   F8, F11–F14. C32 is fixed without a test, being a documentation claim.
 - **Closed by decision, reasoning recorded:** C22, C24, F6, F7, F10, F15.
 - **Accepted residual, named:** C16, C25, F9.
 - **Deferred with a trigger:** C1 and C5 — the wire-format break. Revisit when the ticket format
   changes for any other reason, or before a third protocol signs with the server key.
-- **Nothing open.** C32, the roadmap's stale audit-status block, was closed by commit `df94910`,
-  which replaced it with the closing statement that file had already promised.
+- **One open:** C33 (above). C32, the roadmap's stale audit-status block, was closed by commit
+  `df94910`, which replaced it with the closing statement that file had already promised.
 
 ## 5. The handoff control, and whether it worked
 
