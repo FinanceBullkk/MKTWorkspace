@@ -36,7 +36,7 @@ Every phase closed. No phase was skipped or silently downgraded.
 - **No DOM injection sink exists** in either application.
 - **12 migrations classified**; none is irreversible-and-unrehearsed, and the one automated upgrade
   path backs up before it applies.
-- **The suite has no expected failures.** As of C2 this is true for the first time in the audit.
+- **The suite has no expected failures.** As of C2 this is true for the first time in the audit, and it is CI-verified: run `32003277917` on commit `a63932c` reports 1739 passed, 10 skipped, and no expected-fail line at all, against 1729 passed plus 4 expected fail on the parent.
 
 ## 3. What was NOT examined — read this before trusting anything above
 
@@ -92,6 +92,13 @@ Recorded because each was a wrong turn caught late, and the pattern is more usef
   background runner while the real command had failed with `yarn: command not found`.
 - **A green suite does not prove your tests ran.** Every CI claim in Phases 05 and 06 was verified by
   differencing the test count against the parent commit's run, not by the green tick.
+- **Fixing only what turned red is not fixing the class.** The C2 guard broke 22 tests locally; three
+  fixture files were fixed and the work moved on. Six more sat in `*.database.test.ts`, which cannot
+  run on this machine, so CI went red on the next push. The information needed to predict that was
+  already on hand — 158 local files against 189 on CI, written down as the first environment trap in
+  the handoff. The repair swept the whole repository for the pattern instead of the six files CI
+  named. Recorded because the same shape will recur: when a new guard rejects fixtures, the fixtures
+  it rejects are a class, not a list.
 
 ## 7. Unresolved questions
 
