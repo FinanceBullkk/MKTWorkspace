@@ -1,6 +1,11 @@
 # Phase 06 — Breadth Completion
 
-Depth: **D2**, D3 on redaction only · Priority: P3 · Status: Not started · Effort: 1 session
+Depth: **D2**, D3 on redaction only · Priority: P3 · Status: **Partially complete, 17 Aug 2026** · Effort: 1 session
+
+Report: [`audit-260817-1200-breadth-completion.md`](../reports/audit-260817-1200-breadth-completion.md).
+No findings. H109 fixed; 6.2 and 6.3 closed; 6.4 closed; H91 definitive. **Not examined: H93, 6.5,
+and the dependency-tree half of H100; H92 and H94 only partly.** The coverage statement must keep
+saying "not examined" for those until they are.
 
 ## Context
 
@@ -112,13 +117,13 @@ Everything else in this phase stays read-only. Findings go to the register.
 
 ## Todo
 
-- [ ] H109 reject unresolvable Reddit share links at input (inbound handoff from Phase 05)
-- [ ] Frontend sink review (both apps)
-- [ ] Secret × sink table
-- [ ] `yarn npm audit` MKTBrowser + pinning review
-- [ ] Concurrency read (3 paths)
+- [x] H109 reject unresolvable Reddit share links at input (inbound handoff from Phase 05) — `c607115`
+- [~] Frontend sink review — H91 definitive (zero DOM sinks); H92 partial, H93 not done, H94 by implication only
+- [x] Secret × sink table
+- [x] `yarn npm audit` MKTBrowser (no advisories) + pinning review
+- [x] Concurrency read (3 paths)
 - [ ] Docs accuracy diff (safety-case claims only)
-- [ ] H107 user-facing string language pass; H108 `config-override` status-page assertion
+- [~] H107 counted (~4 strings in the named view; 60-80 across the wider relay surface) — not fixed; H108 closed earlier
 - [ ] `plans/reports/audit-{date}-breadth-completion.md`
 
 ## Success criteria

@@ -73,7 +73,7 @@ a check of every other cross-phase handoff, and it found a second one.
 | `handle-configure.ts:94` trust-root replacement (Phase 01) | Phase 02 | **Dropped.** Never mentioned in any Phase 02 report, never became a finding, never entered this register. Recovered as C26. |
 | C10 test hermeticity (Phase 02) | Phase 03 | Honored; C10 fixed. |
 | Driver half of F2 (Phase 01) | Phase 02 | Honored; F2 fixed. |
-| C27 second half — reject `/r/<sub>/s/<opaque>` share links at input (`interaction-form.tsx`, mark-posted field) (Phase 05) | Phase 06 | **Registered at the moment of handoff, 17 Aug.** Not fixable in `normalizeThreadUrl`: the id is opaque without an HTTP redirect, so the remedy is a form that refuses the format and asks for the permalink. Acceptance: form rejects with that message. |
+| C27 second half — reject `/r/<sub>/s/<opaque>` share links at input (`interaction-form.tsx`, mark-posted field) (Phase 05) | Phase 06 | **Honored, 17 Aug — commit `c607115`.** Registered at the moment of handoff, and Phase 06 opened by reconciling against this table, which is how it was noticed that the item sat in the register but not in the phase's own scope or todo. Became H109, fixed, sabotage-proven at three points. First handoff in this audit caught by the receiving phase instead of by someone going looking later. |
 
 Phase 05 opened by reconciling against this table on 17 August 2026 and found **no inbound
 handoff** — every handoff phrase in every phase file and report resolves to Phase 02, 03, or 04,
