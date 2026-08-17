@@ -70,7 +70,11 @@ product's safety case.
 
 | C36 | P3 | Open — needs a tool install, not a code change | **The project's own pre-deploy safety step cannot run on the admin machine.** `deployment-guide.md:536` states the rule categorically: *"run `npm run db:backup:remote` immediately before every deploy that changes database structure — `prisma migrate deploy` does not back up, and that is exactly the riskiest moment."* On 17 August, merging #24 applied three migrations to production and **that backup could not be taken**: local `pg_dump` is 17.10, Railway's Postgres is 18.4, and `pg_dump` refuses a server with a higher major. Both documented workarounds were unavailable — Docker was not running, and no Postgres 18 client is installed. The deploy proceeded on two pieces of evidence instead: all three migrations are **additive only** (`ADD COLUMN`, one `CREATE UNIQUE INDEX` on a new nullable column — no `DROP`, no type change, no data write), and the server-side nightly R2 backup is **unaffected** by the client version gap and had run successfully at 03:00 that morning (`mkttool-prod-20260817-030007.sql`, 66 KB, 111 rows across 14 tables), giving a ~15-hour-old restore point. That reasoning was sound for these migrations and will not be sound for the first destructive one. **Fix is a one-time install**, already written down at `deployment-guide.md:565`: install a Postgres 18 client and set `PG_DUMP_PATH` in `.env`. Until then the rule is documented but unenforceable, which is worse than either honest state — the guide even names the date it first bit, 08/08/2026, so this is the second occurrence. |
 
-| C37 | P3 | Fixed (PR #27) | **A P2 remediation silently broke the tool that verifies releases, and it stayed broken because that tool is not in CI.** F4 made `/encrypt-for-vault` require the trusted `Origin` — without it any page the operator has open is a blind encryption oracle against `VAULT_KEY_OPERATOR`. `scripts/smoke-test-relay-executable.ts` was never updated to send one, so its two sealing calls have failed since F4 landed. It went unseen because the suite needs a Windows-built `.exe` and therefore never runs in CI; it surfaced only because Relay 13 was verified before publishing, showing three red checks all reading *"the last call came from an unnamed origin"*. Fixed by passing `{ origin: bakedOrigin }`, which every other call in the file already did; the suite is then fully green against the real executable. **Fourth instance of one shape in a single day** — with C23, C35 and C36: the check that would have caught the problem was not the check that runs. The others were closed by moving the check into the automated gate; this one cannot be, because the gate has no Windows runner and no built `.exe`. That makes "run `npm run relay:verify` before every publish" a **human step with no machine behind it** — treat it as a release-checklist item, not as something CI protects. |
+| C37 | P3 | Fixed (PR #27) | **A P2 remediation silently broke the tool that verifies releases, and it stayed broken because that tool is not in CI.** F4 made `/encrypt-for-vault` require the trusted `Origin` — without it any page the operator has open is a blind encryption oracle against `VAULT_KEY_OPERATOR`. `scripts/smoke-test-relay-executable.ts` was never updated to send one, so its two sealing calls have failed since F4 landed. It went unseen because the suite needs a Windows-built `.exe` and therefore never ran in CI; it surfaced only because Relay 13 was verified before publishing, showing three red checks all reading *"the last call came from an unnamed origin"*. Fixed by passing `{ origin: bakedOrigin }`, which every other call in the file already did; the suite is then fully green against the real executable. **Fourth instance of one shape in a single day** — with C23, C35 and C36: the check that would have caught the problem was not the check that runs.
+
+**Correction, 17 August 2026 — the un-automatable claim was wrong, and it was the most costly kind of wrong.** This row originally concluded that this instance "cannot be" closed by moving the check into the automated gate, "because the gate has no Windows runner and no built `.exe`", and it demoted `relay:verify` to a release-checklist item. Neither half survived ten minutes of reading. **The Windows runner already exists and is already proven** — `MKTBrowser/.github/workflows/release.yml:17` runs `windows-latest` with Node 22 on every push and pull request; the capability was in the sibling repository the whole time. **The `.exe` needs no secrets to build** — `build-relay-executable.ts:130` takes the baked origin from a flag, and the suite mints a throwaway `TICKET_SIGNING_KEY` and a per-run operator vault key at `smoke-test-relay-executable.ts:68,82`, reading the origin to trust back out of the executable's own `/health`. Measured rather than argued: built with `--web-origin=https://ci.invalid --compatibility-floor=1`, the suite is **27/27 green**, and the Relay never calls that origin because `relay/src` contains no outbound `fetch` at all. Closed by the `relay-executable` job in `.github/workflows/ci.yml`, deliberately with **no `paths:` filter** — the suite imports from `src/lib/crypto`, `src/lib/tickets` and `src/lib/relay`, so a change outside `relay/` breaks it, which is exactly what F4 did; narrowing the trigger would rebuild the blind spot. One supporting change: `relay:build` used `--env-file=.env`, which hard-fails when the file is absent, so it is now `--env-file-if-exists=.env` (verified: the strict flag exits with `.env…: not found`, the tolerant one continues).
+
+**The lesson is not about Windows runners.** This row asserted an infrastructure limit in one sentence and closed on it, while every claim about *code* in this register is required to be sabotage-proven. That asymmetry is how a mechanizable check gets written down as a permanent human ritual — which is precisely C36's failure mode, one level up. Sabotage-proofing establishes that a check **catches**; only a runner establishes that it **runs**, and "it cannot run here" is a claim that needs evidence like any other. See the rule recorded below. |
 
 ## Handoff Audit — 17 August 2026
 
@@ -314,6 +318,83 @@ working machine or their data. Every decision this session follows it — `parse
 env-to-process adoption while `allowPlaceholder` exempts the retirement read; the Relay guards the
 paste box but not the sealed device-to-device transfer, and not the stored key at load; and boot is
 use, not adoption.
+
+## Decisions — 17 August 2026, fourth pass
+
+**6. Coverage boundaries are a finding class, not four coincidences. Audit the checking apparatus, not only the code.**
+
+Asked after C37, because four findings in one day shared a shape and that started to read as an audit
+failure rather than an audit result. It is not a failure — six of the seven recent findings (C26, C33,
+C34, C35, C36, C37) were caught internally, and only C23 reached production. But the *discovery
+mechanism* was luck in every case: C33 while writing a handoff, C34 while remediating C33, C35 by
+self-review, C36 while attempting a deploy, C37 because a human happened to run the pre-publish step.
+Recovery by someone going looking is not a control — the same sentence this register already wrote
+about dropped handoffs.
+
+The four are not one bug repeated. They are one invariant violated at four different edges:
+
+| Finding | Boundary crossed |
+| --- | --- |
+| C23 | developer filesystem ⊃ Docker image filesystem |
+| C35 (also C2, C33) | suite runs without Postgres; `*.database.test.ts` needs it |
+| C36 | `pg_dump` 17.10 client < Postgres 18.4 server |
+| C37 | CI is Linux with no built `.exe`; the artifact is Windows |
+
+The invariant: **CI's environment is a strict subset of the production and release environments, and
+everything in the difference set is unverified.** Each finding is a discovered element of a set nobody
+had enumerated.
+
+**The rule, stated so the next instance is mechanical:** *a check not proven to **run** in the
+environment its artifact lives in does not exist.* Sabotage-proofing proves a check **catches**; only
+a runner proves it **runs**. This project has a rigorous ritual for the first question and had none
+for the second, and all four findings are failures of the second.
+
+**This was already learned once, in the other repository, and not carried across.**
+`MKTBrowser/.github/workflows/release.yml:45-50` records the identical lesson — MKB-03, the
+settings-store suite and the workspace-quality contract "all existed and passed locally while never
+running on any push" — and fixes it with a single aggregate registration point (`test:installer`), so
+a new suite is covered by CI the moment it is added. MKTTool has no equivalent. That is the
+generalisation still owed; the C37 job closes one instance, not the class.
+
+**Known checks with no machine behind them** — the inventory that did not exist until now, which is
+the part that *is* mechanizable even when the check is not:
+
+| Check | State |
+| --- | --- |
+| `npm run relay:verify` before publish | **Closed** — now the `relay-executable` CI job (C37). |
+| `npm run db:backup:remote` before a structural deploy | **Open (C36)** — documented, unenforceable until a Postgres 18 client is installed. Second occurrence; first bit 08/08/2026. |
+| `test:packaging:windows-machine` (C10) | Opt-in by design — live machine inspection cannot be hermetic. Stays human, deliberately. |
+| Authenticode verification (H41/H42) | Blocked on procurement of a signing certificate. |
+| Power-loss and withdrawn-installer gates (H52, H54) | Blocked on a clean Windows VM. |
+
+An item belongs in this table the moment it is identified as human-only, for the same reason handoffs
+belong in the Handoff Audit table at the moment of handoff rather than when someone remembers.
+
+**7. The Windows job runs on pull requests only, and the reasoning is a cost trade rather than a
+safety one.** `Techieslab-app/MKTTool` is private, so Windows minutes bill at **2x**; measured
+locally, build is ~90 s and the suite ~40 s, which lands near 12 billed minutes per run once a cold
+`npm ci` on Windows is included. At the recent rate of work that is most of a monthly allowance. The
+saving is nearly free because a `pull_request` event builds the **merge commit** — the head already
+merged into the base — so the PR run verifies the exact tree master is about to become, and the
+post-merge `push` run re-verifies identical content. Residuals written into the workflow next to the
+condition: a commit pushed directly to master skips the job, and a PR whose base moved after its last
+run tested a stale merge commit. Every change since #23 arrived by pull request, so neither is
+reachable in the current way of working; if that changes, deleting one `if:` line restores full
+coverage. F10 governs `check` and is untouched.
+
+**8. MKTTool does not have MKTBrowser's suite-registration gap. Closing the item rather than carrying
+it as debt.** The generalisation owed after C37 looked like "MKTTool needs its own `test:installer`".
+Checked instead of assumed, and the premise is false: `vitest.config.mts:52` discovers tests by glob
+across `src/**`, `relay/**` and `scripts/**`, so there is no hand-maintained list of suites that can
+silently lag the repository — which is exactly the failure MKTBrowser's aggregate step exists to
+prevent, and it needed one because it registered suites individually. Verified there is no
+`*.test.ts` anywhere outside those three directories, and the only other top-level directories are
+`prisma`, `data`, `docs` and `plans`. No guard test was added: the risk it would cover is a test file
+placed somewhere no test file has ever been placed, and a guard against that buys less than the line
+it costs. **What the class actually is, restated correctly:** MKTTool's blind spot was never test
+*discovery*, it was checks that are not test files at all — build scripts, acceptance harnesses,
+operational tooling. Of those, `relay:verify` is now in CI and `db:backup:remote` is C36. The table
+above is the register of that class; keep it, not a second aggregate script.
 
 ## Observations from the 17 August deploy — recorded, not ranked
 
