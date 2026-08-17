@@ -1,11 +1,12 @@
 # Phase 06 — Breadth Completion
 
-Depth: **D2**, D3 on redaction only · Priority: P3 · Status: **Partially complete, 17 Aug 2026** · Effort: 1 session
+Depth: **D2**, D3 on redaction only · Priority: P3 · Status: **Complete, 17 Aug 2026** · Effort: 1 session
 
 Report: [`audit-260817-1200-breadth-completion.md`](../reports/audit-260817-1200-breadth-completion.md).
-No findings. H107 and H109 fixed; 6.2 and 6.3 closed; 6.4 closed; H91 definitive. **Not examined: H93, 6.5,
-and the dependency-tree half of H100; H92 and H94 only partly.** The coverage statement must keep
-saying "not examined" for those until they are.
+Every hypothesis has a result. H107 and H109 fixed. Two P3 findings, both from the second pass:
+**C31** (any operator can delete another person's nick while deleting a proxy needs ADMIN) and
+**C32** (the roadmap's audit-status block now understates the audit). C32 is listed, not edited, per
+this phase's own instruction — it belongs with the closing coverage statement.
 
 ## Context
 
@@ -118,11 +119,11 @@ Everything else in this phase stays read-only. Findings go to the register.
 ## Todo
 
 - [x] H109 reject unresolvable Reddit share links at input (inbound handoff from Phase 05) — `c607115`
-- [~] Frontend sink review — H91 definitive (zero DOM sinks); H92 partial, H93 not done, H94 by implication only
+- [x] Frontend sink review — H91 zero DOM sinks; H92 closed; H93 closed with C31; H94 closed by H91
 - [x] Secret × sink table
 - [x] `yarn npm audit` MKTBrowser (no advisories) + pinning review
 - [x] Concurrency read (3 paths)
-- [ ] Docs accuracy diff (safety-case claims only)
+- [x] Docs accuracy diff (safety-case claims only) — H106 clean, H104 not ranked, H105 → C32
 - [x] H107 fixed — `869cb1e`. Direction is Vietnamese to English per `AGENTS.md:25`; three modules feed one screen and all three moved. H108 closed earlier
 - [x] `plans/reports/audit-260817-1200-breadth-completion.md`
 

@@ -1,8 +1,9 @@
-# Phase 06 — Breadth Completion (partial)
+# Phase 06 — Breadth Completion
 
-D2, D3 on redaction. 17 August 2026. **Not complete** — see §7 for what was not done. The phase's own
-risk section says a skipped part must keep saying "not examined" rather than become an implied clean
-bill, so the coverage statement below is written that way.
+D2, D3 on redaction. 17 August 2026. Run in two passes: the first covered redaction, dependencies and
+concurrency; the owner then asked for the remainder, and the second pass closed H92, H93, H94, H100
+and 6.5. **Every hypothesis in this phase now has a result.** Two P3 findings, both from the second
+pass. Rows in §7 marked *(2nd pass)* say how each was reached and where the limits are.
 
 ## 1. Opening reconciliation
 
@@ -41,8 +42,22 @@ itself the property worth guarding. Commit `c607115`.
 
 ## 3. Findings
 
-**None.** Every hypothesis reached in this session closed clean or produced an observation ranked
-below the finding line. That is a real result for 6.2 and 6.3, and a thin one for 6.1 — see §7.
+**Two, both P3, both found in the second pass** (§7b) after the remaining items were worked.
+
+- **C31 — any operator can delete another person's nick, while deleting a proxy needs ADMIN.**
+  `vault-delete-actions.ts:30` is `adminAction`; `:59` is `guardedAction`. The schema states the
+  hierarchy the other way round — *"Nick là tài sản, đăng ký máy là quyền"* — so the object guarded
+  less is the one the project calls the asset. Bounded, and that is why it is P3: deletion is
+  refused for any nick with jobs, interactions, Facebook links or admin roles, enforced twice (in
+  the action and by RESTRICT foreign keys). What remains deletable is a nick with no history — i.e.
+  a freshly entered one, whose row holds the only copy of its operator-domain password, email
+  password and TOTP secret. Insider or stolen session, not an outsider.
+- **C32 — the roadmap's audit-status block is now wrong.** `development-roadmap.md:42-45` still says
+  phases 05 and 06 "have not started, so nothing should be read as clean there". It understates the
+  audit rather than overstating it, which is the safer direction, but it is a safety-case claim and
+  those are the only documentation this audit scopes in. Per this phase's own instruction — *list
+  inaccuracies, do not fix them here* — it is recorded, not edited. Its replacement is already
+  designed at `:64`, so it belongs with the closing coverage statement.
 
 ## 4. Secret × sink (6.2, D3)
 
@@ -78,10 +93,11 @@ the actual values are in scope and can be substituted out longest-first.
   is **not** a finding because `yarn.lock` is committed and pins resolutions, so installs are
   reproducible and the carets only move on a deliberate upgrade. Worth knowing that the pinning
   discipline applied to the runtime was not applied to the toolchain that builds the signed artifact.
-- **H100 — partially closed.** Own install scripts are benign: MKTTool runs `prisma generate`,
-  MKTBrowser declares none. Yarn Berry runs dependency lifecycle scripts by default and
-  `.yarnrc.yml` does not disable them, so third-party `postinstall` execution on build machines is
-  possible in principle. The dependency tree was **not enumerated** for postinstall scripts.
+- **H100 — closed in the second pass; see §7 for the enumeration and its one stated limit.** Own
+  install scripts are benign. `enableScripts` is on in MKTBrowser, so any transitive dependency may
+  run code at install time on a build machine. That is normal for this stack and not ranked, but it
+  is the supply-chain surface Phase 04 did not cover, and yarn offers `enableScripts: false` with an
+  explicit `dependenciesMeta.built` allowlist if the owner ever wants that surface closed.
 
 ## 6. Concurrency (6.4, D2)
 
@@ -102,19 +118,20 @@ the actual values are in scope and can be substituted out longest-first.
   `SingletonLock` is judged dead all three files are removed together, so a second instance starting
   inside that window could lose a freshly created socket.
 
-## 7. Coverage statement — what was NOT examined
+## 7. Coverage statement
 
-Stated plainly so this does not read as a clean bill.
+Stated plainly so this does not read as a clean bill. Rows marked **(2nd pass)** were completed after
+the owner asked for the remaining items to be finished.
 
 | Item | Status |
 | --- | --- |
 | H91 DOM sinks | **Examined, definitive.** Zero hits for `dangerouslySetInnerHTML`, `.innerHTML`, `.outerHTML`, `insertAdjacentHTML`, `document.write` across MKTTool `src/**` and MKTBrowser `apps/desktop/src/**`. |
-| H92 secret reaching the browser | **Partly examined.** No page or layout reads `VAULT_KEY*`, a signing seed, or `process.env` — clean at that level. The six client components that mention credential words were **not individually read**; they are input forms, but that is inference, not verification. |
-| H93 server action arguments | **Not examined.** |
-| H94 renderer trusting main-process data | **Partly, by implication only.** H91 found no DOM sink in the renderer, so an injection route would have to be something else. Not traced. |
-| H100 dependency-tree postinstall | **Not enumerated.** |
-| 6.5 docs accuracy (H104–H106) | **Not started.** |
-| H107 string count | **Counted, see §8. Not fixed.** |
+| H92 secret reaching the browser | **Examined (2nd pass). Closed.** No page or layout reads `VAULT_KEY*`, a signing seed, or `process.env`. No client component receives a secret as a prop. `vault-secret-field.tsx` turned out to be the opposite of a leak: it is an input that stays `disabled` until hydration, because a `disabled` field is absent from `FormData`, so a pre-hydration Enter cannot post a plaintext secret. The component exists to close the very direction H92 asks about. |
+| H93 server action arguments | **Examined (2nd pass). One finding.** 25 files carry a real `"use server"` directive — the first grep over-counted by matching the string inside comments. Every exported symbol across all 25 goes through `guardedAction` or `adminAction`; there is no unguarded export. The three actions without zod take only opaque ids used as Prisma primary keys, so there is nothing to inject. The residual is authorization, not argument shape: **C31**. |
+| H94 renderer trusting main-process data | **Closed by H91, reasoning stated.** With zero DOM sinks in the renderer and React escaping by default, untrusted main-process strings have no injection route into the DOM. That closes the hypothesis as written; it does not claim the renderer was read line by line. |
+| H100 dependency-tree postinstall | **Enumerated (2nd pass). Closed.** MKTTool: 7 third-party packages declare install scripts, read from `package-lock.json` `hasInstallScript` rather than by walking `node_modules` — `@prisma/engines`, `prisma`, `esbuild`, `unrs-resolver`, and `fsevents` ×3 (optional, macOS). All are build tooling that legitimately fetches or compiles a binary; none is a surprise. MKTBrowser: `enableScripts` is **true**, read from the yarn CLI rather than inferred from the file, and the native surface is `electron`, `better-sqlite3`, `node-gyp`, `prebuild-install`, `esbuild`. Limit worth stating: `yarn.lock` does not record which packages declare install scripts, so the MKTBrowser side is the known native set, not an exhaustive enumeration. |
+| 6.5 docs accuracy (H104–H106) | **Examined (2nd pass), time-boxed.** H106 clean: every `src/**` path referenced by `codebase-summary.md` still exists. H104: the one candidate — `project-changelog.md:772` describing an "Authenticode-signed, secretless installer" — reads as a false claim in isolation but is inside a passage introduced by "The plan now defines one normal journey", and the roadmap separately lists Authenticode as an open human gate. Ambiguous only out of context; not ranked. H105 is real: **C32**. |
+| H107 string count | **Counted and fixed (2nd pass).** See §8 and §8b. |
 
 ## 8. H107 — the count, which was the deliverable
 
