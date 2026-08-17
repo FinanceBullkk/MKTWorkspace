@@ -57,6 +57,11 @@ product's safety case.
 | C25 | P3 | Accepted residual | Hand-rolled SigV4 has no known-answer vector and none is obtainable — no independent SigV4 implementation exists in the dependency tree, and adding one defeats the module's purpose. Hand-traced clean for the single-PUT/no-query shape in use. Cannot fail silently: a canonicalization error is an HTTP 403 on first upload, recorded as a failed job. Revisit if this ever signs query strings, presigned URLs, or streaming uploads. |
 | C26 | P2 | Fixed | `/configure` now refuses to change an existing `serverPublicKey`; re-sending the key already on disk still succeeds so re-enrollment stays ordinary. Sabotage-proven: with the guard removed the attacker payload is accepted and the trust root is replaced. No rotation flow breaks, because none exists — `configureRelay` is called once, from enrollment; a future rotation must travel as a statement signed by the outgoing key, which this check forces. Original finding, recovered from a dropped handoff: `/configure` wrote `serverPublicKey` with no check that a trust root already exists (`handle-configure.ts:94`, always registered in `main.ts:251` except during pending retirement), so a live enrolled Relay's trust root can be replaced by any request from the allowed web origin. The Relay keeps `VAULT_KEY_OPERATOR` and becomes a decryption oracle for whoever re-points it. Phase 01 raised this as an unowned observation and ranked it low on the framing that the precondition — being the allowed origin — is already fatal. That framing holds for a compromised *server*, which already has the signing key. It does not hold for a compromised *web app*: an XSS there converts a transient browser-side compromise into persistent trust-root replacement on every operator device, which is why this is ranked P2 here. `handle-set-operator-key` already implements the missing pattern one line below the `/configure` registration (`main.ts:265`). |
 
+| C27 | P3 | Fixed (first half); second half handed to Phase 06 | `redd.it/<id>` now resolves to the same `reddit:<id>` key as the full permalink, matched on exact host so `notredd.it` and `redd.it.evil.com` do not qualify. Sabotage-proven: guard removed → red on `'redd.it/1a2b3c'` vs `'reddit:1a2b3c'`, restored → green. The `/r/<sub>/s/<opaque>` half is not locally resolvable and is registered as a Phase 06 handoff. Original finding: `normalizeThreadUrl` canonicalised a Reddit thread only through `/comments/<id>`. Proven against the real function: `redd.it/1veg99o` → `redd.it/1veg99o` and `/r/Trove/s/AbCdEfGh12` → `reddit.com/r/trove/s/abcdefgh12`, neither equal to `reddit:1veg99o`. Rule 8 — the one non-overridable rule — silently misses the collision; the same key feeds `duplicate-posted-url-check`, `health-check-recorder` matching, and the `post-job-revert` trace lookup. Two halves: `redd.it` is locally fixable (the id is in the path); `/r/<sub>/s/<opaque>` is not resolvable without an HTTP redirect and is handed to Phase 06 as input-time rejection. `reddit-title-slug-match.ts:38` already names `redd.it` as a slug-less link, so this is two modules disagreeing, not an unknown format. Phase 05. |
+| C28 | P3 | Fixed | **Not a future trap — one live instance.** `HEALTH_VERDICTS` has six members; rule 10 enumerated five, so `UNTRACKED_POSTS` ("outsiders see posts the ledger does not have") already fell through to ALLOW, and it is the verdict that means rules 4/5/6 are undercounting. Rule 10 now keeps its own explicit list of judgeable verdicts and **blocks** anything outside it, deliberately not importing `HEALTH_VERDICTS` — importing it would auto-accept a new verdict and reinstate the bug. `UNTRACKED_POSTS` handled as WARN, matching `statusForcedBy`'s decision not to quarantine for a bookkeeping fault. The unknown-verdict check sits **before** the staleness check: sabotage showed an unknown-and-stale verdict otherwise returns WARN and still posts. Sabotage-proven: guard removed → 3 tests red (`ALLOW`≠`WARN`, `ALLOW`≠`BLOCK`, `WARN`≠`BLOCK`), restored → 63 green. A companion test asserts every member of `HEALTH_VERDICTS` is judgeable, so the next added verdict is a red test locally rather than a herd-wide block in production. |
+| C29 | P3 | Fixed, CI-verified only | New nullable `heartbeatAt` column (additive migration `20260817100000_health_check_lock_heartbeat`, reversible by one `DROP COLUMN`); the run renews it after every nick, including nicks that errored, and staleness now measures liveness instead of elapsed time. `startedAt` is kept untouched so the operator-facing "holding for N minutes" line stays true — that split is why a column was added rather than reusing `startedAt`. Renewal is token-scoped, so a run that already lost the lock cannot heartbeat into the new holder's row. Four regression tests added; they need Postgres, so they run on CI, **not sabotage-proven locally**. Original finding: `STALE_AFTER_MS` was a fixed 30 minutes while health-check run duration scales with herd size (30–90 s sleep per nick). At ~20 nicks a second run declares the first orphaned and probes concurrently through the single observer proxy — the exact failure the lock exists to prevent, presenting as `ERROR` verdicts. `startedAt` is never renewed, so staleness measures elapsed time, not liveness. Trigger is the product's own growth. Phase 05. |
+| C30 | P3 | Fixed, structurally; CI-verified only | Job create and `RULE_OVERRIDDEN` audit row now share one interactive `$transaction` (interactive rather than array because the audit `detail` needs the new job's id), matching `relay-device-retirement-actions.ts:143,233`. Two regression tests added on the user-visible invariant — an overridden job always carries an audit row pointing at its id, an ordinary job produces none. **Honest limit:** the rollback itself is not sabotage-proven, because `AuditLog` carries no constraint that can be made to fail on demand, so no fault can be injected between the two writes. The tests guard the invariant; the transaction is what makes it survive a crash. Original finding: the audit row was written after the job create, outside its transaction, while the file header states an override "always leaves an AuditLog". |
+
 ## Handoff Audit — 17 August 2026
 
 Phase 04 was closed having forgotten C3, which Phase 01 had explicitly assigned to it. That prompted
@@ -68,8 +73,14 @@ a check of every other cross-phase handoff, and it found a second one.
 | `handle-configure.ts:94` trust-root replacement (Phase 01) | Phase 02 | **Dropped.** Never mentioned in any Phase 02 report, never became a finding, never entered this register. Recovered as C26. |
 | C10 test hermeticity (Phase 02) | Phase 03 | Honored; C10 fixed. |
 | Driver half of F2 (Phase 01) | Phase 02 | Honored; F2 fixed. |
+| C27 second half — reject `/r/<sub>/s/<opaque>` share links at input (`interaction-form.tsx`, mark-posted field) (Phase 05) | Phase 06 | **Registered at the moment of handoff, 17 Aug.** Not fixable in `normalizeThreadUrl`: the id is opaque without an HTTP redirect, so the remedy is a form that refuses the format and asks for the permalink. Acceptance: form rejects with that message. |
 
-Two of four handoffs were dropped. Both were recovered only because someone went looking, which is
+Phase 05 opened by reconciling against this table on 17 August 2026 and found **no inbound
+handoff** — every handoff phrase in every phase file and report resolves to Phase 02, 03, or 04,
+and each already has a register row. The table above is complete as written. Cost about five
+minutes; the two dropped handoffs cost days. Keep it as the phase-opening ritual.
+
+Two of four original handoffs were dropped. Both were recovered only because someone went looking, which is
 not a control. The fix is procedural: an item handed from one phase to another belongs in this
 register when it is handed over, not when the receiving phase remembers it. Phase 05 and 06 should
 open by reconciling against this table.
@@ -96,6 +107,21 @@ open by reconciling against this table.
 Phase 04 closed H42/H52/H54 as far as code can: Authenticode and clean-machine withdrawal are
 release-rehearsal observables, not code defects. They stay open as human gates and do not block
 Phase 05.
+
+## Current Phase 05 Coverage
+
+| State | Hypotheses |
+| --- | --- |
+| Closed — control found and traced | H73, H74, H75, H76, H77, H84, H85, H87, H88 (scheduler half), H89, H90 |
+| Closed by remediation-worthy finding | H79 (C28), H82 (C27), H86 (C27, predicted coupling confirmed) |
+| Closed with observation, not ranked | H78, H80, H81, H83 |
+| Open, scale-triggered | H88 (lock half) → C29 |
+
+C30 was not hypothesised. Registry ↔ schema drift is zero; the 1-nick-1-proxy-1-profile invariant is
+DB-enforced by two `@unique` columns plus the structural `ObserverProxy` split, with the one
+cross-table leg (`deviceId ⇒ device.userId == ownerId`) declared in the schema as not expressible
+in Postgres. All 12 migrations classified; none irreversible-and-unrehearsed. Detail:
+[`audit-260817-0958-data-and-business-logic.md`](../reports/audit-260817-0958-data-and-business-logic.md).
 
 ## Decisions - 17 August 2026
 
@@ -129,8 +155,11 @@ not belong to a separate pass either.
 
 ## Next Sequence
 
-1. Phase 05 — data layer and business logic. Unrelated risk area; nothing blocks it.
-2. Phase 06 — breadth completion, including H107, H108, and the C23/C24 decisions.
+1. Phase 05 — completed at D3 on 17 August 2026 with opportunistic D4 on H82. Four P3 findings
+   (C27-C30), no P0/P1/P2. Source remediation for C27a/C28/C29/C30 needs the same explicit
+   authorization Phase 03 was given; without it the four stay open here.
+2. Phase 06 — breadth completion, including H107, H108, the C23/C24 decisions, and the C27 share-link
+   handoff now recorded in the Handoff Audit table.
 3. C3 was closed on 17 August 2026 in the debt pass after Phase 04 — see the register row. Phase 01
    had asked whether `compatibility-manifest-crypto.ts:37` was "a more reachable instance of C3"
    because it feeds `publicKeyFromHex` a key taken from data. It is not: root endorsement is proved
@@ -154,3 +183,10 @@ not belong to a separate pass either.
 1. C1 and C5 — the wire-format break. The only structural finding still without a decision, carried
    since Phase 01.
 2. C2 — reject placeholder signing seeds, or record acceptance? A one-line policy either way.
+3. Authorize Phase 05 source remediation (C27a, C28, C29, C30)? All four are small and each wants a
+   sabotage-proven test alongside.
+4. C28 — block or warn on an unrecognised health verdict? Blocking matches rule 1 and the house
+   principle, but it also means a bad recorder write stops all Reddit posting. Policy, not bug fix.
+5. C29 — heartbeat `startedAt` between nicks, or raise the constant and add a loud assertion that
+   fails when `nickCount × 90 s > STALE_AFTER_MS`? The heartbeat is correct; the assertion cannot
+   itself drift.

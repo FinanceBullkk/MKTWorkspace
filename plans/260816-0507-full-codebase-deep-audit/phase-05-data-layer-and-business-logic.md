@@ -1,6 +1,10 @@
 # Phase 05 — Data Layer & Business Logic
 
-Depth: **D3** · Priority: P2 · Status: Not started · Effort: 1–2 sessions
+Depth: **D3** · Priority: P2 · Status: **Completed 17 Aug 2026** · Effort: 1 session
+
+Report: [`audit-260817-0958-data-and-business-logic.md`](../reports/audit-260817-0958-data-and-business-logic.md).
+Findings C27–C30, all P3. Hypotheses below are as written on 16 Aug and were not revised after
+reading, per the plan rule.
 
 ## Context
 
@@ -98,13 +102,13 @@ Existing coverage is good here, so the yield per hour is lower than Phases 01–
 
 ## Todo
 
-- [ ] Write H73–H90
-- [ ] Schema read + constraint table
-- [ ] Registry ↔ schema diff
-- [ ] All 16 rule evaluators: missing-input behaviour table
-- [ ] 12 migrations: reversibility review
-- [ ] Queue/schedule partial-failure trace
-- [ ] `plans/reports/audit-{date}-data-and-business-logic.md`
+- [x] Write H73–H90
+- [x] Schema read + constraint table
+- [x] Registry ↔ schema diff — zero drift, 8 columns both ways
+- [x] All 16 rule evaluators: missing-input behaviour table — 2 silent passes in 14 paths
+- [x] 12 migrations: reversibility review — none irreversible-and-unrehearsed
+- [x] Queue/schedule partial-failure trace — 7 of 13 files; the 6 unread are reporting surfaces
+- [x] `plans/reports/audit-260817-0958-data-and-business-logic.md`
 
 ## Success criteria
 
