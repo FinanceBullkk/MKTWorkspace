@@ -1,9 +1,13 @@
 # Windows release gates — runbook
 
 Written 17 August 2026. The audit closed with three gates that code cannot close. They are not
-"tests nobody got round to": two are blocked on equipment that does not exist yet, and one is blocked
-on a certificate that has not been bought. This file exists so that whoever has the equipment can run
-them without re-deriving what they were supposed to prove.
+"tests nobody got round to": two are blocked on equipment that does not exist yet, and one — gate 1,
+Authenticode — turned out not to be pending at all. **Corrected the same evening:** the owner decided
+on 12 August that v1 ships unsigned to the internal fleet (`development-roadmap.md:39`), so gate 1 is
+out of scope for v1 rather than waiting on a purchase, and only its non-signature half is worth
+running. **The real standing blocker is one clean Windows VM**, which unblocks gates 2 and 3 and half
+of gate 1. This file exists so that whoever has the equipment can run them without re-deriving what
+they were supposed to prove.
 
 Each gate traces to a numbered hypothesis from the Windows-lifecycle phase. **Test the hypothesis as
 written, not a paraphrase** — the paraphrases in circulation ("check the installer works") are looser
@@ -15,7 +19,7 @@ The three gates span both repositories, which is why this runbook sits above bot
 
 | Gate | Needs | Have it? |
 | --- | --- | --- |
-| 1 — Authenticode (H52) | An OV or EV code-signing certificate, plus `signtool.exe` from the Windows SDK | **No.** This is a purchase, not a task. |
+| 1 — Authenticode (H52) | An OV or EV code-signing certificate, plus `signtool.exe` from the Windows SDK | **Not for v1** — the owner decided on 12 August that v1 ships unsigned to the internal fleet, so this is out of scope rather than pending. Live again if distribution widens. Its non-signature half (binary writable by non-admins) can run on the gate 2/3 VM. |
 | 2 — Power loss (H41, H42) | A Windows VM whose power can be cut from the host mid-write | **No.** Roughly half a day to set up. |
 | 3 — Withdrawn installer (H54) | The same clean VM, plus one revoked/withdrawn version's installer kept deliberately | **No**, same VM. |
 
@@ -26,6 +30,15 @@ run.
 ---
 
 ## Gate 1 — Authenticode survives resource editing (H52)
+
+> **Not applicable to v1, and that is a decision rather than a delay** (noted 17 August 2026).
+> `development-roadmap.md:39` records the owner's decision of 12 August: v1 ships **unsigned** for
+> the internal fleet, with SmartScreen appearing once and the setup journey announcing it in advance.
+> So there is nothing to buy and nothing to schedule here for v1. **The trigger that makes this gate
+> live again is distribution widening beyond the internal fleet** — the moment the binary reaches
+> anyone who is not an employee receiving it directly. The second claim below (the binary being
+> writable by non-admins) is *not* signature-dependent and could be tested at any time on the clean
+> VM built for gates 2 and 3; it is the half people forget, and it survives the v1 decision.
 
 **Hypothesis, verbatim:** *`edit-windows-executable.cjs` / `rcedit` breaks a signature or leaves the
 binary writable by non-admins.*

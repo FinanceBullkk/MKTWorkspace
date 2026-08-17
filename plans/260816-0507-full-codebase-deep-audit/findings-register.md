@@ -262,7 +262,18 @@ slip into a review pass. It is worth deciding deliberately; it is not decided he
 only person who can run them.** Stating it plainly so the question stops being re-asked as though it
 were a staffing choice. Authenticode verification cannot be scheduled at all: it needs a
 code-signing certificate, which does not exist yet, so it is a **procurement** item, not a testing
-item. Power loss during an update and a withdrawn installer on a clean machine both need a **clean
+item.
+
+> **Corrected 17 August 2026, evening — gate 1 is not pending, it is out of scope for v1.** Reading
+> this row alone makes buying a certificate look like outstanding work; it is not.
+> `development-roadmap.md:39` records an owner decision of **12 August**: v1 ships **unsigned** for
+> the internal fleet, so SmartScreen appears once and the setup journey announces it in advance. That
+> decision is defensible on its own terms — the operators are employees receiving the binary
+> internally, not the public downloading it — and it means gate 1 (H41/H42) is **not applicable to
+> v1** rather than blocked on money. It becomes live again only if distribution ever widens beyond
+> the internal fleet, which is the trigger to write against. This row's original wording caused a
+> recommendation to start certificate procurement to be made in ignorance of the decision; the two
+> documents now agree. Gates 2 and 3 are unaffected — they still need the clean VM. Power loss during an update and a withdrawn installer on a clean machine both need a **clean
 Windows VM** — the development machine cannot stand in, because "on a clean machine" is the property
 under test, and hard-cutting power to the working box is not a test anyone should run. So the real
 next action for gates 2 and 3 is half a day setting up a VM, and for gate 1 it is buying a
@@ -410,10 +421,34 @@ would otherwise be rediscovered from scratch.
 - **Two test files fail on Windows and pass on Linux CI.**
   `scripts/release-authority/offline-root-ceremony.test.ts` and
   `release-authority-ceremony-verifier.test.ts` both fail locally with `SyntaxError: Invalid or
-  unexpected token`, almost certainly a character-encoding difference. Confirmed **pre-existing**
-  by stashing all local changes and re-running. CI is green on them, so a local full-suite run on
-  this machine reads as `2 failed | 159 passed` even on a clean tree — know that before treating it
-  as a regression you just caused.
+  unexpected token`. Confirmed **pre-existing** by stashing all local changes and re-running. CI is
+  green on them, so a local full-suite run on this machine reads as `2 failed | 190 passed` even on
+  a clean tree — know that before treating it as a regression you just caused.
+
+  **The stated cause was wrong. Corrected 17 August 2026, evening.** This entry said "almost
+  certainly a character-encoding difference", and it is not: every file in the import chain —
+  both `.test.ts` files and all five `.mjs` modules under `scripts/release-authority/` — is **pure
+  ASCII, no BOM, no control characters**, checked byte by byte. "Almost certainly" was a guess
+  written as a finding, which is the same habit that produced C37's un-automatable claim; a guess
+  belongs in the entry labelled as one.
+
+  **Investigating it did surface a real defect, now fixed.** `offline-root-ceremony.mjs:189` guarded
+  its direct-run branch with `import.meta.url === pathToFileURL(process.argv[1]).href`. When the
+  module is *imported* rather than run, `process.argv[1]` can be undefined and `pathToFileURL`
+  throws `TypeError`, so the module could not be loaded by anything that imports it — proven with a
+  bare `node` import, which failed before the fix and succeeds after. Guarded with
+  `process.argv[1] &&`; direct invocation still prints usage, import is now silent. The pattern
+  appears exactly once in the repository. **It was not the cause of the two red suites** — they stay
+  red after the fix — so this is a latent bug found on the way past, not the answer.
+
+  **The actual cause is still unknown**, and is recorded that way rather than guessed at twice.
+  Vitest reports the failure at *transform* time with no file, line, or stack. One lead worth
+  following next: `package.json` declares no `"type": "module"`, so `.ts` under `scripts/` is CJS
+  while these `.mjs` modules are ESM, and the two failing suites are the only ones that cross that
+  boundary. Low priority — CI is green, so the release-authority ceremony code is genuinely covered;
+  the cost is local-only friction. **But it should not stay open indefinitely:** two permanently red
+  files on the developer's machine re-teaches the habit that C2's `it.fails` cleanup removed, which
+  is that red is normal. The suite has zero expected failures **on CI**; locally it does not.
 
 ## Unresolved Questions
 

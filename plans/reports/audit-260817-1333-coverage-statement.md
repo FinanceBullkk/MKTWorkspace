@@ -52,20 +52,41 @@ Every phase closed. No phase was skipped or silently downgraded.
 
 ## 4. Findings — final state
 
-32 deep-audit findings (C1–C32) plus 15 from the 16 August sweep (F1–F15).
+**Updated 17 August 2026, evening.** This section said "32 findings (C1–C32)" and "one open: C33".
+Five more findings were raised and closed after it was first written, so the count and the open item
+were both wrong — a closing statement that understates its own findings is the same defect as C32,
+which is why it is corrected here rather than left to the register alone. The
+[findings register](../260816-0507-full-codebase-deep-audit/findings-register.md) remains the
+authority; this is the summary.
 
-- **No P0 remains.** No P1 remains. No P2 remains.
-- **One P3 opened after this statement was first written:** C33, the vault-key parser having the
-  same missing content check that C2 closed for the signing seed. Found while writing the closing
-  handoff, recorded rather than quietly carried.
-- **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26, C27, C28, C29, C30, C31, and F1–F5,
-  F8, F11–F14. C32 is fixed without a test, being a documentation claim.
+**37 deep-audit findings (C1–C37) plus 15 from the 16 August sweep (F1–F15).**
+
+- **No P0 remains.** No P1 remains. No P2 remains. **Nothing is open.**
+- **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26–C31, C33, C34, C35, C37, and F1–F5,
+  F8, F11–F14. C32 is fixed without a test, being a documentation claim; C36 is a tool install
+  rather than a code change and is proven by a real backup instead.
 - **Closed by decision, reasoning recorded:** C22, C24, F6, F7, F10, F15.
 - **Accepted residual, named:** C16, C25, F9.
-- **Deferred with a trigger:** C1 and C5 — the wire-format break. Revisit when the ticket format
-  changes for any other reason, or before a third protocol signs with the server key.
-- **One open:** C33 (above). C32, the roadmap's stale audit-status block, was closed by commit
-  `df94910`, which replaced it with the closing statement that file had already promised.
+- **Half fixed, half deferred with a trigger:** C1 with C5. The reachable half — `verifyTicket`
+  accepting any `kind` — is closed and sabotage-proven (`6eb16f9`), no wire change. Real domain
+  prefixes across all six protocols stay deferred. Note the old trigger ("before a third protocol
+  signs with the server key") **had already fired unnoticed**; there are six. The count is now
+  written down, because a trigger nobody counts against is not a trigger.
+
+**The five raised after this statement first closed, and why that matters more than the count.**
+C33 and C34 are the vault-key half of C2, found while writing the closing handoff and then while
+remediating C33 — neither by a scan. C35 replaced the hand-written fixture sweep with a test after
+that ritual had cost two CI reds. C36 is the pre-deploy backup rule being documented but
+unenforceable, closed the same evening by installing a Postgres 18 client and taking a real backup.
+C37 is the release acceptance suite having been red for days unseen, closed by putting it on a
+Windows CI runner.
+
+Four of those five share one shape, and it is now recorded as a finding class in the register's
+fourth-pass decisions: **the check that would have caught the problem was not the check that runs.**
+The rule taken from it — *a check not proven to run in the environment its artifact lives in does not
+exist* — is the most portable thing this audit produced, and it was learned after this statement
+declared the audit closed. That is worth reading as evidence about closing statements generally, not
+only this one.
 
 ## 5. The handoff control, and whether it worked
 
