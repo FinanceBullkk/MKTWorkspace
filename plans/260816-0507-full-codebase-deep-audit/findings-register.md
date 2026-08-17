@@ -305,7 +305,16 @@ use, not adoption.
    server-and-relay wire-format break. Trigger: the next time the ticket wire format changes for any
    other reason. **Do not re-derive the safety argument from this row alone** — it was wrong once.
    Re-read `server-key-cross-protocol-matrix.test.ts`, which pins the actual property and enumerates
-   every artifact-verifier pair.
+   every artifact-verifier pair. **Now designed and waiting**:
+   `../260817-1802-c1-c5-protocol-domain-separation/`. Writing it surfaced a hard dependency nobody
+   had noticed — `RelayDevice` carries no version column, so there is no way to know when a rollout
+   has reached every machine, and the phase where the server switches signing format is a blind
+   switch until that exists. The plan does **not** authorise starting; the trigger has not fired.
+
+The three Windows gates have a runbook: [windows-release-gates-runbook.md](windows-release-gates-runbook.md).
+It tests H52, H41/H42 and H54 as originally worded rather than the looser paraphrases in
+circulation, and it names the one thing that must happen *before* the next release or gate 3 becomes
+impossible forever: **keep a copy of a withdrawn version's installer.**
 
 Questions 2 through 5 of the previous list — C2's seed policy, authorizing Phase 05 remediation,
 C28's block-or-warn, and C29's heartbeat — were all answered and implemented on 17 August 2026. They
