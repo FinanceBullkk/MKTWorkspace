@@ -56,12 +56,13 @@ Every phase closed. No phase was skipped or silently downgraded.
 
 - **No P0 remains.** No P1 remains. No P2 remains.
 - **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26, C27, C28, C29, C30, C31, and F1–F5,
-  F8, F11–F14.
+  F8, F11–F14. C32 is fixed without a test, being a documentation claim.
 - **Closed by decision, reasoning recorded:** C22, C24, F6, F7, F10, F15.
 - **Accepted residual, named:** C16, C25, F9.
 - **Deferred with a trigger:** C1 and C5 — the wire-format break. Revisit when the ticket format
   changes for any other reason, or before a third protocol signs with the server key.
-- **Open, to be closed by this document:** C32, the roadmap's stale audit-status block.
+- **Nothing open.** C32, the roadmap's stale audit-status block, was closed by commit `df94910`,
+  which replaced it with the closing statement that file had already promised.
 
 ## 5. The handoff control, and whether it worked
 
