@@ -59,8 +59,8 @@ product's safety case.
 
 | C27 | P3 | Fixed (first half); second half handed to Phase 06 | `redd.it/<id>` now resolves to the same `reddit:<id>` key as the full permalink, matched on exact host so `notredd.it` and `redd.it.evil.com` do not qualify. Sabotage-proven: guard removed → red on `'redd.it/1a2b3c'` vs `'reddit:1a2b3c'`, restored → green. The `/r/<sub>/s/<opaque>` half is not locally resolvable and is registered as a Phase 06 handoff. Original finding: `normalizeThreadUrl` canonicalised a Reddit thread only through `/comments/<id>`. Proven against the real function: `redd.it/1veg99o` → `redd.it/1veg99o` and `/r/Trove/s/AbCdEfGh12` → `reddit.com/r/trove/s/abcdefgh12`, neither equal to `reddit:1veg99o`. Rule 8 — the one non-overridable rule — silently misses the collision; the same key feeds `duplicate-posted-url-check`, `health-check-recorder` matching, and the `post-job-revert` trace lookup. Two halves: `redd.it` is locally fixable (the id is in the path); `/r/<sub>/s/<opaque>` is not resolvable without an HTTP redirect and is handed to Phase 06 as input-time rejection. `reddit-title-slug-match.ts:38` already names `redd.it` as a slug-less link, so this is two modules disagreeing, not an unknown format. Phase 05. |
 | C28 | P3 | Fixed | **Not a future trap — one live instance.** `HEALTH_VERDICTS` has six members; rule 10 enumerated five, so `UNTRACKED_POSTS` ("outsiders see posts the ledger does not have") already fell through to ALLOW, and it is the verdict that means rules 4/5/6 are undercounting. Rule 10 now keeps its own explicit list of judgeable verdicts and **blocks** anything outside it, deliberately not importing `HEALTH_VERDICTS` — importing it would auto-accept a new verdict and reinstate the bug. `UNTRACKED_POSTS` handled as WARN, matching `statusForcedBy`'s decision not to quarantine for a bookkeeping fault. The unknown-verdict check sits **before** the staleness check: sabotage showed an unknown-and-stale verdict otherwise returns WARN and still posts. Sabotage-proven: guard removed → 3 tests red (`ALLOW`≠`WARN`, `ALLOW`≠`BLOCK`, `WARN`≠`BLOCK`), restored → 63 green. A companion test asserts every member of `HEALTH_VERDICTS` is judgeable, so the next added verdict is a red test locally rather than a herd-wide block in production. |
-| C29 | P3 | Fixed, CI-verified only | New nullable `heartbeatAt` column (additive migration `20260817100000_health_check_lock_heartbeat`, reversible by one `DROP COLUMN`); the run renews it after every nick, including nicks that errored, and staleness now measures liveness instead of elapsed time. `startedAt` is kept untouched so the operator-facing "holding for N minutes" line stays true — that split is why a column was added rather than reusing `startedAt`. Renewal is token-scoped, so a run that already lost the lock cannot heartbeat into the new holder's row. Four regression tests added; they need Postgres, so they run on CI, **not sabotage-proven locally**. Original finding: `STALE_AFTER_MS` was a fixed 30 minutes while health-check run duration scales with herd size (30–90 s sleep per nick). At ~20 nicks a second run declares the first orphaned and probes concurrently through the single observer proxy — the exact failure the lock exists to prevent, presenting as `ERROR` verdicts. `startedAt` is never renewed, so staleness measures elapsed time, not liveness. Trigger is the product's own growth. Phase 05. |
-| C30 | P3 | Fixed, structurally; CI-verified only | Job create and `RULE_OVERRIDDEN` audit row now share one interactive `$transaction` (interactive rather than array because the audit `detail` needs the new job's id), matching `relay-device-retirement-actions.ts:143,233`. Two regression tests added on the user-visible invariant — an overridden job always carries an audit row pointing at its id, an ordinary job produces none. **Honest limit:** the rollback itself is not sabotage-proven, because `AuditLog` carries no constraint that can be made to fail on demand, so no fault can be injected between the two writes. The tests guard the invariant; the transaction is what makes it survive a crash. Original finding: the audit row was written after the job create, outside its transaction, while the file header states an override "always leaves an AuditLog". |
+| C29 | P3 | Fixed; CI-verified, not sabotage-proven | New nullable `heartbeatAt` column (additive migration `20260817100000_health_check_lock_heartbeat`, reversible by one `DROP COLUMN`); the run renews it after every nick, including nicks that errored, and staleness now measures liveness instead of elapsed time. `startedAt` is kept untouched so the operator-facing "holding for N minutes" line stays true — that split is why a column was added rather than reusing `startedAt`. Renewal is token-scoped, so a run that already lost the lock cannot heartbeat into the new holder's row. Four regression tests added; they need Postgres, so CI is the only place they run — verified green in run `31992649178` (commit `4dda1f9`), with the migration applied on real Postgres. **Not sabotage-proven**: proven to pass, not proven to fail on the vulnerable path. Original finding: `STALE_AFTER_MS` was a fixed 30 minutes while health-check run duration scales with herd size (30–90 s sleep per nick). At ~20 nicks a second run declares the first orphaned and probes concurrently through the single observer proxy — the exact failure the lock exists to prevent, presenting as `ERROR` verdicts. `startedAt` is never renewed, so staleness measures elapsed time, not liveness. Trigger is the product's own growth. Phase 05. |
+| C30 | P3 | Fixed; CI-verified, rollback not fault-injected | Job create and `RULE_OVERRIDDEN` audit row now share one interactive `$transaction` (interactive rather than array because the audit `detail` needs the new job's id), matching `relay-device-retirement-actions.ts:143,233`. Two regression tests added on the user-visible invariant — an overridden job always carries an audit row pointing at its id, an ordinary job produces none — verified green on CI in run `31992649178`. **Honest limit:** the rollback itself is not sabotage-proven, because `AuditLog` carries no constraint that can be made to fail on demand, so no fault can be injected between the two writes. The tests guard the invariant; the transaction is what makes it survive a crash. Original finding: the audit row was written after the job create, outside its transaction, while the file header states an override "always leaves an AuditLog". |
 
 ## Handoff Audit — 17 August 2026
 
@@ -148,6 +148,23 @@ choice, not a defect; leaving them open was costing a line in every report.
    labels and error messages only. Source comments in legacy modules stay untouched — translating
    them is churn against the audit baseline and buys no user-visible correctness.
 
+4. **`UNTRACKED_POSTS` warns, it does not block** (decided 17 August 2026, during C28 remediation).
+   The owner's decision covered *unrecognised* verdicts, which now block. This one is recognised, so
+   it needed its own answer. It warns, for three reasons, the third being decisive:
+   - `statusForcedBy` already decided the same question the same way, in writing: the nick is
+     healthy and the fault is in our own ledger, so quarantining the nick punishes the wrong thing.
+     Blocking here would contradict a considered decision one file away.
+   - Rule 10 is overridable, so "block" here is a speed bump with an audit entry, not a stop.
+   - The verdict is the **residue after auto-linking** — posts the prober could not attach to a job.
+     It does not clear itself, and it may be legitimately unresolvable (a post made outside the
+     tool). Blocking would demand an override on every scheduling attempt, for a condition that may
+     never lift. Routine overrides are what destroys the meaning of the override audit trail that
+     C30 was just fixed to protect.
+
+   Residual, stated plainly: while this verdict stands, rules 4, 5 and 6 count low and the operator
+   is told so rather than stopped. The remedy is recording the posts at `/queue`, which the warning
+   names.
+
 **Phase 06 scope, decided:** documentation accuracy stays inside this audit, restricted to claims
 that carry the safety case — a doc asserting a security or lifecycle property the code does not have
 is an audit finding. Prose quality, comment translation, and `docs/archive/` are out of scope and do
@@ -156,8 +173,10 @@ not belong to a separate pass either.
 ## Next Sequence
 
 1. Phase 05 — completed at D3 on 17 August 2026 with opportunistic D4 on H82. Four P3 findings
-   (C27-C30), no P0/P1/P2. Source remediation for C27a/C28/C29/C30 needs the same explicit
-   authorization Phase 03 was given; without it the four stay open here.
+   (C27-C30), no P0/P1/P2. Remediation was authorized the same day and all four are fixed and
+   pushed (`1773ea5`, `238f0ec`, `4dda1f9`); CI run `31992649178` is green with exactly +12 tests
+   against the parent commit's run. Only C27's share-link half remains, and it is a Phase 06
+   handoff by design, not a leftover.
 2. Phase 06 — breadth completion, including H107, H108, the C23/C24 decisions, and the C27 share-link
    handoff now recorded in the Handoff Audit table.
 3. C3 was closed on 17 August 2026 in the debt pass after Phase 04 — see the register row. Phase 01

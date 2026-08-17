@@ -332,9 +332,27 @@ nicks that errored — a heartbeat reports the process is alive, not that the la
 Gates: `tsc --noEmit` clean, `eslint .` clean, local suite **157 files / 1464 passed + 4 expected
 fail** — the 4 being C2's gates, unchanged, and no regression anywhere else.
 
-**Not yet verified:** C29 and C30's tests need Postgres, which does not exist locally. They have not
-run. CI is the only place they can, and per the plan CI's `status`/`conclusion` must be read
-directly rather than trusting `gh run watch`. Until that happens both fixes are argued, not proven.
+**CI verification — run `31992649178`, commit `4dda1f9`, `status: completed`, `conclusion: success`**,
+read via `gh api`, not `gh run watch`, per the plan's verification rules. Job `check` succeeded with
+no non-success step.
+
+A green suite does not prove *these* tests ran, so it was checked by arithmetic against the parent
+commit's run (`31987725942`, `35879ce`):
+
+| | Baseline `35879ce` | After `4dda1f9` |
+| --- | --- | --- |
+| Test files | 184 passed / 3 skipped (187) | 184 passed / 3 skipped (187) |
+| Tests | **1709 passed** / 4 expected fail / 10 skipped | **1721 passed** / 4 expected fail / 10 skipped |
+
+Delta is exactly **+12 passed** — 6 rules tests, 4 lock tests, 2 queue tests, i.e. every test added.
+Skipped is unchanged at 10 and expected-fail unchanged at 4, so nothing was quietly skipped and the
+C2 gates are untouched. The migration applied on real Postgres: `heartbeatAt` appears in the
+`HealthCheckLock` INSERT statements in the server log.
+
+Both remaining caveats are narrower now, not gone. C29 and C30 were never sabotage-proven — they
+are proven to pass, not proven to fail on the vulnerable path, because that would require running
+the sabotage through CI. And C30's rollback is still not fault-injected, for the reason recorded in
+the register.
 
 ## 11. Unresolved questions
 
