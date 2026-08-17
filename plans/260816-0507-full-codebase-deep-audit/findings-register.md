@@ -203,15 +203,49 @@ not belong to a separate pass either.
    `it.fails` gates in `server-signing-key-seed-hardening.test.ts` are now the only expected-fail
    tests left in the suite.
 
+## Decisions — 17 August 2026, second pass
+
+Taken on the owner's instruction to decide the three questions left open by the closing handoff.
+
+**1. The placeholder period ceiling is now `length / 2`, not 8.** Reversing the position taken
+earlier the same day. Two things changed. First, the reason for keeping 8 was that widening forces a
+fixture sweep and fixture sweeps are where CI goes red — and C35 removed exactly that risk, so the
+premise expired. Second, 8 was never principled: for a 32-byte secret nothing longer than 16 can
+repeat at all, so `length / 2` is the complete form of the rule rather than a chosen bound. What
+settled it was that the shape the old ceiling missed — a 16-byte block written twice — was the
+vault-key fixture in `ci.yml` and eleven test files in this repository. A guard meant to catch what
+people type by hand was missing the most common thing anyone here had typed by hand. Twelve files
+swept, enumerated by C35 rather than by eye; pinned in all three hardening suites.
+
+**2. Both draft PRs go ready — but merging MKTTool #24 has a precondition nobody had written down.**
+Ready is right: both branches are finished, CI is green on each, there is no second reviewer to wait
+for, and 278 files of divergence from `master` gets more expensive every day it sits. The gates are
+release gates, not merge gates, and conflating them freezes finished work behind a manual test.
+**The precondition, found while deciding this:** `docs/deployment-guide.md:19` — Railway deploys from
+`master`, so merging #24 deploys. The C33 guard runs at key load, so if Railway's `VAULT_KEY_SERVER`
+or `TICKET_SIGNING_KEY` is a placeholder pattern the app **fails to boot after deploy**. Check the
+two values against the guard before merging, not after. This is a real risk created by this session's
+own work, and it is cheap to retire; it is recorded here rather than left to be discovered as an
+outage.
+
+**3. The three Windows gates are blocked on prerequisites, not on scheduling — and the owner is the
+only person who can run them.** Stating it plainly so the question stops being re-asked as though it
+were a staffing choice. Authenticode verification cannot be scheduled at all: it needs a
+code-signing certificate, which does not exist yet, so it is a **procurement** item, not a testing
+item. Power loss during an update and a withdrawn installer on a clean machine both need a **clean
+Windows VM** — the development machine cannot stand in, because "on a clean machine" is the property
+under test, and hard-cutting power to the working box is not a test anyone should run. So the real
+next action for gates 2 and 3 is half a day setting up a VM, and for gate 1 it is buying a
+certificate. Until then the roadmap's wording stands and must not soften: unrun, and code cannot
+close them.
+
 ## Unresolved Questions
 
 1. C1 and C5 — the wire-format break. The only structural finding still without a decision, carried
-   since Phase 01.
-2. C2 — reject placeholder signing seeds, or record acceptance? A one-line policy either way.
-3. Authorize Phase 05 source remediation (C27a, C28, C29, C30)? All four are small and each wants a
-   sabotage-proven test alongside.
-4. C28 — block or warn on an unrecognised health verdict? Blocking matches rule 1 and the house
-   principle, but it also means a bad recorder write stops all Reddit posting. Policy, not bug fix.
-5. C29 — heartbeat `startedAt` between nicks, or raise the constant and add a loud assertion that
-   fails when `nickCount × 90 s > STALE_AFTER_MS`? The heartbeat is correct; the assertion cannot
-   itself drift.
+   since Phase 01, now deferred with a recorded trigger: revisit when the ticket wire format changes
+   for any other reason, or before a third protocol signs with the server key.
+
+Questions 2 through 5 of the previous list — C2's seed policy, authorizing Phase 05 remediation,
+C28's block-or-warn, and C29's heartbeat — were all answered and implemented on 17 August 2026. They
+are removed rather than left standing, because a list of open questions that is mostly closed
+questions stops being read.
