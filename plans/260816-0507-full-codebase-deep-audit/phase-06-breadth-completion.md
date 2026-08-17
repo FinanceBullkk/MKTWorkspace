@@ -28,6 +28,17 @@ MKTTool `src/app/**` + `src/components/**`; MKTBrowser `apps/desktop/src/rendere
 - H94 MKTBrowser renderer trusts main-process data unsanitised (profile names, proxy labels, extension
   names) into a DOM sink.
 
+**Inbound handoff from Phase 05 — C27, second half.** Registered in the Handoff Audit table on
+17 August 2026 at the moment of handoff. `normalizeThreadUrl` cannot canonicalise a
+`/r/<sub>/s/<opaque>` Reddit share link: the id is opaque and only an HTTP redirect resolves it, so
+the fix belongs at the input surface, which is this phase's territory.
+
+- H109 The interaction form and the mark-posted field accept a share link the collision key cannot
+  resolve, so rule 8 — the only non-overridable rule — silently sees a different thread.
+  Acceptance: the form refuses the format and tells the operator to open the link and paste the full
+  permalink. `redd.it` short links already resolve (Phase 05, commit `1773ea5`) and must keep
+  working. Written before reading the form code, same rule as every other hypothesis here.
+
 ### 6.2 Global redaction (D3)
 
 - H95 Proxy password, token, or credential reaches a thrown error, a provider error body, or a Next.js
@@ -50,6 +61,10 @@ to every sink (throw, log, response body, file write). Table of value × sink.
 ### 6.4 Concurrency (D2)
 
 - H101 `health-check-lock` expiry allows two holders at a boundary (tests exist; read the expiry path).
+  **Read this one with extra suspicion:** the expiry path was rewritten hours earlier by C29, in this
+  same audit, so the hypothesis now examines fresh work by the same hand that wrote it. Staleness
+  moved from elapsed time to heartbeat; the boundary cases changed with it. Trace the new path from
+  scratch rather than confirming the change is good.
 - H102 `daily-backup-scheduler` and `daily-health-check-scheduler` can double-fire across restarts.
 - H103 `cleanStaleSingletonLocks` deletes a live lock, killing a running browser.
 
@@ -73,6 +88,20 @@ security or lifecycle property the code does not have. Prose quality, comment tr
 - ~~H108 The status page's `config-override` branch of `describeMktBrowserToken` has no test.~~
   Closed 17 August 2026 ahead of this phase: both branches asserted, sabotage-proven.
 
+## Remediation scope, decided 17 August 2026
+
+This phase reads; two of its items write. The owner authorized them separately:
+
+- **H109 is fixed in-phase.** It closes the remaining half of C27, on rule 8 — the only rule that
+  cannot be overridden — so leaving it open until a later pass would end the audit with a known hole
+  in the strongest guard.
+- **H107 is counted first, then decided.** List every mixed-language user-facing string with a
+  pointer; if the count is small, fix in-phase, otherwise it leaves the audit as its own task. The
+  count is the deliverable either way — an unbounded string sweep is exactly the risk this phase's
+  own risk section names.
+
+Everything else in this phase stays read-only. Findings go to the register.
+
 ## Method
 
 1. Read frontend for sinks; grep-assisted but read the hits.
@@ -83,6 +112,7 @@ security or lifecycle property the code does not have. Prose quality, comment tr
 
 ## Todo
 
+- [ ] H109 reject unresolvable Reddit share links at input (inbound handoff from Phase 05)
 - [ ] Frontend sink review (both apps)
 - [ ] Secret × sink table
 - [ ] `yarn npm audit` MKTBrowser + pinning review
