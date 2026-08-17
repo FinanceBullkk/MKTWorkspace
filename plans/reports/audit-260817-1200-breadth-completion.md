@@ -131,9 +131,36 @@ the answer:
   HTTP responses the web app consumes — so translating them wholesale is neither bounded nor clearly
   correct.
 
-Recommendation: fix the ~4 in the named view, which is the whole of what F15 left behind, and record
-the wider relay text as out of scope rather than deferring it to a phantom pass. Not done in this
-session.
+### 8b. Correction — the count measured the wrong direction, then the fix
+
+The owner chose to fix on the strength of "~4 strings". Before touching anything, `AGENTS.md:25` was
+re-read, and it settles the direction the count had assumed away: *"write all project artifacts in
+English: source comments, UI copy, errors… do not add new Vietnamese content, and translate actively
+maintained sections when they are materially revised."*
+
+So the direction is **Vietnamese → English**. The 4 strings counted were the *English* ones — the
+half already complying. The real work was the Vietnamese half, and it was measured properly before
+starting: 8 sites in the status page, ~10 more in the configuration problems rendered into it.
+
+It also reached one file further than the count. Three modules feed one screen, and all three had to
+move together or the screen would still mix:
+
+| File | What it contributes to the view |
+| --- | --- |
+| `relay-status-page.ts` | headings, status badges, public-key section |
+| `relay-config.ts` | the `ConfigProblem` messages rendered into the problem list |
+| `relay-operator-key-form.ts` | the form appended at the bottom, including its inline script's status text |
+
+Out of scope and deliberately left: `handle-configure.ts` messages are HTTP responses the web app
+consumes, not text on this page; and source comments, which the F15 decision already scoped out as
+churn against the audit baseline.
+
+Four test assertions were retargeted to the English text with their meaning unchanged — `INCOMPLETE`
+for `CHƯA ĐỦ`, `/signed-in Windows account/` for `/tài khoản Windows/`, and so on. None was loosened,
+and the suite count is unchanged at 1472 + 4 expected fail, so no assertion was lost in the move.
+
+Commit `869cb1e`. `tsc` and `eslint` clean; a final sweep of both rendering files finds no Vietnamese
+display string left. **H107 closed, and with it the last item surviving from F15.**
 
 ## 9. Environment note worth keeping
 

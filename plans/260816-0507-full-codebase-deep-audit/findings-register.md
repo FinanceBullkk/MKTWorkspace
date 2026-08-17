@@ -24,7 +24,7 @@ product's safety case.
 | F12 | P3 | Fixed with correction | Real dead exports removed; earlier false positives were preserved. |
 | F13 | P3 | Fixed | `nanoid` advisory removed. |
 | F14 | P3 | Fixed | Empty corrupt-name directories removed; origin was external to both repos. |
-| F15 | P3 | Split; policy half closed | `AGENTS.md:25` already states the policy and its legacy scope: English for all new artifacts, no new Vietnamese, translate actively maintained sections on material revision. The real residual is narrower — the user-facing surface is mixed-language inside a single view (`relay-status-page.ts` renders "Cấu hình đang dùng" next to "Setup is incomplete"). Scoped to Phase 06 as a bounded strings-only pass. |
+| F15 | P3 | Closed | `AGENTS.md:25` already states the policy and its legacy scope: English for all new artifacts, no new Vietnamese, translate actively maintained sections on material revision. The real residual is narrower — the user-facing surface is mixed-language inside a single view (`relay-status-page.ts` renders "Cấu hình đang dùng" next to "Setup is incomplete"). Scoped to Phase 06 as a bounded strings-only pass, and closed there on 17 August 2026 (commit `869cb1e`, H107): the status page, the configuration problems rendered into it, and the operator key form now read as one language. Direction was English, per `AGENTS.md:25` — the earlier "~4 strings" count had measured the English half, the part already compliant. Source comments untouched, as decided. |
 
 ## Deep Audit Findings
 
