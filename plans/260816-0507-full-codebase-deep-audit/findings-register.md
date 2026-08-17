@@ -225,6 +225,18 @@ release gates, not merge gates, and conflating them freezes finished work behind
 `master`, so merging #24 deploys. If Railway's `VAULT_KEY_SERVER` or `TICKET_SIGNING_KEY` is a
 placeholder pattern, the guard will refuse it. Check both values against the guard **before** merging.
 
+**RETIRED, 17 August 2026 — checked against production.** Project `renewed-benevolence`, service
+`mkttool-web`, environment `production`, read through the Railway CLI and piped straight into a
+checker so no value ever reached stdout, a log, or a file. Result: `VAULT_KEY_SERVER` **ok**,
+`TICKET_SIGNING_KEY` **ok**, `VAULT_KEY_OPERATOR` **absent**. Nothing blocks merging #24 on this
+account.
+
+The absence is the part worth recording: it means production posture is **`separated`** — the server
+does not hold the key that opens nick secrets. That is GĐ3's stated goal, and this is the first time
+it has been *verified in production* rather than asserted from the roadmap. It also means the C33
+guard has no live exposure on the operator key server-side, because there is no operator key there
+to guard.
+
 **Correction, 17 August 2026 (self-review).** An earlier version of this paragraph said the app would
 "fail to boot after deploy". That is wrong, and the truth is more awkward: `loadVaultKey` is lazy and
 `src/instrumentation.ts` validates no keys at startup, so the deploy would **succeed**, the site would
