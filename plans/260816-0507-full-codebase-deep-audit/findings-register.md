@@ -55,6 +55,24 @@ product's safety case.
 | C23 | P3 | Fixed | Ceremony public evidence moved to `src/lib/release/release-authority-public-evidence/`; the trust root no longer sits behind a `plans/` path. `release-root-trust.test.ts` passes unchanged. |
 | C24 | P3 | Closed by decision | The metadata comparison is a publication sanity check, not an integrity control: whoever can replace the bytes in the bucket holds the credentials that also set the metadata, so hashing on the way out would stop nobody while costing a full re-read of a 280 MB engine per request. The integrity control is the device-side hash. Recorded in `relay-compatibility-artifact-source.ts` so it stops reading as an oversight. |
 | C25 | P3 | Accepted residual | Hand-rolled SigV4 has no known-answer vector and none is obtainable — no independent SigV4 implementation exists in the dependency tree, and adding one defeats the module's purpose. Hand-traced clean for the single-PUT/no-query shape in use. Cannot fail silently: a canonicalization error is an HTTP 403 on first upload, recorded as a failed job. Revisit if this ever signs query strings, presigned URLs, or streaming uploads. |
+| C26 | P2 | Open — recovered from a dropped handoff | `/configure` writes `serverPublicKey` with no check that a trust root already exists (`handle-configure.ts:94`, always registered in `main.ts:251` except during pending retirement), so a live enrolled Relay's trust root can be replaced by any request from the allowed web origin. The Relay keeps `VAULT_KEY_OPERATOR` and becomes a decryption oracle for whoever re-points it. Phase 01 raised this as an unowned observation and ranked it low on the framing that the precondition — being the allowed origin — is already fatal. That framing holds for a compromised *server*, which already has the signing key. It does not hold for a compromised *web app*: an XSS there converts a transient browser-side compromise into persistent trust-root replacement on every operator device, which is why this is ranked P2 here. `handle-set-operator-key` already implements the missing pattern one line below the `/configure` registration (`main.ts:265`). |
+
+## Handoff Audit — 17 August 2026
+
+Phase 04 was closed having forgotten C3, which Phase 01 had explicitly assigned to it. That prompted
+a check of every other cross-phase handoff, and it found a second one.
+
+| Handoff | Assigned to | Outcome |
+| --- | --- | --- |
+| C2, C3 (Phase 01) | Phase 04 | C3 dropped, recovered and fixed 17 Aug. C2 still open by decision. |
+| `handle-configure.ts:94` trust-root replacement (Phase 01) | Phase 02 | **Dropped.** Never mentioned in any Phase 02 report, never became a finding, never entered this register. Recovered as C26. |
+| C10 test hermeticity (Phase 02) | Phase 03 | Honored; C10 fixed. |
+| Driver half of F2 (Phase 01) | Phase 02 | Honored; F2 fixed. |
+
+Two of four handoffs were dropped. Both were recovered only because someone went looking, which is
+not a control. The fix is procedural: an item handed from one phase to another belongs in this
+register when it is handed over, not when the receiving phase remembers it. Phase 05 and 06 should
+open by reconciling against this table.
 
 ## Current Phase 03 Coverage
 
@@ -111,6 +129,8 @@ not belong to a separate pass either.
 
 ## Next Sequence
 
+0. C26 — decide: add the existing-trust-root guard, or accept and record why. It is the highest
+   open severity in this register and it is a one-line guard with a working sibling to copy.
 1. Phase 05 — data layer and business logic. Unrelated risk area; nothing blocks it.
 2. Phase 06 — breadth completion, including H107, H108, and the C23/C24 decisions.
 3. C3 was closed on 17 August 2026 in the debt pass after Phase 04 — see the register row. Phase 01
