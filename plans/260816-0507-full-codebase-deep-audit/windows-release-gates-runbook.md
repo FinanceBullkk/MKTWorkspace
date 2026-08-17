@@ -125,6 +125,25 @@ failure of this gate even if no bytes are corrupt.
 
 ## Gate 3 — A withdrawn installer on a clean machine (H54)
 
+> **Read this before building anything: as of 18 August 2026 nothing is actually withdrawn.**
+> Checked rather than assumed, because the procedure below spends a clean VM on a version that has
+> to be refused, and it would be spent for nothing.
+>
+> - `MIN_RELAY_VERSION = 1` (`src/lib/tickets/ticket-types.ts:38`), so **no Relay version is
+>   globally refused**. A v9 Relay still gets credential and OTP tickets today.
+> - `MIN_RELAY_VERSION_BY_KIND` (`:84`) is where refusals actually live: `LAUNCH_PROFILE` and
+>   `CREATE_PROFILE` need **7**, `COMPATIBILITY_UPDATE` needs **12**.
+> - Retained installers are v9–v12 in `MKTBrowser/apps/desktop/.relay-payload/`, so the artifacts
+>   exist and the "keep one before it is gone" prerequisite below is already satisfied — that
+>   deadline has passed safely.
+>
+> So the gate is runnable, but **only against the compatibility-update path**: v9, v10 or v11
+> installed on the clean VM should be refused a `COMPATIBILITY_UPDATE`, and the refusal must name
+> something the operator can act on. Anything broader has nothing to test, because nothing is
+> revoked. The alternative is to withdraw a version for real first — raising `MIN_RELAY_VERSION` or
+> publishing a manifest that revokes one — but that is a product decision, not test setup, and it
+> should not be made just to give this gate something to chew on.
+
 **Hypothesis, verbatim:** *`compatibility-installer-floor` can be satisfied by a downgraded
 installer, enabling rollback to a revoked version.*
 
