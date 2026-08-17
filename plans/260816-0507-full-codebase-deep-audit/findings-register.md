@@ -68,6 +68,8 @@ product's safety case.
 
 | C35 | P3 | Fixed; widened 17 Aug after self-review | **Self-review found the backstop had the same blind spot it was built to remove.** The scan matched the three env-var *names*, so `process.env[SERVER_SIGNING_KEY_ENV] = …` — the constant-alias spelling, used by three relay tests — was invisible to it. A name-based regex only catches the spellings its author thought of, which is precisely the defect that produced C35 in the first place. Aliases are now scanned (`SERVER_SIGNING_KEY_ENV`, `VAULT_KEY_ENV.server`, `VAULT_KEY_ENV.operator`), and proven: setting one relay fixture to `"ab".repeat(32)` turns the scan red and names the file. No live defect was hiding there — all three values were genuine seeds. Widening also surfaced two more resolver bugs, both fixed: a bare identifier lost its terminator to the statement cut and failed to resolve, and vector-table lookups (`RFC_8032[0].seed`) had no rule. Vector tables are **skipped by an explicit, documented exception** rather than resolved: extracting every 64-hex literal from such a table would drag in public keys and signature halves, and a correct Ed25519 vector table legitimately contains `00…00` as the order-4 point, so a key-placeholder policy applied there would reject values that must be present. The exception is safe because vector tables live in unit tests that run on every `npm test`, whereas this scan exists for `*.database.test.ts`, which cannot run without Postgres. **The scan is an approximation and now says so in its own header** — a fixture set through some fourth spelling still slips past. Original finding: **A process defect, recorded as a finding because it has now cost two CI reds.** Twice — C2, then C33 — a guard landed, the author ran a hand-written regex sweep for fixtures that would violate it, and the sweep missed a spelling it had not anticipated (`"21".repeat(32)` where it looked for hex in full). The reason it keeps happening is structural, not carelessness: `*.database.test.ts` needs Postgres, so on a development machine those fixtures are never evaluated at all, and the first evaluation is CI, three minutes after a push. `src/lib/crypto/key-fixtures-pass-the-guard.test.ts` replaces the ritual with a test — it enumerates every fixture assigned to `VAULT_KEY_SERVER`, `VAULT_KEY_OPERATOR` or `TICKET_SIGNING_KEY` across `src/`, `relay/`, `scripts/` and `.github/`, resolves the four spellings in use (hex literal, `.repeat()`, same-file `const`, runtime value), and runs each through the real detector. It needs no database, so a bad fixture is red locally in under a second. An unrecognised spelling fails the suite and names the file instead of being skipped, and a floor on the fixture count stops a broken scan from passing as an empty one. **Proven to catch**, and that check earned its keep immediately: reverting one fixture to `"21".repeat(32)` left the test *green*, which exposed a bug in the scan itself — the 120-character capture window spilled into the next statement, so a neighbouring `process.env` made the value look runtime-computed and the fixture was skipped in silence. Fixed by cutting the right-hand side to one statement; the revert then turned it red and named the file. |
 
+| C36 | P3 | Open — needs a tool install, not a code change | **The project's own pre-deploy safety step cannot run on the admin machine.** `deployment-guide.md:536` states the rule categorically: *"run `npm run db:backup:remote` immediately before every deploy that changes database structure — `prisma migrate deploy` does not back up, and that is exactly the riskiest moment."* On 17 August, merging #24 applied three migrations to production and **that backup could not be taken**: local `pg_dump` is 17.10, Railway's Postgres is 18.4, and `pg_dump` refuses a server with a higher major. Both documented workarounds were unavailable — Docker was not running, and no Postgres 18 client is installed. The deploy proceeded on two pieces of evidence instead: all three migrations are **additive only** (`ADD COLUMN`, one `CREATE UNIQUE INDEX` on a new nullable column — no `DROP`, no type change, no data write), and the server-side nightly R2 backup is **unaffected** by the client version gap and had run successfully at 03:00 that morning (`mkttool-prod-20260817-030007.sql`, 66 KB, 111 rows across 14 tables), giving a ~15-hour-old restore point. That reasoning was sound for these migrations and will not be sound for the first destructive one. **Fix is a one-time install**, already written down at `deployment-guide.md:565`: install a Postgres 18 client and set `PG_DUMP_PATH` in `.env`. Until then the rule is documented but unenforceable, which is worse than either honest state — the guide even names the date it first bit, 08/08/2026, so this is the second occurrence. |
+
 ## Handoff Audit — 17 August 2026
 
 Phase 04 was closed having forgotten C3, which Phase 01 had explicitly assigned to it. That prompted
@@ -310,6 +312,25 @@ working machine or their data. Every decision this session follows it — `parse
 env-to-process adoption while `allowPlaceholder` exempts the retirement read; the Relay guards the
 paste box but not the sealed device-to-device transfer, and not the stored key at load; and boot is
 use, not adoption.
+
+## Observations from the 17 August deploy — recorded, not ranked
+
+Neither is a defect worth a finding row, but both were seen for the first time during the deploy and
+would otherwise be rediscovered from scratch.
+
+- **Turbopack traces the whole project into the output.** Two warnings, at `database-backup.ts:156`
+  (`spawn(PG_DUMP_COMMAND, …)`) and `relay-compatibility-manifest-file.ts:56`
+  (`readFileSync(relayCompatibilityManifestPath(), …)`). Next's own message: *"leads to all source
+  files (including the public folder) to be deployed as part of the server code … can slow down
+  deployments or lead to failures when size limits are exceeded."* Not the cause of any failure so
+  far. The documented fixes are a statically-scoped path or a `turbopackIgnore` comment.
+- **Two test files fail on Windows and pass on Linux CI.**
+  `scripts/release-authority/offline-root-ceremony.test.ts` and
+  `release-authority-ceremony-verifier.test.ts` both fail locally with `SyntaxError: Invalid or
+  unexpected token`, almost certainly a character-encoding difference. Confirmed **pre-existing**
+  by stashing all local changes and re-running. CI is green on them, so a local full-suite run on
+  this machine reads as `2 failed | 159 passed` even on a clean tree — know that before treating it
+  as a regression you just caused.
 
 ## Unresolved Questions
 
