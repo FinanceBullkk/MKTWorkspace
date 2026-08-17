@@ -124,7 +124,7 @@ Everything else in this phase stays read-only. Findings go to the register.
 - [x] Concurrency read (3 paths)
 - [ ] Docs accuracy diff (safety-case claims only)
 - [~] H107 counted (~4 strings in the named view; 60-80 across the wider relay surface) — not fixed; H108 closed earlier
-- [ ] `plans/reports/audit-{date}-breadth-completion.md`
+- [x] `plans/reports/audit-260817-1200-breadth-completion.md`
 
 ## Success criteria
 
