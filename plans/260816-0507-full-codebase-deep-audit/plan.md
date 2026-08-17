@@ -1,7 +1,7 @@
 ---
 title: "Full Codebase Deep Audit — Subsystems Not Covered by the 16 Aug Sweep"
 description: "Close the coverage gaps declared in audit-260816-0452 by auditing each remaining subsystem to a declared depth, with executable proof for trust boundaries."
-status: in_progress
+status: complete
 priority: P1
 effort: "6 phases; phases 01-02 carry most of the risk"
 issue: null
@@ -37,7 +37,10 @@ in depth. It declared 13 unexamined areas. This plan audits them.
   Opened by reconciling the Handoff Audit table — no inbound handoff existed — and closed by
   registering its one outbound handoff to Phase 06 at the moment of handoff. Read-only: no source
   changed, no test added; remediation awaits authorization.
-- Phase 06 has not started.
+- Phase 06 completed at D2 with D3 on redaction. Two P3 findings (C31, C32), both fixed.
+- **Audit closed 17 August 2026.** All six phases done; no P0/P1/P2 outstanding; the suite has no
+  expected failures. Closing coverage statement:
+  [`audit-260817-1333-coverage-statement.md`](../reports/audit-260817-1333-coverage-statement.md).
 - Current merged status lives in [`findings-register.md`](./findings-register.md). Phase reports remain
   the detailed evidence record.
 
@@ -68,7 +71,7 @@ code already handles, which is the failure mode the 16 Aug pass avoided by using
 | 03 | [Windows Lifecycle](./phase-03-windows-lifecycle-installer-update-rollback.md) | D3 + targeted D4 | Completed | C21/C10 fixed; C22 closed for the supported single-user topology; cross-user VM exercise waived. |
 | 04 | [Release Authority & Supply Chain](./phase-04-release-authority-and-supply-chain.md) | D3 + D4 on verification | Completed | Trust root proved load-bearing by sabotage; three P3 residuals. |
 | 05 | [Data Layer & Business Logic](./phase-05-data-layer-and-business-logic.md) | D3 | Completed | Two silent-pass paths found in fourteen (C27, C28); schema and migrations clean. |
-| 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Not started | Frontend, redaction, deps, concurrency, docs accuracy. |
+| 06 | [Breadth Completion](./phase-06-breadth-completion.md) | D2 | Completed | No unredacted secret path; every server action guarded; C31, C32. |
 
 ## Non-negotiable rules
 
