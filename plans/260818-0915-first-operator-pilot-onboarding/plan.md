@@ -74,6 +74,30 @@ to someone who did not write it. The reader will be its author. Step 6 below —
 is the part this variant is weakest at, and its emptiness will mean nothing. **C29's class stays
 open after this runs.** Say so in the write-up rather than letting a green pilot close it.
 
+## Blocker found before the pilot ran — MKT Browser ships Relay 12
+
+**`MIN_RELAY_VERSION` is 13. MKT Browser's Windows installer installs Relay 12, unconditionally,
+with no version check anywhere on the path.** Verified rather than inferred:
+
+- `apps/desktop/relay-release.json` pins `"version": 12`, sha256 `fe6de7fc…`.
+- `.relay-payload/MKTTool-Relay.zip` is byte-identical to the retained `MKTTool-Relay-v12.zip`.
+  The published Relay 13 is `c5571848…` — a different artifact.
+- `build/installer.nsh:150-158` expands that zip and runs `install-relay.ps1` on **every** install,
+  and aborts the whole installation if it fails. The `RelayOwned` registry logic above it decides
+  only who owns the Relay *at uninstall time*; it does not gate the install.
+- `relay/install-relay.ps1` contains no version comparison at all.
+
+So on a clean machine: **installing MKT Browser produces a Relay that production refuses every
+ticket from.** And the order does not save you — installing Relay 13 first and MKT Browser second
+silently downgrades it back to 12. Any future MKT Browser upgrade does the same thing again.
+
+**The only working order is MKT Browser first, then Relay 13 from `/relay-download` second**, and
+that is a workaround, not a fix. This was created the moment C39 raised the floor without re-pinning
+MKT Browser's payload; nobody noticed because the only machine in existence already had Relay 13 on
+it. **It deserves a finding row of its own and a re-pin task in MKTBrowser** — re-fetch the pinned
+payload at v13, rebuild the installer — and arguably a version guard in `install-relay.ps1` so a
+downgrade cannot happen silently at all.
+
 ## Steps
 
 1. ~~Pick the person and the machine.~~ **Decided:** owner's secondary PC, second Google account,
