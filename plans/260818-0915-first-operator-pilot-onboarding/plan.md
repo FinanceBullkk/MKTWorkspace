@@ -53,7 +53,20 @@ Everything above is code-read and document-level. **No two-machine flow has ever
   `operatorKeyReadyAt: null` from the clear-list turns the re-grant test red, and replacing the
   grant hash with a constant turns two red.
 
-  **Still unexercised: the three parties together, on real machines.** That is the pilot itself.
+  **Correction, 18 August 2026, 10:15 — the three parties have already run together.** This section
+  claimed otherwise and was wrong. Reading the registry rows rather than the counts:
+  `operatorKeyReadyAt` is non-null on **two** devices, including `MSI`, owned by
+  `anhhao9a2.xt@gmail.com` — a second account on a second machine, granted between 6 and 8 August.
+  `operatorKeyReadyAt` is only ever set by the delivery flow; a manual paste at `/set-operator-key`
+  never reaches the server. So the sealed box has crossed two real machines and been opened.
+
+  The wrong claim came from reasoning off aggregates — two accounts, one active device — instead of
+  looking at the rows. Same mistake as the handoff item this plan was written to correct, made while
+  correcting it.
+
+  What is still unexercised is narrower and worth stating precisely: **the flow has never been run
+  against a floor of 13, nor with the fixed `/setup` links, nor by a device that has to generate a
+  fresh keypair because its previous one was revoked.** That last one is the pilot's real shape.
 - A clean machine installing Relay 13 from `/relay-download` with no prior state.
 - Whether `ALLOWED_EMAILS` + restart is genuinely all that stands between a new email and a working
   session.
