@@ -154,6 +154,26 @@ accepts, letting a machine land on a revoked version and stay there.
 This needs a clean machine because an already-installed machine carries state that may mask the
 answer.
 
+> **Blocker found 18 August 2026, and it applies to gate 2 as well: both gates need a server to
+> enrol against, and it must not be production.** Gate 2 needs a compatibility update actually in
+> flight, which needs a `COMPATIBILITY_UPDATE` ticket, which needs an enrolled device. Gate 3's
+> procedure below reaches the same wall at step 3. Enrolling the throwaway VM against production
+> would put a disposable machine into the production device registry and paste a real
+> `VAULT_KEY_OPERATOR` into it — the exact thing `create-windows-gate-vm.ps1` tells you not to do.
+>
+> **The way through is a local server, not a production enrolment.** The Relay bakes its web origin
+> at build time, so a Relay built with `--web-origin=http://<host-lan-ip>:3000` against a dev server
+> and a scratch database gives both gates everything they need with no production exposure. That is
+> the missing setup, and it is the real remaining cost of these two gates — not the gates
+> themselves.
+>
+> **One property of gate 3 has already been established without any of that.** A retained v12
+> binary was driven to *ready* and handed a ticket carrying floor 13; it refused, naming both
+> versions. See `scripts/probe-old-relay-refuses-the-floor.ts` and register row C41. That settles
+> the *refusal is actionable* half. It does **not** settle H54 as worded — whether the installer
+> floor can be satisfied from below on a clean machine is a different claim, and it still needs the
+> VM and an install.
+
 ### Procedure
 
 1. Keep one installer of a version that has since been withdrawn or revoked. Preserving it is a
