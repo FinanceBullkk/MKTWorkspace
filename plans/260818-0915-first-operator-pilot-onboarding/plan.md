@@ -129,6 +129,30 @@ downgrade cannot happen silently at all.
 6. **Write down every place they hesitated**, including the ones they recovered from unaided. Those
    are the expensive ones: they cost nothing today and cost everything at ten operators.
 
+## What the pilot found — 18 August 2026, steps 1–4
+
+**Four defects, all on the path a new operator walks, none of them findable by reading.** Steps 5
+and 6 have not run yet; everything below came out of getting one machine enrolled.
+
+| # | Defect | How it presented |
+|---|---|---|
+| 1 | MKT Browser shipped Relay 12 against a floor of 13, and `install-relay.ps1` compared no versions at all | A clean machine came up refused. Installing a current Relay first did not help — the next browser install pulled it back down. Fixed in Relay 15 + re-pin |
+| 2 | The Relay refused to receive the operator key because it had no operator key | `This Relay is not enrolled yet.` on a machine that was enrolled, active, and granted a key **twice**. Fixed in Relay 14 |
+| 3 | The key only arrives while `/setup` is open, and nothing says so | The machine sat waiting after a successful grant. The owner's own PC had the same scar: granted 6 August, ready 16 August — **ten days**, unnoticed because the granter and the receiver were the same person |
+| 4 | Onboarding spanned three surfaces, and they described each other wrongly | `/relay-download` sent new operators to `/relay-devices`, which is admin-only for that action. Folded into `/setup` |
+
+**Defect 2 is the one worth sitting with.** It made the documented primary onboarding path
+impossible from a cold start, for every operator who has ever existed, and the product shipped that
+way for months. It survived because the only machine that ever needed the path already had the key
+on it by another route — the same blind spot as the population of one, one level down.
+
+**Defect 3 answers the observer-effect worry above.** The friction list was supposed to be this
+variant's weakest output, because the reader is the guide's author. It found something anyway, and
+found it in the form that matters: a ten-day delay nobody had noticed until the data was read.
+
+**None of these needed step 5.** The pilot had already paid for itself before anyone tried to do a
+real unit of work, which is an argument for running the remaining steps rather than calling it done.
+
 ## Success criteria
 
 - A second `RelayDevice` row, active, with `relayVersion = 13` and a non-null `lastSeenAt` — which
