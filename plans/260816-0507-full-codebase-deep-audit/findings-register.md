@@ -493,9 +493,19 @@ costs an afternoon is worth something on its own.
 register's own rule warns about exactly that. The mitigating difference is that the operator is not
 stranded — the message names the way out and the way out works. Pre-pilot, "mid-work" barely exists.
 
-**Not done here, on purpose.** It blocks colleagues' machines, so it is outward-facing in the way
-that wants a human decision even though reverting is one constant and one deploy. Prepared, not
-triggered.
+**Approved by the owner and done, 18 August 2026 — MKTTool #30, shipped with the C39 fix in one PR
+so the order cannot be got wrong.** Raising the floor before the lever was repaired would have moved
+nothing for four of five kinds while reporting that it had.
+
+**"One constant and one deploy" was wrong, and the correction is the useful part.** Raising the floor
+broke five suites, in two distinct ways. Two tests encoded the *old policy* as their premise — that a
+Relay at 9 still gets credential tickets while being refused compatibility updates — which the
+security floor deliberately overrides; the per-kind mechanism is now **dormant** rather than gone,
+since 13 exceeds every capability entry. Those were rewritten with the reasoning kept, not deleted.
+Three more carried **hard-coded relay versions in fixtures** and expired the moment the floor moved:
+the C35 lesson one layer up, and two of the three need Postgres, so on a machine without one they
+would have surfaced on CI after a push rather than locally. All now derive from `MIN_RELAY_VERSION`.
+The estimate was wrong because it counted the constant and not the assumptions built on its value.
 
 **Note the ordering, because it matters.** Raising the floor also gives gate 3 a real subject: v9–v12
 become genuinely refused, and the gate becomes runnable as literally worded rather than scoped down
