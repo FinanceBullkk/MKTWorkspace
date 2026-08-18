@@ -514,6 +514,14 @@ to give a test something to chew on would be the tail wagging the dog; enforcing
 P2 is sitting unpatched on every operator machine is just the right thing, and the gate happens to
 benefit.
 
+**The recovery path was confirmed live before the floor landed**, which was the one thing that had to
+be true before blocking anyone. The download page serves **Relay 13, 32.7 MB, packaged 17 August
+20:23** — matching the retained artifact byte for byte at 34,284,121 bytes. This had been carried as
+an open question since 17 August precisely because it could not be checked from outside: every
+relevant endpoint returns 401 before it resolves a version, which is correct behaviour and also why
+it needed a signed-in human. Blocking a fleet whose only exit is a download page nobody had opened
+would have been the wrong order to do this in.
+
 ## Unresolved Questions
 
 1. C1's remaining half and C5 — real domain prefixes on all six protocols, a coordinated
