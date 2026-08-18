@@ -78,6 +78,8 @@ product's safety case.
 
 | C38 | P3 | **Fixed 18 Aug (PR #29)** — the gap is closed by a check, not by a reminder | **A production deploy failed and nothing was watching, so Relay 13 was published but undistributable for nine hours.** Found 18 August 2026, only because merging #28 prompted a check of whether the *previous* merge had actually deployed. It had not. PR #27 merged 17 Aug 20:34 local; Railway deployment `ddc2b301` at 20:37:52 is **FAILED**, and production went on serving the image from #26 until #28 deployed successfully at 05:24 the next morning. **Why it mattered rather than being cosmetic:** `RELAY_VERSION = 12 → 13` was in #27, not in #26 where the version's name suggests it lived. That constant drives two live paths — `relay-browser-client.ts:184` decides "your Relay is outdated" by `outcome.relayVersion < RELAY_VERSION`, and both `api/relay/download/route.ts:34` and `relay-download/page.tsx:40` resolve the download through `readRelayRelease(RELAY_VERSION)`. With the server still believing 12 was current, an operator on Relay 12 was told nothing, and the download page served **Relay 12**. So the changelog's own sentence — *"Relay 13 is published, and you have to update to get any of the Relay-side changes above"* — was false in production for nine hours, for a release whose whole point was Relay-side security fixes. Actual harm is plausibly zero: the window was 20:37–05:24 local, overnight for an internal fleet, and #28 carried the same commits so the state repaired itself. That is luck, not a control. **Cause not established:** the build log for `ddc2b301` contains one line, `scheduling build on Metal builder`, so this may be a Railway-side scheduling failure rather than anything in the code — which makes monitoring *more* necessary, not less, because a deploy can fail for reasons no amount of test coverage will catch. **Fifth instance of the shape**, after C23, C35, C36 and C37, and the one with the largest reach: the check that would have caught it — *did the merge actually deploy?* — does not exist at all. Nothing in CI, nothing in the runbook, no Railway notification. Note C23 is the same system failing the same way: it too was found by a human noticing production was broken. **Closed by the `deploy-verification` job in `.github/workflows/ci.yml` (PR #29), 18 August 2026.** The first recommendation here was a Railway notification and a human habit — a checklist item, which this register has now watched fail four times. It turned out to be mechanizable after all, for the same reason C37 was: **the signal already existed and nobody was reading it.** Railway's GitHub integration has been publishing deployment status to `repos/.../deployments` all along, so the check needs no Railway token and no secrets, only `deployments: read` on the default token. **The trap it had to avoid is worth reading**, because the obvious implementation would have been useless: Railway posted `in_progress` for `ddc2b301` and then never posted again — no failure state was ever recorded, so a check looking for `failure` would have passed the exact deploy that prompted the finding. The job therefore treats **only `success` as success**; silence, a stuck `in_progress`, and no deployment at all are all failures. Proven in both directions against real history before it was committed — `141cde3` passes, `6bf3985` fails and names the stuck-`in_progress` signature — which also caught a bug in the check itself: GitHub's `sha` filter needs the full 40-character SHA, and a short one matches nothing and reads as "never deployed". Ten-minute timeout against observed deploys of 1m28s–1m55s. |
 
+| C39 | P2 | Fixed 18 Aug (PR #30) — the mechanism; the **policy question it exposes is open and is the owner's** | **The only lever for forcing a fleet off a vulnerable Relay was broken, and it was broken in a way that would only have shown up on the day it was pulled.** Found 18 August while checking whether gate 3 had anything to test. `ticket-issuer.ts` stamped `minRelayVersion: MIN_RELAY_VERSION_BY_KIND[kind] ?? MIN_RELAY_VERSION`. That reads as a fallback and is an **override**: the per-kind entry replaces the global floor rather than raising it. Every ticket kind is present in the table — a property `ticket-min-version-by-kind.test.ts:92` pins *deliberately* — so the `??` branch was unreachable and **`MIN_RELAY_VERSION` was dead code**, which is why nothing ever caught it. Harmless at a global floor of 1. The moment anyone raised it, which is the single thing it exists for, four of the five kinds would have kept their lower table value — **profile launch among them, at 7** — while the operator believed the fleet floor had moved. Fixed with `Math.max(MIN_RELAY_VERSION, byKind ?? 0)`, which preserves the design rationale the sibling test's header argues for (raising one kind must not drag the others up) while making the global value an actual floor. Sabotage-proven: reverting to `??` turns four of five cases red. A companion assertion guards the table itself, so an entry below the global floor is now a failing test rather than a silent lie about intent. Ranked P2 rather than P3 because it disables incident response: it is not a defect that hurts today, it is a defect that removes the ability to react. **Confirmed by history — `MIN_RELAY_VERSION` has never changed since the commit that introduced it (`d7f5acd`), across thirteen Relay releases.** A control never once exercised in the life of the product had quietly stopped working, exactly as this audit's own rule predicts. |
+
 ## Handoff Audit — 17 August 2026
 
 Phase 04 was closed having forgotten C3, which Phase 01 had explicitly assigned to it. That prompted
@@ -464,6 +466,43 @@ would otherwise be rediscovered from scratch.
   the cost is local-only friction. **But it should not stay open indefinitely:** two permanently red
   files on the developer's machine re-teaches the habit that C2's `it.fails` cleanup removed, which
   is that red is normal. The suite has zero expected failures **on CI**; locally it does not.
+
+## The open policy question behind C39 — 18 August 2026
+
+Stated separately from the C39 row because the code defect is fixed and this is not a code question.
+It is the owner's, and it should be answered deliberately rather than drifting.
+
+**`MIN_RELAY_VERSION` is still 1, and the fleet is still on Relay 12 or earlier.** Relay 13 is the
+first build carrying the C26 fix — an enrolled Relay's trust root could be replaced over
+`/configure`, ranked **P2**, which converts an XSS in the web app into persistent trust-root
+replacement on every operator device and leaves the Relay a decryption oracle for whoever re-points
+it. It also carries C34. So the audit's headline, *no P0, P1 or P2 findings remain*, is true of the
+repository and **not true of the machines**. A fix that is not enforced is not deployed. The only
+pressure to update today is an advisory notice, and C38 has just demonstrated that the notice can
+silently stop working for nine hours.
+
+**The recommendation is to raise the floor to 13, and the argument is about timing more than
+principle.** The cost of enforcing is at its historical minimum right now: pre-pilot, no real
+accounts, an internal fleet, and a download page that serves 13. Every week that passes raises it.
+The refusal is already actionable — `ticket-verifier.ts:167` tells the operator the version they
+have, the version required, and where to get it — which is precisely the standard gate 3 asks for.
+And the mechanism has never been exercised in thirteen releases; pulling the lever while a mistake
+costs an afternoon is worth something on its own.
+
+**The argument against, which is real:** this is a rejection at *use*, not at adoption, and this
+register's own rule warns about exactly that. The mitigating difference is that the operator is not
+stranded — the message names the way out and the way out works. Pre-pilot, "mid-work" barely exists.
+
+**Not done here, on purpose.** It blocks colleagues' machines, so it is outward-facing in the way
+that wants a human decision even though reverting is one constant and one deploy. Prepared, not
+triggered.
+
+**Note the ordering, because it matters.** Raising the floor also gives gate 3 a real subject: v9–v12
+become genuinely refused, and the gate becomes runnable as literally worded rather than scoped down
+to the compatibility-update path. That is a **byproduct and not the reason**. Withdrawing a version
+to give a test something to chew on would be the tail wagging the dog; enforcing a floor because a
+P2 is sitting unpatched on every operator machine is just the right thing, and the gate happens to
+benefit.
 
 ## Unresolved Questions
 
