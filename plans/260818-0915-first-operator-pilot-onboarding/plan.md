@@ -1,6 +1,7 @@
 # Pilot — put the second operator on the tool and measure what breaks
 
-**Status:** prep done, blocked on a person · **Created:** 18 August 2026
+**Status:** ready to run · **Created:** 18 August 2026 · **Variant:** owner's secondary machine,
+pure OPERATOR account — see *"and what it costs"* before reading any result from it
 
 Production holds **2 user accounts and 4 `RelayDevice` rows — 1 active, 3 revoked, all created
 inside two hours on 6 August 2026**. The single active device is the owner's own machine. Measured,
@@ -40,18 +41,45 @@ Everything above is code-read and document-level. **No two-machine flow has ever
 - The sealed-box delivery end to end — admin's Relay seals to a second device's public key, server
   holds the box, that device opens it. Both endpoints are well covered on the Relay side
   (`handle-seal-operator-key`, `handle-receive-operator-key`,
-  `operator-key-grant-substitution`, `relay-paths-are-wired`). The **server action's happy path has
-  one test and it is an edge case** (no grant restored after retirement starts). Nothing exercises
-  the three parties together.
+  `operator-key-grant-substitution`, `relay-paths-are-wired`).
+
+  **The middle is now covered too, as of 18 August 2026.** The server action had one test and it was
+  an edge case (no grant restored after retirement starts) — the path the guide now recommends to
+  every new operator had never been run. Four tests added in
+  `relay-device-actions.database.test.ts`: the box is stored byte-for-byte with the id, fingerprint
+  and generation a receiver needs; a re-grant wipes all five fields of the previous delivery, so a
+  device cannot read a stale completion as its own; and both closed doors — revoked device, owner
+  removed from `ALLOWED_EMAILS` — refuse without writing. Sabotage-proven: dropping
+  `operatorKeyReadyAt: null` from the clear-list turns the re-grant test red, and replacing the
+  grant hash with a constant turns two red.
+
+  **Still unexercised: the three parties together, on real machines.** That is the pilot itself.
 - A clean machine installing Relay 13 from `/relay-download` with no prior state.
 - Whether `ALLOWED_EMAILS` + restart is genuinely all that stands between a new email and a working
   session.
 
+## Decided 18 August 2026 — and what it costs
+
+The owner will run this **on their own secondary machine, under a second account with no admin
+role**. That answers who and what, and it changes what the exercise can claim.
+
+**What a second machine of the same person still proves**, all of it currently unproven: a clean PC
+installing Relay 13 from `/relay-download` with no prior state; a second account reaching a working
+session on `ALLOWED_EMAILS` alone; the sealed box crossing two real machines; and the OPERATOR
+permission boundary, which the owner's own admin account has never been subject to. A pure operator
+cannot rescue itself, so anything that needs admin will surface as a refusal instead of hiding.
+
+**What it cannot prove, and must not be recorded as proving:** whether the guide is comprehensible
+to someone who did not write it. The reader will be its author. Step 6 below — the friction list —
+is the part this variant is weakest at, and its emptiness will mean nothing. **C29's class stays
+open after this runs.** Say so in the write-up rather than letting a green pilot close it.
+
 ## Steps
 
-1. **Pick the person and the machine.** A real second operator on their own PC. Not the
-   `mkt-windows-gate` VM — that VM is disposable, and enrolling it into production puts a throwaway
-   machine in the production registry and a real `VAULT_KEY_OPERATOR` on it, which is what
+1. ~~Pick the person and the machine.~~ **Decided:** owner's secondary PC, second Google account,
+   `ALLOWED_EMAILS` only — deliberately **not** in `ADMIN_EMAILS`. Not the `mkt-windows-gate` VM —
+   that VM is disposable, and enrolling it into production puts a throwaway machine in the
+   production registry and a real `VAULT_KEY_OPERATOR` on it, which is what
    `create-windows-gate-vm.ps1` warns against.
 2. **Add their email to `ALLOWED_EMAILS` on Railway, restart.** Time it. Confirm they can log in
    and that a click actually succeeds rather than only the login.
@@ -83,8 +111,15 @@ Everything above is code-read and document-level. **No two-machine flow has ever
 
 ## Unresolved questions
 
-1. **Who?** The pilot cannot start without a named second person. This is the only real blocker.
-2. Does the second account need `ADMIN_EMAILS`, or is a pure OPERATOR the more honest test? A pure
-   operator exercises the permission boundaries; an admin can rescue themselves and hides defects.
-3. Should the sealed-box happy path get a server-side test **before** a person walks it, or is the
-   pilot itself the acceptable first exercise of it?
+All three of the original questions were answered on 18 August 2026 — owner's secondary machine,
+pure OPERATOR, and yes the server-side test comes first (done). What is left:
+
+1. **A real second person, still.** This variant does not close C29's class, and nothing in this
+   plan should be read as if it did. Keep the question standing until someone who did not build the
+   tool has used it.
+2. **The operator key goes onto a second real machine either way.** Even the owner's own second PC
+   is a genuine expansion of where `VAULT_KEY_OPERATOR` lives, and §11 of the team guide starts
+   applying to that machine from the day it is enrolled. Decide now whether it stays enrolled after
+   the pilot or gets revoked and the key rotated.
+3. **Nothing reads `relayVersion` yet.** C40 writes the column; no screen shows it. After the pilot
+   there will be two rows worth looking at and still only a SQL client to look with.
