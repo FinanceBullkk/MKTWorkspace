@@ -462,14 +462,25 @@ would otherwise be rediscovered from scratch.
   appears exactly once in the repository. **It was not the cause of the two red suites** — they stay
   red after the fix — so this is a latent bug found on the way past, not the answer.
 
-  **The actual cause is still unknown**, and is recorded that way rather than guessed at twice.
-  Vitest reports the failure at *transform* time with no file, line, or stack. One lead worth
-  following next: `package.json` declares no `"type": "module"`, so `.ts` under `scripts/` is CJS
-  while these `.mjs` modules are ESM, and the two failing suites are the only ones that cross that
-  boundary. Low priority — CI is green, so the release-authority ceremony code is genuinely covered;
-  the cost is local-only friction. **But it should not stay open indefinitely:** two permanently red
-  files on the developer's machine re-teaches the habit that C2's `it.fails` cleanup removed, which
-  is that red is normal. The suite has zero expected failures **on CI**; locally it does not.
+  **Closed 18 August 2026. The cause was a shebang line meeting a CRLF checkout**, and both suites
+  now pass on this machine. `offline-root-ceremony.mjs` opens with `#!/usr/bin/env node` — the only
+  shebang in any importable source file in the repository. `core.autocrlf=true` with no
+  `.gitattributes` converts it to CRLF on Windows checkout, and vitest's transform mishandles that
+  first line; the whole module then fails to parse. Git stores the blob as LF, so Linux CI never
+  saw it. Fixed with `.gitattributes` carrying `*.mjs text eol=lf`, which turns off the checkout
+  conversion without touching committed content.
+
+  **Bisected, not reasoned about**, after two guesses had already been wrong here. Importing each
+  `.mjs` in the chain one at a time from a throwaway suite isolated the failure to
+  `offline-root-ceremony.mjs` alone; `node --check` accepted that same file. Two copies then
+  separated the variables — shebang stripped, CRLF kept, passes; shebang kept, CRLF stripped,
+  passes — so neither alone is sufficient and the pair is the cause.
+
+  **The recorded lead was also wrong, and that is the third wrong cause on this one entry.** The
+  CJS/ESM boundary explains nothing: `release-authority-format.mjs` imports cleanly from a `.ts`
+  suite under `scripts/`, crossing exactly the boundary the lead blamed. Both prior guesses and this
+  lead were produced by reasoning from the symptom; the answer came from bisection in under ten
+  minutes. That is the cheaper move and it should have been the first one.
 
 ## The open policy question behind C39 — 18 August 2026
 
