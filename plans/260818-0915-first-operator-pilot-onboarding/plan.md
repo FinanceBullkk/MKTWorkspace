@@ -153,6 +153,32 @@ found it in the form that matters: a ten-day delay nobody had noticed until the 
 **None of these needed step 5.** The pilot had already paid for itself before anyone tried to do a
 real unit of work, which is an argument for running the remaining steps rather than calling it done.
 
+## Verified on a real machine — 18 August 2026, evening
+
+The onboarding completed on the secondary PC with **no manual edit of `relay-config.json`**,
+confirmed by the operator. That is the evidence neither of the automated checks could produce:
+`relay:verify` never exercises the operator key route, and the wiring assertion only reads source.
+
+| MSI, from production | |
+|---|---|
+| `relayVersion` | **15** |
+| `operatorKeyReadyAt` | `2026-08-18 07:55:35Z` |
+| Sealed box | cleared — the delivery ran to completion |
+| Grant generation | 4 |
+
+So the Relay 14 fix works where it had to: a machine that had never held the operator key received
+one. Before today that was impossible for every operator who has ever existed, and the impossibility
+was invisible because the only machine that needed the path already had the key by another route.
+
+**What it took to get one second machine working, end to end:** two Relay releases, a re-pin in
+MKTBrowser, a page consolidation, a new publish path for the browser installer itself, and four
+defects fixed. None of it was known this morning; the audit that preceded it had closed six phases
+and left no P0/P1/P2.
+
+**Still not done: steps 5 and 6.** No real unit of work has been completed by that machine, and the
+friction list is still the four defects above rather than anything observed while working. The
+success criteria below are met for setup and not for use.
+
 ## Success criteria
 
 - A second `RelayDevice` row, active, with `relayVersion = 13` and a non-null `lastSeenAt` — which
