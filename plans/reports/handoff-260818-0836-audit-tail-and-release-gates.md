@@ -22,6 +22,24 @@ was already taken before that work: `data/backups/mkttool-prod-20260818-081925.s
 
 ## Do these first
 
+> **Both done, and item 2 turned out to be void. 18 August 2026, 09:15.**
+>
+> #32 merged as `e3808c1`. Verified rather than assumed: the migration reports `finished_at`
+> 01:55:11Z with `rolled_back_at` null in the production database, and `relayVersion` / `lastSeenAt`
+> both exist and are nullable. `deploy-verification` is green and `relay-executable` ran green on
+> the PR itself.
+>
+> **There is no team to tell.** Production holds **2 user accounts and 4 `RelayDevice` rows — 1
+> active, 3 revoked — all created inside two hours on 6 August**, none since. The single active
+> device is the owner's own machine, confirmed by the owner. So raising the floor to 13 blocked
+> exactly one device belonging to the person who raised it. Nobody was refused, nobody was waiting,
+> and the critical path this item claimed simply was not there.
+>
+> The claim was never checked against the database before being written down — it was inferred from
+> the floor being live. Same shape as the session's own rule, one level up: *a population not
+> measured does not exist*. Left in place above rather than deleted, because the correction is the
+> useful part.
+
 1. **Merge #32** once CI is green. Additive migration, two nullable columns, reversible with two
    `DROP COLUMN`s.
 2. **Tell the team the Relay floor is now 13.** The only item with a human on the critical path.

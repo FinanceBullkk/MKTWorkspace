@@ -563,6 +563,28 @@ next release* is **satisfied and no longer urgent**: v9–v12 are retained in
 clean Windows VM exists (`mkt-windows-gate`, snapshot `clean`, Secure Boot enrolled), so **gates 2
 and 3 are now blocked on nothing but someone running them.**
 
+**The production population, measured for the first time — 18 August 2026, 09:15.** Read-only query
+against the production database, the same one whose migration log carries `e3808c1`:
+
+| | |
+|---|---|
+| User accounts | **2** |
+| `RelayDevice` rows, all time | **4** — 1 active, 3 revoked |
+| Created | all four inside two hours on **6 August 2026**; none since |
+| The one active device | the **owner's own machine**, confirmed by the owner |
+
+Nothing in this register had ever checked. "The fleet", "the team", "the internal fleet" appear
+throughout and all of them describe a population of one. Raising `MIN_RELAY_VERSION` to 13 refused
+exactly one device, belonging to the person who raised it.
+
+This does not retract any finding — the defects were real and the fixes are real. It changes what
+the **remaining** work is worth. Gates 2 and 3 harden a release path that has delivered to one
+machine: gate 2 is power loss mid-update, gate 3 is whether a withdrawn installer can satisfy the
+floor from below. Both are genuine, neither is reachable by an operator who does not exist. Set
+against unresolved question 4 — that the tool has never met real operators — the half-day of
+infrastructure those gates need now looks like the second-best use of it, and this table is the
+reason to say so out loud rather than let the runbook's momentum decide.
+
 Questions 2 through 5 of the previous list — C2's seed policy, authorizing Phase 05 remediation,
 C28's block-or-warn, and C29's heartbeat — were all answered and implemented on 17 August 2026. They
 are removed rather than left standing, because a list of open questions that is mostly closed
