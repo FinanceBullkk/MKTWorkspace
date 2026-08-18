@@ -59,12 +59,20 @@ which is why it is corrected here rather than left to the register alone. The
 [findings register](../260816-0507-full-codebase-deep-audit/findings-register.md) remains the
 authority; this is the summary.
 
-**37 deep-audit findings (C1–C37) plus 15 from the 16 August sweep (F1–F15).**
+**The count lives in the register and is deliberately not repeated here.** It was restated twice and
+went stale twice within a day — first at 32, then at 37, while findings kept arriving after the
+phases closed. A number copied into a summary is a number that silently stops being true, and this
+document is read as a safety case, so a wrong one here is worse than no one at all. Everything below
+is phrased to stay correct as the register grows; for the current tally and per-finding state, read
+[findings-register.md](../260816-0507-full-codebase-deep-audit/findings-register.md), which is the
+only place either is maintained.
 
 - **No P0 remains.** No P1 remains. No P2 remains. **Nothing is open.**
-- **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26–C31, C33, C34, C35, C37, and F1–F5,
-  F8, F11–F14. C32 is fixed without a test, being a documentation claim; C36 is a tool install
-  rather than a code change and is proven by a real backup instead.
+- **Fixed with tests:** C2, C3, C4, C6–C15, C17–C21, C23, C26–C31, C33, C34, C35, C37, C39, and
+  F1–F5, F8, F11–F14. Three are closed by something other than a test, each for its own reason:
+  C32 is a documentation claim, C36 is a tool install proven by taking a real backup, and C38 is a
+  CI job whose subject is the deploy pipeline rather than the code.
+  *(This enumeration is a snapshot. The register is where it is maintained.)*
 - **Closed by decision, reasoning recorded:** C22, C24, F6, F7, F10, F15.
 - **Accepted residual, named:** C16, C25, F9.
 - **Half fixed, half deferred with a trigger:** C1 with C5. The reachable half — `verifyTicket`

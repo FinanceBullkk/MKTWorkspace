@@ -80,6 +80,8 @@ product's safety case.
 
 | C39 | P2 | Fixed 18 Aug (PR #30) — the mechanism; the **policy question it exposes is open and is the owner's** | **The only lever for forcing a fleet off a vulnerable Relay was broken, and it was broken in a way that would only have shown up on the day it was pulled.** Found 18 August while checking whether gate 3 had anything to test. `ticket-issuer.ts` stamped `minRelayVersion: MIN_RELAY_VERSION_BY_KIND[kind] ?? MIN_RELAY_VERSION`. That reads as a fallback and is an **override**: the per-kind entry replaces the global floor rather than raising it. Every ticket kind is present in the table — a property `ticket-min-version-by-kind.test.ts:92` pins *deliberately* — so the `??` branch was unreachable and **`MIN_RELAY_VERSION` was dead code**, which is why nothing ever caught it. Harmless at a global floor of 1. The moment anyone raised it, which is the single thing it exists for, four of the five kinds would have kept their lower table value — **profile launch among them, at 7** — while the operator believed the fleet floor had moved. Fixed with `Math.max(MIN_RELAY_VERSION, byKind ?? 0)`, which preserves the design rationale the sibling test's header argues for (raising one kind must not drag the others up) while making the global value an actual floor. Sabotage-proven: reverting to `??` turns four of five cases red. A companion assertion guards the table itself, so an entry below the global floor is now a failing test rather than a silent lie about intent. Ranked P2 rather than P3 because it disables incident response: it is not a defect that hurts today, it is a defect that removes the ability to react. **Confirmed by history — `MIN_RELAY_VERSION` has never changed since the commit that introduced it (`d7f5acd`), across thirteen Relay releases.** A control never once exercised in the life of the product had quietly stopped working, exactly as this audit's own rule predicts. |
 
+| C40 | P3 | Open — needs a column and a write, not a decision | **Nobody can see which Relay version any machine is running, and raising the floor to 13 made that expensive the same hour.** `RelayDevice` carries `name`, `userId`, `publicKey`, `createdAt` and `revokedAt` — **no version, no last-seen**. So immediately after C39 blocked every Relay below 13, there is no way to answer *who did we just block*, *has the fleet migrated*, or *is anyone still stuck*. The operator finds out by being refused; the owner finds out by being told. **The data already flows past on every single interaction.** The Relay stamps `relayVersion` into *every* response including rejections — a property `relay-http-server.ts:20` documents on purpose — and `relay-browser-client.ts:157,161` reads it, uses it to render the outdated notice, and then discards it. It is never sent to the server and never stored. **Third instance in this session of the same shape:** the signal exists and nobody reads it, after C37 (a Windows runner already existed in the sibling repository) and C38 (Railway had been publishing deploy status into GitHub all along). Recorded as P3 because nothing is broken and no secret is at risk; it is an observability gap, and its cost is measured in the fleet migration being invisible rather than in exposure. Cheap to close and worth doing before the next floor move, not after: one nullable column plus one write on any authenticated relay interaction. Noted separately in the C1/C5 plan for a different reason — a rollout across the fleet is a blind switch without it — which is the second time this absence has been the thing standing in the way. |
+
 ## Handoff Audit — 17 August 2026
 
 Phase 04 was closed having forgotten C3, which Phase 01 had explicitly assigned to it. That prompted
@@ -536,8 +538,17 @@ would have been the wrong order to do this in.
 
 The three Windows gates have a runbook: [windows-release-gates-runbook.md](windows-release-gates-runbook.md).
 It tests H52, H41/H42 and H54 as originally worded rather than the looser paraphrases in
-circulation, and it names the one thing that must happen *before* the next release or gate 3 becomes
-impossible forever: **keep a copy of a withdrawn version's installer.**
+circulation.
+
+**Status, 18 August 2026.** Two of the three blockers this list used to carry are gone. Gate 1 is
+**out of scope for v1** — the owner decided on 12 August that v1 ships unsigned to the internal
+fleet, so it is not a purchase waiting to be made; only its non-signature half is worth running, and
+that runs on the same VM as the others. The warning about keeping a withdrawn installer *before the
+next release* is **satisfied and no longer urgent**: v9–v12 are retained in
+`MKTBrowser/apps/desktop/.relay-payload/`. And gate 3 has a real subject for the first time — raising
+`MIN_RELAY_VERSION` to 13 means those versions are genuinely refused rather than merely old. The
+clean Windows VM exists (`mkt-windows-gate`, snapshot `clean`, Secure Boot enrolled), so **gates 2
+and 3 are now blocked on nothing but someone running them.**
 
 Questions 2 through 5 of the previous list — C2's seed policy, authorizing Phase 05 remediation,
 C28's block-or-warn, and C29's heartbeat — were all answered and implemented on 17 August 2026. They
