@@ -1,6 +1,6 @@
 # Rescope UI về TikTok-only + sửa hồi quy bản redesign
 
-**Ngày:** 19/08/2026 · **Nhánh:** master · **Trạng thái:** P0 xong, còn P1–P2
+**Ngày:** 19/08/2026 · **Nhánh:** master · **Trạng thái:** P0 + P03 xong (19/08 17:55), còn P04–P05
 
 ## Bối cảnh
 
@@ -23,7 +23,7 @@ Cả domain (`platformFamily`, `validatePlatformAccountFields`, `account-readine
 |---|-------|---------|------|
 | 01 | ✅ Mở đường cho TIKTOK trong domain | P0 chặn | [phase-01](phase-01-tiktok-in-domain-model.md) |
 | 02 | ✅ Bịt rò dữ liệu + khay cảnh báo | P0 | [phase-02](phase-02-auth-boundary-and-alerts.md) |
-| 03 | Rescope nav — gác FB/Reddit/pipeline | P1 | [phase-03](phase-03-nav-rescope.md) |
+| 03 | ✅ Rescope nav — gác FB/Reddit/pipeline | P1 | [phase-03](phase-03-nav-rescope.md) |
 | 04 | Flow người dùng + layout | P1 | [phase-04](phase-04-user-flow-and-layout.md) |
 | 05 | Font, UI chết, a11y | P2 | [phase-05](phase-05-polish.md) |
 
