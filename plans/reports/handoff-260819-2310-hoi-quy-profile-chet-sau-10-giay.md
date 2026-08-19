@@ -1,18 +1,78 @@
 # Handoff — hồi quy: profile mở lên rồi chết sau ~10 giây
 
-**19/08/2026 23:10** · Thay thế [handoff-260819-2245](handoff-260819-2245-viec-hoan-sang-phien-sau.md),
-bản đó viết lúc còn tưởng công cụ đã chạy được.
+**19/08/2026 23:10 · GIẢI QUYẾT XONG 20/08 00:20**
 
-## ⛔ Trạng thái: CÔNG CỤ ĐANG HỎNG — đừng chạy runbook TikTok
+---
 
-Mở profile → engine khởi động, tạo profile, mở cổng CDP, `launch()` trả về **thành công** →
-**~10 giây sau tiến trình chết.** UI hiện "terminating".
+# ✅ KẾT LUẬN CUỐI: CÔNG CỤ KHÔNG HỎNG
 
-**Nguyên nhân: `windowWatcher` trong `ChromiumBrowserDriver.ts` tự quyết định là người dùng đã
-đóng trình duyệt, rồi tháo dỡ profile.** Không phải `88dad47` — commit đó đã được thực nghiệm
-loại (xem dưới).
+**Bằng chứng:** 00:04:39 chờ tới khi `active = 0` rồi mới gọi `launch_profile` →
+**pid 22076 sống 393 giây liên tục**, `CDP pages = 1`, cửa sổ mở đúng trang browserscan.
+Log của app **không có một dòng nào** của đường đóng.
 
-Đừng đốt acc TikTok cho tới khi profile sống được quá 60 giây.
+## Chuỗi nhân quả thật
+
+```
+seat ban (lease treo tu lan chet truoc)
+  -> engine exit 76  — NHUNG exit 76 den SAU khi CDP da mo (do duoc: CDP tra loi pages=1 o 1.1s, chet o 1.5s)
+  -> windowWatcher thay CDP mat >1.5s
+  -> emit "closing"  -> UI hien "terminating"
+  -> gracefulShutdown + killBrowsersUsingDataDir
+```
+
+**"terminating" là triệu chứng ở cuối chuỗi, không phải nguyên nhân.** Nó làm cả hai phiên đi
+lạc: nhãn đó chỉ do `close()` hoặc `windowWatcher` phát, nên ai đọc mã cũng kết luận "app tự
+đóng" — đúng, nhưng app đóng vì *engine đã chết trước đó vì seat*.
+
+## Vì sao seat lúc nào cũng bận
+
+Gói free = **1 seat**. Mỗi lần engine chết không qua `Browser.close` để lại **lease mồ côi 7–17
+phút**. Tối 19/08 có **hai phiên chạy song song** cùng thử mở liên tục → seat gần như không bao
+giờ rảnh → mọi phép đo đều nhiễm nhiễu seat.
+
+## Bốn giả thuyết đã sai, và vì sao
+
+| Giả thuyết | Bác bỏ bằng |
+|---|---|
+| Probe kill cứng gây ra | Chết cả khi đóng êm |
+| Lease treo giữ slot → engine tự thoát | Đo lúc `active = 0` vẫn chết *(nhưng lần đó seat đã bị lượt đo khác chiếm giữa chừng)* |
+| `--disable-background-networking` giết | Đối chứng không cờ cũng chết ở 1.1s |
+| Cả 9 cờ giết | Sống 60s khi seat thật sự rảnh |
+
+Tất cả đều là **nhiễu seat** đọc nhầm thành tín hiệu.
+
+## Nghi thức đo bắt buộc từ nay
+
+Không có đường tắt. Trước **mỗi** phép thử:
+
+1. Đối chứng **không cờ** phải sống đủ **75 giây**
+2. Đóng bằng **`Browser.close`** (không kill)
+3. Rồi mới chạy phép thử
+
+Kết quả chỉ có giá trị khi đối chứng liền trước nó xanh. Thời điểm chết (0.8s / 1.1s / 1.5s /
+2.3s / 5.7s đều đã thấy) và việc CDP có trả lời **đều không** phân biệt được "chết vì cờ" với
+"chết vì seat".
+
+## Việc còn lại — không cái nào chặn runbook
+
+1. **`windowWatcher` báo sai nguyên nhân.** Nó phát `closing` như thể người dùng đóng cửa sổ,
+   trong khi thật ra engine đã thoát. Nên phân biệt "CDP mất vì tiến trình đã chết" với "người
+   dùng đóng tab", và **hiện mã thoát của engine** (76/77/78/79) lên UI. Đây là lỗi *thông báo*,
+   không phải lỗi *hành vi* — nhưng nó vừa đốt của hai phiên gần bốn tiếng.
+2. **Quét dọn lease mồ côi lúc khởi động** (mục nợ kỹ thuật cũ) — giờ thành ưu tiên cao hơn, vì
+   đây là thứ tạo ra toàn bộ chuỗi trên.
+3. Đối chiếu vân tay với persona (xem mục dưới) — `hardwareConcurrency: 16` vẫn chưa giải thích.
+
+## ⚠️ Hai phiên chạy song song trên cùng cây làm việc
+
+Phiên kia đã commit `d625453`, `363980d`, `a058eb6`, `c6ff114`, `24697b8` và viết
+[handoff-260819-2345](handoff-260819-2345-mot-thu-pham-chua-bat-duoc.md). Bản đó kết luận *"công
+cụ VẪN HỎNG"* — viết lúc 23:50, **trước** bằng chứng 393 giây ở trên. Phần "cái bẫy seat" của nó
+vẫn đúng và là mảnh ghép quyết định.
+
+Trước khi làm gì tiếp: **kiểm `git log` xem phiên kia đã đi tới đâu.**
+
+---
 
 ## Bằng chứng, theo thứ tự thu được
 
