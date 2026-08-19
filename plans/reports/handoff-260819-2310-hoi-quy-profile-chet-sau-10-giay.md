@@ -66,7 +66,37 @@ Vì sao khối cờ này chưa bao giờ lộ vấn đề trước đây: nó đ
 mà vô hại — nhưng suốt thời gian đó engine là **146, bản không có kiểm license**. Cặp "cờ mới +
 engine có license" chỉ gặp nhau tối 19/08.
 
-## ✅ Thủ phạm thật: `windowWatcher`
+## ⚠️ CẬP NHẬT 00:15 — KHÔNG TÁI HIỆN ĐƯỢC sau khi khởi động lại app
+
+Chạy lại app **từ terminal** (tắt hẳn rồi mở lại), gọi `launch_profile` qua MCP lúc 00:04:39:
+
+```
+pid 22076 -> SONG > 5 phut, CDP pages = 1, cua so mo dung trang browserscan
+log khong co MOT dong nao cua duong dong
+```
+
+⇒ Lỗi **không tái hiện trên một instance app vừa khởi động**. Mọi lần chết trước đó xảy ra trên
+instance app đã chạy từ ~18:00 và đã trải qua nhiều lần launch bị **giết từ bên ngoài** bằng
+`Stop-Process` (do tôi dò lỗi).
+
+### Giả thuyết mới, CHƯA kiểm chứng bằng code
+
+`windowWatcher` mồ côi. Khi một launch bị giết từ bên ngoài, `close()` không chạy nên
+`clearInterval(record.windowWatcher)` không chạy — interval cũ vẫn poll cổng cũ. Tới lúc nó kết
+luận "đóng rồi", callback gọi:
+
+```
+gracefulShutdown(r)  +  killBrowsersUsingDataDir(r.browserDataDir)
+```
+
+`killBrowsersUsingDataDir` giết **mọi tiến trình đang dùng data-dir của profile đó** — kể cả một
+launch MỚI vừa mở cho cùng profile. Khớp cả ba: chỉ chết khi app đã có launch bị giết trước đó,
+chết sau ~10s, và app mới khởi động thì không chết.
+
+**Việc phiên sau:** đọc `child.on("exit")` xem có `clearInterval(windowWatcher)` không. Nếu không
+có thì đó là lỗi thật và sửa rất nhỏ.
+
+## Thứ đã xác định chắc: `windowWatcher` là nơi THỰC THI cái chết
 
 [`ChromiumBrowserDriver.ts:1472`](../../MKTBrowser/apps/desktop/src/main/ChromiumBrowserDriver.ts#L1472)
 — poll `http://127.0.0.1:<port>/json/list` **mỗi giây**, và kích hoạt khi:
@@ -160,12 +190,46 @@ yarn workspace @mktbrowser/desktop build:win
 `apps/desktop` và `packages/profile-manager` với Node 22). Chạy `yarn dev` sẽ đổi nó sang Electron
 ABI và làm build gãy — hai chế độ xung khắc.
 
-## Nghiệm thu còn thiếu (sau khi profile sống lại)
+## ✅ Nghiệm thu browserscan — ĐÃ LÀM lúc 00:10 trên engine 151, persona VN, không proxy
 
-Mở profile **không proxy** → `browserscan.net` → đọc **DNS Leak**: phải ra resolver **VNPT / Việt
-Nam**. Trước khi vá là `74.114.31.150` + 5 IP nước ngoài. Vá ở `88dad47`, **chưa ai xác nhận**.
+```
+Bot Detection ............ No        ✅
+authenticity ............. 90%
+language ................. vi-VN    ✅
+DNS Leak ................. 172.217.47.22 (+8)   <- IP cua Google
+```
 
-Bấm luôn: **"Detection"** cạnh *IP Time Zone* (đang đỏ) và **"Unexpand"** ở thanh *authenticity 90%*.
+### "DNS leak" KHÔNG phải lỗi trình duyệt — là cấu hình máy
+
+```
+Get-DnsClientServerAddress:
+  Ethernet : 8.8.8.8, 8.8.4.4    <- Google DNS dat CUNG tren may
+  Wi-Fi    : 172.20.10.1         <- gateway hotspot iPhone
+```
+
+Chromium hỏi resolver mà hệ điều hành chỉ định. **Không cờ nào sửa được.** `88dad47` nhắm vào DoH,
+còn thứ browserscan bắt được là DNS của máy.
+
+**Hệ quả cho runbook: chạy trên hotspot thì vấn đề tự biến mất** — DNS đi tới `172.20.10.1` (điện
+thoại) rồi ra nhà mạng, khớp với IP di động. Đừng chạy profile trên đường Ethernet đang cắm DNS
+Google. Muốn sửa hẳn thì để DNS Ethernet về tự động (DHCP).
+
+### Còn nghi: vân tay có thể đang rò thông số host
+
+Probe của chính app (`[mkt-browser] post-bootstrap probe`) trong log báo:
+
+```
+hardwareConcurrency: 16     <- may MSI co 16 lo^i
+tz: "Asia/Saigon"           <- mui gio host (co the chi la alias cua Asia/Ho_Chi_Minh)
+langs: ["vi-VN","vi","fr-FR","fr","en-US","en"]   <- fr-FR o dau ra?
+brands: [{"brand":"Not=A?Brand",...}]              <- ky tu la
+```
+
+**Chưa đối chiếu được với persona** — `list_profiles` qua MCP không phơi trường vân tay (trả None).
+Phiên sau đọc thẳng DB profile-manager. Nếu persona khai 8 lõi mà trang thấy 16 thì đó là rò thật,
+và nghiêm trọng hơn mọi thứ trong file này.
+
+Chưa bấm: **"Detection"** cạnh *IP Time Zone* (đang đỏ), **"Unexpand"** ở thanh *authenticity 90%*.
 
 ## Merge — đích là `main`, KHÔNG phải `master`
 
