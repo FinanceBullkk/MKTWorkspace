@@ -5,20 +5,34 @@ không thay thế. Bản đó đã được một phiên chạy song song cập 
 về chẩn đoán (cờ vô can, `windowWatcher` là thủ phạm). Bản này ghi phần bổ sung: **những gì đã được
 commit vào mã nguồn**, một lỗi thứ 7 vừa tìm ra, và cái bẫy đo lường đã làm hỏng 8 lượt seat.
 
-## ⛔ Trạng thái: vẫn phải coi công cụ là HỎNG
+## ⛔ Trạng thái: công cụ VẪN HỎNG — và `0.3.7` KHÔNG chữa được
 
-Chưa có profile nào sống quá 60 giây kể từ khi hỏng. **Đừng chạy runbook TikTok.**
+`windowWatcher` là thủ phạm, và **nhánh này chưa đụng một dòng nào vào nó.** Bản vá thật chưa
+được viết. Đừng cài `0.3.7` rồi mong profile sống.
 
-Có `0.3.7` để cài, có lý do để tin nó khá hơn, **không có bằng chứng nó chữa được**.
+**Đừng chạy runbook TikTok.**
+
+### `0.3.7` để làm gì, nếu không chữa được
+
+Hai thứ, đều không phải hồi quy 10 giây:
+
+1. `get_runtime_info` trả **đúng** phiên bản đang chạy (xem "Bẫy số 0.3.1"). Cần cái này trước,
+   nếu không thì mọi lần "đã cài chưa" ngày mai đều đọc phải một hằng số.
+2. `Translate,MediaRouter` được khôi phục — bị vứt âm thầm từ 19/08.
+
+Cài hay không tuỳ, nhưng **cài nó xong profile vẫn sẽ chết ~10 giây.** Đó là kết quả đúng như dự
+kiến, không phải bằng chứng bản vá hỏng.
 
 ## Việc làm ngay, theo thứ tự
 
-1. **Cài** `MKTBrowser/apps/desktop/release/installer/MKTBrowser-win-x64.exe` *(cần bấm, nâng quyền)*
-2. **Kiểm bản đã cài đúng chưa**: gọi `get_runtime_info` qua MCP → phải ra **`appVersion: 0.3.7`**.
-   Ra `0.3.1` ⇒ installer không đè lên bản cũ (xem mục "Bẫy số 0.3.1").
-3. **Mở một profile, bấm đồng hồ.** Sống quá 60 giây = đạt. Chết ~10 giây = bản vá cờ không phải thuốc.
+1. **Đọc kết quả phép đo `ZERO-PAGES` / `CDP-UNREACHABLE`** của phiên song song. Không có nó thì
+   sửa `createWindowWatcher` là đoán — tối nay đã đoán sai hai lần rồi.
+2. **Sửa `createWindowWatcher`** theo đúng nhánh đã nổ.
+3. **Bump + rebuild** (`0.3.8`), cài, mở profile, bấm đồng hồ. Sống quá 60 giây = đạt.
 4. Đạt → nghiệm thu DNS ở browserscan → rồi mới tới TikTok.
-5. Không đạt → nhảy xuống mục "Nếu vẫn chết ~10 giây".
+
+Nếu cài `0.3.7` trước để lấy `appVersion` đúng: gọi `get_runtime_info` → phải ra **`0.3.7`**.
+Ra `0.3.1` ⇒ installer không đè lên bản cũ.
 
 ## Đã commit (nhánh `feat/cloakbrowser-licensed-engine-channel`, chưa đẩy)
 
