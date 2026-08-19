@@ -45,10 +45,22 @@ Hoist **toàn bộ** khối cờ ra khỏi `if (profile.proxy)`, áp cho mọi p
 --disable-client-side-phishing-detection
 ```
 
-Nghi phạm số 1: **`--disable-background-networking`**. Đã chứng minh trong phiên rằng kiểm license
-của CloakBrowser **đi qua tầng mạng của Chromium** (`--disable-features=AsyncDns` biến exit 78
-thành 76). Nếu nhịp heartbeat license bị xếp là "background networking" thì: lần kiểm đầu qua →
-heartbeat sau bị chặn → engine tự thoát. Khớp cả ba triệu chứng.
+### ❌ `--disable-background-networking` KHÔNG phải thủ phạm — đã loại bằng thực nghiệm
+
+Đo lúc 23:16, engine trần + đúng một cờ đó: **sống qua 35 giây** (+5/+10/+20/+35 đều SỐNG).
+
+Lý lẽ ban đầu nghe rất thuyết phục — kiểm license đi qua tầng mạng Chromium (đã chứng minh:
+`--disable-features=AsyncDns` biến exit 78 thành 76), nên heartbeat có thể bị xếp là background
+networking. **Sai.** Ghi lại đây để phiên sau đừng mất một lượt seat đi lại đường này.
+
+### Còn lại trong diện nghi
+
+Tám cờ kia của khối hoist, hoặc **tổ hợp** của chúng, hoặc **không phải cờ nào cả** — trường hợp
+đó thì thủ phạm nằm ở phía app (`windowWatcher`, hoặc đường tháo dỡ sau `launch()`).
+
+Phép thử kế tiếp đã cắm: chạy engine trần với **cả 9 cờ hoist cùng lúc**.
+- Chết → là cờ, bisect tiếp trong 8 cái còn lại
+- Sống → **cờ vô can, thủ phạm ở phía app** — đổi hẳn hướng điều tra
 
 Vì sao trước đây không lộ: **engine 146 không có kiểm license.** Cờ này đã áp cho profile có proxy
 nhiều tháng mà vô hại.
@@ -168,7 +180,7 @@ mang nó. Đáng ra phải nghi mình trước.
 
 ## Câu chưa giải quyết
 
-1. `--disable-background-networking` có đúng là thủ phạm, hay cờ khác trong nhóm 6?
+1. ~~`--disable-background-networking`~~ đã loại. Cờ nào trong 8 cái còn lại — hay không phải cờ nào, mà là phía app?
 2. DNS sau khi vá có về VNPT không?
 3. Múi giờ đỏ và 10% thiếu trên browserscan là gì?
 4. Có đẩy nhánh lên GitHub mở PR sẵn không?
