@@ -1,5 +1,9 @@
 # Việc hoãn sang phiên sau — 19/08/2026 22:45
 
+> ⚠️ **ĐÃ LỖI THỜI.** Bản này viết lúc còn tưởng công cụ chạy được. Sau đó phát hiện hồi quy:
+> profile mở lên rồi chết sau ~10 giây, do chính commit `88dad47` của phiên này.
+> Đọc [handoff-260819-2310](handoff-260819-2310-hoi-quy-profile-chet-sau-10-giay.md) thay cho bản này.
+
 Chốt cuối phiên. Tool đã chạy được; phần dưới là nợ, không cái nào chặn buổi test TikTok.
 
 ## Nghiệm thu còn thiếu — làm trước tiên, 3 phút
