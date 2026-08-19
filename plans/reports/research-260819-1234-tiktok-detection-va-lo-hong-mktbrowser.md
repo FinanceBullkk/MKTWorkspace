@@ -481,3 +481,48 @@ Branch `feat/cloakbrowser-licensed-engine-channel`, commit `f6fdeeb`, 5 file, +3
 4. Persona Mac trên host Windows: chọn (a) cảnh báo UI / (b) snap về Windows / (c) chỉ dùng persona
    Windows. Đề xuất (c) — không cần code.
 
+---
+
+## 12. [ĐO BÊN THỨ BA 19:18] browserscan trên engine 151
+
+Phép chấm đầu tiên **không phải của mình**. Persona Việt, **không proxy** — đúng cấu hình mà
+buổi test TikTok đầu tiên sẽ chạy.
+
+| Mục | Kết quả |
+|---|---|
+| **Bot Detection** | **No** ✅ |
+| **Fingerprint authenticity** | **90%** |
+| Browser | Chrome 151.0.7922.109 · Windows 11 ✅ |
+| IP / ISP | `2001:ee0:…` · ho chi minh / Vietnam · VNPT |
+| IP Time Zone | Asia/Ho_Chi_Minh ✅ khớp persona |
+| language | vi-VN ✅ |
+| Proxy | No ✅ đúng cấu hình |
+| **DNS Leak** | **`74.114.31.150` + 5 resolver nữa — đều ở nước ngoài** ❌ |
+
+Bốn trường nhận dạng (IP, múi giờ, ngôn ngữ, nền tảng) **đồng nhất**. Không mâu thuẫn nội tại,
+không bị chấm là bot.
+
+### Lỗi tìm ra nhờ phép đo này — và nó nằm đúng đường test
+
+DNS đi qua resolver nước ngoài trong khi IP là VNPT TP.HCM. Nguyên nhân là **phạm vi**, không
+phải logic: toàn bộ cờ chống rò DNS (`--dns-over-https-mode=off`, `--disable-features=DnsOverHttps…`,
+`--dns-prefetch-disable`) nằm trong `if (profile.proxy)`. Profile **không** proxy không nhận
+dòng nào ⇒ Chrome tự nâng cấp lên DoH ⇒ DNS ra Cloudflare/Google.
+
+Mà profile test đầu tiên **chính là ca không proxy** (acc rác trên hotspot). Không sửa thì phép
+đo 72h mang sẵn một điểm lệch đã biết.
+
+Đã sửa: `88dad47` — hoist khối DNS ra khỏi nhánh proxy, áp cho mọi profile.
+
+### Chưa xử: egress là IPv6
+
+`2001:ee0:…` là IPv6 của VNPT. Chưa quan trọng lúc không proxy (đó là IP thật, đúng như khai).
+**Thành vấn đề ở GĐ 1**: proxy chỉ IPv4 thì IPv6 đi vòng qua proxy — đường rò IP thật kinh điển.
+Launch có proxy đẩy mọi thứ qua cầu SOCKS5 nên HTTP an toàn; khe hở còn lại là WebRTC, đã phủ
+bằng rule tường lửa + `--fingerprint-webrtc-ip`.
+
+### Hai chỗ chưa đọc kỹ
+
+- **IP Time Zone hiển thị màu đỏ** trên browserscan. Persona và IP đều Asia/Ho_Chi_Minh nên
+  không rõ nó cảnh báo gì — phải bấm "Detection" xem chi tiết.
+- **10% còn thiếu** của "fingerprint authenticity" là gì — trang không nói ở màn tóm tắt.
