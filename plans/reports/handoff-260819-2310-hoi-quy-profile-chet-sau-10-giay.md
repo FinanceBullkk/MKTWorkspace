@@ -8,7 +8,9 @@ bản đó viết lúc còn tưởng công cụ đã chạy được.
 Mở profile → engine khởi động, tạo profile, mở cổng CDP, `launch()` trả về **thành công** →
 **~10 giây sau tiến trình chết.** UI hiện "terminating".
 
-Nguyên nhân gần như chắc chắn: **hồi quy do commit `88dad47`** (của phiên này).
+**Nguyên nhân: `windowWatcher` trong `ChromiumBrowserDriver.ts` tự quyết định là người dùng đã
+đóng trình duyệt, rồi tháo dỡ profile.** Không phải `88dad47` — commit đó đã được thực nghiệm
+loại (xem dưới).
 
 Đừng đốt acc TikTok cho tới khi profile sống được quá 60 giây.
 
@@ -53,20 +55,46 @@ Lý lẽ ban đầu nghe rất thuyết phục — kiểm license đi qua tầng
 `--disable-features=AsyncDns` biến exit 78 thành 76), nên heartbeat có thể bị xếp là background
 networking. **Sai.** Ghi lại đây để phiên sau đừng mất một lượt seat đi lại đường này.
 
-### Còn lại trong diện nghi
+### ❌ Cả 9 cờ cũng KHÔNG phải thủ phạm — đã loại bằng thực nghiệm
 
-Tám cờ kia của khối hoist, hoặc **tổ hợp** của chúng, hoặc **không phải cờ nào cả** — trường hợp
-đó thì thủ phạm nằm ở phía app (`windowWatcher`, hoặc đường tháo dỡ sau `launch()`).
+Đo 23:33, engine trần + **cả 9 cờ hoist cùng lúc**: sống qua **60 giây** (+5/+10/+20/+35/+60).
 
-Phép thử kế tiếp đã cắm: chạy engine trần với **cả 9 cờ hoist cùng lúc**.
-- Chết → là cờ, bisect tiếp trong 8 cái còn lại
-- Sống → **cờ vô can, thủ phạm ở phía app** — đổi hẳn hướng điều tra
+⇒ **`88dad47` được minh oan.** Bộ cờ vô can. Mốc thời gian trùng hợp đã đánh lừa cả tôi lẫn
+cách đọc bằng chứng.
 
 Vì sao khối cờ này chưa bao giờ lộ vấn đề trước đây: nó đã áp cho profile **có proxy** nhiều tháng
 mà vô hại — nhưng suốt thời gian đó engine là **146, bản không có kiểm license**. Cặp "cờ mới +
 engine có license" chỉ gặp nhau tối 19/08.
 
-## Bản vá — ĐÃ VIẾT, CHƯA COMMIT, CHƯA XÁC NHẬN
+## ✅ Thủ phạm thật: `windowWatcher`
+
+[`ChromiumBrowserDriver.ts:1472`](../../MKTBrowser/apps/desktop/src/main/ChromiumBrowserDriver.ts#L1472)
+— poll `http://127.0.0.1:<port>/json/list` **mỗi giây**, và kích hoạt khi:
+
+- **0 target `type=="page"`** liên tục >1.5s, **hoặc**
+- **CDP không trả lời** liên tục >1.5s
+
+Kích hoạt rồi thì gọi callback ở dòng 865: emit `closing` → **UI hiện "terminating"** →
+`gracefulShutdown()` → `killBrowsersUsingDataDir()`. Khớp từng chữ với triệu chứng.
+
+### Vì sao mọi phép thử trước đó đánh lừa
+
+Các lần chạy engine trần của tôi **không có `--remote-debugging-port`** ⇒ không có watcher nào theo
+dõi ⇒ đương nhiên sống. Tôi đã so sánh sai đối tượng suốt buổi: "engine trần sống, app chết" bị
+đọc thành "app truyền cờ độc", trong khi khác biệt thật là **có watcher hay không**.
+
+### Phép thử đang chạy khi kết phiên
+
+Mở engine kèm `--remote-debugging-port=9333` và poll `/json/list` y hệt watcher, in `pages=N` mỗi
+giây. Kết quả sẽ chỉ đúng một trong hai nhánh:
+
+- **`ZERO-PAGES`** → 151 không mở page target như 146. Sửa: watcher phải phân biệt "chưa có tab"
+  với "đã đóng tab", hoặc nới ngưỡng khởi động (hiện chỉ bỏ qua 2 giây đầu).
+- **`CDP-UNREACHABLE`** → cổng debug chết/đổi sau khi khởi động. Sửa ở tầng khác.
+
+Đọc log của tiến trình nền trước khi làm gì.
+
+## Bản vá cờ DNS — ĐÃ VIẾT, CHƯA COMMIT (giờ là việc RIÊNG, không liên quan hồi quy)
 
 Nằm trong working tree: `M apps/desktop/src/main/ChromiumBrowserDriver.ts` (HEAD = `186dcee`).
 
@@ -84,8 +112,8 @@ Hai thay đổi:
 
 ## Việc phiên sau, theo thứ tự
 
-1. **Đọc kết quả phép thử 9 cờ** (đã cắm sẵn tối 19/08, xem mục "Còn lại trong diện nghi").
-   Sống → thủ phạm ở phía app, đổi hướng. Chết → bisect trong 8 cờ còn lại.
+1. **Đọc log phép thử `--remote-debugging-port`** để biết watcher thấy `ZERO-PAGES` hay
+   `CDP-UNREACHABLE`, rồi sửa `createWindowWatcher` theo đúng nhánh đó.
 2. **Commit bản vá** đang nằm trong tree.
 3. **Rebuild `0.3.7`** — xem mục "Lệnh build".
 4. **Cài** *(cần bấm, installer nâng quyền để ghi rule tường lửa)*.
@@ -181,7 +209,7 @@ mang nó. Đáng ra phải nghi mình trước.
 
 ## Câu chưa giải quyết
 
-1. ~~`--disable-background-networking`~~ đã loại. Cờ nào trong 8 cái còn lại — hay không phải cờ nào, mà là phía app?
+1. Watcher thấy `ZERO-PAGES` hay `CDP-UNREACHABLE`? Quyết định cách sửa.
 2. DNS sau khi vá có về VNPT không?
 3. Múi giờ đỏ và 10% thiếu trên browserscan là gì?
 4. Có đẩy nhánh lên GitHub mở PR sẵn không?
