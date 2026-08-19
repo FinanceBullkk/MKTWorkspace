@@ -62,8 +62,9 @@ Phép thử kế tiếp đã cắm: chạy engine trần với **cả 9 cờ hoi
 - Chết → là cờ, bisect tiếp trong 8 cái còn lại
 - Sống → **cờ vô can, thủ phạm ở phía app** — đổi hẳn hướng điều tra
 
-Vì sao trước đây không lộ: **engine 146 không có kiểm license.** Cờ này đã áp cho profile có proxy
-nhiều tháng mà vô hại.
+Vì sao khối cờ này chưa bao giờ lộ vấn đề trước đây: nó đã áp cho profile **có proxy** nhiều tháng
+mà vô hại — nhưng suốt thời gian đó engine là **146, bản không có kiểm license**. Cặp "cờ mới +
+engine có license" chỉ gặp nhau tối 19/08.
 
 ## Bản vá — ĐÃ VIẾT, CHƯA COMMIT, CHƯA XÁC NHẬN
 
@@ -83,8 +84,8 @@ Hai thay đổi:
 
 ## Việc phiên sau, theo thứ tự
 
-1. **Xác nhận thủ phạm** *(tuỳ chọn, để hiểu)*: chạy engine trần chỉ thêm
-   `--disable-background-networking`, xem có chết trong 35s không.
+1. **Đọc kết quả phép thử 9 cờ** (đã cắm sẵn tối 19/08, xem mục "Còn lại trong diện nghi").
+   Sống → thủ phạm ở phía app, đổi hướng. Chết → bisect trong 8 cờ còn lại.
 2. **Commit bản vá** đang nằm trong tree.
 3. **Rebuild `0.3.7`** — xem mục "Lệnh build".
 4. **Cài** *(cần bấm, installer nâng quyền để ghi rule tường lửa)*.
