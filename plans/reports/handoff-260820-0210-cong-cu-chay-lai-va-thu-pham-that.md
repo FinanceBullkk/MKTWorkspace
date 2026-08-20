@@ -4,21 +4,49 @@
 và [handoff-260819-2345](handoff-260819-2345-mot-thu-pham-chua-bat-duoc.md). Cả hai đều sai ở phần
 kết luận, theo hai hướng khác nhau.
 
-## ✅ Trạng thái: ĐẠT
+## ✅ Trạng thái: ĐẠT — nguyên nhân đã CHỐT bằng tái tạo có chủ đích
 
-`0.3.8` chạy trên bản đóng gói, profile **sống trọn 90 giây**, đóng bằng `Browser.close`, exit 0,
-không SIGTERM/SIGKILL ⇒ seat được nhả sạch.
+`0.3.9` chạy trên bản đóng gói, profile **sống trọn 90 giây**, đóng bằng `Browser.close`, exit 0,
+không SIGTERM/SIGKILL ⇒ seat được nhả sạch. `appVersion` báo đúng.
+
+**Có thể chạy runbook TikTok** — với đúng **một** profile một lúc.
+
+### Tái tạo có chủ đích (20/08 07:52 và 08:00)
+
+Giữ seat bằng một engine trần, rồi bảo app mở profile:
 
 ```
-02:06:52  launch_profile -> pid 24608, cdp 9222
-  +2s .. +40s   alive, pages 1 -> 2
- +94.6s  CLOSE-REQUESTED -> Browser.close -> CHILD-EXIT exit=0 -> SHUTDOWN-COMPLETE
+07:52:10  giu seat bang engine tran
+07:52:13  launch_profile -> LOI "Chromium exited during launch with code 76"
+          log:  +2.253s  CHILD-EXIT  exit=76
+07:52:55  nha seat (Browser.close, exit 0)
+07:53:23  mo lai -> SONG, pages=2      => seat hoi ngay, khong treo lease
 ```
 
-`get_runtime_info` báo đúng `appVersion: 0.3.8`. Không có `ZERO-PAGES`, không `CDP-UNREACHABLE`,
-không `SWEEP-DISCOVERY-FAILED`.
+`exit=76` lần đầu tiên nằm trong log. **Hết seat license là nguyên nhân gốc**, không còn là suy luận.
 
-**Có thể chạy runbook TikTok.**
+### Nhưng hình dạng hôm nay KHÁC triệu chứng gốc
+
+| | Đêm 19/08 | Sáng 20/08 |
+|---|---|---|
+| `launch_profile` | báo **thành công** | báo **lỗi** |
+| Chết lúc | ~10 giây | 1.6–2.3 giây, trong lúc launch |
+| Watcher | nổ, UI "terminating" | **không nổ** |
+
+Cùng nguyên nhân, hai cách biểu hiện — vì đường launch đã được làm cứng (`2ec3934`/`3c74b08`),
+nó bắt cú chết ngay trong lúc khởi động. Mã cũ thì `waitForCdpSessionReady` qua được **trước** khi
+có phán quyết license, nên báo thành công, rồi watcher mới phát hiện xác.
+
+⇒ Nói cho đúng: **hết seat là nguyên nhân; "chết sau 10 giây" chỉ là cách mã cũ trình bày nó.**
+
+### Thông điệp lỗi — đã sửa (`9c4f4b7`)
+
+Trước: `INTERNAL_ERROR: Chromium exited during launch with code 76`.
+Nay: `ENGINE_UNAVAILABLE` + *"your plan's session limit is reached. Close another running profile,
+or raise the limit at https://cloakbrowser.dev (the free key allows one at a time)."*
+
+Bản đồ thông điệp `LICENSE_EXIT_MESSAGES` **đã có sẵn từ trước** cho cả 76/77/78/79 — nhưng chỉ ghi
+ra stderr, mà Electron đóng gói vứt stderr. Câu trả lời nằm sẵn trong máy suốt đêm mà không ai đọc được.
 
 ## Thủ phạm thật: hết seat license, tự nuôi chính nó
 
@@ -114,15 +142,31 @@ Một lần mở profile là đủ để biết chuyện gì xảy ra. Cả tố
 5. Quét dọn mồ côi lúc khởi động — app bị tắt cứng thì chrome con vẫn giữ seat.
 6. Phase-04 dựng lại tile/layout · bộ ký compatibility set · IPv6 khi lên proxy.
 
+## Cách "fix" — phần lớn không phải code
+
+1. **Không có bug trình duyệt.** Gói free = 1 seat. Code giờ báo đúng.
+2. **Đã sửa:** thông điệp lỗi (`9c4f4b7`), và vòng lặp SIGKILL-cắt-nhả-seat (`f8b1962`).
+3. **Còn sửa được bằng code, chưa làm:** quét dọn mồ côi lúc khởi động. Tắt cứng app ⇒ chrome con
+   giữ seat 7–17 phút, không có cách ép nhả. Cách làm: đọc `--remote-debugging-port` từ dòng lệnh của
+   tiến trình mồ côi, gửi `Browser.close` — **không SIGKILL**. `findBrowserProcessesUsingDataDir`
+   đã có sẵn.
+4. **Không sửa được bằng code:** muốn chạy **>1 profile cùng lúc** thì phải nâng gói. Nếu kế hoạch
+   TikTok là nhiều acc song song thì đây mới là bức tường thật.
+
+### Quy tắc vận hành
+
+- Luôn đóng bằng **Stop / `close_profile`** — đường duy nhất nhả seat.
+- **Đừng tắt cứng app** khi còn profile đang mở.
+- Gặp lỗi seat → xem log, tìm `SIGKILL`. Có SIGKILL = mất seat 7–17 phút, chờ.
+
 ## Việc kế tiếp
 
 1. **Nghiệm thu DNS**: mở profile **không proxy** → `browserscan.net` → mục **DNS Leak** phải ra
    resolver **VNPT / Việt Nam**. Trước khi vá là `74.114.31.150` + 5 IP nước ngoài. Vá ở `88dad47`,
-   **vẫn chưa ai xác nhận** — đây là món nợ cũ nhất còn lại.
+   **vẫn chưa ai xác nhận** — món nợ cũ nhất còn lại.
    Bấm luôn "Detection" cạnh *IP Time Zone* (đang đỏ) và "Unexpand" ở thanh *authenticity 90%*.
 2. Đạt → chạy runbook TikTok.
-3. Merge: đích là **`main`**, không phải `master`. Thứ tự: `pull --rebase origin main` →
-   `test:installer` → đẩy nhánh → PR.
+3. Merge: đích là **`main`**, không phải `master`.
 
 ## Bài học — 7 lỗi, cùng một hình dạng
 
