@@ -115,11 +115,79 @@ Muốn resolver ra Việt Nam: `Set-DnsClientServerAddress -InterfaceAlias Ether
 (trả về DHCP), hoặc chạy trên hotspot. Tôi **không tự đổi** — đây là máy anh đang dùng, và mất phân
 giải giữa chừng thì phiền hơn cái nó sửa.
 
+### 7. Đã đo. Chưa từng có lỗi DNS phía trình duyệt.
+
+Đo lúc 11:37–11:45 trên bản `0.3.11` tự build, profile `876a1611` (không proxy, timezone VN).
+
+**Phép 1 — engine có tự phân giải tên miền không?** Đây mới là phép thử của code, và nó không phụ
+thuộc trang web nào đọc hộ. Đếm kết nối của `chrome.exe`:
+
+```
+tổng kết nối TCP           : 33
+tới bất kỳ resolver nào    : KHÔNG CÓ
+cổng 853 (DNS-over-TLS)    : KHÔNG CÓ
+socket UDP cổng 53         : KHÔNG CÓ
+```
+
+Engine không mở một kết nối nào tới máy chủ DNS ⇒ **Windows phân giải, không phải trình duyệt**.
+Đúng thứ `88dad47` nhắm tới. Đạt.
+
+**Phép 2 — browserscan (`/dns-leak`)**
+
+```
+IP    2001:ee0:5003:...   ISP: VNPT   ho chi minh city / Vietnam
+DNS   172.253.x, 172.217.x, 74.114.31.x, 74.114.28.x
+      -> toàn bộ "Google", phần lớn Singapore, vài cái Hong Kong
+```
+
+#### Chỗ lật ngược kết luận cũ
+
+Dải `74.114.31.x` chính là dải bị ghi là "resolver nước ngoài đáng ngờ" hôm 19/08
+(`74.114.31.150`). Tra ngược tên miền:
+
+```
+74.114.31.151 -> 151.31.114.74.bc.googleusercontent.com
+74.114.28.17  ->  17.28.114.74.bc.googleusercontent.com
+```
+
+**Là Google.** Sáu "resolver nước ngoài" trước bản vá **cũng đã luôn là Google DNS của máy**. Không
+có rò rỉ nào từ trình duyệt, cả trước lẫn sau bản vá.
+
+Nghĩa là món nợ cũ nhất tồn tại vì **một chẩn đoán sai**, không phải vì một bug chưa sửa. Cái
+browserscan báo, từ đầu, chỉ là `8.8.8.8` mà máy được cấu hình sẵn — đúng như handoff 19/08 23:10
+nói, trước khi bị report sau ghi đè.
+
+Chủ máy đã chốt **giữ 8.8.8.8** (20/08). IP VNPT + resolver Google Singapore là có lệch, nhưng dùng
+Google DNS là chuyện phổ biến ⇒ tín hiệu yếu, không phải cờ đỏ.
+
+#### Phát sinh: máy đang chạy IPv6
+
+IP mà browserscan thấy là `2001:ee0:...` — IPv6 của VNPT. Gạch đầu dòng "IPv6 khi lên proxy" trong
+phase-04 lâu nay là giả định; giờ là sự thật đo được. Chưa ai kiểm profile có proxy thì IPv6 đi đâu.
+
+### 8. Ghế bị mất giữa buổi đo — và đó là bằng chứng cho một bug đã sửa
+
+11:27 tôi mở profile bằng app **đã cài, bản `0.3.1`** để dò. Bản đó chưa có `f8b1962`, nên lúc đóng
+nó đi đường SIGKILL và giữ ghế. 11:34 mở lại bằng `0.3.11` ⇒ `exit 76`, nhìn hệt crash. Ghế nhả lúc
+11:37, tức **giữ khoảng 6 phút**.
+
+Tình cờ tái hiện đúng lỗi mà bản mới sửa, bằng cách dùng bản cũ. Cũng là câu trả lời sắc nhất cho
+"bản 0.3.1 cũ tới mức nào": mỗi lần đóng profile là mất ghế vài phút tới 17 phút.
+
+### 9. `LicenseKeyPool` hiện chưa làm được gì
+
+`settings.json` chỉ có `cloakBrowserLicenseKey` (một key). Pool đọc từ `cloakBrowserLicenseKeys` —
+danh sách, đang rỗng. Một key thì không có gì để xoay, `exit 76` vẫn là lỗi cuối, đúng như vừa xảy ra.
+
+⇒ `548fca5` chỉ có giá trị khi mua thêm key. **Chưa kiểm** UI có chỗ nhập key thứ hai không, hay
+phải sửa tay `settings.json`. Sửa lại đánh giá ở mục 4: "sức chứa = số key rảnh" đúng về nguyên tắc,
+nhưng cấu hình hiện tại sức chứa vẫn đúng bằng **1**, nên UI của phase-02/03 phải chạy đúng ở ca một key.
+
 ## Còn nợ
 
 | Món | Vì sao chưa xong |
 |---|---|
-| **Nghiệm thu DNS trên browserscan** | Tiêu chí đang sai, xem mục 6. Sửa tiêu chí xong mới đo được. |
+| ~~Nghiệm thu DNS~~ | **Xong**, xem mục 7. Kết luận: không có lỗi trình duyệt. |
 | **Đóng gói sau 0.3.11** | `548fca5` + guard DNS có test, chưa có build. Tôi hoãn có chủ ý — plan sidecar sắp sửa lại đúng vùng lifecycle này, phát hành hai lần lên cùng một chỗ là phí một vòng nghiệm thu. |
 | **Plan 1001, 4/4 phase pending** | Phase-01 là cổng cứng cần chạy thật với key hợp lệ + proxy test. Cần anh gật. |
 | **Plan 0803 phase 02–04** | Bị 1001 chặn, và mẫu số vừa đổi (mục 4). |
