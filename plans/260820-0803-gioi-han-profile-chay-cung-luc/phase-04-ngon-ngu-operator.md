@@ -54,10 +54,10 @@ việc của nó.
 ```
 apps/desktop/src/main/operator-messages.ts
 
-  operatorMessageForLicenseExit(code): string   // tieng Viet, trung tinh
+  operatorMessageForLicenseExit(code): string   // tieng Anh, khong ten nha cung cap
 ```
 
-Bản nháp chữ nghĩa (chờ duyệt):
+Bản nháp chữ nghĩa (chờ duyệt) — đơn vị là *profile*, không phải *session*:
 
 | Mã | Chuỗi operator |
 |---|---|
