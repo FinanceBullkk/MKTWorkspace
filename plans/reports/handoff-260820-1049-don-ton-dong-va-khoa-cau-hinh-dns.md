@@ -183,11 +183,57 @@ danh sách, đang rỗng. Một key thì không có gì để xoay, `exit 76` v�
 phải sửa tay `settings.json`. Sửa lại đánh giá ở mục 4: "sức chứa = số key rảnh" đúng về nguyên tắc,
 nhưng cấu hình hiện tại sức chứa vẫn đúng bằng **1**, nên UI của phase-02/03 phải chạy đúng ở ca một key.
 
+### 10. Đã cài `0.3.12` — và tìm ra một bug chặn nâng cấp
+
+App đã cài trước đó là `0.3.1` (19/08 22:28), cũ hơn cả bản vá DNS. Đã build và cài `0.3.12`.
+
+Xác nhận **bằng hash**, không phải dấu thời gian:
+
+```
+app.asar đã cài : 0be7385524e5c160ca1dc0fce04674e3b5b9234ce0f9280ecfde71125b9d012d
+bằng chứng build: 0be7385524e5c160ca1dc0fce04674e3b5b9234ce0f9280ecfde71125b9d012d
+get_runtime_info: appVersion 0.3.12, engine 151.0.7922.108.2, status ready
+```
+
+Vì sao là `0.3.12` chứ không đè lên `0.3.11`: bản `0.3.11` dựng lúc 08:41, trước cả key pool lẫn
+module cờ mạng. Cùng số hiệu mà khác `app.asar` chính là kiểu trôi mà bảng "lỗi cùng hình dạng" đã
+ghi. Hành vi không đổi — module tách ra sinh đúng các cờ đó, đúng thứ tự cũ.
+
+#### Bug: cài im lặng luôn hỏng khi Relay đang chạy
+
+| Điều kiện | Kết quả |
+|---|---|
+| `/S`, Relay đang chạy | **exit 21**, không cài gì |
+| `/S /currentuser`, Relay đang chạy | **exit 21** |
+| `/S`, Relay đã tắt | **exit 0**, cài đúng |
+| Chạy tay bộ dò, Relay đang chạy, đúng `-ExpectedRelayPath` | **exit 0**, "inspection passed" |
+
+Relay chạy từ đúng `%LOCALAPPDATA%\MKTTool-Relay\MKTTool-Relay.exe`, và bộ dò cho phép đúng đường
+dẫn đó (`$AllowExpectedPath = $true`). Nghĩa là **trình cài đang trao cho bộ dò một đường dẫn khác
+với thứ nó tự dùng**.
+
+Đây là bug thật với vận hành: Relay nằm trong Startup nên **mặc định nó luôn chạy**. Operator nâng
+cấp sẽ luôn gặp exit 21, im lặng, không thông điệp (cài im lặng chỉ `DetailPrint`). Cách đi vòng:
+tắt Relay trước khi cài.
+
+**Giả thuyết đã thử và SAI:** tôi đoán NSIS phân giải `$LOCALAPPDATA` sang ngữ cảnh all-users
+(`C:\ProgramData`). `/currentuser` cũng ra 21 ⇒ bỏ giả thuyết. Không đưa bản vá dựa trên phỏng đoán.
+
+**Cách chốt nguyên nhân:** mã 21 phát ra từ *hai* nhánh trong
+`windows-install-conflict-detection.ps1` — "ownership could not be verified" (khi `Process-Path` trả
+rỗng) và "a different installation is running" (khi lệch đường dẫn). Cài im lặng nuốt mất thông
+điệp, nên phải dựng lại trình cài có `LogSet on` hoặc `DetailPrint` giá trị `$ExpectedRelayPath`
+thật, rồi đọc xem nhánh nào nổ. Chưa làm.
+
 ## Còn nợ
 
 | Món | Vì sao chưa xong |
 |---|---|
 | ~~Nghiệm thu DNS~~ | **Xong**, xem mục 7. Kết luận: không có lỗi trình duyệt. |
+| ~~Bản cài cũ `0.3.1`~~ | **Xong**, đã cài `0.3.12`, khớp hash. |
+| **Bug cài im lặng (exit 21)** | Tái hiện được, chưa chốt nhánh nào gây ra. Xem mục 10. |
+| **UI nhập key thứ hai** | Chưa kiểm có hay không. `LicenseKeyPool` vô dụng tới khi có. Mục 9. |
+| **IPv6 khi có proxy** | Máy đang chạy IPv6 thật; chưa ai đo profile có proxy thì IPv6 đi đâu. Mục 7. |
 | **Đóng gói sau 0.3.11** | `548fca5` + guard DNS có test, chưa có build. Tôi hoãn có chủ ý — plan sidecar sắp sửa lại đúng vùng lifecycle này, phát hành hai lần lên cùng một chỗ là phí một vòng nghiệm thu. |
 | **Plan 1001, 4/4 phase pending** | Phase-01 là cổng cứng cần chạy thật với key hợp lệ + proxy test. Cần anh gật. |
 | **Plan 0803 phase 02–04** | Bị 1001 chặn, và mẫu số vừa đổi (mục 4). |
