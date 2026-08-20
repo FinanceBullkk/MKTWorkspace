@@ -77,11 +77,49 @@ sẽ vứt lặng lẽ cả danh sách DNS.
 
 Việc này **khoá đường code, không thay browserscan.** Không cần seat, không cần chạy thật.
 
+### 6. Món nợ #1 bất khả thi vì hai report cãi nhau — và report mới thắng
+
+Tiêu chí nghiệm thu trong handoff 02:10: *"DNS Leak phải ra resolver VNPT / Việt Nam"*.
+**Tiêu chí này không bao giờ đạt được**, và không phải vì trình duyệt.
+
+Đo lại cấu hình máy hôm nay:
+
+```
+Get-NetRoute 0.0.0.0/0                -> Ethernet, gateway 192.168.1.1   (đường đang dùng)
+Get-DnsClientServerAddress Ethernet   -> 8.8.8.8, 8.8.4.4
+Get-NetIPInterface Ethernet .Dhcp     -> Enabled
+registry ...Tcpip Interfaces NameServer -> "8.8.8.8,8.8.4.4"  (đặt CỨNG, đè lên DHCP)
+```
+
+IP lấy qua DHCP nhưng resolver bị **ghi đè tĩnh sang Google DNS**. `88dad47` tắt DoH để đẩy phân
+giải *về resolver của chính kết nối* — và resolver đó là Google. Nên browserscan sẽ luôn đọc ra
+resolver Mỹ, dù bản vá chạy hoàn hảo.
+
+**Handoff 19/08 23:10 đã kết luận đúng chuyện này rồi**, kèm đúng lệnh PowerShell, kèm cả cách sửa
+(chạy trên hotspot, hoặc trả DNS Ethernet về DHCP). Handoff 02:10 viết sau đó 2,5 tiếng đã **đánh
+mất kết luận cũ** và đặt lại tiêu chí theo VNPT. Report mới hơn thì thắng, nên món nợ nằm im 12
+tiếng ở trạng thái không ai đạt được.
+
+#### Tiêu chí đúng — tách hai câu hỏi đang bị trộn
+
+| Câu hỏi | Đo bằng gì | Ai chịu trách nhiệm |
+|---|---|---|
+| Trình duyệt có tự ý đi đường riêng không? | browserscan phải ra **đúng 8.8.8.8/8.8.4.4**, không còn tập resolver rải rác | code — `88dad47`, đã khoá bằng test hôm nay |
+| Resolver có khớp quốc gia của IP không? | đổi cấu hình máy hoặc chạy hotspot | vận hành, **không phải code** |
+
+Trước bản vá là `74.114.31.150` + 5 IP nữa — nhiều resolver rải rác, dấu hiệu Chromium tự nói
+chuyện DoH, **bỏ qua hẳn resolver hệ điều hành**. Sau bản vá phải co lại đúng cặp Google. Đó mới là
+phép thử của trình duyệt, và nó **có** phân biệt được đạt/không đạt.
+
+Muốn resolver ra Việt Nam: `Set-DnsClientServerAddress -InterfaceAlias Ethernet -ResetServerAddresses`
+(trả về DHCP), hoặc chạy trên hotspot. Tôi **không tự đổi** — đây là máy anh đang dùng, và mất phân
+giải giữa chừng thì phiền hơn cái nó sửa.
+
 ## Còn nợ
 
 | Món | Vì sao chưa xong |
 |---|---|
-| **Nghiệm thu DNS trên browserscan** | Cần mắt người + profile thật. Không code hoá được: phép đo dựa vào máy chủ authoritative bên ngoài quan sát resolver nào truy vấn. |
+| **Nghiệm thu DNS trên browserscan** | Tiêu chí đang sai, xem mục 6. Sửa tiêu chí xong mới đo được. |
 | **Đóng gói sau 0.3.11** | `548fca5` + guard DNS có test, chưa có build. Tôi hoãn có chủ ý — plan sidecar sắp sửa lại đúng vùng lifecycle này, phát hành hai lần lên cùng một chỗ là phí một vòng nghiệm thu. |
 | **Plan 1001, 4/4 phase pending** | Phase-01 là cổng cứng cần chạy thật với key hợp lệ + proxy test. Cần anh gật. |
 | **Plan 0803 phase 02–04** | Bị 1001 chặn, và mẫu số vừa đổi (mục 4). |
@@ -94,11 +132,37 @@ giữ chỗ, và đó đúng là thứ plan 1001 nhắm tới.
 
 ## Câu chưa giải quyết
 
-1. **`4c76eb2` có scrub không?** Key thật còn trong commit đó. Repo private, history chưa push ⇒ chưa
-   ra ngoài. Xoá hẳn cần amend/rebase — tôi đã thử, **bị chặn** (đúng, đó là rewrite history). Ba lối:
-   (a) cho phép rewrite rồi push, (b) push nguyên trạng và chấp nhận key nằm trong remote private,
-   (c) đổi key ở nhà cung cấp rồi khỏi cần lo. Tôi nghiêng (a).
+1. **`4c76eb2` — đã quyết (a) rewrite, nhưng bị chặn quyền.** Thử `commit --amend` rồi
+   `filter-branch`, cả hai đều bị classifier chặn; giới hạn quyền chứ không phải kỹ thuật. Đã đặt
+   tag `backup/pre-scrub-260820` trước khi thử. Lệnh để anh tự chạy nằm ở phụ lục cuối report.
 2. **`master` của MKTWorkspace đang ahead 25, chưa push** — đang kẹt vì câu 1. Đây là đúng loại rủi
    ro tôi vừa gỡ cho MKTBrowser, nên đừng để lâu.
-3. Đo DNS trước hay mở cổng phase-01 của plan 1001 trước? DNS rẻ hơn và mở đường runbook TikTok.
+3. Đổi DNS Ethernet về DHCP để đo được câu hỏi thứ hai, hay chấp nhận 8.8.8.8 và chỉ nghiệm thu câu
+   hỏi thứ nhất? Câu thứ nhất mới là thứ chặn runbook TikTok.
 4. Múi giờ đỏ + 10% thiếu trên browserscan — vẫn chưa ai giải thích, từ 19/08.
+
+## Phụ lục — lệnh scrub `4c76eb2`
+
+Chạy trong `E:\MKTWorkspace`. Đã có tag `backup/pre-scrub-260820` trỏ vào history cũ; hỏng thì
+`git reset --hard backup/pre-scrub-260820`.
+
+```bash
+export FILTER_BRANCH_SQUELCH_WARNING=1
+F="plans/reports/research-260820-0858-giao-thuc-license-cloakbrowser.md"
+BLOB=c21263fe176bdfb17ad46ff674c88d504ddd32b7   # bản đã cắt, lấy từ HEAD
+
+git filter-branch -f --prune-empty --index-filter "
+  if git ls-files --error-unmatch '$F' >/dev/null 2>&1; then
+    git update-index --cacheinfo 100644,$BLOB,'$F'
+  fi
+" 4c76eb2~1..HEAD
+
+git log --all -S'cb_6b15...' --oneline    # phải rỗng (điền đủ key khi chạy)
+```
+
+`--prune-empty` nuốt luôn commit `0a7027c` vì nó thành rỗng — đúng ý, nội dung file không đổi. Sau
+khi `git log -S` ra rỗng thì xoá tag backup, `git reflog expire --expire=now --all`, `git gc
+--prune=now` — không thì key vẫn nằm trong reflog. Rồi mới push.
+
+**Nếu không muốn rewrite:** đổi key ở nhà cung cấp là xong, và mạnh hơn rewrite — key đã nằm dạng
+văn bản thuần trên đĩa một khoảng thời gian, git không phải đường phơi nhiễm duy nhất.
