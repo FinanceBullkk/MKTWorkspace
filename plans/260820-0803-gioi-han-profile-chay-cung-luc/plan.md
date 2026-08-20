@@ -13,11 +13,34 @@ Bốn thứ sai với người dùng thật (marketer TikTok, không phải kỹ
 
 1. **"seat" / "session limit"** — không ai ngoài kỹ sư hiểu đây là gì
 2. **Lộ tên `CloakBrowser` và link cloakbrowser.dev** — engine là chi tiết nội bộ, sản phẩm là MKT Browser
-3. **Tiếng Anh** — app chưa có i18n, toàn bộ chuỗi là tiếng Anh cứng
-4. **Báo lỗi SAU khi bấm** — app đã biết đang chạy mấy profile (`App.tsx:314`), lẽ ra phải chặn trước
+3. **Báo lỗi SAU khi bấm** — app đã biết đang chạy mấy profile (`App.tsx:314`), lẽ ra phải chặn trước
 
 Tệ hơn: tắt cứng app ⇒ chrome con giữ chỗ **7–17 phút**, app đếm 0 nhưng thực tế là 0 chỗ trống.
 Operator thấy "không có gì chạy" mà vẫn không mở được, và không có gì giải thích.
+
+**Ngôn ngữ: giữ tiếng Anh toàn bộ** (chốt 20/08). Không thêm i18n. Vấn đề không phải ngôn ngữ mà là
+*thuật ngữ*: "seat"/"session limit" là từ của nhà cung cấp license, phải đổi sang từ mà người dùng
+hiểu — "profiles running at once" — và bỏ tên nhà cung cấp.
+
+## Cooldown — chốt phạm vi có thể cứu
+
+| Tình huống | Trước `0.3.11` | Sau |
+|---|---|---|
+| Bấm Stop / thoát app bình thường | không mất chỗ | không đổi |
+| Tắt cứng app, máy vẫn chạy | **mất 7–17 phút** | **vài giây** |
+| Mất điện / BSOD | mất 7–17 phút | vẫn mất |
+
+**Phát hiện khi nghiệm thu phase-01, ngược với giả định ban đầu của plan này:** tắt cứng app thì
+chrome **chết theo**, không hề có mồ côi — vì `spawn` dùng `detached: false` nên trình duyệt nằm
+chung job object với app. Nghe gọn gàng nhưng là kết cục tệ nhất: trình duyệt chết đúng kiểu duy
+nhất **không** nhả chỗ, mà lại không để lại gì để sau này nhờ nhả hộ.
+
+`7a51999` đổi sang `detached: true`. Trình duyệt sống sót qua cú crash, và chính cửa sổ đó là đường
+cứu: operator tự đóng ⇒ tắt sạch ⇒ chỗ về ngay; hoặc mở lại app ⇒ phase-01 đóng qua cổng debug.
+
+Ca **mất điện** vẫn không có đường ra bằng code: nhả chỗ qua API cần `lease_id` + `instance_id`, hai
+thứ chỉ nằm trong bộ nhớ tiến trình. Còn hai lối, cả hai ngoài code: **nâng gói**, hoặc **xin nhà
+cung cấp endpoint nhả theo `install_id`** (cái này bền trên đĩa).
 
 ## Nguyên tắc thiết kế
 
@@ -32,10 +55,10 @@ Operator thấy "không có gì chạy" mà vẫn không mở được, và khô
 
 | # | Việc | Trạng thái |
 |---|---|---|
-| [01](phase-01-quet-don-profile-mo-coi-luc-khoi-dong.md) | Quét dọn profile mồ côi lúc khởi động | đang làm |
+| [01](phase-01-quet-don-profile-mo-coi-luc-khoi-dong.md) | Quét dọn profile mồ côi lúc khởi động | **xong**, đang nghiệm thu |
 | [02](phase-02-mo-hinh-suc-chua-va-trang-thai-cho.md) | Mô hình sức chứa + trạng thái chờ giải phóng | chưa |
 | [03](phase-03-ui-chan-truoc-khi-bam.md) | UI: đồng hồ sức chứa, chặn trước khi bấm | chưa |
-| [04](phase-04-ngon-ngu-operator.md) | Chuỗi tiếng Việt, không lộ tên engine | chưa |
+| [04](phase-04-ngon-ngu-operator.md) | Chuỗi tiếng Anh dễ hiểu, không lộ tên engine | chưa |
 
 Phase 01 độc lập. 02 → 03 → 04 nối tiếp (03 cần state của 02, 04 cần chỗ hiển thị của 03).
 
