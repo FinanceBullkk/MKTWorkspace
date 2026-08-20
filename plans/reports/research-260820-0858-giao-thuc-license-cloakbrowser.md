@@ -15,9 +15,9 @@ POST /api/license/session/start
 Content-Type: application/json
 
 {
-  "install_id":  "d364c1e8-93c9-4324-a212-d38962e2fe21",
-  "instance_id": "ff4d024d-ec13-43dc-ad9c-46d1eb8a1e7c",
-  "license_key": "cb_6b1524709bb54fae8c3fc8119ebdf2ae",
+  "install_id":  "d364c1e8-…",   // redacted — ben, giong nhau qua moi lan chay
+  "instance_id": "ff4d024d-…",   // redacted — moi, sinh lai moi lan khoi dong
+  "license_key": "cb_6b15…",     // redacted — key that cua operator
   "platform":    "windows-x64",
   "version":     "151.0.7922.108"
 }
