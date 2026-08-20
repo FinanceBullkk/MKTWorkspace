@@ -1,6 +1,6 @@
 # Phase 01 — Quét dọn profile mồ côi lúc khởi động
 
-**Ưu tiên:** cao · **Trạng thái:** đang làm · Độc lập với các phase khác
+**Ưu tiên:** cao · **Trạng thái:** xong, đã nghiệm thu 20/08 · Độc lập với các phase khác
 
 ## Bối cảnh
 
@@ -88,13 +88,13 @@ lại phần dò tiến trình.
 
 ## Todo
 
-- [ ] `debugPortFromCommandLine` + test
-- [ ] `startup-orphan-sweep.ts`
-- [ ] reason mới trong log
-- [ ] nối vào `index.ts`
-- [ ] cờ settings
-- [ ] lint + test
-- [ ] build + nghiệm thu thật (xem Tiêu chí đạt)
+- [x] `debugPortFromCommandLine` + test — `browser-process-discovery.ts` + `.test.ts`
+- [x] `startup-orphan-sweep.ts` — kèm `startup-orphan-sweep.test.ts`
+- [x] reason mới trong log — `ORPHAN-SWEEP-CLOSED` / `-NONE` / `-KILLED` / `-DISCOVERY-FAILED`
+- [x] nối vào `index.ts` — `index.ts:368`, chạy nền bằng `void`
+- [x] cờ settings — `settings-store/src/index.ts:56`, mặc định `true`
+- [x] lint + test
+- [x] build + nghiệm thu thật (xem Bằng chứng nghiệm thu)
 
 ## Tiêu chí đạt
 
@@ -108,6 +108,24 @@ Nghiệm thu bằng tay, tái tạo đúng tình huống:
 6. **Mở profile được ngay**, không phải chờ 7–17 phút
 
 Bước 6 là điều kiện đạt. Nếu chỉ `ORPHAN-SWEEP-KILLED` (SIGKILL) thì **chưa đạt** — chỗ vẫn bị giữ.
+
+## Bằng chứng nghiệm thu
+
+Chạy thật 20/08, sau khi `7a51999` đổi sang `detached: true`. Nguồn: `profile-shutdown.log`
+(`%LOCALAPPDATA%\MKTTool\MKTBrowser`). Log ghi giờ UTC, cộng 7 ra giờ máy:
+
+| Giờ máy | Bản ghi | Ứng với bước |
+|---|---|---|
+| 08:54:17 | `ORPHAN-SWEEP-CLOSED` pid 3500 port 9222 | 5 — đóng qua cổng debug, **không** SIGKILL |
+| 08:54:33 | `BOOTSTRAP-DONE` sau 3,06s | 6 — mở lại được **ngay**, không chờ 7–17 phút |
+| 08:54:50 | `SHUTDOWN-COMPLETE` `Browser.close` exit 0 | đóng sạch, nhả chỗ bình thường |
+
+Bước 6 là điều kiện đạt, và khoảng cách 16 giây giữa dòng 1 và dòng 2 chính là nó: chỗ đã trống
+trước khi lần mở kế tiếp chạm vào. Bản ghi là `CLOSED` chứ không phải `KILLED` nên không rơi vào
+trường hợp bị loại.
+
+Bốn dòng `ORPHAN-SWEEP-NONE` trước đó là các lần khởi động không có gì để dọn — nhánh không-làm-gì
+cũng có chạy, không phải code chết.
 
 ## Rủi ro
 

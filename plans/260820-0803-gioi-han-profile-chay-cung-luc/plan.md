@@ -1,6 +1,6 @@
 # Giới hạn số profile chạy cùng lúc — nói bằng ngôn ngữ người dùng
 
-**Tạo:** 20/08/2026 08:03 · **Trạng thái:** chưa bắt đầu (phase-01 đang làm)
+**Tạo:** 20/08/2026 08:03 · **Trạng thái:** phase-01 xong · 02–04 chờ plan sidecar
 
 ## Vấn đề
 
@@ -55,7 +55,7 @@ cung cấp endpoint nhả theo `install_id`** (cái này bền trên đĩa).
 
 | # | Việc | Trạng thái |
 |---|---|---|
-| [01](phase-01-quet-don-profile-mo-coi-luc-khoi-dong.md) | Quét dọn profile mồ côi lúc khởi động | **xong**, đang nghiệm thu |
+| [01](phase-01-quet-don-profile-mo-coi-luc-khoi-dong.md) | Quét dọn profile mồ côi lúc khởi động | **xong**, nghiệm thu đạt 20/08 |
 | [02](phase-02-mo-hinh-suc-chua-va-trang-thai-cho.md) | Mô hình sức chứa + trạng thái chờ giải phóng | chưa |
 | [03](phase-03-ui-chan-truoc-khi-bam.md) | UI: đồng hồ sức chứa, chặn trước khi bấm | chưa |
 | [04](phase-04-ngon-ngu-operator.md) | Chuỗi tiếng Anh dễ hiểu, không lộ tên engine | chưa |
@@ -80,6 +80,34 @@ Phase 01 độc lập. 02 → 03 → 04 nối tiếp (03 cần state của 02, 0
 - `profile-shutdown.log` (JSONL) — đã có, là nguồn phát hiện cooldown
 - `runningCount` trong `App.tsx:314` — đã có, là mầm của đồng hồ sức chứa
 - Không có i18n framework — phase-04 phải quyết định: thêm i18n hay chỉ đổi chuỗi tại chỗ
+
+### Cập nhật 20/08/2026 10:01 — backend lease recovery supersedes cooldown assumptions
+
+Phases 02-04 chờ plan
+[`260820-1001-per-profile-license-sidecar-recovery`](../260820-1001-per-profile-license-sidecar-recovery/plan.md).
+Plan mới phải đo response thật của `session/start/end`, triển khai per-profile sidecar, và chỉ trả key
+về trạng thái rảnh khi vendor xác nhận release. Nếu plan đó qua validation, mô hình UI ở đây phải dùng
+ba trạng thái `confirmed released`, `pending recovery`, `cooling unknown` thay vì chỉ đếm ngược 17 phút.
+Phase 01 đã hoàn thành không bị mở lại.
+
+### Cập nhật 20/08/2026 11:00 — sức chứa không còn là một con số cố định
+
+`548fca5` (`LicenseKeyPool`) làm hỏng câu mở đầu của plan này. "Engine chỉ cho 1 phiên cùng lúc"
+đúng với *một key*, không đúng với *một máy*: engine buộc phiên vào đúng key nó nhận lúc spawn, nên
+operator giữ N key mở được N profile, mỗi profile một key. Giới hạn thật là **số key đang rảnh**,
+không phải hằng số 1.
+
+Kéo theo, cho phase-02/03:
+
+- Đồng hồ sức chứa đếm **key rảnh**, không đếm phiên. Mẫu số thay đổi khi operator thêm/bớt key.
+- `maxConcurrentProfiles` trong bảng cấu hình bên dưới mất phần lớn lý do tồn tại — số chỗ tự suy ra
+  được từ pool. Giữ nó thì chỉ còn nghĩa "trần do người đặt", thấp hơn số key.
+- Exit 76 giờ **không còn là lỗi cuối**: pool xoay sang key kế tiếp. UI chỉ được báo hết chỗ khi
+  *mọi* key đều bị từ chối, nếu không sẽ báo sai ngay lúc app đang tự chữa được.
+- Một key vừa đóng **không rảnh ngay** — chỗ nhả trong lúc trình duyệt flush, nên key đó phải nghỉ,
+  đúng ba trạng thái mà ghi chú 10:01 nói tới.
+
+`548fca5` chưa nằm trong phase nào của cả hai plan, và chưa được đóng gói (sau bản phát hành 0.3.11).
 
 ## Câu chưa giải quyết
 
