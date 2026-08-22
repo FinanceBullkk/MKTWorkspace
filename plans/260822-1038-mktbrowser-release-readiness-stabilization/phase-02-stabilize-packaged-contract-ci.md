@@ -170,6 +170,42 @@ stability dispatch can no longer emit a second installer beside the single verif
 Since v1 ships unsigned, an extra installer is not distinguishable from the real one by inspection,
 which is precisely why an extra one must not exist.
 
+## Stability Streak Progress - 22 August 2026
+
+| Run | Iterations | Declared engine | Result |
+|---|---|---|---|
+| `32570630202` | 20 | `151.0.7922.170` | 20/20, engine matched on every iteration, installer skipped |
+| six dispatches at 11:50-11:51 UTC | none | n/a | Never started |
+
+Streak stands at 1 of 7.
+
+The six runs did not fail the contract; they never allocated a runner. GitHub reported: *the job was
+not started because recent account payments have failed or your spending limit needs to be
+increased*. Nothing was measured, so these runs neither count toward the streak nor reset it. They
+are recorded here so the gap in run identifiers is not later mistaken for six suppressed failures.
+
+## Blocked - Actions Spending Limit
+
+The repository is private under an organization, so every Actions minute is billed and Windows
+runners bill at a 2x multiplier. The remaining six runs cannot start until the spending limit is
+raised or the payment method is fixed. This is an account action, not an engineering one.
+
+### Cost Note Worth Acting On
+
+Each dispatch currently re-runs `quality` and `package` before `packaged-contract`, so a seven-run
+streak pays for seven full lint/typecheck/test passes and seven package builds to obtain seven
+twenty-iteration measurements. Roughly a third of the spend measures what the streak is about.
+
+There is a second, larger consequence. Rebuilding per dispatch means the seven runs exercise seven
+separately built packages. The gate is meant to prove that one packaged artifact launches reliably,
+so testing seven artifacts once each is weaker evidence than testing one artifact seven times, while
+costing considerably more.
+
+A dispatch mode that downloads the artifact from a named earlier run would cut the spend and
+strengthen the evidence at the same time. It is not implemented, because implementing it changes the
+merge tree and therefore requires another required-gate run, which is exactly the spend that is
+currently unavailable.
+
 ## Open Finding - Verifier Engine Is Not Pinned
 
 `scripts/system-chrome-engine-fixture.cjs` links whichever Google Chrome the runner image ships.
