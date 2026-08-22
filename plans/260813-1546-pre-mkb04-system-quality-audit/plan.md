@@ -7,7 +7,7 @@ effort: "8-15 working days plus human-gate scheduling"
 issue: null
 branch: "MKTTool feat/mkt-browser-clean-break; MKTBrowser main"
 tags: [audit, security, windows, release, critical]
-blockedBy: []
+blockedBy: [260821-1925-antidetect-browser-proxy-p0]
 blocks: []
 created: 2026-08-13
 ---
