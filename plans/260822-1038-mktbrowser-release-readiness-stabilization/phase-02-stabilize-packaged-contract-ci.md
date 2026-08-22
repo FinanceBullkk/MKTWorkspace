@@ -126,7 +126,7 @@ runs. Any rerun needed to obtain green resets the consecutive-run count.
 
 - [x] The fixed-port allocator is removed from packaged launch behavior.
 - [x] A failed readiness run identifies the process/port mechanism without another diagnostic rerun.
-- [ ] Required PR packaged verification passes 5/5 cold launches on the exact uploaded artifact.
+- [x] Required PR packaged verification passes 5/5 cold launches on the exact uploaded artifact.
 - [ ] Seven independent 20-iteration runs complete without CDP readiness failure or orphan process.
 - [x] Normal operator timeout remains strict and separately tested.
 
@@ -150,6 +150,45 @@ runs. Any rerun needed to obtain green resets the consecutive-run count.
   every disposable application/browser process.
 - Phase 2 remains in progress. The required pull-request artifact run and seven independent 20/20
   Windows runner runs are external gates and have not happened yet.
+
+## CI Evidence - 22 August 2026
+
+The Phase 1 and Phase 2 work existed only as local commits until this date. The required check had
+therefore been grading a tree that did not contain the fix, which is why the branch read as unstable
+while the local evidence read as green. Both were true statements about different trees.
+
+| Run | Event | Tree | Result |
+|---|---|---|---|
+| `32568808252` | pull_request | `48372cc` | quality, package, packaged-contract all pass; 5/5 iterations |
+| `32569415269` | pull_request | `6b70a6d` | same three jobs pass; 5/5 iterations; `windows-installer` correctly skipped |
+
+Run `32569415269` is the authoritative one: it is the current merge tree. Iterations averaged about
+eleven seconds each against the uploaded artifact in a job that never built it.
+
+`windows-installer` reporting `skipped` is itself the evidence that the new dispatch gate holds. A
+stability dispatch can no longer emit an unsigned installer beside the single Phase 4 artifact.
+
+## Open Finding - Verifier Engine Is Not Pinned
+
+`scripts/system-chrome-engine-fixture.cjs` links whichever Google Chrome the runner image ships.
+Run `32569415269` measured `151.0.7922.170`; the 22 August local sweep measured `151.0.7922.138`;
+the production pin in `apps/desktop/windows-engine-release.json` is CloakBrowser `151.0.7922.108.2`.
+Three engines, no assertion tying them together.
+
+Consequences for the remaining gate:
+
+- The seven-run streak spans days. A runner image refresh mid-streak means the runs did not measure
+  one engine, and nothing currently fails when that happens.
+- This phase's own risk register says to measure CFT and CloakBrowser because `DevToolsActivePort`
+  behaviour is engine-specific. System Chrome is neither.
+
+Running CloakBrowser inside the 20-iteration gate is rejected, not deferred: each cold launch takes a
+licence seat, so 140 launches would fail on seat refusal rather than on stability, and a refusal
+already presents as an exit code that reads like a crash. Live CloakBrowser proof belongs to the
+Phase 5 gates, which launch a handful of times under human observation.
+
+The engine version is recorded per iteration, so the drift is visible in evidence. Recording is not
+pinning, and this decision is open.
 
 ## Risk Assessment
 
