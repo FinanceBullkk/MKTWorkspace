@@ -13,7 +13,7 @@ dependencies: [5]
 
 Run a controlled seven-day canary with the exact signed artifact that passed Phase 5, then issue an
 explicit GO or NO-GO. The canary is manual operator use, not automation expansion. A new build, config
-change, dependency update, Relay update, or certificate change resets the canary unless the owner
+change, dependency update, or Relay update resets the canary unless the owner
 accepts a narrowly documented exception.
 
 ## Requirements
@@ -76,7 +76,7 @@ success and must be classified separately from an unexpected launch failure.
    execute rollback, and issue NO-GO with exact remediation.
 6. At the end, reconcile metrics and open incidents. Require zero unresolved critical/high identity,
    network, lease, recovery, signing, or data-integrity issue.
-7. Issue signed GO/NO-GO. GO names exact installer hash, source/tree, certificate identity, Relay hash,
+7. Issue a GO/NO-GO record. GO names exact installer SHA-256, source/tree, Relay hash,
    supported topology, known limitations, and rollback procedure.
 8. Only after explicit owner authorization: publish/promote the retained artifact, update signed
    compatibility manifest/download pointer, and verify retrieval hash from the operator path.
@@ -110,8 +110,10 @@ success and must be classified separately from an unexpected launch failure.
 ## Security Considerations
 
 Canary logs must not contain credentials, cookies, content, proxy endpoints, raw IPs, tickets, or
-license keys. Release promotion uses existing signed compatibility-manifest authority plus the new
-Authenticode identity; each protects a different boundary.
+license keys. Release promotion rests on the existing signed compatibility-manifest authority and on
+the published installer SHA-256. V1 ships unsigned by owner decision, so nothing in the file itself
+identifies the publisher, and the promotion record must say which artifact hash was promoted rather
+than which publisher signed it.
 
 ## Next Step
 

@@ -77,7 +77,7 @@ Do not start real-account work until disposable profile gates pass on both PCs.
 
 ## Implementation Steps
 
-1. Freeze a sanitized test manifest: signed installer hash, Browser source/tree, Relay version/hash,
+1. Freeze a sanitized test manifest: installer SHA-256, Browser source/tree, Relay version/hash,
    PC labels A/B, profile labels, proxy labels, engine version/hash, and planned fault sequence.
 2. On PC A, run two disposable profiles separately and concurrently. Compare independent proxy probe
    to in-browser egress; test DNS and WebRTC; reopen profiles and verify stable fingerprint plus no

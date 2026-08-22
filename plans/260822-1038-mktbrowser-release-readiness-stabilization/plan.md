@@ -1,9 +1,9 @@
 ---
 title: "MKTBrowser Release Readiness Stabilization"
-description: "Remove release blockers, make packaged Windows CI deterministic, produce a signed installer from a frozen source tree, and close real-operator rollout gates."
+description: "Remove release blockers, make packaged Windows CI deterministic, produce one attested installer from a frozen source tree, and close real-operator rollout gates."
 status: in-progress
 priority: P1
-effort: "3-5 engineering weeks plus certificate lead time and a 7-day canary"
+effort: "3-5 engineering weeks plus a 7-day canary"
 issue: null
 branch: "feat/cloakbrowser-licensed-engine-channel"
 tags: [security, windows, ci, release, testing, refactor, critical]
@@ -20,7 +20,7 @@ source: skill
 
 Move MKT Browser from a strong internal technical build to an evidence-backed operator release.
 The critical path is strict: remove vulnerable runtime extraction, eliminate packaged-contract CI
-nondeterminism, require the pull-request merge check, build and Authenticode-sign one installer from
+nondeterminism, require the pull-request merge check, produce one attested installer from
 a frozen source tree, close real Windows/network/recovery gates, then complete a seven-day canary.
 
 Large-module decomposition continues only after the release blockers are closed. It must proceed in
@@ -52,7 +52,7 @@ pull-request check for the current merge tree.
 | 1 | [Remove Vulnerable Runtime Extraction](./phase-01-remove-vulnerable-runtime-extraction.md) | Completed |
 | 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | In Progress |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Pending |
-| 4 | [Build Signed Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | Pending |
+| 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | Pending |
 | 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | Pending |
 | 6 | [Run Seven Day Canary and Promote](./phase-06-run-seven-day-canary-and-promote.md) | Pending |
 | 7 | [Decompose Browser Hotspots Incrementally](./phase-07-decompose-browser-hotspots-incrementally.md) | Pending |
@@ -72,7 +72,8 @@ These are phase-level dependencies, not plan-level blockers. Phases 1-4 can proc
 - No high/critical unapproved production advisory in packaged Browser runtime dependencies.
 - Required PR merge check passes repeatedly on the exact merge tree; branch rules prevent bypass.
 - Critical-path coverage floors run in both repositories and cannot decrease silently.
-- Installer is built once from frozen HEAD, verified, Authenticode-signed, timestamped, and attested.
+- Installer is built once from frozen HEAD, verified, attested, and distributed with a published
+  SHA-256. V1 ships unsigned by owner decision reaffirmed on 22 August 2026; see phase 4.
 - Real proxy, DNS, WebRTC, input, vendor lease, crash/reboot, and second-PC gates have sanitized proof.
 - The exact signed artifact completes seven days with no identity-boundary or unrecovered-seat event.
 - Large modules are reduced through tested responsibility seams, not a broad rewrite.

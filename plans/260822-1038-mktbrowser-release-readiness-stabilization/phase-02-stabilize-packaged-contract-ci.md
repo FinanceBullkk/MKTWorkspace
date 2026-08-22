@@ -166,7 +166,9 @@ Run `32569415269` is the authoritative one: it is the current merge tree. Iterat
 eleven seconds each against the uploaded artifact in a job that never built it.
 
 `windows-installer` reporting `skipped` is itself the evidence that the new dispatch gate holds. A
-stability dispatch can no longer emit an unsigned installer beside the single Phase 4 artifact.
+stability dispatch can no longer emit a second installer beside the single verified Phase 4 artifact.
+Since v1 ships unsigned, an extra installer is not distinguishable from the real one by inspection,
+which is precisely why an extra one must not exist.
 
 ## Open Finding - Verifier Engine Is Not Pinned
 
