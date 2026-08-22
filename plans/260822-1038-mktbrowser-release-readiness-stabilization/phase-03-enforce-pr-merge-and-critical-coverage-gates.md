@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Enforce PR Merge and Critical Coverage Gates"
-status: in-progress
+status: complete
 priority: P1
 effort: "2-3 working days"
 dependencies: [1, 2]
@@ -115,6 +115,33 @@ applying it is a repository configuration change and needs the owner. Intended s
 in `Branch Protection Settings` below so the applied state can be compared against an intent that
 was written down first.
 
+## Applied and Verified - 22 August 2026
+
+Read back from the API after configuration rather than trusted because the write returned success:
+
+```
+required_check      = mktbrowser-pr-release-gate
+strict_base         = true
+enforce_admins      = true
+requires_PR         = true
+required_approvals  = 0
+force_pushes        = false
+deletions           = false
+conversation_res    = true
+```
+
+The rule proved itself on the first pull request it met. After the branch was updated onto the
+current base, PR #5 reported `BLOCKED` until the required check completed on the new head. Before
+today those forty-one commits could have reached the default branch at any moment with no check at
+all.
+
+PR #5 merged as `627db23`. That merge is both the delivery of the P0 work to the default branch and
+the first exercise of the gate that now guards it. The push workflow was still running on the same
+commit at merge time and was correctly not waited on: it is informational, and the release rule says
+the pull-request check is the merge authority.
+
+MKTTool CI run `32575269324` passed with its coverage floor in place.
+
 ## Branch Protection Settings
 
 | Setting | Value | Why |
@@ -161,12 +188,14 @@ MKTTool:
 
 ## Function And Interface Checklist
 
-- [ ] Required check name exists only on PR merge-tree execution.
-- [ ] Workflow prints checked-out commit and tree SHA; tree matches packaged artifact manifest.
-- [ ] Coverage scripts fail below lines/functions/branches thresholds.
-- [ ] Coverage includes production modules without counting tests/fixtures/generated output.
-- [ ] Threshold changes are visible in code review and cannot be overridden by environment input.
-- [ ] Branch protection is verified through GitHub API evidence after configuration.
+- [x] Required check name exists only on PR merge-tree execution.
+- [x] Tree matches the packaged artifact manifest; the contract job refuses an artifact whose
+  `sourceSha` differs from the checked-out merge tree. It enforces rather than prints, and the
+  manifest is uploaded as evidence, so the SHA is recoverable from any run.
+- [x] Coverage scripts fail below lines/functions/branches thresholds.
+- [x] Coverage includes production modules without counting tests/fixtures/generated output.
+- [x] Threshold changes are visible in code review and cannot be overridden by environment input.
+- [x] Branch protection is verified through GitHub API evidence after configuration.
 
 ## Implementation Steps
 
@@ -216,11 +245,11 @@ npm run build
 
 ## Success Criteria
 
-- [ ] GitHub refuses merge when `mktbrowser-pr-release-gate` is not successful for current base.
-- [ ] Green push CI cannot satisfy the required PR check.
-- [ ] Both repositories enforce measured critical line/function/branch floors.
-- [ ] Workflow contract tests prevent silent removal of audit, coverage, package, or packaged checks.
-- [ ] Branch rules and current required checks are captured in sanitized evidence.
+- [x] GitHub refuses merge when `mktbrowser-pr-release-gate` is not successful for current base.
+- [x] Green push CI cannot satisfy the required PR check.
+- [x] Both repositories enforce measured critical line/function/branch floors.
+- [x] Workflow contract tests prevent silent removal of audit, coverage, package, or packaged checks.
+- [x] Branch rules and current required checks are captured in sanitized evidence.
 
 ## Risk Assessment
 
