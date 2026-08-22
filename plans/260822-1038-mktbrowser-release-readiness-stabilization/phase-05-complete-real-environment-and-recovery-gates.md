@@ -12,7 +12,7 @@ dependencies: [4]
 ## Overview
 
 Close the gates code cannot prove: real network identity, human input, live vendor lease behavior,
-crash/reboot recovery, and clean second-PC installation. Use the exact signed Phase 4 candidate.
+crash/reboot recovery, and clean second-PC installation. Use the exact verified Phase 4 candidate.
 
 This phase consumes, rather than duplicates, the execution details in the active P0 operational plan
 and the per-profile license sidecar/recovery plan. Master-plan completion requires their relevant
@@ -34,18 +34,18 @@ phases to be checked off with sanitized evidence.
 - Prove vendor start/heartbeat/end and recovery behavior before advertising capacity as authoritative.
 - Prove normal close, browser hard kill, Electron crash, Relay restart, OS reboot, and power-loss-like
   interruption do not cross-wire profiles or strand a seat indefinitely.
-- Second PC installs from one signed package without Node, manual JSON, key copying, or port editing.
+- Second PC installs from one published package without Node, manual JSON, key copying, or port editing.
 
 ## Architecture And Gate Order
 
 ```text
-signed candidate on PC A
+verified candidate on PC A
   -> two-profile proxy/DNS/WebRTC isolation
   -> human login/input and normal use
   -> live vendor lease protocol + failure recovery
   -> crash/reboot matrix
 
-signed candidate on clean PC B
+verified candidate on clean PC B
   -> install -> authenticated setup -> device assignment -> managed launch
   -> repeat network/input/recovery smoke
   -> uninstall/repair proof
@@ -89,7 +89,7 @@ Do not start real-account work until disposable profile gates pass on both PCs.
 5. Run lifecycle faults in fixed order: normal close, browser hard kill, Electron crash, Relay restart,
    reboot with Browser open, reboot during pending recovery, and controlled power-loss equivalent.
 6. Verify every recovery result against vendor truth. No key returns to idle until confirmed release.
-7. Install the signed candidate on clean PC B through the supported one-download journey. Complete
+7. Install the verified candidate on clean PC B through the supported one-download journey. Complete
    device assignment and managed profile launch without developer tools or manual config.
 8. Repeat one network, input, crash/reboot, repair, and uninstall smoke on PC B.
 9. Update living roadmap and linked plan checkboxes only from evidence. Any failed gate leaves rollout
@@ -103,7 +103,7 @@ Do not start real-account work until disposable profile gates pass on both PCs.
 | Critical | DNS/WebRTC probes under both profiles | No operator-home/public direct address or cross-profile route |
 | Critical | Vendor lease after Electron/browser crash | Seat state matches vendor truth; bounded recovery; no false-free state |
 | Critical | Reboot with active and pending leases | Startup sweep/recovery converges without cross-wiring |
-| Critical | Clean second-PC install | Valid signature, no Node/config copying, correct device ownership |
+| Critical | Clean second-PC install | Installer hash matches the published value, no Node/config copying, correct device ownership |
 | High | Manual typing/login/window focus | No unexplained input loss/stall; credentials remain human-controlled |
 | High | Relay restart during Browser activity | Existing browser remains safe; subsequent operation re-authenticates |
 | High | Repair/uninstall | Owned app files handled; profiles and unrelated Relay state preserved |
@@ -114,7 +114,7 @@ Do not start real-account work until disposable profile gates pass on both PCs.
 - [ ] Human input/login works on both PCs without credential automation.
 - [ ] Live vendor lifecycle is measured and integrated; capacity is honest and fail-closed.
 - [ ] Normal close, hard kill, Electron crash, Relay restart, and reboot recover deterministically.
-- [ ] Clean second-PC install/setup/launch/repair/uninstall passes with the signed candidate.
+- [ ] Clean second-PC install/setup/launch/repair/uninstall passes with the verified candidate.
 - [ ] Evidence is sanitized, bound to exact artifact hashes, and reviewed before canary.
 
 ## Risk Assessment

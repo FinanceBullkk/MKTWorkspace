@@ -11,7 +11,7 @@ dependencies: [5]
 
 ## Overview
 
-Run a controlled seven-day canary with the exact signed artifact that passed Phase 5, then issue an
+Run a controlled seven-day canary with the exact verified artifact that passed Phase 5, then issue an
 explicit GO or NO-GO. The canary is manual operator use, not automation expansion. A new build, config
 change, dependency update, or Relay update resets the canary unless the owner
 accepts a narrowly documented exception.
@@ -23,9 +23,10 @@ accepts a narrowly documented exception.
 - No silent auto-update. Artifact hash remains constant for all seven days.
 - Daily health review covers launches, proxy identity, input, lease recovery, crashes, reboots, and
   operator friction.
-- Stop immediately on identity cross-wire, direct egress, secret exposure, invalid signature,
+- Stop immediately on identity cross-wire, direct egress, secret exposure, an installer hash that
+  does not match the published value,
   unrecoverable profile damage, or vendor seat state that cannot be reconciled.
-- Promotion updates compatibility/release pointers only after signed GO and explicit publish approval.
+- Promotion updates compatibility/release pointers only after a recorded GO and explicit publish approval.
 
 ## Canary Metrics
 
@@ -36,7 +37,7 @@ accepts a narrowly documented exception.
 | Direct egress or DNS/WebRTC leak | 0 |
 | Unrecovered vendor seat beyond defined recovery window | 0 |
 | Browser/Relay crash requiring profile recreation | 0 |
-| Installer/signature warning beyond expected trusted publisher flow | 0 |
+| Installer warning beyond the SmartScreen notice onboarding already described | 0 |
 | Manual config/key/token handling by operator | 0 |
 | Critical operator-blocking issue | 0 open at end |
 
@@ -66,7 +67,7 @@ success and must be classified separately from an unexpected launch failure.
 
 1. Freeze canary roster, artifact hashes, compatible Relay floor, start/end time, daily operating
    scenarios, metrics, stop conditions, rollback pointer, and incident owner.
-2. Day 0: install/upgrade on canary PCs, verify signatures and artifact hashes, run baseline network,
+2. Day 0: install/upgrade on canary PCs, verify the artifact hash against the published value, run baseline network,
    launch, close, recovery, and reboot smoke.
 3. Days 1-7: perform representative manual browsing work. Include cold launch, warm reopen, concurrent
    profile use within measured capacity, normal close, at least one reboot, and one controlled recovery.
@@ -78,7 +79,7 @@ success and must be classified separately from an unexpected launch failure.
    network, lease, recovery, signing, or data-integrity issue.
 7. Issue a GO/NO-GO record. GO names exact installer SHA-256, source/tree, Relay hash,
    supported topology, known limitations, and rollback procedure.
-8. Only after explicit owner authorization: publish/promote the retained artifact, update signed
+8. Only after explicit owner authorization: publish/promote the retained artifact, update the signed
    compatibility manifest/download pointer, and verify retrieval hash from the operator path.
 
 ## Test Scenario Matrix
@@ -94,7 +95,7 @@ success and must be classified separately from an unexpected launch failure.
 
 ## Success Criteria
 
-- [ ] Seven full calendar days complete on one unchanged signed candidate.
+- [ ] Seven full calendar days complete on one unchanged verified candidate.
 - [ ] All canary metrics meet targets and no stop condition occurs.
 - [ ] Rollback/withdrawal path is rehearsed against the exact candidate.
 - [ ] GO/NO-GO record names exact hashes, supported scope, limitations, and unresolved defects.
