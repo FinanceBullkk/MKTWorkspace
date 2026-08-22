@@ -50,7 +50,7 @@ pull-request check for the current merge tree.
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | [Remove Vulnerable Runtime Extraction](./phase-01-remove-vulnerable-runtime-extraction.md) | Completed |
-| 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | Pending |
+| 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | In Progress |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Pending |
 | 4 | [Build Signed Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | Pending |
 | 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | Pending |

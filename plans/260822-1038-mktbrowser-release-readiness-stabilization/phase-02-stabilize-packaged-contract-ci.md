@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Stabilize Packaged Contract CI"
-status: pending
+status: in-progress
 priority: P1
 effort: "3-5 working days"
 dependencies: []
@@ -62,6 +62,7 @@ workspace state and prevents an unnoticed rebuild between verification steps.
 | Modify | `E:\MKTWorkspace\MKTBrowser\apps\desktop\src\main\cdpReadiness.ts` | Existing | Stage diagnostics and process checks |
 | Modify | `E:\MKTWorkspace\MKTBrowser\apps\desktop\src\main\browser-process-discovery.ts` | Existing | Bind actual port to owned data directory/PID |
 | Modify | `E:\MKTWorkspace\MKTBrowser\apps\desktop\src\main\startup-orphan-sweep.ts` | Existing | Recover actual DevTools port after crash |
+| Modify | `E:\MKTWorkspace\MKTBrowser\apps\desktop\src\main\index.ts` | Existing | Serialize first launch behind startup orphan recovery |
 | Modify | `E:\MKTWorkspace\MKTBrowser\scripts\verify-packaged-runtime-contract.cjs` | Existing | Repeat mode, artifact hash, process/port evidence |
 | Modify | `E:\MKTWorkspace\MKTBrowser\scripts\system-chrome-engine-fixture.cjs` | Existing | Deterministic fixture and version evidence |
 | Modify | `E:\MKTWorkspace\MKTBrowser\.github\workflows\release.yml` | Existing | Build-once/download/test job split |
@@ -70,12 +71,12 @@ workspace state and prevents an unnoticed rebuild between verification steps.
 
 ## Function And Interface Checklist
 
-- [ ] Launch state does not require a port before Chromium publishes one.
-- [ ] `DevToolsActivePort` parsing is bounded, schema-checked, and tied to the owned data directory.
-- [ ] Readiness errors report stage, elapsed time, child/primary PID state, port owner, and bounded stderr.
-- [ ] Failed launch always closes discovered processes and removes temporary profile state.
-- [ ] Startup orphan recovery can rediscover the port without trusting a stale command-line value.
-- [ ] Packaged verifier accepts `--repeat N` and records per-iteration timing without hiding failures.
+- [x] Launch state does not require a port before Chromium publishes one.
+- [x] `DevToolsActivePort` parsing is bounded, schema-checked, and tied to the owned data directory.
+- [x] Readiness errors report stage, elapsed time, child/primary PID state, port owner, and bounded stderr.
+- [x] Failed launch always closes discovered processes and removes temporary profile state.
+- [x] Startup orphan recovery can rediscover the port without trusting a stale command-line value.
+- [x] Packaged verifier accepts `--repeat N` and records per-iteration timing without hiding failures.
 
 ## Implementation Steps
 
@@ -123,11 +124,32 @@ runs. Any rerun needed to obtain green resets the consecutive-run count.
 
 ## Success Criteria
 
-- [ ] The fixed-port allocator is removed from packaged launch behavior.
-- [ ] A failed readiness run identifies the process/port mechanism without another diagnostic rerun.
+- [x] The fixed-port allocator is removed from packaged launch behavior.
+- [x] A failed readiness run identifies the process/port mechanism without another diagnostic rerun.
 - [ ] Required PR packaged verification passes 5/5 cold launches on the exact uploaded artifact.
 - [ ] Seven independent 20-iteration runs complete without CDP readiness failure or orphan process.
-- [ ] Normal operator timeout remains strict and separately tested.
+- [x] Normal operator timeout remains strict and separately tested.
+
+## Local Review Evidence - 22 August 2026
+
+- Node 22 `test:installer`, typecheck, zero-warning lint, and the production Windows directory build
+  pass after adversarial review fixes.
+- A focused regression test proves startup orphan recovery aborts a never-resolving polite CDP close
+  within its own total cleanup budget before the first launch barrier opens.
+- Verifier health probes and MCP RPCs have independent hard deadlines, with regression coverage for
+  both a never-settling transport and successful response-body consumption.
+- The rebuilt executable is 221,933,568 bytes with SHA-256
+  `b62642a57c2651c071a59fe210fa2fe9633df584d16fa49e3abd855e747bc1a7`; packaged `app.asar`
+  SHA-256 is `8a2310fbd9341b0b45ae829a45b9fdbb40a31da5aa821513fb01e9209a919da7`.
+- The exact local directory package passed 5/5 cold lifecycle iterations while loopback ports 9222
+  and 9223 were held. Chrome `151.0.7922.138` SHA-256 evidence is recorded per iteration in
+  `local-test-artifacts/phase2-packaged-contract-timings-bounded-sweep-final.json`; post-run checks
+  found no disposable process, directory-package application process, or fixed-port listener.
+- An expected active-port timeout produced the discovery stage, elapsed budget, child state,
+  sanitized PID/parent/listener snapshot, and redacted final stack in one artifact; cleanup removed
+  every disposable application/browser process.
+- Phase 2 remains in progress. The required pull-request artifact run and seven independent 20/20
+  Windows runner runs are external gates and have not happened yet.
 
 ## Risk Assessment
 
