@@ -1,18 +1,28 @@
 ---
 title: "Pre-MKB-04 System Quality and Release-Readiness Audit"
 description: "Remediate MKB-03, freeze a clean Windows baseline, then issue a strict evidence-backed GO or NO-GO verdict for MKB-04."
-status: in-progress
+status: superseded
 priority: P1
 effort: "8-15 working days plus human-gate scheduling"
 issue: null
 branch: "MKTTool feat/mkt-browser-clean-break; MKTBrowser main"
 tags: [audit, security, windows, release, critical]
-blockedBy: [260821-1925-antidetect-browser-proxy-p0]
+blockedBy: []
 blocks: []
 created: 2026-08-13
+supersededBy:
+  - 260816-0507-full-codebase-deep-audit
+  - 260821-1925-antidetect-browser-proxy-p0
 ---
 
 # Pre-MKB-04 System Quality and Release-Readiness Audit
+
+> **Historical plan — do not use for current versions or rollout status.** Its audit execution was
+> replaced by the completed [full codebase deep audit](../260816-0507-full-codebase-deep-audit/plan.md).
+> Current Browser/proxy readiness and the remaining NO-GO gates are tracked by the active
+> [P0 antidetect Browser and proxy plan](../260821-1925-antidetect-browser-proxy-p0/plan.md). Relay
+> v11, unpublished-artifact, and physical-ceremony statements below are preserved as evidence of the
+> state on 13-15 August, not claims about the current v15 codebase.
 
 ## Decision
 
