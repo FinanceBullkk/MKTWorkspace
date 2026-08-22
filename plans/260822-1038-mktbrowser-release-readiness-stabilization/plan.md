@@ -32,7 +32,7 @@ or automation expansion. Phases 1-6 form the release path; Phase 7 follows witho
 
 | Area | Current evidence | Release consequence |
 |---|---|---|
-| Packaged CI | PR run `32547593681` failed at CDP port 9223 after 60 seconds; push run `32547591956` passed on the same source tree `2c13c91efffa9e0dac3f9cb8ed34ce23cd662631` | Treat as true nondeterminism; no timeout-only fix |
+| Packaged CI | Closed 22 August. The fixed-port allocator was the mechanism; with an OS-assigned port the required PR check passes 5/5 and seven independent runs passed 20/20 on one declared engine | Gate closed on evidence |
 | Extraction | `extract-zip@2.0.1` is a direct packaged dependency used by engine and extension extraction; audit reports high-severity `GHSA-jmr9-qjv8-65gv` | Block release until removed or fully patched |
 | Coverage | Neither repository enforces a coverage threshold | Add critical-path floors before refactors |
 | Installer | Current combined installer predates 22 August P0 hardening and is unsigned | Do not distribute; rebuild from frozen HEAD and sign |
@@ -50,7 +50,7 @@ pull-request check for the current merge tree.
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | [Remove Vulnerable Runtime Extraction](./phase-01-remove-vulnerable-runtime-extraction.md) | Completed |
-| 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | In Progress |
+| 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | Completed |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Pending |
 | 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | Pending |
 | 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | Pending |

@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Stabilize Packaged Contract CI"
-status: in-progress
+status: complete
 priority: P1
 effort: "3-5 working days"
 dependencies: []
@@ -127,7 +127,7 @@ runs. Any rerun needed to obtain green resets the consecutive-run count.
 - [x] The fixed-port allocator is removed from packaged launch behavior.
 - [x] A failed readiness run identifies the process/port mechanism without another diagnostic rerun.
 - [x] Required PR packaged verification passes 5/5 cold launches on the exact uploaded artifact.
-- [ ] Seven independent 20-iteration runs complete without CDP readiness failure or orphan process.
+- [x] Seven independent 20-iteration runs complete without CDP readiness failure or orphan process.
 - [x] Normal operator timeout remains strict and separately tested.
 
 ## Local Review Evidence - 22 August 2026
@@ -174,21 +174,38 @@ which is precisely why an extra one must not exist.
 
 | Run | Iterations | Declared engine | Result |
 |---|---|---|---|
-| `32570630202` | 20 | `151.0.7922.170` | 20/20, engine matched on every iteration, installer skipped |
-| six dispatches at 11:50-11:51 UTC | none | n/a | Never started |
+| `32570630202` | 20 | `151.0.7922.170` | 20/20 |
+| `32572582551` | 20 | `151.0.7922.170` | 20/20 |
+| `32572622904` | 20 | `151.0.7922.170` | 20/20 |
+| `32572628115` | 20 | `151.0.7922.170` | 20/20 |
+| `32572633406` | 20 | `151.0.7922.170` | 20/20 |
+| `32572638973` | 20 | `151.0.7922.170` | 20/20 |
+| `32572644069` | 20 | `151.0.7922.170` | 20/20 |
 
-Streak stands at 1 of 7.
+Streak complete: 7 of 7. One hundred and forty cold packaged launches, no CDP readiness failure, no
+rerun anywhere in the count. Every run declared the same engine and the guard confirmed it on each of
+the one hundred and forty iterations, so this is one streak on one engine rather than seven runs that
+happened to agree. `windows-installer` reported `skipped` in all seven.
+
+A green run is also the orphan evidence: the verifier fails a run when cleanup cannot remove the
+disposable application or browser processes, so seven clean runs mean no run left one behind.
+
+Six dispatches at 11:50-11:51 UTC appear between runs one and two in the run list and are not part of
+the count. They were refused a runner for billing and never started, so they measured nothing and
+neither counted nor reset the streak. They are named here so the gap is not later read as six
+suppressed failures.
 
 The six runs did not fail the contract; they never allocated a runner. GitHub reported: *the job was
 not started because recent account payments have failed or your spending limit needs to be
 increased*. Nothing was measured, so these runs neither count toward the streak nor reset it. They
 are recorded here so the gap in run identifiers is not later mistaken for six suppressed failures.
 
-## Blocked - Actions Spending Limit
+## Resolved - Actions Spending Limit
 
 The repository is private under an organization, so every Actions minute is billed and Windows
-runners bill at a 2x multiplier. The remaining six runs cannot start until the spending limit is
-raised or the payment method is fixed. This is an account action, not an engineering one.
+runners bill at a 2x multiplier. The streak stalled at one of seven when the spending limit was
+reached. The limit was raised the same day and the remaining six runs completed. Recorded because the
+failure presented as six red runs and was not an engineering fault at all.
 
 ### Cost Note Worth Acting On
 
