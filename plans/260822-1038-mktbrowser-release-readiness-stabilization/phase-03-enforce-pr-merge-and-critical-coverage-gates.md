@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Enforce PR Merge and Critical Coverage Gates"
-status: pending
+status: in-progress
 priority: P1
 effort: "2-3 working days"
 dependencies: [1, 2]
@@ -53,6 +53,79 @@ Coverage policy:
 4. Add missing tests before accepting a lower baseline. Never exclude hard-to-test code merely to
    improve the number.
 5. Raise toward 85/80/75 as Phase 7 extracts testable seams.
+
+## Implementation Evidence - 22 August 2026
+
+### A skipped required check counts as passed
+
+The first version of this gate put the required job in the push workflow behind
+`if: github.event_name == 'pull_request'`. It ran green, and the check runs on the head commit then
+showed the name twice:
+
+```
+mktbrowser-pr-release-gate    success    (pull_request run)
+mktbrowser-pr-release-gate    skipped    (push run)
+```
+
+A condition stops a job from running but not from publishing a check run under its name, and GitHub
+treats a skipped required check as satisfied. Enabling branch protection at that moment would have
+produced a gate that protected nothing: a push carrying a failing pipeline would still have
+published the required name, in a state that satisfies the requirement.
+
+This is the same shape as the finding already in the register - the check that would have caught the
+problem was not the check that runs - with a new variant worth naming separately: **a check that
+runs, reports, and protects nothing.**
+
+The fix is structural rather than conditional. The pipeline is now a reusable workflow with two
+callers, so the required name cannot exist outside pull requests:
+
+| Workflow | Trigger | Carries the gate name |
+|---|---|---|
+| `windows-pipeline.yml` | `workflow_call` | No |
+| `release.yml` | push, schedule, dispatch | No |
+| `pr-release-gate.yml` | `pull_request` | Yes |
+
+Verified after the split: the required name appears exactly once on the head commit, `success`.
+
+The contract test forbids the name and the merge-request trigger from appearing anywhere in the push
+workflow, comments included. Its first run failed on the comment that explained the rule, and the
+comment was reworded rather than the check loosened, because a substring rule with a carve-out for
+comments is one someone can talk their way around.
+
+### Measured coverage floors
+
+Both floors are the measured baseline rounded down by one point, per the policy above.
+
+| Repository | Lines | Branches | Functions | Statements | Protected slice |
+|---|---:|---:|---:|---:|---|
+| MKTBrowser | 87.38 | 81.65 | 86.75 | - | 11 modules in `apps/desktop/src/main` |
+| MKTTool | 82.47 | 75.38 | 80.23 | 79.78 | auth, crypto, tickets, relay, release, proxies, enrollment, antidetect |
+
+MKTTool's floor is proven to fail rather than assumed to: forcing the line threshold to 99 exits 1
+with `Coverage for lines (82.47%) does not meet global threshold (99%)`. A configured number nobody
+has watched fail is indistinguishable from a comment.
+
+Both contracts fail closed when a protected module is renamed out of the include list, because
+coverage of whatever remains would otherwise keep looking healthy.
+
+### Open - branch protection not yet applied
+
+The required check now exists and is unique, so protection can be applied. It has not been, because
+applying it is a repository configuration change and needs the owner. Intended settings are recorded
+in `Branch Protection Settings` below so the applied state can be compared against an intent that
+was written down first.
+
+## Branch Protection Settings
+
+| Setting | Value | Why |
+|---|---|---|
+| Required check | `mktbrowser-pr-release-gate` | The only name a push cannot publish |
+| Strict (base up to date) | true | A stale base is a different merge tree than the one tested |
+| Enforce for admins | true | Ordinary merges have no bypass; disabling is the documented break-glass |
+| Required approving reviews | 0 | The team is one person, and GitHub forbids approving your own pull request. Requiring one approval would block every merge, and a rule that cannot be followed gets switched off entirely |
+| Require conversation resolution | true | Cheap, and stops an unanswered review comment from being merged past |
+| Force pushes | denied | History on the default branch is evidence |
+| Deletions | denied | - |
 
 ## File Inventory
 
