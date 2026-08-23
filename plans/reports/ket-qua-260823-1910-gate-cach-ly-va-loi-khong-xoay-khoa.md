@@ -105,9 +105,44 @@ Nghĩa là kể cả rotation hoàn hảo, sản phẩm vẫn không dùng đư�
 
 Kèm một lỗi phát hiện khi làm: đổi primary thì khoá cũ **vẫn nằm lại trong pool**, vì store tự gộp primary vào danh sách khi đọc. Rotation sẽ tốn một lượt thử và một cooldown 17 phút cho khoá operator vừa bỏ. Đã sửa trong `saveLicence`.
 
-### Một điểm chưa giải thích
+## 6b. [P1] Khoá `…bdf2ae` không dùng được — gate cách ly đồng thời vẫn chặn
 
-Lần đo 13:07Z, khoá `…bdf2ae` đo FREE lúc 12:49Z nhưng vẫn bị từ chối theo đúng hình thái "15s + exit 76". Không rõ ai giữ nó trong khoảng đó. Không ảnh hưởng kết luận về rotation, nhưng là một quan sát chưa khớp.
+Gate cần hai seat cùng lúc. Có hai khoá, nhưng chỉ một khoá khởi động được browser.
+
+### Phép đo tách bạch
+
+Nghi ngờ ban đầu: probe của chính tôi (mở rồi đóng session ngay trước mỗi lần launch) tạo vòng lặp treo seat. Loại trừ bằng **28 phút hoàn toàn im lặng** — không một lời gọi API licence nào — rồi launch:
+
+```
+14:06:03  spawn khoá …bdf2ae → engine mở DevTools ws://127.0.0.1:53918
+14:06:18  CHILD-EXIT exitCode 76, port: null (driver không discover được)
+14:06:19  LICENCE-KEY-REFUSED bdf2ae, keysLeft:0
+```
+
+Engine **có** khởi động và phục vụ CDP rồi mới bị từ chối — đúng hình thái "verdict tới sau CDP". Nên đây là từ chối licence thật, không phải lỗi khởi động.
+
+Loại trừ tiếp giả thuyết "browser detached còn sống heartbeat giữ seat": không tiến trình CloakBrowser nào sót lại từ lần thử đó.
+
+### Tổng hợp toàn bộ lần đo hôm nay
+
+| Giờ | Khoá | Kết quả |
+|---|---|---|
+| 12:24 | bdf2ae | chết 1.2s, exit 76 |
+| 12:30 | b8f6b7 | **thành công** 1.4s |
+| 13:07 | bdf2ae | 15s, exit 76 |
+| 13:21 | bdf2ae → b8f6b7 | bdf2ae 15s+76; b8f6b7 **thành công** |
+| 13:37 | bdf2ae → b8f6b7 | bdf2ae 15s+76; b8f6b7 **thành công** |
+| 14:06 | bdf2ae (sau 28' im lặng) | 15s, exit 76 |
+
+`b8f6b7` chưa hỏng lần nào khi seat rảnh. `bdf2ae` chưa chạy được lần nào hôm nay — dù API của tôi cấp lease cho chính nó lúc 12:49Z và 13:37Z.
+
+Đối chiếu log 20/08: `bdf2ae` **từng chạy được** (04:37, chạy 433 giây, đóng sạch exit 0), rồi bị từ chối lúc 15:43. Nên khoá không hỏng vĩnh viễn — seat của nó *không đáng tin*.
+
+### Hệ quả
+
+Thực tế chỉ có **một** seat dùng được. Gate cách ly đồng thời không chạy được trên máy này cho tới khi có seat thứ hai đáng tin. Không phải lỗi code — code đã xoay khoá đúng, và đúng lúc nó xoay sang `bdf2ae` thì khoá đó từ chối.
+
+Việc cần chủ dự án: hỏi CloakBrowser vì sao khoá `…bdf2ae` báo `session_limit_exceeded` khi không máy nào giữ, hoặc mua một khoá đã kiểm chứng là mở được browser.
 
 ---
 
@@ -188,6 +223,28 @@ Hai profile dùng thử `phase5-isolation-A` (`d0f4473a…`) và `phase5-isolati
 - Cả hai proxy test đều là datacenter cùng ASN — blueprint yêu cầu 4G/dân cư. Chủ dự án đã xác nhận đây chỉ là proxy test.
 
 ---
+
+## 8. Máy ảo sạch cho các gate cần phần cứng — đang dựng
+
+Ba gate cần một máy chưa từng có sản phẩm: clean install/launch/repair/uninstall, verify hash trên máy nhận, và second-PC setup không cần Node/JSON/sửa port. Máy thật chỉ sạch được đúng một lần; snapshot thì sạch lại bao nhiêu lần cũng được.
+
+**Không dùng VM cho:** bất cứ thứ gì đo fingerprint thật. GPU ảo và chuỗi thiết bị của nó tự nó là tín hiệu nhận dạng — canary và mọi nick thật ở lại máy thật.
+
+Đã dựng: VirtualBox 7.2.16, guest Windows 11 **Home** (trùng OS thật của chủ máy), 6 GB RAM / 60 GB đĩa trên ổ D, unattended install, OpenSSH bật sẵn ở bước post-install để chạy không cần ai click, forward `127.0.0.1:2222` → guest `:22`. UAC **giữ nguyên bật** — guest phải hành xử như máy operator, và đây là per-user install lẽ ra không cần elevation; tắt UAC sẽ che mất nếu điều đó thay đổi.
+
+Harness ở `local-test-artifacts/vm/`: `create-windows-test-vm.ps1`, `run-clean-install-gate.ps1`, `drive-guest-gate.ps1`.
+
+### Candidate đã attest — hash khớp trên máy nhận
+
+Bản trong `Downloads` là build 19/08 (`8307400e…`), **không phải** candidate. Kéo đúng artifact từ CI run `32616608981`:
+
+| | |
+|---|---|
+| `MKTBrowser-win-x64.exe` | 146,020,764 bytes |
+| SHA-256 đo được | `d18c8d79fc6a6f77e1783044e2e9fae4ac28f73b152992bee0a0bcbc6a4e3490` |
+| Giá trị đã công bố | khớp tuyệt đối |
+
+Đó là nửa đầu mục còn nợ của Phase 4. Nửa sau — verify trên máy **sạch** — là việc gate trong VM đang chạy.
 
 ## Câu hỏi chưa giải
 
