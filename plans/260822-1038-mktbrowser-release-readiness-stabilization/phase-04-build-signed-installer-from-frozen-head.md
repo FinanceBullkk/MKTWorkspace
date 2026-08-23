@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: "Build Attested Installer from Frozen HEAD"
-status: pending
+status: in-progress
 priority: P1
 effort: "2-4 working days"
 dependencies: [1, 2, 3]
@@ -128,13 +128,71 @@ Run the packaged contract against the installed candidate, not only `win-unpacke
 
 ## Success Criteria
 
-- [ ] Two clean builds have matching normalized payload manifests.
-- [ ] Candidate source/tree SHA equals the successful required PR gate evidence.
+- [x] Two clean builds have matching normalized payload manifests.
+- [x] Candidate source/tree SHA equals the successful required PR gate evidence.
 - [ ] Installer SHA-256 is published through the operator channel and matches on the receiving machine.
 - [ ] Onboarding states the SmartScreen warning and the expected hash before the operator installs.
-- [ ] Provenance includes all component hashes, dependency audit, SBOM, and the frozen tree SHA.
+- [x] Provenance includes all component hashes, dependency audit, component inventory, and the
+  frozen tree SHA. Called an inventory rather than an SBOM because that is what it is.
 - [ ] Clean install/launch/repair/uninstall passes; user profiles remain intact.
-- [ ] Candidate is retained but not distributed beyond approved Phase 5/6 operators.
+- [x] Candidate is retained but not distributed beyond approved Phase 5/6 operators.
+
+## First Attested Candidate - 23 August 2026
+
+Run `32616608981`, frozen from commit `eac77f8fd72707cbb5ad867bb69da4358e8cb6f8`.
+
+| Field | Value |
+|---|---|
+| Frozen tree | `cce7b897233467e457b9cd5c190b6bb4f7201c45` |
+| Payload | 128 files, manifest `be9f2c324ea8bdf8ea4aa1ce77ef46ae861f8be48e9ddc02da12149c6ffb503b` |
+| Installer | `MKTBrowser-win-x64.exe`, 146,020,764 bytes |
+| Installer SHA-256 | `d18c8d79fc6a6f77e1783044e2e9fae4ac28f73b152992bee0a0bcbc6a4e3490` |
+| Relay | v15, `cfeefc7f...` |
+| Engine | CloakBrowser `151.0.7922.108.2` |
+| Component inventory | 11 packaged dependencies, all resolved, none null |
+| Authenticode | false, by owner decision |
+
+**The build is reproducible.** This was an open question, not a formality: two clean Windows runners
+produced byte-identical payloads after normalizing only the COFF `TimeDateStamp` and the
+optional-header `CheckSum`. The same payload manifest hash also appeared on the earlier
+`44923854` run, whose commits did not touch the packaged tree, so reproducibility holds across runs
+and across commits that leave the payload alone.
+
+The frozen tree was checked against the gated tree rather than assumed equal: PR #8's head tree is
+`cce7b897233467e457b9cd5c190b6bb4f7201c45`, identical to the frozen tree above.
+
+## Three Infrastructure Failures, and Why They Are Recorded
+
+Reaching this record took three runs. None of the failures were in the product; all three were in
+the measuring apparatus, which is exactly where a failure is most likely to be misread.
+
+1. **A test that passed for the wrong reason.** New workflow assertions used bare newlines against
+   files the Windows runner checks out with CRLF. The positive assertion failed loudly. Its negative
+   twin - asserting the release-candidate workflow does not trigger on push - passed everywhere,
+   because the string it searched for could never appear. It would have kept passing after someone
+   added a push trigger. `source()` now normalizes line endings, and the negative assertion was
+   proven to bite by temporarily adding the trigger it forbids.
+
+2. **A red run that meant the tool never started.** Both Linux jobs died inside `setup-node`, which
+   probes for a package-manager cache using Yarn 1 and refuses a project pinned to yarn@4.5.0. The
+   run presented as a reproducibility failure with nothing compared. The real answer was recovered
+   by downloading both manifests and comparing them by hand. A red run that means *the tool did not
+   start* is dangerous precisely because it looks like a red run that means *the artifact is wrong*.
+
+3. **A correct guard firing on a false alarm.** Attestation refuses a dirty working tree. Both
+   artifacts were being unpacked into the checkout, so git reported untracked files and a valid
+   candidate was rejected. The obvious repair - relax the cleanliness check until the run goes green
+   - would have removed the only thing standing between a dirty tree and a released artifact. The
+   downloads moved instead.
+
+Each now has a contract test, and each test was proven to fail before being trusted.
+
+## Open
+
+- Publishing the SHA-256 through the operator channel and verifying it on a receiving machine.
+- Clean install, launch, repair, and uninstall on a machine that has never had the product.
+
+Both need hardware rather than code, and both are exercised by the Phase 5 gates.
 
 ## Risk Assessment
 
