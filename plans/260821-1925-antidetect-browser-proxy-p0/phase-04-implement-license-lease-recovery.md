@@ -95,6 +95,46 @@ and keeps uncertainty visible instead of guessing.
 13. Test app restart and simulated power loss from journal fixtures before any live destructive gate.
 14. Remove timer-only assumptions only after the measured state machine passes all regressions.
 
+## Measured 23 August 2026 - live vendor protocol
+
+Evidence: [`ket-qua-260823-1250-do-nang-luc-seat-cloakbrowser.md`](../reports/ket-qua-260823-1250-do-nang-luc-seat-cloakbrowser.md),
+[`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../reports/ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md)
+
+| Measured | Result |
+|---|---|
+| `session/start` | HTTP 200, `lease_id`, `plan: "free"` |
+| `lease_ttl_seconds` | 900 |
+| `heartbeat_interval_seconds` | 300 |
+| `session/end` | HTTP 200 `{"ok":true}`, seat free within seconds |
+| Second session, same key | HTTP 403 `session_limit_exceeded`, `active_sessions:1`, `limit:1` |
+| Second session, second key, same `install_id` | Granted. Sessions are counted **per licence**, not per account and not per install |
+| Normal profile close | Seat free in seconds, not after the 900s lease. Measured twice |
+
+The capacity model is therefore N keys on one machine, not N machines. Recovery after an unclean
+exit is measured only incidentally so far: a launch that dies before it is licensed leaves the seat
+held until the lease expires, observed at roughly 20-25 minutes rather than the nominal 900s, which
+is what the pool's 17-minute cooldown already assumes.
+
+### Blocker found and fixed while measuring
+
+Key rotation never ran. The engine serves CDP before the licence server answers, and every check for
+the child's exit sampled it once while it was still alive, so launch resolved successfully at ~0.9s
+and the verdict landed at ~1.2s against a loop that had already returned. A held primary killed the
+launch with a free key sitting unused in the pool.
+
+Fixed in browser commit `b63d212`, proven on hardware: a held primary is refused, logged as
+`LICENCE-KEY-REFUSED` with a `keysLeft` countdown, and the launch succeeds on the next free key,
+reaching bootstrap in 1.4s. Two log shapes now tell the story apart - 15s with `port: null` and exit
+76 means no seat; ~1.4s to `BOOTSTRAP-DONE` means the seat was granted.
+
+Alongside it, browser commit `22207ad`: nothing in the renderer referenced the key list, so an
+operator had no way to enter a second key at all. An N-key cost model needs a route into the product.
+
+### Still open
+
+Heartbeat behaviour across a long session, and recovery from hard kill, Electron crash, Relay restart
+and reboot. Until those are measured, `license-capacity-v1` stays unadvertised.
+
 ## Test Scenario Matrix
 
 | Scenario | Expected |

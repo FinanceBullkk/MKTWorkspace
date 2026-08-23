@@ -81,6 +81,37 @@ sanitized diagnostic.
 11. Add only the smallest code fixes exposed by these runs; no new proxy abstraction if existing
     managed launch and bridge contracts can own the behavior.
 
+## Measured 23 August 2026 - PC A
+
+Evidence: [`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../reports/ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md)
+
+Two disposable profiles, two assigned proxies, measured against an independent out-of-browser probe
+of the same proxies. Addresses are recorded because both proxies are disposable test endpoints the
+owner has confirmed are not operational identities.
+
+| Check | Profile A | Profile B |
+|---|---|---|
+| Independent proxy probe | `82.29.239.125` | `82.25.225.8` |
+| In-browser egress | `82.29.239.125` | `82.25.225.8` |
+| Match to own proxy only | yes | yes |
+| DNS resolver seen by an authoritative server | `82.29.239.125` | `82.25.225.8` |
+| Operator ISP resolver reached | no | no |
+| WebRTC ICE candidates | none gathered | none gathered |
+| Operator real address `14.169.109.47` | absent | absent |
+
+DNS resolves remotely through each profile's own proxy, which is what the SOCKS5 bridge is for. No
+probe saw the other profile's exit.
+
+**This does not close the gate.** A and B were measured sequentially, not concurrently: only one
+licence seat was reliably free during the run. Cross-wiring between two live profiles - shared
+process, shared resolver, shared storage partition, a socket reused across profiles - is exactly
+what a sequential run cannot exclude, and it is the reason this phase stays open.
+
+Two observations recorded rather than acted on. The total absence of ICE candidates is good for leak
+containment but is itself unusual enough to be a signal; real Chrome gathers at least one. And
+profile B was issued `locale: da-DK` with `timezone: Europe/Copenhagen` while its proxy exits in
+Singapore, which is a geography mismatch a scanner can read directly.
+
 ## Test Scenario Matrix
 
 | Scenario | Expected |
