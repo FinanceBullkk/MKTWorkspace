@@ -46,6 +46,40 @@ Khoá rảnh nằm sẵn trong pool ở cả hai lần. Lần một không hề 
 
 Mua thêm khoá hiện **không** mua thêm được profile đồng thời. Operator bị kẹt ở đúng khoá primary; khoá đó bận thì app chết, dù còn bao nhiêu khoá rảnh trong pool. Đây là thứ chặn thẳng con đường mở rộng quy mô, và nó im lặng: nhìn từ ngoài chỉ thấy "browser tự tắt".
 
+### Nguyên nhân gốc và bản sửa — commit `b63d212`
+
+Đọc source thì vòng lặp rotation viết đúng, pool viết đúng, và env spawn **có** dùng khoá pool cấp (`licenseKeyPool.keyFor(profileId)`, `ChromiumBrowserDriver.ts:774-777`). Hỏng nằm ở khâu phát hiện.
+
+Cả ba chỗ kiểm tra child chết đều là **lấy mẫu một lần**:
+
+```ts
+if (launchProcess.childExit && trackedPid === child.pid && !isPidAlive(trackedPid))
+```
+
+Đối chiếu timeline đo được: CDP ready ~0.8s → guard chạy, child còn sống → launch **resolve thành công** → BOOTSTRAP-FAILED 0.858s → CHILD-EXIT 76 lúc **1.237s**. Verdict tới sau khi guard đã đi qua. Rotation chỉ xoay được khi có exception ném ra, mà lúc đó vòng lặp đã trả về thắng lợi.
+
+Thêm một lỗi thứ hai: guard ở giai đoạn bootstrap (`:1159`) ném `Error` trần, không gắn `licenseExitCode`, nên kể cả bắt được thì `isSeatRefusal()` vẫn trả false.
+
+**Sửa:** launch chờ hết một cửa sổ verdict có giới hạn trước khi công bố profile đang chạy, và trả về ngay khi child chết. Cửa sổ 2500ms = 2× verdict chậm nhất đo được (1.24s), chỉ tốn cho engine có kênh licence. Mọi đường child-chết-khi-launch giờ đi qua một classifier duy nhất.
+
+Timing + phân loại tách ra `apps/desktop/src/main/licence-verdict.ts` để test được không cần Electron (không test nào ở `src/main` load được `@mktbrowser/mcp-server`); việc dựng error ở lại driver vì `engineUnavailable` nằm trong package đó.
+
+7 test mới, **đã chứng minh fail trước khi tin**: khôi phục hành vi point-sample cũ thì đúng 2 test cốt lõi đỏ. Toàn bộ `test:mkb02` 125/125 pass, lint sạch.
+
+### Xác minh trên máy thật
+
+Giữ seat của khoá primary bằng lease thật, để khoá kia trong pool, chạy bản đóng gói từ source:
+
+```
+LICENCE-KEY-REFUSED  keyTail:"b8f6b7"  keysLeft:1     ← xoay
+LICENCE-KEY-REFUSED  keyTail:"bdf2ae"  keysLeft:0
+→ ENGINE_UNAVAILABLE "your plan's session limit is reached..."
+```
+
+Trước bản sửa: một lần spawn, không dòng nào, caller nhận "thành công" kèm pid của tiến trình đang chết. Sau: đúng hai lần thử, đúng tail khoá, đếm lùi đúng, và caller nhận lỗi thật.
+
+**Còn mở:** lần thử thứ hai đáng lẽ phải chạy được vì `…bdf2ae` đo là FREE lúc 12:41Z, nhưng nó cũng bị từ chối sau 15s (`port: null`, chưa từng mở DevTools) và sau đó khoá này **bị giữ**. Tức engine đã lấy seat rồi vẫn exit 76, bỏ treo lease. Rotation *có engage* — chưa chứng minh được rotation *thành công*. Cần một lần đo với seat thứ hai thật sự rảnh.
+
 ---
 
 ## 3. Gate cách ly — qua phần tuần tự, KHÔNG chạy được phần đồng thời

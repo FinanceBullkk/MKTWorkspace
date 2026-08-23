@@ -109,13 +109,29 @@ Evidence: [`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../repo
 | Normal close returns the seat | Pass, twice. The seat was free within seconds, not after the 900s lease expiry |
 | Hard kill, Electron crash, Relay restart, reboot | Not run |
 
-### Blocker found while running this gate
+### Blocker found while running this gate, and its fix
 
-The build does not rotate to a free licence key when the primary key is refused. `LicenseKeyPool`
-and `launchWithKeyRotation` exist for exactly this, but with a held primary and a free second key in
-the pool the launch died at exit 76 without rotating; with the free key as primary the same launch
-succeeded. Until this is fixed, holding N keys yields one concurrent profile, and the concurrent
-isolation gate cannot be run on one machine.
+The build did not rotate to a free licence key when the primary was refused. `LicenseKeyPool` and
+`launchWithKeyRotation` exist for exactly this, but with a held primary and a free second key in the
+pool the launch died at exit 76 without rotating; with the free key as primary the same launch
+succeeded.
+
+Root cause: the engine serves CDP before the licence server answers, and every check for the child's
+exit was a single sample taken while it was still alive. Launch resolved successfully at ~0.9s and
+the verdict landed at ~1.2s, so the rotation loop had already returned before a refusal existed. The
+bootstrap-stage check also threw an untagged `Error`, which `isSeatRefusal` cannot recognise.
+
+Fixed in `b63d212`: launch waits out a bounded verdict window (2.5s, twice the slowest measured
+verdict) before publishing the running record, returning early the moment the child exits, and every
+during-launch exit is classified through one path. Timing and classification moved to
+`apps/desktop/src/main/licence-verdict.ts` with seven tests, proven to fail against the old
+behaviour first.
+
+Verified on hardware: with the primary's seat held, the log now shows two attempts with the correct
+key tails and a `keysLeft` countdown, and the caller receives ENGINE_UNAVAILABLE rather than a pid
+for a dying process. Still open — the rotated-to key was also refused and then found held, so the
+engine took a seat and exited 76 anyway. Rotation is proven to engage; it is not yet proven to
+succeed. That needs one measurement with a genuinely free second seat.
 
 ## Test Scenario Matrix
 
