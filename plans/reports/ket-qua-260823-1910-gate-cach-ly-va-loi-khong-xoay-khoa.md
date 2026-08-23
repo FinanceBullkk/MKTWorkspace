@@ -78,7 +78,36 @@ LICENCE-KEY-REFUSED  keyTail:"bdf2ae"  keysLeft:0
 
 Trước bản sửa: một lần spawn, không dòng nào, caller nhận "thành công" kèm pid của tiến trình đang chết. Sau: đúng hai lần thử, đúng tail khoá, đếm lùi đúng, và caller nhận lỗi thật.
 
-**Còn mở:** lần thử thứ hai đáng lẽ phải chạy được vì `…bdf2ae` đo là FREE lúc 12:41Z, nhưng nó cũng bị từ chối sau 15s (`port: null`, chưa từng mở DevTools) và sau đó khoá này **bị giữ**. Tức engine đã lấy seat rồi vẫn exit 76, bỏ treo lease. Rotation *có engage* — chưa chứng minh được rotation *thành công*. Cần một lần đo với seat thứ hai thật sự rảnh.
+### Chứng minh dứt điểm — rotation chạy trọn vẹn
+
+Lần đo trên có cả hai khoá đều bận nên chỉ chứng minh được rotation *engage*. Đo lại lúc 13:21Z với primary bị giữ (lease treo thật) và khoá kia rảnh:
+
+```
+13:21:28  spawn pid 23316, khoá …bdf2ae (bị giữ) → 15s → CHILD-EXIT 76
+13:21:43  LICENCE-KEY-REFUSED  keyTail:"bdf2ae"  keysLeft:1     ← xoay
+13:21:46  spawn pid 24900, khoá …b8f6b7 (rảnh)
+13:21:48  BOOTSTRAP-DONE (1.4s), CDP port 56191, profile SỐNG
+```
+
+Primary bận → phát hiện đúng → cho nghỉ → xoay sang khoá rảnh → profile mở được. Caller nhận thành công **sau khi** rotation hoàn tất. **N khoá giờ thật sự mua được N profile.**
+
+Hai hình thái phân biệt rõ trong log:
+- **15s, `port: null`, exit 76** = seat không có
+- **~1.4s, `BOOTSTRAP-DONE`** = seat được cấp
+
+### [P1] UI không có chỗ nhập khoá thứ hai — commit `22207ad`
+
+`grep cloakBrowserLicenseKeys` trong toàn bộ `src/renderer` không khớp dòng nào. Backend nhận mảng khoá đầy đủ, UI chỉ có một ô scalar. Cách duy nhất nạp khoá thứ hai là sửa tay `settings.json` — không phải một cách.
+
+Nghĩa là kể cả rotation hoàn hảo, sản phẩm vẫn không dùng được N khoá. Mô hình chi phí là N khoá mà không có đường nhập N khoá.
+
+Đã thêm `AdditionalLicenceKeys.tsx`: liệt kê khoá đang dùng theo 6 ký tự cuối, thêm/xoá từng khoá, nêu rõ N khoá = N profile đồng thời và cần restart. Khoá đầy đủ không bao giờ render ra DOM.
+
+Kèm một lỗi phát hiện khi làm: đổi primary thì khoá cũ **vẫn nằm lại trong pool**, vì store tự gộp primary vào danh sách khi đọc. Rotation sẽ tốn một lượt thử và một cooldown 17 phút cho khoá operator vừa bỏ. Đã sửa trong `saveLicence`.
+
+### Một điểm chưa giải thích
+
+Lần đo 13:07Z, khoá `…bdf2ae` đo FREE lúc 12:49Z nhưng vẫn bị từ chối theo đúng hình thái "15s + exit 76". Không rõ ai giữ nó trong khoảng đó. Không ảnh hưởng kết luận về rotation, nhưng là một quan sát chưa khớp.
 
 ---
 

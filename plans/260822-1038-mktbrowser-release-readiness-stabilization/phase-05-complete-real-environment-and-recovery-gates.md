@@ -127,11 +127,16 @@ during-launch exit is classified through one path. Timing and classification mov
 `apps/desktop/src/main/licence-verdict.ts` with seven tests, proven to fail against the old
 behaviour first.
 
-Verified on hardware: with the primary's seat held, the log now shows two attempts with the correct
-key tails and a `keysLeft` countdown, and the caller receives ENGINE_UNAVAILABLE rather than a pid
-for a dying process. Still open — the rotated-to key was also refused and then found held, so the
-engine took a seat and exited 76 anyway. Rotation is proven to engage; it is not yet proven to
-succeed. That needs one measurement with a genuinely free second seat.
+Verified on hardware, end to end. With the primary key's seat genuinely held and the second key
+free, the launch refused the primary at exit 76, logged `LICENCE-KEY-REFUSED keysLeft:1`, spawned
+again on the free key, and reached `BOOTSTRAP-DONE` in 1.4s with CDP serving. N keys now buys N
+profiles. Two shapes are now distinguishable in the log: 15s with `port: null` and exit 76 means the
+seat was unavailable; ~1.4s to `BOOTSTRAP-DONE` means it was granted.
+
+A second gap surfaced while proving this and is fixed in `22207ad`: nothing in the renderer
+referenced `cloakBrowserLicenseKeys`, so an operator had no way to enter a second key at all — the
+list had to be hand-edited into `settings.json`. Settings now manages the key list. Replacing the
+primary also drops the retired key, which the store had been silently folding back into the pool.
 
 ## Test Scenario Matrix
 
