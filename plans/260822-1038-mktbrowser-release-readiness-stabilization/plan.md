@@ -36,7 +36,8 @@ or automation expansion. Phases 1-6 form the release path; Phase 7 follows witho
 | Extraction | `extract-zip@2.0.1` is a direct packaged dependency used by engine and extension extraction; audit reports high-severity `GHSA-jmr9-qjv8-65gv` | Block release until removed or fully patched |
 | Coverage | Closed 22 August. MKTBrowser 86/80/85 and MKTTool 81/74/79/78, both measured then rounded down, both failing closed on a renamed module | Floors in place before refactors |
 | Installer | Rebuilt 23 August from frozen tree `cce7b897`, reproducible across two clean runners, attested with published SHA-256 `d18c8d79...`. Unsigned by decision | Retained, not distributed |
-| Operational proof | Real proxy/DNS/WebRTC, human input, live vendor recovery, reboot/crash, second PC, and canary remain open | No broad operator rollout |
+| Operational proof | 23 August: per-profile proxy egress, DNS, and WebRTC pass on two profiles measured sequentially, and a normal close returns the seat immediately. Concurrent two-profile isolation, human input, crash/reboot, second PC, and canary remain open | No broad operator rollout |
+| Licence capacity | 23 August: the vendor counts sessions per licence, not per account or per install, measured with two keys on one `install_id`. N concurrent profiles cost N keys on one machine. But the shipped build does not rotate to a free key when the primary is refused, so N keys currently buy one profile | Blocks scale until rotation works |
 | Browser hotspots | 2,581-line driver, 1,574-line fingerprint module, 1,364-line MCP server, plus 973/959-line startup modules | Refactor incrementally after P0 release gates |
 
 ## Release Rule
@@ -53,7 +54,7 @@ pull-request check for the current merge tree.
 | 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | Completed |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Completed |
 | 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | In Progress - candidate built and attested; receiving-machine checks carry into phase 5 |
-| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | Pending |
+| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | In Progress - sequential proxy/DNS/WebRTC and clean-close seat release pass; concurrent isolation blocked on key rotation |
 | 6 | [Run Seven Day Canary and Promote](./phase-06-run-seven-day-canary-and-promote.md) | Pending |
 | 7 | [Decompose Browser Hotspots Incrementally](./phase-07-decompose-browser-hotspots-incrementally.md) | Pending |
 

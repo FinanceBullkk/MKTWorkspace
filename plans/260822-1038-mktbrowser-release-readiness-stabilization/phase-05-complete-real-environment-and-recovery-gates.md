@@ -1,7 +1,7 @@
 ---
 phase: 5
 title: "Complete Real Environment and Recovery Gates"
-status: pending
+status: in-progress
 priority: P1
 effort: "4-7 working days plus access to two Windows PCs, two proxies, and live vendor keys"
 dependencies: [4]
@@ -94,6 +94,28 @@ Do not start real-account work until disposable profile gates pass on both PCs.
 8. Repeat one network, input, crash/reboot, repair, and uninstall smoke on PC B.
 9. Update living roadmap and linked plan checkboxes only from evidence. Any failed gate leaves rollout
    NO-GO with an exact blocker and artifact hash.
+
+## Measured 23 August 2026 - PC A
+
+Evidence: [`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../reports/ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md)
+
+| Gate | Result |
+|---|---|
+| Vendor capacity model | Sessions are counted **per licence**, not per account or per install. Two keys granted two concurrent sessions on one `install_id`. N concurrent profiles cost N keys on one machine |
+| Per-profile proxy egress | Pass. Profile A egressed `82.29.239.125` and profile B `82.25.225.8`, each matching only its own independent probe. The operator's real address never appeared |
+| DNS | Pass. Each profile's resolver was its own proxy, not the operator's ISP resolver |
+| WebRTC | Pass. No ICE candidates gathered under either profile, so nothing to leak. The total absence is itself a possible fingerprint tell and is not yet measured |
+| Concurrent two-profile isolation | **Not run.** Only one seat was ever free, so A and B were measured sequentially. Sequential measurement cannot exclude cross-wiring between two live profiles |
+| Normal close returns the seat | Pass, twice. The seat was free within seconds, not after the 900s lease expiry |
+| Hard kill, Electron crash, Relay restart, reboot | Not run |
+
+### Blocker found while running this gate
+
+The build does not rotate to a free licence key when the primary key is refused. `LicenseKeyPool`
+and `launchWithKeyRotation` exist for exactly this, but with a held primary and a free second key in
+the pool the launch died at exit 76 without rotating; with the free key as primary the same launch
+succeeded. Until this is fixed, holding N keys yields one concurrent profile, and the concurrent
+isolation gate cannot be run on one machine.
 
 ## Test Scenario Matrix
 

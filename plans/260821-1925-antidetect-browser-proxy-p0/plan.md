@@ -72,8 +72,8 @@ MKTTool account and proxy checks
 |-------|------|--------|
 | 1 | [Freeze P0 Baseline and Acceptance Contract](./phase-01-freeze-p0-baseline-and-acceptance-contract.md) | In Progress |
 | 2 | [Stabilize Browser Input and Manual Login](./phase-02-stabilize-browser-input-and-manual-login.md) | Pending |
-| 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - automated foundation complete; live proof open |
-| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - journal/recovery foundation complete; vendor protocol gate open |
+| 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - 23 Aug: live egress/DNS/WebRTC pass per profile, measured sequentially; concurrent two-profile proof still open |
+| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 23 Aug: vendor protocol measured (per-licence seats, start/end, clean close releases immediately); key rotation found not to engage; heartbeat and crash recovery open |
 | 5 | [Integrate Operator Readiness and Capacity UX](./phase-05-integrate-operator-readiness-and-capacity-ux.md) | In Progress - readiness UX complete; authoritative capacity withheld |
 | 6 | [Run Canary Pilot and Issue GO-NO-GO](./phase-06-run-canary-pilot-and-issue-go-no-go.md) | Pending |
 
