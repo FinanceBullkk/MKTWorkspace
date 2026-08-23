@@ -105,7 +105,37 @@ Nghĩa là kể cả rotation hoàn hảo, sản phẩm vẫn không dùng đư�
 
 Kèm một lỗi phát hiện khi làm: đổi primary thì khoá cũ **vẫn nằm lại trong pool**, vì store tự gộp primary vào danh sách khi đọc. Rotation sẽ tốn một lượt thử và một cooldown 17 phút cho khoá operator vừa bỏ. Đã sửa trong `saveLicence`.
 
-## 6b. [P1] Khoá `…bdf2ae` không dùng được — gate cách ly đồng thời vẫn chặn
+## 3. Gate cách ly — qua phần tuần tự, KHÔNG chạy được phần đồng thời
+
+### Control độc lập (ngoài browser, qua curl)
+
+| | Exit IP | ASN |
+|---|---|---|
+| trực tiếp | `14.169.109.47` | AS45899 VNPT, VN |
+| proxy A | `82.29.239.125` | AS10753 Level 3, SG |
+| proxy B | `82.25.225.8` | AS10753 Level 3, SG |
+
+### Đo trong browser, qua CDP của từng profile
+
+| Profile | Egress | Khớp proxy riêng? | DNS resolver | WebRTC |
+|---|---|---|---|---|
+| A (proxy A, port 9222) | `82.29.239.125` | có | `82.29.239.125` | không có candidate |
+| B (proxy B, port 9223) | `82.25.225.8` | có | `82.25.225.8` | không có candidate |
+
+- Mỗi profile ra đúng proxy của nó, không lệch.
+- **DNS không rò**: resolver là chính proxy, không phải VNPT của máy → phân giải từ xa đúng thiết kế.
+- IP thật `14.169.109.47` không xuất hiện ở bất kỳ phép đo nào.
+- Không thấy cross-wire: B không bao giờ hiện IP của A và ngược lại.
+
+### Điều này KHÔNG chứng minh được
+
+A và B chạy **tuần tự**, không đồng thời — khoá 1 bị giữ từ bên ngoài suốt cả phiên đo (>12 phút, không nhả), nên chỉ có một seat rảnh tại một thời điểm. Gate yêu cầu hai phiên cùng lúc để loại trừ cross-wire khi hai profile song song. **Gate cách ly vẫn mở.**
+
+Có một lần hai profile spawn cùng lúc (pid 11948 port 9222 + pid 22764 port 9223, tiến trình và port tách biệt) nhưng cả hai chết vì exit 76 trước khi CDP phục vụ, nên không đo được gì.
+
+---
+
+## 3b. [P1] Khoá `…bdf2ae` không dùng được — đây là thứ đang chặn gate
 
 Gate cần hai seat cùng lúc. Có hai khoá, nhưng chỉ một khoá khởi động được browser.
 
@@ -143,36 +173,6 @@ Loại trừ tiếp giả thuyết "browser detached còn sống heartbeat giữ
 Thực tế chỉ có **một** seat dùng được. Gate cách ly đồng thời không chạy được trên máy này cho tới khi có seat thứ hai đáng tin. Không phải lỗi code — code đã xoay khoá đúng, và đúng lúc nó xoay sang `bdf2ae` thì khoá đó từ chối.
 
 Việc cần chủ dự án: hỏi CloakBrowser vì sao khoá `…bdf2ae` báo `session_limit_exceeded` khi không máy nào giữ, hoặc mua một khoá đã kiểm chứng là mở được browser.
-
----
-
-## 3. Gate cách ly — qua phần tuần tự, KHÔNG chạy được phần đồng thời
-
-### Control độc lập (ngoài browser, qua curl)
-
-| | Exit IP | ASN |
-|---|---|---|
-| trực tiếp | `14.169.109.47` | AS45899 VNPT, VN |
-| proxy A | `82.29.239.125` | AS10753 Level 3, SG |
-| proxy B | `82.25.225.8` | AS10753 Level 3, SG |
-
-### Đo trong browser, qua CDP của từng profile
-
-| Profile | Egress | Khớp proxy riêng? | DNS resolver | WebRTC |
-|---|---|---|---|---|
-| A (proxy A, port 9222) | `82.29.239.125` | có | `82.29.239.125` | không có candidate |
-| B (proxy B, port 9223) | `82.25.225.8` | có | `82.25.225.8` | không có candidate |
-
-- Mỗi profile ra đúng proxy của nó, không lệch.
-- **DNS không rò**: resolver là chính proxy, không phải VNPT của máy → phân giải từ xa đúng thiết kế.
-- IP thật `14.169.109.47` không xuất hiện ở bất kỳ phép đo nào.
-- Không thấy cross-wire: B không bao giờ hiện IP của A và ngược lại.
-
-### Điều này KHÔNG chứng minh được
-
-A và B chạy **tuần tự**, không đồng thời — khoá 1 bị giữ từ bên ngoài suốt cả phiên đo (>12 phút, không nhả), nên chỉ có một seat rảnh tại một thời điểm. Gate yêu cầu hai phiên cùng lúc để loại trừ cross-wire khi hai profile song song. **Gate cách ly vẫn mở.**
-
-Có một lần hai profile spawn cùng lúc (pid 11948 port 9222 + pid 22764 port 9223, tiến trình và port tách biệt) nhưng cả hai chết vì exit 76 trước khi CDP phục vụ, nên không đo được gì.
 
 ---
 
