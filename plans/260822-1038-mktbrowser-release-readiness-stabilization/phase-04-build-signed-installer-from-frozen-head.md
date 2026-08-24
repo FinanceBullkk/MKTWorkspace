@@ -220,6 +220,44 @@ Microsoft Defender reported `Behavior:Win32/PShellCobStager.A` twice and success
 Defender was not disabled or allow-listed. The installer remains unsigned by owner decision. The
 candidate therefore stays retained but cannot close the clean install/repair/uninstall criterion.
 
+## Defender Detection Diagnosed and Partly Remediated - 24 August 2026
+
+The signature name is the diagnosis: `PShellCobStager` is **PowerShell COM stager**, a behavioural
+detection rather than a hash match. The installer matched all four parts of that shape.
+
+| Part of the shape | Where | Status |
+|---|---|---|
+| Unsigned executable drops `.ps1` into a temp dir and runs it `-ExecutionPolicy Bypass` | five scripts staged to `$PLUGINSDIR` | **Unchanged** |
+| Elevation through `runas` into one of those scripts | `customInstall`, `customUnInstall` | **Unchanged**, required for machine-wide rules |
+| `New-Object -ComObject HNetCfg.FwPolicy2` mutating the firewall | `windows-webrtc-firewall.ps1` | **Removed** |
+| Startup-shortcut persistence | `$SMSTARTUP` | **Unchanged**, required |
+
+Only the reads used COM; every write already used the NetSecurity cmdlets. The COM object bought
+nothing and cost the product its ability to install, so `Assert-Rule`, `Assert-FirewallProfiles`,
+`Owned-Rules` and `VerifyAbsent` now read through `Get-NetFirewallRule`,
+`Get-NetFirewallApplicationFilter`, `Get-NetFirewallPortFilter` and `Get-NetFirewallProfile`.
+Browser commit `8595027`.
+
+Measured on a machine with real installed rules - `CheckProfiles` 0, `Verify` 0, `CheckOwner` 0,
+`VerifyAbsent` 16 with rules present. Fail-closed confirmed: a foreign CFT root gives 17, a
+malformed path gives 10.
+
+**A fail-open defect was found and fixed during that verification.** The first rewrite put the
+lookup behind a helper returning `@(...)`. PowerShell unrolls an array on return, so a single match
+reaches the caller as a bare object whose `.Count` is `$null`. `$null -ne 1` reads as the wrong
+rule count, and `$null -ne 0` is false - which would have let `VerifyAbsent` report a
+still-present rule as removed. Lookups are inline at the assignment, with the reasoning recorded in
+the script so it is not refactored back.
+
+Two `WScript.Shell` uses that read `.lnk` targets remain, in the conflict detector and the Relay
+cleanup. There is no cmdlet equivalent, and hand-parsing the shell link format inside a fail-closed
+ownership check is the larger risk. If a clean-VM install still trips, they are the next candidate.
+
+**This does not close the gate.** Removing the named trigger is not proof the behavioural engine is
+satisfied, because three parts of the shape remain. The next clean-VM run is what decides, and it
+should run this build before any further shape change - a detection that persists tells us the
+stager shape is the cause, which is evidence worth more than another guess.
+
 ## Risk Assessment
 
 - An unsigned installer trains operators to dismiss SmartScreen, and a habit of dismissing warnings
@@ -243,7 +281,19 @@ deliver. It is not a substitute for Authenticode and is not described as one.
 
 ## Next Step
 
-Keep this older candidate quarantined. Change the installer implementation so mandatory firewall and
-Relay work completes without the current Defender detection, rebuild once from the current frozen
-source, then require that exact attested artifact to pass combined install and repair before it can
-enter the remaining Phase 5 real-environment tests.
+Keep this older candidate quarantined. The installer change called for above is done in part
+(`8595027`, see the 24 August section): the COM trigger the signature is named after is gone, the
+dropped-script and elevation shape is not.
+
+Rebuild once, from a frozen source that includes both the Defender remediation and the licence-seat
+persistence work in `260821-1925-.../reports/licence-lease-ttl-and-seat-persistence-20260824.md`.
+The attested candidate `cce7b897` now trails six Browser fixes, so one rebuild carries all of them
+rather than spending an attestation per fix.
+
+Then require that exact attested artifact to pass combined install and repair before it can enter
+the remaining Phase 5 real-environment tests. Run it on a clean VM **before** attempting any further
+change to the installer's script-staging shape: if Defender still trips with COM gone, that isolates
+the cause to the stager shape and is worth more than another untested guess.
+
+Signing remains the real fix and remains an owner decision. The 22 August "unsigned for V1" call now
+has a measured cost attached to it rather than an assumed one.

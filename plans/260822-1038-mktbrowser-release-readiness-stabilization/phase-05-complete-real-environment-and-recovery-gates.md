@@ -188,6 +188,48 @@ referenced `cloakBrowserLicenseKeys`, so an operator had no way to enter a secon
 list had to be hand-edited into `settings.json`. Settings now manages the key list. Replacing the
 primary also drops the retired key, which the store had been silently folding back into the pool.
 
+### The journal writes named as a structural blocker are now in - 24 August 2026
+
+The blocker recorded above - "missing driver journal writes ... and startup vendor release
+integration" - was more literal than it read. `license-lease-journal.ts` and
+`license-lease-recovery.ts` existed and were fully tested, but **nothing in the product ever called
+them.** The journal was opened at startup and read only to render capacity; `recoverLicenseLeases`
+was referenced by its own test and nowhere else. The only live seat bookkeeping was
+`LicenseKeyPool`, which is in memory, so every restart offered every key as `idle`.
+
+That is what the concurrent-isolation probe hit. A browser killed by a crash or a Stop leaves its
+session open on the vendor for the full lease; the app restarts having forgotten this; the next
+launch picks that key and is refused exit 76. On a one-key install it is the whole product
+unavailable, with nothing running that the operator could close to explain it.
+
+Fixed in Browser `3ecc68f`:
+
+| Change | Effect |
+|---|---|
+| Pool seeds `cooling` from persisted leases, counted from each lease's own `updatedAt` | A restart no longer resets the vendor's clock |
+| `LicenseLeaseRecorder` writes reserve → starting → active → ending → `confirmed-released` \| `cooling`, plus `terminal-refused` on a refusal | The journal finally carries real data |
+| `licenseSeatWaitMessage` replaces a bare `ENGINE_UNAVAILABLE` | Distinguishes "close a running profile" from "a previous session is resting, ~X minutes left" |
+
+Journal writes are best-effort and logged: a bookkeeping failure must never refuse a launch that
+would otherwise work.
+
+**Lease expiry is now measured, not assumed.** A lease abandoned with no `session/end` and no
+heartbeat was reclaimed after **15.1 minutes**, against the server's declared
+`lease_ttl_seconds: 900` - enforced to within five seconds. The 17-minute cooldown stays as 900s
+plus clock-skew margin. This corrects the "roughly 20-25 minutes" previously recorded in
+`260821-1925-.../phase-04`, which was never reproduced.
+
+Still open, and deliberately so: a killed browser continues to lose its seat for the full lease.
+`session/end` needs a `lease_id` and `instance_id` that die with the engine. This work declines to
+offer the key until the vendor's clock has run - trading an unexplained refusal for an explained
+wait - rather than recovering the seat, which would require intercepting the licence channel and sits
+against the binary licence's reverse-engineering clause. `recoverLicenseLeases` therefore still does
+not run at startup; its `deps.release` needs that same impossible call. The journal now carries real
+records, so it is ready the day a legitimate release path exists.
+
+Unit-tested only. The human gate stands: kill a browser, restart the app, confirm the key reports
+`cooling` with a correct remaining time instead of a refusal.
+
 ## Test Scenario Matrix
 
 | Priority | Scenario | Pass condition |
