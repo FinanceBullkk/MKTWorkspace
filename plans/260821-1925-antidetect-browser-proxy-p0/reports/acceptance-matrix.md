@@ -137,7 +137,7 @@ Evidence: `licence-key-reliability-probe-20260824.md`. Measured 12:13Z-12:18Z, s
 | Key 2 at engine level | Rotation forced onto key 2; `BOOTSTRAP-DONE` at 2.229s, alive through t+25s | `PASS` |
 | 23 August "only one key works" finding | Cause restated: an orphaned seat, not an unreliable key | `SUPERSEDED` |
 | Key 1 at engine level | Refused twice (12:34Z, 12:51Z) while both the pool and the licence API read the seat free; each refusal left `active_sessions: 1` with no local process | `FAIL` |
-| Key 1 unaided recovery | Cleared on its own 15m19s after the first refusal, inside the documented 7-17 minute lease expiry | `PASS` |
+| Key 1 unaided recovery | Cleared on its own 15m19s after the first refusal, inside the 900s lease expiry measured on 24 Aug (15.1 min) | `PASS` |
 | Product visibility of seat state | No product code calls the licence session API; the pool is an inference and read `2/2 free` while a seat was held | `FAIL` |
 | **Concurrent two-profile launch** | **Attempted 12:34Z. Profile A launched; profile B refused `ENGINE_UNAVAILABLE`. No engine spawned for B** | `FAIL` |
 

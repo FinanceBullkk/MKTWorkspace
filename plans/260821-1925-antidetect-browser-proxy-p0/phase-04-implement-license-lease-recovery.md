@@ -110,10 +110,25 @@ Evidence: [`ket-qua-260823-1250-do-nang-luc-seat-cloakbrowser.md`](../reports/ke
 | Second session, second key, same `install_id` | Granted. Sessions are counted **per licence**, not per account and not per install |
 | Normal profile close | Seat free in seconds, not after the 900s lease. Measured twice |
 
-The capacity model is therefore N keys on one machine, not N machines. Recovery after an unclean
-exit is measured only incidentally so far: a launch that dies before it is licensed leaves the seat
-held until the lease expires, observed at roughly 20-25 minutes rather than the nominal 900s, which
-is what the pool's 17-minute cooldown already assumes.
+The capacity model is therefore N keys on one machine, not N machines. A launch that dies before it
+is licensed leaves the seat held until the lease expires.
+
+**Corrected 24 August 2026.** This section previously recorded that expiry as "roughly 20-25
+minutes rather than the nominal 900s". That was wrong. Measured directly with
+`scripts/measure-licence-lease-ttl.cjs` - open a session, abandon it with no `session/end` and no
+heartbeat exactly as a killed browser does, then ask for it back every 30s:
+
+| Abandoned | Reclaimed | Elapsed |
+|---|---|---|
+| `15:58:22.667Z` | `16:13:27.169Z` | **15.1 minutes** |
+
+The last refusal landed at t+15m and the next attempt was granted, five seconds past the declared
+`lease_ttl_seconds: 900`. The vendor enforces its stated TTL to within seconds; there is no hidden
+grace period and no silent extension. The 15m19s unaided recovery in the acceptance matrix agrees.
+
+The earlier 20-25 minute figure was never reproduced and is most likely elapsed time counted from
+launch start rather than from the moment the engine died. The pool's 17-minute cooldown stays as
+it is: 900s plus two minutes of clock-skew margin, now known to be sufficient rather than assumed.
 
 ### Blocker found and fixed while measuring
 

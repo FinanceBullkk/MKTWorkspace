@@ -142,7 +142,7 @@ the launch path regardless. Corrected to persist the proxy with `update_profile`
 ## 12:49Z-12:51Z - The decisive test
 
 Licence 1's stuck seat cleared on its own at 12:49:21Z, **15 minutes 19 seconds** after the
-12:34:02Z attempt that left it held. That is inside the documented 7-17 minute lease expiry, so the
+12:34:02Z attempt that left it held. That is inside the 900s lease expiry measured directly on 24 Aug (15.1 min), so the
 recovery mechanism itself works.
 
 The test then forced the engine onto licence 1 with every other licence held, the mirror of the
