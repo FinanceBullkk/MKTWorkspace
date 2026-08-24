@@ -135,6 +135,28 @@ operator had no way to enter a second key at all. An N-key cost model needs a ro
 Heartbeat behaviour across a long session, and recovery from hard kill, Electron crash, Relay restart
 and reboot. Until those are measured, `license-capacity-v1` stays unadvertised.
 
+## Measured 24 August 2026 - safe lifecycle continuation
+
+Evidence: [`lifecycle-installer-repair-evidence-20260824.md`](./reports/lifecycle-installer-repair-evidence-20260824.md).
+
+The current local directory artifact, source `c802fabb` / tree `bd87f752`, passed another normal-close
+gate with one unmanaged disposable no-proxy profile. Capacity moved from `free 1 / active 0 / cooling
+1 / pending 0` to `0 / 1 / 1 / 0`, then returned to `1 / 0 / 1 / 0`. The lifecycle log records
+`Browser.close`, child exit code 0, and `SHUTDOWN-COMPLETE` with method `Browser.close`. No new
+cooling or pending-recovery state appeared during close.
+
+The existing cooling seat came from a preceding live refusal: starting from two free keys, one key
+was refused and rotation opened on the second. The refused key stayed cooling instead of becoming
+false-free; the active key returned on normal close. A final sanitized read later found
+`free 2 / active 0 / cooling 0 / pending 0`, so the refused seat returned naturally without being
+declared free by the close gate.
+
+Destructive faults remain open. The sandbox had no terminate access to the six disposable engine
+processes or Browser main process, Relay was not running on the host, and host reboot was not
+authorized separately from the preservation requirement. More importantly, production recovery is
+still not integrated: no per-profile sidecar, driver journal lifecycle writes, or startup vendor
+release path exists. Current fixture recovery therefore cannot be promoted to live recovery proof.
+
 ## Test Scenario Matrix
 
 | Scenario | Expected |
@@ -189,7 +211,7 @@ and reboot. Until those are measured, `license-capacity-v1` stays unadvertised.
   release through the profile proxy, and live normal-close/hard-kill recovery. Those require the
   sanitized owner-controlled vendor protocol capture first.
 
-- [ ] Live protocol schema is measured and sanitized before implementation.
+- [x] Live protocol schema is measured and sanitized before implementation.
 - [ ] Each licensed profile owns one sidecar, bridge, key allocation, and journal row.
 - [ ] Confirmed release is the only transition to idle.
 - [ ] Normal close, hard kill, Electron crash, restart, and power-loss fixtures recover deterministically.

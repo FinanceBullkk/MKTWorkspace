@@ -187,34 +187,38 @@ the measuring apparatus, which is exactly where a failure is most likely to be m
 
 Each now has a contract test, and each test was proven to fail before being trusted.
 
-## Closed On A Clean Machine - 24 August 2026
+## Clean-Machine Evidence Reconciled - 24 August 2026
 
-Both remaining items are measured. Evidence:
-`local-test-artifacts/vm/clean-install-evidence.json`.
+Evidence:
+`local-test-artifacts/vm/clean-install-evidence.json` and
+`local-test-artifacts/vm/clean-install-evidence-reconciliation.json`.
 
-The candidate was pulled from run `32616608981` and hashed twice: once on this machine, and again
-inside a Windows 11 Home guest that had never held the product. Both equal the published
-`d18c8d79fc6a6f77e1783044e2e9fae4ac28f73b152992bee0a0bcbc6a4e3490`. The guest was proven clean
-before the installer reached it - none of four product paths existed, and no Node was on PATH - and
-that claim is re-creatable, because it lives in a snapshot rather than in a machine's one-time
-history.
+The receiving-machine hash gate is valid. The candidate was pulled from run `32616608981` and hashed
+inside a restored Windows 11 Home guest that had no product path and no Node before transfer. The
+guest hash equals the published
+`d18c8d79fc6a6f77e1783044e2e9fae4ac28f73b152992bee0a0bcbc6a4e3490`.
 
-| Item | Result |
+The combined-install claim is not valid. The first harness treated `MKTBrowser.exe` appearance as
+installer completion, but electron-builder copies Browser files before the mandatory `customInstall`
+sequence finishes WebRTC firewall setup, pinned Relay installation, the startup shortcut, Publisher,
+and Relay ownership metadata. A fresh repair attempt reproduced that partial state: 129 Browser files
+and the desktop shortcut existed, while Relay was absent, firewall-rule count was zero, the startup
+shortcut was absent, Publisher was unset, and Relay ownership metadata was absent.
+
+| Item | Reconciled result |
 |---|---|
-| Published SHA-256 matches on the receiving machine | Yes, hashed after transfer into the clean guest |
-| Silent install | 129 files, 438.2 MB, uninstaller present |
-| Launch | Serves its control port at t+30s, in the operator's own session |
-| First run without Node, hand-written JSON or a chosen port | Token, data directory and profile store all self-provisioned |
-| Uninstall | Every file and the shortcut removed, registry entry gone, only an empty folder left |
-| Operator data across uninstall | Marker file and profiles.db both survived |
+| Published SHA-256 matches on the receiving machine | PASS |
+| Clean guest and no Node preflight | PASS |
+| Browser payload copied | Observed component evidence only |
+| Browser first-run provisioning | Observed on the copied Browser component; not supported combined-install proof |
+| Supported Browser + Relay install | OPEN; mandatory custom-install work did not complete |
+| Repair | FAIL in this environment; Defender remediated installer-spawned PowerShell behavior |
+| Combined uninstall ownership | OPEN; the prerequisite combined installed state never existed |
+| Browser data preservation | Observed component evidence only |
 
-Two things are recorded rather than claimed. Repair was not exercised - only install, launch, first
-run and uninstall. And `settings.json` is absent after a first run: the app keeps defaults in memory
-and writes the file only when something changes, which is a stronger form of "nothing to hand-edit"
-than the file existing.
-
-The installer remains unsigned, and the gate records `NotSigned` rather than asserting a status, so
-the day that changes is visible in the evidence instead of quietly passing a check nobody re-read.
+Microsoft Defender reported `Behavior:Win32/PShellCobStager.A` twice and successfully remediated it.
+Defender was not disabled or allow-listed. The installer remains unsigned by owner decision. The
+candidate therefore stays retained but cannot close the clean install/repair/uninstall criterion.
 
 ## Risk Assessment
 
@@ -239,4 +243,7 @@ deliver. It is not a substitute for Authenticode and is not described as one.
 
 ## Next Step
 
-The exact verified candidate becomes the only artifact eligible for Phase 5 real-environment tests.
+Keep this older candidate quarantined. Change the installer implementation so mandatory firewall and
+Relay work completes without the current Defender detection, rebuild once from the current frozen
+source, then require that exact attested artifact to pass combined install and repair before it can
+enter the remaining Phase 5 real-environment tests.

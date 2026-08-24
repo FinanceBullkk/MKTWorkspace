@@ -12,7 +12,8 @@ dependencies: [4]
 ## Overview
 
 Close the gates code cannot prove: real network identity, human input, live vendor lease behavior,
-crash/reboot recovery, and clean second-PC installation. Use the exact verified Phase 4 candidate.
+crash/reboot recovery, and clean second-PC installation. Use the exact current-source Phase 4
+candidate only after its supported combined install and repair gates pass.
 
 This phase consumes, rather than duplicates, the execution details in the active P0 operational plan
 and the per-profile license sidecar/recovery plan. Master-plan completion requires their relevant
@@ -39,13 +40,13 @@ phases to be checked off with sanitized evidence.
 ## Architecture And Gate Order
 
 ```text
-verified candidate on PC A
+current-source attested candidate on PC A
   -> two-profile proxy/DNS/WebRTC isolation
   -> human login/input and normal use
   -> live vendor lease protocol + failure recovery
   -> crash/reboot matrix
 
-verified candidate on clean PC B
+same attested candidate on clean PC B
   -> install -> authenticated setup -> device assignment -> managed launch
   -> repeat network/input/recovery smoke
   -> uninstall/repair proof
@@ -108,33 +109,55 @@ Evidence: [`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../repo
 | Concurrent two-profile isolation | **Not run.** Only one seat was ever free, so A and B were measured sequentially. Sequential measurement cannot exclude cross-wiring between two live profiles |
 | Normal close returns the seat | Pass, twice. The seat was free within seconds, not after the 900s lease expiry |
 | Hard kill, Electron crash, Relay restart, reboot | Not run |
-| Clean second-machine install | **Pass**, 24 August. A Windows 11 Home guest that had never held the product: published hash matched after transfer, silent install produced 129 files, the app started in the operator's own session and served its control port, and first run provisioned its own token, data directory and profile store with no Node, no hand-written JSON and no port chosen by anyone |
-| Uninstall | **Pass**. Every file and the shortcut removed and the registry entry gone, while the operator's marker file and profiles.db survived. Only an empty program folder remains |
-| Repair | Not run |
+| Clean second-machine install | **Reopened 24 August.** Clean preflight and receive-side hash pass. The old harness stopped when Browser files appeared, before mandatory firewall/Relay custom-install work completed. Fresh evidence had 129 Browser files but no Relay, no firewall rules, no startup shortcut, no Publisher, and no Relay ownership metadata |
+| Uninstall | Browser-file removal and Browser-data preservation were observed after the partial install. This does not prove combined Browser + Relay ownership cleanup because the supported installed state never existed |
+| Repair | **Environmental FAIL.** Defender remediated installer-spawned PowerShell behavior as `Behavior:Win32/PShellCobStager.A`; it was not disabled or allow-listed |
 
-### The clean machine is a snapshot, and that is the point
+### The snapshot remains useful; the completion condition changed
 
-The second-PC gate now runs against a Windows 11 Home guest rather than a spare laptop, because
-"a machine that has never had the product" is a property a real machine has exactly once. Restoring
-a snapshot brings it back in about thirty seconds, and it was needed: the first pass installed the
-product before the harness failed, which destroyed the very precondition the gate exists to test.
+The Windows 11 Home snapshot still gives a reproducible clean precondition. It remains intentionally
+limited to installation and recovery; virtual hardware cannot prove fingerprint realism and no real
+account belongs in it.
 
-Scope is deliberately narrow. A virtual GPU and its device strings are themselves a detection
-signal, so nothing about fingerprint realism, and no real account, belongs in this guest. It
-measures installation, first run and removal.
+The critical harness defect was deeper than an SSH/session issue. Browser payload copy happens before
+the installer's mandatory firewall/Relay custom phase. Polling only for `MKTBrowser.exe` converted a
+partial install into a false pass. Both clean-install and repair harnesses now require installer exit
+zero, Browser payload, pinned Relay, two WebRTC firewall rules, desktop/startup shortcuts, Publisher,
+and Relay ownership metadata before launch begins.
 
-Three harness defects were found and fixed while getting there, all of them ways a test can look
-like a product failure. The gate ran over SSH, which lands in session 0 with no desktop, so the
-launched app never opened its control port - it now launches through an interactive scheduled task,
-which is also how an operator actually starts it. `Start-Process -Wait` on the silent installer
-never returned even though 129 files and a working uninstaller were already on disk. And a live
-snapshot cannot be taken on this host at all: it fails saving machine state and leaves the guest
-wedged, while an offline snapshot works and is all this gate needs.
+The current environment cannot reach that state without changing security policy. The repair clone
+showed the installer's Administrator error and two Defender detections. Defender remained enabled and
+was not allow-listed. The disposable clone disk/config was deleted afterward; the original VM data on
+`D:` remains untouched.
 
-Worth naming for whoever runs this next: the host's own hypervisor holds AMD-V, so VirtualBox falls
-back to the NEM backend. The guest wedges hard under sustained load - twice during Windows setup,
-once mid-gate. Recovery is a snapshot restore. It is a property of this host, not of the product,
-and it is the reason every step here is short and driven from outside the guest.
+The VirtualBox/NEM instability remains an environment constraint: live snapshots can wedge the guest,
+while offline restore is reliable enough for short external gates.
+
+### Lifecycle continuation - 24 August 2026
+
+Evidence: [`lifecycle-installer-repair-evidence-20260824.md`](../260821-1925-antidetect-browser-proxy-p0/reports/lifecycle-installer-repair-evidence-20260824.md).
+
+The host runtime was bound to the current local directory artifact, not the older candidate: source
+`c802fabb`, tree `bd87f752`, executable SHA-256 `9c269536...`, and `app.asar` SHA-256
+`37ba4a0a...`. The control-port PID was an interactive-session `MKTBrowser` process and the exact
+hashed executable was locked, but sandbox policy prevented querying the PID image path. This is
+strong local evidence, not release provenance, and cannot qualify the candidate.
+
+One unmanaged disposable profile with no proxy or account data launched and closed through MCP.
+Capacity moved `free 1 / active 0 / cooling 1` -> `0 / 1 / 1` -> `1 / 0 / 1`. Lifecycle logs record
+`Browser.close`, child exit code 0, and `SHUTDOWN-COMPLETE` with method `Browser.close`. The close
+added no cooling or pending-recovery state.
+
+The earlier attempt started with two free keys. One vendor key was refused, remained cooling, and the
+second key opened the profile after rotation. The active seat returned on close; the refused key did
+not falsely become free.
+
+Hard kill and Electron crash were not injected: terminate access returned Win32 error 5 for every
+new disposable engine process and the Browser main process, so the harness could not guarantee safe
+scope or relaunch. Relay restart was inapplicable because no Relay process/listener was running. Host
+reboot was not performed because it would disrupt unrelated processes without separate exact reboot
+authorization. Production pending-recovery reboot remains structurally blocked by the missing driver
+journal writes, sidecar forwarding, and startup vendor release integration.
 
 ### Blocker found while running this gate, and its fix
 

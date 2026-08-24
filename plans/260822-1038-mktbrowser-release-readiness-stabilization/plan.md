@@ -35,14 +35,14 @@ or automation expansion. Phases 1-6 form the release path; Phase 7 follows witho
 | Packaged CI | Closed 22 August. The fixed-port allocator was the mechanism; with an OS-assigned port the required PR check passes 5/5 and seven independent runs passed 20/20 on one declared engine | Gate closed on evidence |
 | Extraction | `extract-zip@2.0.1` is a direct packaged dependency used by engine and extension extraction; audit reports high-severity `GHSA-jmr9-qjv8-65gv` | Block release until removed or fully patched |
 | Coverage | Closed 22 August. MKTBrowser 86/80/85 and MKTTool 81/74/79/78, both measured then rounded down, both failing closed on a renamed module | Floors in place before refactors |
-| Installer | Rebuilt 23 August from frozen tree `cce7b897`, reproducible across two clean runners, attested with published SHA-256 `d18c8d79...`. Unsigned by decision | Retained, not distributed |
-| Operational proof | 23 August: per-profile proxy egress, DNS, and WebRTC pass on two profiles measured sequentially, and a normal close returns the seat immediately. Concurrent two-profile isolation, human input, crash/reboot, second PC, and canary remain open | No broad operator rollout |
+| Installer | Rebuilt 23 August from frozen tree `cce7b897`, reproducible across two clean runners, attested with published SHA-256 `d18c8d79...`. Receive-side hash passed, but the 24 August clean combined-install claim was invalidated because the harness stopped before mandatory Relay/firewall completion | Retained, not distributed; install/repair/uninstall remains open |
+| Operational proof | 23 August: per-profile proxy egress, DNS, and WebRTC pass on two profiles measured sequentially. Normal close passed again on 24 August on the current local directory artifact, but hard-kill/crash/reboot/Relay and candidate-equivalent lifecycle remain open | No broad operator rollout |
 | Licence capacity | 23 August: the vendor counts sessions per licence, not per account or per install, measured with two keys on one `install_id`. N concurrent profiles cost N keys on one machine. The build declared a refused launch successful before the verdict arrived, so rotation never ran; fixed in `b63d212` and proven end to end on hardware — a held primary rotates to a free key and the profile opens. The UI had no way to enter a second key at all, fixed in `22207ad` | Scale unblocked |
 | Browser hotspots | 2,581-line driver, 1,574-line fingerprint module, 1,364-line MCP server, plus 973/959-line startup modules | Refactor incrementally after P0 release gates |
 
 ## Release Rule
 
-No installer may be distributed unless Phases 1-5 are complete and the exact signed artifact enters
+No installer may be distributed unless Phases 1-5 are complete and the exact attested artifact enters
 Phase 6. A green feature-branch push is informational only. The required merge authority is the
 pull-request check for the current merge tree.
 
@@ -53,8 +53,8 @@ pull-request check for the current merge tree.
 | 1 | [Remove Vulnerable Runtime Extraction](./phase-01-remove-vulnerable-runtime-extraction.md) | Completed |
 | 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | Completed |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Completed |
-| 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | In Progress - candidate built and attested; receiving-machine checks carry into phase 5 |
-| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | In Progress - sequential proxy/DNS/WebRTC and clean-close seat release pass; concurrent isolation blocked on key rotation |
+| 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | In Progress - candidate built and attested; receive-side hash passes, combined install/repair/uninstall reopened |
+| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | In Progress - sequential proxy/DNS/WebRTC and clean close pass; concurrent isolation, destructive recovery, supported second-PC install, and repair remain open |
 | 6 | [Run Seven Day Canary and Promote](./phase-06-run-seven-day-canary-and-promote.md) | Pending |
 | 7 | [Decompose Browser Hotspots Incrementally](./phase-07-decompose-browser-hotspots-incrementally.md) | Pending |
 
@@ -76,5 +76,5 @@ These are phase-level dependencies, not plan-level blockers. Phases 1-4 can proc
 - Installer is built once from frozen HEAD, verified, attested, and distributed with a published
   SHA-256. V1 ships unsigned by owner decision reaffirmed on 22 August 2026; see phase 4.
 - Real proxy, DNS, WebRTC, input, vendor lease, crash/reboot, and second-PC gates have sanitized proof.
-- The exact signed artifact completes seven days with no identity-boundary or unrecovered-seat event.
+- The exact attested artifact completes seven days with no identity-boundary or unrecovered-seat event.
 - Large modules are reduced through tested responsibility seams, not a broad rewrite.
