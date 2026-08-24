@@ -108,6 +108,33 @@ Evidence: [`ket-qua-260823-1910-gate-cach-ly-va-loi-khong-xoay-khoa.md`](../repo
 | Concurrent two-profile isolation | **Not run.** Only one seat was ever free, so A and B were measured sequentially. Sequential measurement cannot exclude cross-wiring between two live profiles |
 | Normal close returns the seat | Pass, twice. The seat was free within seconds, not after the 900s lease expiry |
 | Hard kill, Electron crash, Relay restart, reboot | Not run |
+| Clean second-machine install | **Pass**, 24 August. A Windows 11 Home guest that had never held the product: published hash matched after transfer, silent install produced 129 files, the app started in the operator's own session and served its control port, and first run provisioned its own token, data directory and profile store with no Node, no hand-written JSON and no port chosen by anyone |
+| Uninstall | **Pass**. Every file and the shortcut removed and the registry entry gone, while the operator's marker file and profiles.db survived. Only an empty program folder remains |
+| Repair | Not run |
+
+### The clean machine is a snapshot, and that is the point
+
+The second-PC gate now runs against a Windows 11 Home guest rather than a spare laptop, because
+"a machine that has never had the product" is a property a real machine has exactly once. Restoring
+a snapshot brings it back in about thirty seconds, and it was needed: the first pass installed the
+product before the harness failed, which destroyed the very precondition the gate exists to test.
+
+Scope is deliberately narrow. A virtual GPU and its device strings are themselves a detection
+signal, so nothing about fingerprint realism, and no real account, belongs in this guest. It
+measures installation, first run and removal.
+
+Three harness defects were found and fixed while getting there, all of them ways a test can look
+like a product failure. The gate ran over SSH, which lands in session 0 with no desktop, so the
+launched app never opened its control port - it now launches through an interactive scheduled task,
+which is also how an operator actually starts it. `Start-Process -Wait` on the silent installer
+never returned even though 129 files and a working uninstaller were already on disk. And a live
+snapshot cannot be taken on this host at all: it fails saving machine state and leaves the guest
+wedged, while an offline snapshot works and is all this gate needs.
+
+Worth naming for whoever runs this next: the host's own hypervisor holds AMD-V, so VirtualBox falls
+back to the NEM backend. The guest wedges hard under sustained load - twice during Windows setup,
+once mid-gate. Recovery is a snapshot restore. It is a property of this host, not of the product,
+and it is the reason every step here is short and driven from outside the guest.
 
 ### Blocker found while running this gate, and its fix
 

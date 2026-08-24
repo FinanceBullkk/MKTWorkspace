@@ -187,12 +187,34 @@ the measuring apparatus, which is exactly where a failure is most likely to be m
 
 Each now has a contract test, and each test was proven to fail before being trusted.
 
-## Open
+## Closed On A Clean Machine - 24 August 2026
 
-- Publishing the SHA-256 through the operator channel and verifying it on a receiving machine.
-- Clean install, launch, repair, and uninstall on a machine that has never had the product.
+Both remaining items are measured. Evidence:
+`local-test-artifacts/vm/clean-install-evidence.json`.
 
-Both need hardware rather than code, and both are exercised by the Phase 5 gates.
+The candidate was pulled from run `32616608981` and hashed twice: once on this machine, and again
+inside a Windows 11 Home guest that had never held the product. Both equal the published
+`d18c8d79fc6a6f77e1783044e2e9fae4ac28f73b152992bee0a0bcbc6a4e3490`. The guest was proven clean
+before the installer reached it - none of four product paths existed, and no Node was on PATH - and
+that claim is re-creatable, because it lives in a snapshot rather than in a machine's one-time
+history.
+
+| Item | Result |
+|---|---|
+| Published SHA-256 matches on the receiving machine | Yes, hashed after transfer into the clean guest |
+| Silent install | 129 files, 438.2 MB, uninstaller present |
+| Launch | Serves its control port at t+30s, in the operator's own session |
+| First run without Node, hand-written JSON or a chosen port | Token, data directory and profile store all self-provisioned |
+| Uninstall | Every file and the shortcut removed, registry entry gone, only an empty folder left |
+| Operator data across uninstall | Marker file and profiles.db both survived |
+
+Two things are recorded rather than claimed. Repair was not exercised - only install, launch, first
+run and uninstall. And `settings.json` is absent after a first run: the app keeps defaults in memory
+and writes the file only when something changes, which is a stronger form of "nothing to hand-edit"
+than the file existing.
+
+The installer remains unsigned, and the gate records `NotSigned` rather than asserting a status, so
+the day that changes is visible in the evidence instead of quietly passing a check nobody re-read.
 
 ## Risk Assessment
 
