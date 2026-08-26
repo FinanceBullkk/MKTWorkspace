@@ -66,6 +66,17 @@ phép so đó đủ tất định để đáng làm.
 | `npm test` | **1908/1908**, 208 file |
 | `relay:verify` trên exe vừa build | exit 0, `vé quá hạn bị chặn — EXPIRED` |
 
+## Xác nhận trên CI
+
+Run `32954797133` xanh trên chính runner self-hosted đã đỏ trước đó. `check` success,
+`relay-executable` success. Dòng bằng chứng:
+
+```
+PASS  vé quá hạn bị chặn — EXPIRED — Vé đã quá hạn. Bấm lại nút vừa bấm.
+```
+
+Mã từ chối hiện ra trong log là nhờ `1096d3d`; trước đó cùng dòng này chỉ in `FAIL` trống.
+
 ## Ghi chú
 
 - Relay đã cài của operator bị tắt tạm để giải phóng cổng 47821, đã bật lại. Harness fail-closed
