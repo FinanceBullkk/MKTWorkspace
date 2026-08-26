@@ -294,6 +294,82 @@ the product verdict because the first restore had already begun.
 `G3-RECOVERY` remains open. Required fixes are durable spent-ticket replay state in Relay and a
 bounded startup path that moves a reboot-stranded lease out of `active` without ever guessing free.
 
+## Fixed 26 August 2026 - the reboot-stranded lease now converges
+
+`FAIL - REBOOT_LEASE_STUCK_PENDING_RECOVERY` was not a missing timeout. Startup had exactly one way
+to settle a lease left mid-flight: `reconcileStartupOrphanLeases` acting on what the orphan sweep
+found running. A reboot destroys the browser, so the sweep finds nothing, reports no recovery, and
+the record stays `active` — and `LicenseKeyPool` deliberately refuses to age an `active` record out
+by timestamp, because a browser that outlived the app may still be heartbeating. Correct rule,
+missing branch: nothing spoke for the browser that could not have survived.
+
+The hold was therefore not 15 minutes but unbounded. Reproduced against the shipped modules with a
+journal fixture at `active`, an empty enumerated sweep and clocks at +2 min, +20 min, +1 day and
++1 week after the boot: `acquire` returned null at every point, `nextFreeAtMs` stayed null, and the
+operator string was "a previous browser closed without handing its licence session back" with no
+deadline attached. On a one-key install that is the product, permanently, until someone deletes
+`license-leases.json` by hand.
+
+Fix: give startup the two verdicts it was missing, and keep the pool the conservative party.
+
+| Change | File |
+|---|---|
+| Boot time as proof of death. `bootedAtMs = Date.now() - os.uptime() * 1000`; a boot later than the record means that browser stopped heartbeating at the boot at the latest, so the seat rests from the boot rather than from this start | `startup-license-lease-reconciliation.ts`, `index.ts` |
+| A sweep that did read the process table and found nothing is itself a verdict for every lease it did not name; a sweep that could not look changes nothing | `startup-license-lease-reconciliation.ts` |
+| A lease whose rest already ran out is retired to `expired` rather than written `cooling` as of now, so reopening the app does not re-arm a cooldown from the moment of writing | `startup-license-lease-reconciliation.ts` |
+| `reconcilePersistedLease` accepts when the rest began; `LICENSE_SEAT_COOLDOWN_MS` exported so the 17 minutes has one definition | `license-key-pool.ts` |
+| The disabled-sweep placeholder no longer claims `enumerated: true` — nothing was looked at | `index.ts` |
+
+The pool still refuses to free an `active` record on its own evidence. Both proofs live in the one
+place that also writes the journal, so the pool and the durable record can never disagree about
+whether a key may be handed out.
+
+Behaviour after the fix, measured on the same fixture: reboot then app opened 2 min later gives a
+wait with a deadline ("It frees in about 15 minutes") rather than a dead end; opened 18 min later
+or a day later the key is idle and the launch is granted; a second and third restart do not rest it
+again. Within one boot session, an app and browser that died together now rest the key a full
+cooldown from now instead of blocking for ever. A process table that could not be read still frees
+nothing, which is the fail-closed case and unchanged.
+
+Gates: 128/128 desktop `test:mkb02` main-process tests including 10 new ones, critical-coverage
+contract exit 0 with `license-key-pool.ts` at 100% lines and
+`startup-license-lease-reconciliation.ts` at 100% lines / 90.63% branches, workspace typecheck exit
+0, ESLint clean, workspace-quality contract passed.
+
+### Measured on the packaged app, 26 August 2026
+
+Evidence: `local-test-artifacts/phase5/reboot-lease-convergence-evidence-20260826.json`, run
+`P0-G3-REBOOT-CONVERGENCE-20260826233900`.
+
+The machine could not be power-cycled during the session, so the reboot was reconstructed from the
+two things the app actually reads, both of them real: the boot clock and the process table. A lease
+was seeded at `active` stamped a full day before this machine's genuine last boot, with no browser
+process anywhere. The reconstruction is faithful by its own control run — the **pre-fix** packaged
+build reproduces the 25 August verdict digit for digit.
+
+| Run | Journal | `get_runtime_info` capacity |
+|---|---|---|
+| Packaged build of 25 August, unmodified | `active` → `active` | total 1, **free 0**, pendingRecovery 1 |
+| Same runtime, `app.asar` repacked from the fixed bundle | `active` → `expired` | total 1, **free 1**, pendingRecovery 0 |
+| Fixed build, app and browser died inside one boot session | `active` → `cooling` | bounded 17 minutes |
+| Fixed build, second and third start on a settled root | `expired` → `expired`, `updatedAt` unchanged | no cooldown re-armed |
+
+Disposable `--user-data-dir` per run; the operator install was never touched. The licence key was a
+fake string and the app does not read `CLOAKBROWSER_LICENSE_KEY`, so no vendor endpoint was called
+and no seat was spent. The attested `release/win-unpacked` artifact is unchanged — its `app.asar`
+still hashes to `7160c85a…a557`. `electron-vite build` was invoked directly, bypassing the build
+script's Node 22 gate; it bundles JS/TS only and rebuilds no native module, so this is a local
+diagnostic runtime, not a release artifact, and it is unsigned.
+
+Not done: a real power cycle, and a real vendor seat coming back on a real key. `G3-RECOVERY` still
+owes that run. Relay spent-ticket durability is a separate open item and is untouched here.
+
+Residual, bounded and recorded rather than fixed: a lease settled while its rest is still running is
+stamped `cooling` at the moment of writing, so a later restart counts the remaining rest from that
+stamp and can add up to the boot-to-app-start gap to the wait. It never compounds, because the stamp
+does not move. Carrying the true resting instant would need a journal schema field, which is not
+worth a version bump for a few minutes.
+
 ## Test Scenario Matrix
 
 | Scenario | Expected |
