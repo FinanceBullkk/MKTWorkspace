@@ -75,7 +75,7 @@ labels during disposable gates.
 | Installer repair | Superseded by the R3 run below. The Defender block was caused by the installer's `EncodedCommand` pattern, not by the product contract | `SUPERSEDED` |
 | Normal close | Current local artifact reached `Browser.close`, child exit 0, and `SHUTDOWN-COMPLETE`; the used seat returned without new recovery/cooling state | `PASS` |
 | Hard kill / Electron crash | Superseded by the 25 August continuations below | `SUPERSEDED` |
-| Relay restart | Real installed Relay gate now has a concrete spent-ticket replay failure | `FAIL` |
+| Relay restart | Cause found and fixed in MKTTool `57e14fa`: the replay guard held its jti set in memory only, so a restart forgot every ticket spent in the previous 30s. Spent jtis now persist to `spent-tickets.json` through the Relay's existing atomic write, and the packaged smoke asserts the exact jti reaches disk. **The human gate has not been rerun**, so the gate itself is not closed | `FIXED-PENDING-RERUN` |
 | Host reboot | Owner-approved real reboot failed closed: no false-free seat, but no convergence | `FAIL-CLOSED` |
 | Pending-recovery reboot | Persisted `active` became capacity `pendingRecovery=1`; launch blocked before spawn indefinitely | `FAIL` |
 

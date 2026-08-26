@@ -75,7 +75,7 @@ MKTTool account and proxy checks
 | 1 | [Freeze P0 Baseline and Acceptance Contract](./phase-01-freeze-p0-baseline-and-acceptance-contract.md) | In Progress |
 | 2 | [Stabilize Browser Input and Manual Login](./phase-02-stabilize-browser-input-and-manual-login.md) | Pending |
 | 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - 23 Aug: live egress/DNS/WebRTC pass per profile, measured sequentially; concurrent two-profile proof DEFERRED out of v1 by the 25 Aug one-seat cap |
-| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 25 Aug: hard-kill cooling and active Electron-crash pass; Relay restart fails durable replay protection and reboot fails closed with a stranded pending seat |
+| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 26 Aug: hard-kill cooling and active Electron-crash pass; the Relay-restart replay hole is fixed in MKTTool `57e14fa` and awaits a gate rerun; reboot still fails closed with a stranded pending seat |
 | 5 | [Integrate Operator Readiness and Capacity UX](./phase-05-integrate-operator-readiness-and-capacity-ux.md) | In Progress - readiness UX complete; authoritative capacity withheld |
 | 6 | [Run Canary Pilot and Issue GO-NO-GO](./phase-06-run-canary-pilot-and-issue-go-no-go.md) | Pending |
 
