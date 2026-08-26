@@ -50,6 +50,8 @@ MKTTool account and proxy checks
 ## Scope Boundaries
 
 - Preserve one account = one static proxy = one managed profile = one assigned Relay device.
+- v1 runs **one profile at a time**. One licence seat is free, so concurrency is capped at one by the
+  25 August owner decision, and a second launch must be refused before spawn with an honest wait.
 - Never expose proxy credentials, license keys, tickets, observed IPs, cookies, or operator secrets.
 - Never fall back to direct network access when proxy, bridge, firewall, or lease state is uncertain.
 - Never automate credentials, OTP, CAPTCHA, posting, liking, scrolling, or content production.
@@ -72,8 +74,8 @@ MKTTool account and proxy checks
 |-------|------|--------|
 | 1 | [Freeze P0 Baseline and Acceptance Contract](./phase-01-freeze-p0-baseline-and-acceptance-contract.md) | In Progress |
 | 2 | [Stabilize Browser Input and Manual Login](./phase-02-stabilize-browser-input-and-manual-login.md) | Pending |
-| 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - 23 Aug: live egress/DNS/WebRTC pass per profile, measured sequentially; concurrent two-profile proof still open |
-| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 23 Aug: vendor protocol measured (per-licence seats, start/end, clean close releases immediately); key rotation found not to engage; heartbeat and crash recovery open |
+| 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - 23 Aug: live egress/DNS/WebRTC pass per profile, measured sequentially; concurrent two-profile proof DEFERRED out of v1 by the 25 Aug one-seat cap |
+| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 25 Aug: hard-kill cooling and active Electron-crash pass; Relay restart fails durable replay protection and reboot fails closed with a stranded pending seat |
 | 5 | [Integrate Operator Readiness and Capacity UX](./phase-05-integrate-operator-readiness-and-capacity-ux.md) | In Progress - readiness UX complete; authoritative capacity withheld |
 | 6 | [Run Canary Pilot and Issue GO-NO-GO](./phase-06-run-canary-pilot-and-issue-go-no-go.md) | Pending |
 
@@ -118,9 +120,9 @@ setup, packaged crash/reboot recovery, the seven-day canary, and owner GO/NO-GO 
 |---|---|
 | G0 Baseline | Reproducible Node 22 checks, frozen SHAs, artifact hashes, and sanitized evidence contract |
 | G1 Interaction | Cover/minimize controls produce valid evidence; manual login/input has no unexplained dispatch stall |
-| G2 Network identity | Correct exit path, no DNS/WebRTC bypass, stable per-profile fingerprint, no cross-profile state |
+| G2 Network identity | Correct exit path, no DNS/WebRTC bypass, stable per-profile fingerprint, no cross-profile state, measured sequentially under the one-seat cap |
 | G3 Lifecycle | Normal close, hard kill, Electron crash, Relay restart, and reboot recover without cross-wiring or false-free seats |
-| G4 Operator | Supported installer and setup work on the second PC with no manual config or secret copying |
+| G4 Operator | Supported installer and setup work on the clean VM guest acting as PC B, recorded as virtual, with no manual config or secret copying |
 | G5 Canary | Seven-day manual-use soak meets every metric; signed GO or exact NO-GO blockers recorded |
 
 No gate may close from unit tests alone when it requires packaged Windows, real proxy, or human

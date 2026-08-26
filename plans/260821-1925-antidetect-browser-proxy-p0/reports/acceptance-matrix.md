@@ -2,11 +2,14 @@
 
 **Baseline run:** `P0-G0-20260821-01`
 
-**Status vocabulary:** `PASS`, `FAIL`, `BLOCKED`, `OPEN`, `INVALID`, `NOT-RUN`, `SUPERSEDED`
+**Status vocabulary:** `PASS`, `FAIL`, `BLOCKED`, `OPEN`, `INVALID`, `NOT-RUN`, `SUPERSEDED`, `DEFERRED`
 
 `NOT-RUN` marks a declared check that never executed; it is never absent and never implied to pass.
 `SUPERSEDED` marks a result a later, better-instrumented run replaced. The superseded row stays
 visible with a pointer to what replaced it, so a reversal is never silently overwritten.
+
+`DEFERRED` marks a declared check removed from the release path by an owner scope decision, never by
+evidence. It is not a pass, and a `DEFERRED` row may never be counted as one.
 
 **Rule:** A unit test cannot close a packaged Windows, real-proxy, license-service, second-PC, or
 human interaction gate.
@@ -55,10 +58,11 @@ labels during disposable gates.
 |---|---|---|
 | `G1-INPUT` | Valid cover control, interleaved A/B evidence, three packaged manual-login interactions | `OPEN` |
 | `G2-NETWORK` | Two proxies, matching independent/in-browser route, no DNS/WebRTC bypass | `OPEN` |
-| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation | `OPEN` |
+| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `OPEN` |
+| `G2-CONCURRENT` | Two profiles open at once with no cross-wiring | `DEFERRED` - one seat, capped at one profile (25 Aug owner decision) |
 | `G3-LICENSE` | Measured vendor schema and confirmed-release-only lease state | `OPEN` |
 | `G3-RECOVERY` | Normal close, hard kill, Electron crash, Relay restart, and reboot recovery | `OPEN` |
-| `G4-OPERATOR` | Second-PC installer/setup with no manual secret or configuration copying | `OPEN` |
+| `G4-OPERATOR` | Second-PC installer/setup with no manual secret or configuration copying; the clean VM guest is PC B and is recorded as virtual | `OPEN` |
 | `G5-CANARY` | Seven days of approved manual use with all metrics inside threshold | `OPEN` |
 | `G5-DECISION` | Signed GO or exact NO-GO blockers | `OPEN` |
 
@@ -70,14 +74,99 @@ labels during disposable gates.
 | Supported combined install | Old 9/9 evidence stopped at Browser-file appearance; Relay/firewall/custom metadata were absent | `INVALID` |
 | Installer repair | Superseded by the R3 run below. The Defender block was caused by the installer's `EncodedCommand` pattern, not by the product contract | `SUPERSEDED` |
 | Normal close | Current local artifact reached `Browser.close`, child exit 0, and `SHUTDOWN-COMPLETE`; the used seat returned without new recovery/cooling state | `PASS` |
-| Hard kill / Electron crash | Terminate access denied for all disposable engine processes and Browser main process | `BLOCKED` |
-| Relay restart | No Relay process/listener on the measured host | `BLOCKED` |
-| Host reboot | Not separately authorized; would disrupt unrelated user processes | `BLOCKED` |
-| Pending-recovery reboot | Driver journal writes, profile sidecar, and startup vendor release remain unintegrated | `OPEN` |
+| Hard kill / Electron crash | Superseded by the 25 August continuations below | `SUPERSEDED` |
+| Relay restart | Real installed Relay gate now has a concrete spent-ticket replay failure | `FAIL` |
+| Host reboot | Owner-approved real reboot failed closed: no false-free seat, but no convergence | `FAIL-CLOSED` |
+| Pending-recovery reboot | Persisted `active` became capacity `pendingRecovery=1`; launch blocked before spawn indefinitely | `FAIL` |
 
 These subset results do not close `G3-RECOVERY` or `G4-OPERATOR`. Normal-close evidence is bound to
 the current local directory artifact, not the older attested candidate. See
 `lifecycle-installer-repair-evidence-20260824.md`.
+
+## 25 August Hard-Kill and Restart Cooling Continuation
+
+Evidence: `local-test-artifacts/phase5/hard-kill-restart-cooling-evidence.json`, run
+`P0-G3-SEAT-20260825110255`.
+
+The tested dirty-source artifact is based on source `78499472f0283f31328432e79b45d1dee34c6fa3`
+and tree `b060da0583a768580afb2fa54c00101a4c708150`. Its dirty-source SHA-256 is
+`e00e333ead8b488630d81abf0229854501c0cf5561b861659a48e639b1b0f212`, covering the binary tracked
+patch plus sorted untracked path/content records. Executable SHA-256 is
+`c4a156219a49ec1ced225c0435274786490c6ae066ef58496eb38d3b94cc0eee`; packaged `app.asar` SHA-256
+is `fea4c756c079144588944ca1fab98269d99742b1613466600ae11f3482f7b09f`. The hard-kill gate used
+CloakBrowser `151.0.7922.108.2`; the later packaged-contract rerun used engine `151.0.7922.174` with
+the same Browser executable and `app.asar` hashes.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Licensed launch baseline | One disposable licensed profile reached journal `active`; capacity was `0 free / 1 active` | `PASS` |
+| Browser hard kill | Exact owned CloakBrowser main process was externally killed; journal moved to `cooling`, never `confirmed-released` | `PASS` |
+| Same-key app restart | Restart preserved `cooling`; relaunch was blocked before spawn with an honest bounded wait message | `PASS` |
+| Normal two-key configuration | Original settings were restored byte-for-byte; capacity became `1 free / 1 cooling` | `PASS` |
+| Cleanup | No owned Browser/profile process remained; the cooling journal was intentionally retained | `PASS` |
+| Fresh packaged contract | Same executable and `app.asar` hashes passed runtime/profile lifecycle verification under Node `22.23.2` | `PASS` |
+| Active-session Electron crash | App termination occurred only after the browser was already gone and cooling | `NOT-RUN` |
+| Relay restart / reboot-startup recovery | Not part of this run | `NOT-RUN` |
+
+This closes only the hard-kill/restart cooling-safety subset. It does not prove an active Electron
+crash, Relay restart, reboot convergence, or early vendor release, so `G3-RECOVERY` remains `OPEN`.
+
+### Post-gate source correction
+
+Adversarial review found that a clean exit from a Windows launcher PID was not proof that its
+handed-off browser PID released the vendor seat. The corrected source requires the exit event to
+belong to the owned browser PID before a zero/no-signal exit can be treated as clean; launcher
+handoff remains cooling/ambiguous.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Launcher-handoff false-free regression | Focused lifecycle suite passes `47/47`; launcher exit `0` is non-releasing when browser ownership moved to another PID | `PASS` |
+| Corrected-source automated matrix | `test:mkb02` `116/116`; critical coverage `89/89` at 88.07/82.70/87.50; typecheck, lint, installer/build, and packaged contract pass | `PASS` |
+| Corrected dirty-source identity | Dirty-source SHA-256 `e00e333e...f212`; executable `c4a15621...0eee`; `app.asar` `fea4c756...b09f`; unsigned and unattested | `PASS` |
+| Corrected-artifact hard-kill/restart cooling gate | Run `P0-G3-SEAT-20260825110255` reached active -> cooling, blocked same-key restart before spawn, restored two-key capacity, and left no owned process | `PASS` |
+
+The pre-review run is retained at
+`local-test-artifacts/phase5/hard-kill-restart-cooling-evidence-pre-review.json`. The corrected
+artifact owns the current hard-kill subset PASS.
+
+### Active Electron crash continuation
+
+Evidence: `local-test-artifacts/phase5/active-electron-crash-evidence.json`, run
+`P0-G3-ELECTRON-20260825122143`. Pre-fix evidence is retained separately.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Exact active-session Electron crash | Exact owned Electron main PID killed while CloakBrowser and journal remained active | `PASS` |
+| Startup orphan ownership | Exact `profiles/<id>/engines/cloakbrowser` orphan closed by `Browser.close`; CFT/foreign paths cannot create a lease verdict | `PASS` |
+| Journal/capacity convergence | `active -> ending -> confirmed-released`; capacity `0 free / 1 active` became `1 free / 0 active / 0 pending / 0 cooling` | `PASS` |
+| Vendor differential | Same one-key profile relaunched after recovery and closed cleanly | `PASS` |
+| Cleanup and evidence | Settings/journal restored; no owned process or backup; secret scan zero | `PASS` |
+| Artifact verification | Dirty source `38196691...067a`, EXE `50b0ccb3...5469`, `app.asar` `7160c85a...a557`; `test:mkb02` 120/120, coverage 93/93, build and final packaged contract pass | `PASS` |
+
+This closes active Electron crash recovery for the tested dirty-source artifact. `G3-RECOVERY`
+stays `OPEN` because Relay restart and reboot/startup now fail as recorded below.
+
+### Relay restart and host reboot continuation
+
+Evidence: `local-test-artifacts/phase5/relay-restart-recovery-evidence.json`, run
+`P0-G3-RELAY-20260825130239`; `local-test-artifacts/phase5/reboot-recovery-evidence.json`, run
+`P0-G3-REBOOT-20260825135710`.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Relay active-session safety | Browser survived Relay stop/restart; identity and lease stayed stable; no false-free capacity | `PASS` |
+| Relay fresh operation | Fresh ticket accepted after restart; profile reached `confirmed-released` | `PASS` |
+| Relay replay protection | Still-valid spent ticket was accepted after restart because spent JTI state was not durable | `FAIL` |
+| Real host reboot | Boot time changed; no Browser process survived; persisted journal remained `active` | `PASS` |
+| Reboot capacity safety | Startup reported `0 free / 0 active / 1 pending`; relaunch rejected before spawn | `PASS` |
+| Reboot deterministic convergence | Journal remained `active`; no bounded transition to cooling, release, or retry path | `FAIL` |
+| Cleanup | After the TTL margin and one retry for an installed-app DB lock, original settings/journal/profile DB restored; task/backups/processes removed | `PASS` |
+| Artifact binding | Browser dirty source `38196691...067a`, EXE `50b0ccb3...5469`, `app.asar` `7160c85a...a557`; Relay EXE `eb37eb54...10d1`, version 15 | `PASS` |
+
+The valid reboot verdict is `FAIL-CLOSED`, not `PASS`: safety held, availability did not recover.
+The cleanup-only retry is not a second product observation because the first restore had already
+copied part of the original snapshot. `G3-RECOVERY` remains `OPEN` on
+`RELAY-RESTART-FORGETS-SPENT-TICKET` and `REBOOT_LEASE_STUCK_PENDING_RECOVERY`.
 
 ## 24 August R3 Installer Repair Reconciliation
 
@@ -147,6 +236,22 @@ spent both keys: one on a refused attempt, one on the profile.
 
 `G2-IDENTITY`'s concurrent two-profile requirement stays `OPEN` and is now blocked by an orphaned
 licence seat rather than by key count.
+
+## 25 August Owner Scope Decisions
+
+| Decision | Ruling | Gate effect |
+|---|---|---|
+| Concurrent capacity | One profile at a time; a single free licence seat | `G2-IDENTITY`'s concurrent two-profile requirement becomes `DEFERRED`. Sequential cross-profile isolation stays the evidence of record |
+| Code signing | Unsigned v1; no certificate budget | No gate changes. The Phase 4 onboarding item stays open: announce SmartScreen and publish the hash |
+| Second machine | The clean VM guest is PC B | `G4-OPERATOR` may close on a virtual machine, recorded as virtual |
+
+The 24 August `FAIL` row for concurrent two-profile launch keeps its verdict. It is not repaired by
+this decision; it is removed from the release path, which is a different thing and is recorded as
+such.
+
+Because the cap is one seat, a stranded seat now blocks the whole product for up to the measured
+15.1-minute expiry instead of costing a rotation. `G3-RECOVERY` therefore carries more weight under
+this decision, not less.
 
 ## Invalidation Rules
 

@@ -172,6 +172,128 @@ authorized separately from the preservation requirement. More importantly, produ
 still not integrated: no per-profile sidecar, driver journal lifecycle writes, or startup vendor
 release path exists. Current fixture recovery therefore cannot be promoted to live recovery proof.
 
+## Measured 25 August 2026 - hard-kill and restart cooling gate
+
+Evidence: `local-test-artifacts/phase5/hard-kill-restart-cooling-evidence.json`, run
+`P0-G3-SEAT-20260825110255`.
+
+The corrected dirty-source directory artifact passed the narrow human seat-safety gate. Its base is
+source `78499472f0283f31328432e79b45d1dee34c6fa3`, tree
+`b060da0583a768580afb2fa54c00101a4c708150`, with dirty-source SHA-256
+`e00e333ead8b488630d81abf0229854501c0cf5561b861659a48e639b1b0f212`. The digest includes the
+binary tracked patch plus sorted untracked path/content records. The tested executable SHA-256 is
+`c4a156219a49ec1ced225c0435274786490c6ae066ef58496eb38d3b94cc0eee`; packaged `app.asar` SHA-256
+is `fea4c756c079144588944ca1fab98269d99742b1613466600ae11f3482f7b09f`. The destructive gate used
+CloakBrowser `151.0.7922.108.2`.
+
+With a disposable root and exactly one configured key, the licensed profile reached journal state
+`active` and capacity `free 0 / active 1 / cooling 0 / pending 0`. The exact owned CloakBrowser main
+process was then killed externally. The journal moved to `cooling`, never `confirmed-released`, and
+capacity became `0 / 0 / 1 / 0`. After restarting the app with the same single key, relaunch was
+blocked before engine spawn with the bounded cooling-wait message. Restoring the original two-key
+settings produced `free 1 / active 0 / cooling 1 / pending 0`, so the held key did not make the other
+key unavailable.
+
+Cleanup restored the original settings byte-for-byte and left no owned process. The cooling journal
+record remains intentionally: deleting it would falsely advertise the vendor-held seat as free. The
+same executable and `app.asar` hashes passed the fresh packaged runtime/profile contract under Node
+`22.23.2`; that verifier used the independently downloaded engine `151.0.7922.174`.
+
+This is a pass for the hard-kill/restart **cooling-safety subset**, not full recovery. The restart
+occurred after the browser process was already gone and cooling; terminating the Electron app at
+that point does not prove an active-session Electron crash. It also does not prove Relay restart,
+reboot/startup convergence, or early vendor seat release. Those rows remain open, and
+`G3-RECOVERY` remains open.
+
+### Post-gate adversarial correction
+
+Inline review found one additional false-free edge case after that human run. On Windows the
+spawned child can be a short-lived launcher while the owned browser runs under a different PID. If
+the launcher exited `0` and the handed-off browser then crashed, the child exit code could be
+mistaken for proof that the browser released its seat.
+
+The driver now accepts a zero/no-signal child exit as clean only when the exiting child is also the
+owned browser PID. A launcher handoff is ambiguous and therefore cools the seat. Regression coverage
+locks both the running-child and failed-launch paths.
+
+The corrected dirty source has SHA-256
+`e00e333ead8b488630d81abf0229854501c0cf5561b861659a48e639b1b0f212`. Node `22.23.2` verification
+passes: focused lifecycle `47/47`, `test:mkb02` `116/116`, critical coverage `89/89` at 88.07% lines,
+82.70% branches, and 87.50% functions, plus typecheck, lint, the full installer/build gate, and the
+fresh packaged runtime/profile contract. The rebuilt unsigned directory artifact is executable
+SHA-256 `c4a156219a49ec1ced225c0435274786490c6ae066ef58496eb38d3b94cc0eee`, `app.asar` SHA-256
+`fea4c756c079144588944ca1fab98269d99742b1613466600ae11f3482f7b09f`.
+
+The pre-review PASS is retained separately at
+`local-test-artifacts/phase5/hard-kill-restart-cooling-evidence-pre-review.json`, run
+`P0-G3-SEAT-20260825103809`, executable `d4189049...`. After that lease expired, the same narrow
+gate reran on the corrected artifact and passed. Do not repeat it again while the new retained seat
+is cooling.
+
+## Measured 25 August 2026 - active Electron crash recovery
+
+Evidence: `local-test-artifacts/phase5/active-electron-crash-evidence.json`, run
+`P0-G3-ELECTRON-20260825122143`. The pre-fix failure is retained at
+`local-test-artifacts/phase5/active-electron-crash-evidence-pre-fix.json`.
+
+The first real run reproduced a structural blocker: Electron was force-killed while the licensed
+CloakBrowser remained active; startup closed the exact orphan through `Browser.close`, but the
+journal stayed `active` and capacity stayed `pendingRecovery 1`. Startup sweep outcomes carried only
+PIDs, so no profile lease could be reconciled, and the pool had already seeded that key as blocked.
+
+The fix binds only the exact owned `profiles/<id>/engines/cloakbrowser` process to its journal row.
+`Browser.close` moves the lease through `ending` to `confirmed-released` and clears the pool block;
+a startup SIGKILL moves it to `cooling`; unmatched or failed reconciliation stays pending. CFT and
+foreign/nested paths produce no licence recovery verdict.
+
+The rebuilt dirty-source artifact is source `78499472f0283f31328432e79b45d1dee34c6fa3`, tree
+`b060da0583a768580afb2fa54c00101a4c708150`, dirty-source SHA-256
+`38196691421f0d529c7e4aa459f11aed140d957da23c74b4d815144881ee067a`. Executable SHA-256 is
+`50b0ccb3ae470d7089203877f8cbf0e3b17718dabde693182fbc4be688655469`; `app.asar` SHA-256 is
+`7160c85a49afe0095a06e7e9df80ef5d07e2fc80f50df54ffb95b7102a1aa557`.
+
+The exact Electron main PID was killed while the owned browser and journal remained active. Restart
+logged `ORPHAN-SWEEP-CLOSED` for that browser, left zero orphan processes, moved the journal to
+`confirmed-released`, and reported `1 free / 0 active / 0 pending / 0 cooling`. The same profile then
+reused the same one-key capacity and closed cleanly. Settings and the pre-gate journal were restored,
+no owned process or backup remained, and evidence contains no key, token, profile ID, or local path.
+
+Node `22.23.2` verification passes `test:mkb02` `120/120`, critical coverage `93/93` at 88.66% lines,
+83.74% branches, and 87.78% functions, typecheck, lint, the full installer/build gate, and the fresh
+packaged contract on the same executable and `app.asar` hashes. This closes the active-session
+Electron-crash subset. `G3-RECOVERY` remains open because the Relay-restart and reboot gates below
+now have concrete failures.
+
+## Measured 25 August 2026 - Relay restart and host reboot
+
+Relay evidence: `local-test-artifacts/phase5/relay-restart-recovery-evidence.json`, run
+`P0-G3-RELAY-20260825130239`. Reboot evidence:
+`local-test-artifacts/phase5/reboot-recovery-evidence.json`, run
+`P0-G3-REBOOT-20260825135710`. Both use Browser EXE `50b0ccb3...5469`, `app.asar`
+`7160c85a...a557`, and dirty source `38196691...067a`.
+
+Relay restart preserved the active Browser, stable Relay identity, active lease, and occupied
+capacity. A fresh ticket worked after restart and the profile closed to `confirmed-released`.
+However, the restarted Relay accepted a still-valid ticket already consumed before restart. Spent
+JTI state is process-memory-only, so restart loses replay protection. Verdict:
+`FAIL - RELAY-RESTART-FORGETS-SPENT-TICKET`.
+
+The owner-approved host reboot started from one licensed profile at journal `active`, capacity
+`0 free / 1 active`. After the real boot-time change, no Browser process survived. Startup retained
+the journal row as `active`, seeded capacity as `0 free / 0 active / 1 pending`, and rejected a
+relaunch before spawning. This is safe fail-closed behavior: no false-free seat and no overbooking.
+It is not deterministic recovery because the seat never converges to cooling, confirmed release,
+or an operator-retry state. Verdict: `FAIL - REBOOT_LEASE_STUCK_PENDING_RECOVERY`.
+
+Cleanup waited through the 17-minute vendor-TTL safety margin. The first restore attempt hit a
+profile-DB lock from the separately installed Browser app; after that app closed, a cleanup-only
+retry restored the original two-key settings, journal, and profile DB, removed the disposable
+profile/task/backups, and left no owned process. The retry observation is explicitly excluded from
+the product verdict because the first restore had already begun.
+
+`G3-RECOVERY` remains open. Required fixes are durable spent-ticket replay state in Relay and a
+bounded startup path that moves a reboot-stranded lease out of `active` without ever guessing free.
+
 ## Test Scenario Matrix
 
 | Scenario | Expected |
