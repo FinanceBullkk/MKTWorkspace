@@ -36,9 +36,33 @@ or automation expansion. Phases 1-6 form the release path; Phase 7 follows witho
 | Extraction | `extract-zip@2.0.1` is a direct packaged dependency used by engine and extension extraction; audit reports high-severity `GHSA-jmr9-qjv8-65gv` | Block release until removed or fully patched |
 | Coverage | Closed 22 August. MKTBrowser 86/80/85 and MKTTool 81/74/79/78, both measured then rounded down, both failing closed on a renamed module | Floors in place before refactors |
 | Installer | Rebuilt 23 August from frozen tree `cce7b897`, attested with published SHA-256 `d18c8d79...`. Receive-side hash passed; the clean combined-install claim was invalidated when Defender quarantined the installer's PowerShell as `Behavior:Win32/PShellCobStager.A`. Diagnosed 24 August as a behavioural COM-stager match and partly remediated in `8595027`; three parts of that shape remain | Retained, not distributed. Candidate now trails six Browser fixes: one rebuild carries them all |
-| Operational proof | 23 August: per-profile proxy egress, DNS, and WebRTC pass on two profiles measured sequentially. Normal close passed again on 24 August on the current local directory artifact, but hard-kill/crash/reboot/Relay and candidate-equivalent lifecycle remain open | No broad operator rollout |
-| Licence capacity | 24 August: abandoned-lease expiry measured at **15.1 minutes** against the declared `lease_ttl_seconds: 900`, correcting an unreproduced 20-25 minute figure; the lease journal and recovery module were found built, tested, and never called from the product, so a held seat was forgotten on every restart (`3ecc68f`). 23 August: the vendor counts sessions per licence, not per account or per install, measured with two keys on one `install_id`. N concurrent profiles cost N keys on one machine. The build declared a refused launch successful before the verdict arrived, so rotation never ran; fixed in `b63d212` and proven end to end on hardware — a held primary rotates to a free key and the profile opens. The UI had no way to enter a second key at all, fixed in `22207ad` | Scale unblocked |
+| Operational proof | Per-profile proxy egress, DNS, and WebRTC pass on two profiles measured sequentially. Normal close, Browser hard-kill cooling, and active Electron-crash startup recovery pass on hash-bound artifacts. Relay restart fails durable spent-ticket replay protection; reboot fails closed with a stranded pending seat. Concurrent isolation and candidate-equivalent lifecycle remain open | No broad operator rollout |
+| Licence capacity | 24 August: abandoned-lease expiry measured at **15.1 minutes** against the declared `lease_ttl_seconds: 900`, correcting an unreproduced 20-25 minute figure; the lease journal and recovery module were found built, tested, and never called from the product, so a held seat was forgotten on every restart (`3ecc68f`). 23 August: the vendor counts sessions per licence, not per account or per install, measured with two keys on one `install_id`. N concurrent profiles cost N keys on one machine. The build declared a refused launch successful before the verdict arrived, so rotation never ran; fixed in `b63d212` and proven end to end on hardware — a held primary rotates to a free key and the profile opens. The UI had no way to enter a second key at all, fixed in `22207ad` | Capped at one concurrent profile by owner decision on 25 August; rotation retained in code but out of v1 scope |
 | Browser hotspots | 2,581-line driver, 1,574-line fingerprint module, 1,364-line MCP server, plus 973/959-line startup modules | Refactor incrementally after P0 release gates |
+
+## Owner Scope Decisions - 25 August 2026
+
+Three questions left open by the 24-25 August evidence were answered by the owner. Each narrows v1
+rather than adding work, and each carries a cost stated here rather than discovered by an operator.
+
+| Decision | Ruling | Consequence |
+|---|---|---|
+| Concurrent capacity | **One profile at a time.** Only one licence seat is free, so v1 ships a hard cap of one | The concurrent two-profile launch gate cannot run and leaves the release path. Cross-profile isolation is proved sequentially. Multi-key rotation stays in the code, unsupported and untested for v1 |
+| Code signing | **Unsigned, reaffirmed.** No budget for an Authenticode certificate | SmartScreen warns on every install. The published SHA-256 and the distribution channel are the only origin evidence there is. Onboarding must name the warning before the operator meets it |
+| Second machine | **The clean VM guest is PC B** | `G4-OPERATOR` may close on a virtual machine. Evidence must record it as virtual so nobody later reads it as physical-PC parity. Host hardware distinctness stays unproved |
+
+### What the one-seat cap does to the risk profile
+
+The cap does not make recovery less important. It makes recovery the product. With two keys a
+stranded seat costs a rotation; with one key it costs **the entire application** for up to the
+measured 15.1-minute lease expiry, and the operator can do nothing but wait.
+
+That promotes early vendor release from a nice-to-have to the highest-value remaining fix: ending
+the licence session explicitly on shutdown turns a 15-minute dead wait into an immediate reopen.
+The supporting parts already exist and already fail closed - `license-key-pool.ts` refuses a launch
+before spawning when no key is idle rather than burning an attempt on the vendor, and
+`license-seat-wait-message.ts` distinguishes "close a running profile" from "a dead browser still
+holds the seat, it frees in about N minutes". What is missing is the call that ends the session.
 
 ## Release Rule
 
@@ -53,8 +77,8 @@ pull-request check for the current merge tree.
 | 1 | [Remove Vulnerable Runtime Extraction](./phase-01-remove-vulnerable-runtime-extraction.md) | Completed |
 | 2 | [Stabilize Packaged Contract CI](./phase-02-stabilize-packaged-contract-ci.md) | Completed |
 | 3 | [Enforce PR Merge and Critical Coverage Gates](./phase-03-enforce-pr-merge-and-critical-coverage-gates.md) | Completed |
-| 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | In Progress - 24 Aug: Defender block diagnosed as a COM-stager behavioural match and partly remediated; one rebuild owed, combined install/repair/uninstall still open |
-| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | In Progress - 24 Aug: lease journal wired into launch/close and lease TTL measured at 15.1 min; concurrent isolation, destructive recovery, second-PC install, and repair remain open |
+| 4 | [Build Attested Installer from Frozen HEAD](./phase-04-build-signed-installer-from-frozen-head.md) | In Progress - 25 Aug: current-source candidate passes clean install 9/9, repair 13/13 and uninstall 15/15 on updated Defender; artifact remains unsigned, unattested and not releasable |
+| 5 | [Complete Real Environment and Recovery Gates](./phase-05-complete-real-environment-and-recovery-gates.md) | In Progress - 25 Aug: hard-kill cooling and active Electron-crash pass; Relay restart fails replay durability, reboot fails closed without convergence; authenticated second-PC setup and human input remain open |
 | 6 | [Run Seven Day Canary and Promote](./phase-06-run-seven-day-canary-and-promote.md) | Pending |
 | 7 | [Decompose Browser Hotspots Incrementally](./phase-07-decompose-browser-hotspots-incrementally.md) | Pending |
 

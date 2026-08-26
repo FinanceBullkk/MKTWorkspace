@@ -27,7 +27,8 @@ phases to be checked off with sanitized evidence.
 
 ## Requirements
 
-- Use two disposable managed profiles, two assigned static proxies, and two Windows PCs.
+- Use two disposable managed profiles and two assigned static proxies, opened **one at a time**
+  under the 25 August one-seat cap, across PC A and the clean VM guest acting as PC B.
 - Preserve `1 account = 1 static proxy = 1 managed profile = 1 assigned Relay device`.
 - First Google/Reddit/TikTok login and all credentials/OTP remain human-controlled.
 - Never record proxy credentials, license keys, cookies, tickets, raw IPs, or page contents in evidence.
@@ -41,12 +42,12 @@ phases to be checked off with sanitized evidence.
 
 ```text
 current-source attested candidate on PC A
-  -> two-profile proxy/DNS/WebRTC isolation
+  -> sequential two-profile proxy/DNS/WebRTC isolation (one seat, one profile open at a time)
   -> human login/input and normal use
   -> live vendor lease protocol + failure recovery
   -> crash/reboot matrix
 
-same attested candidate on clean PC B
+same attested candidate on the clean VM guest acting as PC B
   -> install -> authenticated setup -> device assignment -> managed launch
   -> repeat network/input/recovery smoke
   -> uninstall/repair proof
@@ -227,8 +228,137 @@ against the binary licence's reverse-engineering clause. `recoverLicenseLeases` 
 not run at startup; its `deps.release` needs that same impossible call. The journal now carries real
 records, so it is ready the day a legitimate release path exists.
 
-Unit-tested only. The human gate stands: kill a browser, restart the app, confirm the key reports
-`cooling` with a correct remaining time instead of a refusal.
+At this checkpoint the change was unit-tested only. The next subsection records the later human
+gate that killed a browser, restarted the app, and checked the cooling state.
+
+### Hard-kill and restart cooling continuation - 25 August 2026
+
+Evidence: `local-test-artifacts/phase5/hard-kill-restart-cooling-evidence.json`, run
+`P0-G3-SEAT-20260825110255`.
+
+The human seat-safety gate passed on the corrected dirty-source directory artifact. Its base is source
+`78499472f0283f31328432e79b45d1dee34c6fa3`, tree
+`b060da0583a768580afb2fa54c00101a4c708150`, with dirty-source SHA-256
+`e00e333ead8b488630d81abf0229854501c0cf5561b861659a48e639b1b0f212`. The executable SHA-256 is
+`c4a156219a49ec1ced225c0435274786490c6ae066ef58496eb38d3b94cc0eee`; packaged `app.asar` SHA-256
+is `fea4c756c079144588944ca1fab98269d99742b1613466600ae11f3482f7b09f`. The gate used
+CloakBrowser `151.0.7922.108.2`.
+
+A licensed disposable profile reached journal `active` with `0 free / 1 active`. The exact owned
+CloakBrowser main process was externally killed. The journal became `cooling`, never
+`confirmed-released`, and capacity became `0 free / 1 cooling`. Restarting the app with the same
+single key preserved that state and blocked relaunch before engine spawn with an honest cooling-wait
+message. Restoring the original two-key settings exposed the independent free key as
+`1 free / 1 cooling`. Original settings were restored byte-for-byte, no owned process remained, and
+the cooling journal was intentionally preserved rather than making the vendor-held seat false-free.
+
+The same executable and `app.asar` hashes then passed the packaged runtime/profile contract under
+Node `22.23.2`; that verifier used engine `151.0.7922.174`. This is a pass for the hard-kill/restart
+cooling-safety subset only. The Electron app was terminated after the browser was already gone and
+cooling, so active-session Electron crash, Relay restart, reboot/startup convergence, and early
+vendor seat release remain unproved. `G3-RECOVERY` therefore remains open.
+
+#### Post-gate adversarial correction
+
+Review found a Windows launcher-handoff race after the human run. The spawned child may exit `0`
+while the actual owned browser runs under another PID; if that browser then crashes, treating the
+launcher exit as a clean seat release creates a false-free key. The driver now trusts a zero/no-signal
+exit only when it belongs to the owned browser PID. A launcher exit remains ambiguous and cooling.
+
+The corrected dirty source has SHA-256
+`e00e333ead8b488630d81abf0229854501c0cf5561b861659a48e639b1b0f212`. Under Node `22.23.2`, focused
+lifecycle tests pass `47/47`, `test:mkb02` passes `116/116`, and critical coverage passes `89/89` at
+88.07% lines, 82.70% branches, and 87.50% functions. Typecheck, lint, the full installer/build gate,
+and the fresh packaged contract also pass. The rebuilt directory artifact is executable SHA-256
+`c4a156219a49ec1ced225c0435274786490c6ae066ef58496eb38d3b94cc0eee`, packaged `app.asar` SHA-256
+`fea4c756c079144588944ca1fab98269d99742b1613466600ae11f3482f7b09f`; it is unsigned and unattested.
+
+The pre-review run is retained separately at
+`local-test-artifacts/phase5/hard-kill-restart-cooling-evidence-pre-review.json`, executable
+`d4189049...`. After its lease expired, the corrected artifact reran the same narrow human gate and
+passed. Its new retained vendor seat is cooling, so do not repeat the destructive gate until that
+lease expires.
+
+### Active Electron crash recovery continuation - 25 August 2026
+
+Evidence: `local-test-artifacts/phase5/active-electron-crash-evidence.json`, run
+`P0-G3-ELECTRON-20260825122143`; the original failing run is retained as pre-fix evidence.
+
+The first run proved the missing seam: startup politely closed the exact browser orphan, but the
+durable `active` lease and pool block did not change. The corrected startup path now returns a
+profile-scoped seat verdict only for the exact owned CloakBrowser layout, applies it to the journal
+and in-memory pool, and leaves failed/unmatched cases pending or cooling instead of guessing free.
+
+On the rebuilt artifact, force-killing only the exact Electron main left the owned CloakBrowser and
+journal active. Restart closed that orphan through `Browser.close`, converged the journal to
+`confirmed-released` and capacity to one free seat, then relaunched and cleanly closed the same
+profile as a vendor differential. No process, settings backup, or test journal remained after
+cleanup; evidence retained no secret or local identity.
+
+Artifact: dirty-source SHA-256 `38196691...067a`, executable `50b0ccb3...5469`, `app.asar`
+`7160c85a...a557`, unsigned and unattested. Node `22.23.2` verification passes `test:mkb02` 120/120,
+critical coverage 93/93 at 88.66/83.74/87.78, typecheck, lint, installer/build, and packaged contract.
+Active-session Electron crash is closed for this artifact; Relay restart and reboot/startup have the
+concrete failures below, so `G3-RECOVERY` and the Phase 5 success criterion remain open.
+
+### Relay restart and host reboot continuation - 25 August 2026
+
+Relay run `P0-G3-RELAY-20260825130239` used installed Relay version 15, SHA-256
+`eb37eb54...10d1`, against Browser dirty source `38196691...067a`, EXE `50b0ccb3...5469`, and
+`app.asar` `7160c85a...a557`. The Browser survived the Relay restart, Relay identity and active
+capacity stayed stable, a fresh ticket worked, and final close confirmed release. The same restart
+forgot an unexpired consumed ticket and accepted it again. The gate fails
+`RELAY-RESTART-FORGETS-SPENT-TICKET`; spent JTI replay state must survive process restart.
+
+Owner-approved reboot run `P0-G3-REBOOT-20260825135710` began at journal `active`, capacity
+`0 free / 1 active`. The host boot time changed and no Browser process survived. Exact packaged
+startup then reported `0 free / 0 active / 1 pending`, retained the journal as `active`, and blocked
+relaunch before spawning. This is `FAIL-CLOSED`: it prevents false-free reuse, but it does not
+recover availability or offer deterministic convergence. The blocker is
+`REBOOT_LEASE_STUCK_PENDING_RECOVERY`.
+
+After the 17-minute safety margin, cleanup restored the original settings, journal, and profile DB
+and removed the disposable profile, one-shot task, backups, and owned processes. A separately
+installed Browser instance briefly locked the profile DB, requiring one cleanup-only retry; that
+retry is excluded from the product verdict because restore had already begun.
+
+Phase 5 remains open. Fix Relay replay durability and wire reboot-stranded lease convergence before
+rerunning these two gates.
+
+### Clean second-machine installation continuation - 25 August 2026
+
+Evidence: `local-test-artifacts/vm/clean-install-evidence.json` and
+`local-test-artifacts/vm/defender-evidence.md`.
+
+The corrected clean-machine harness passed 9/9 for current-source candidate `7849947`, tree
+`b060da0583a768580afb2fa54c00101a4c708150`, installer SHA-256
+`ad1af433cea4070b5860a3c841d170bb1ef91ec3df33e2c11309acd0ba5d945c`. The guest had no product or
+Node runtime before transfer. The completed state included Browser, pinned Relay, two firewall
+rules, desktop and startup shortcuts, Publisher/ownership metadata, the local control listener,
+and first-run MCP token and profile store. Defender stayed enabled with no detection in the gate
+window and no policy change.
+
+The guest engine was `1.1.25080.5` with signatures `1.437.1.0`, so the same gate must be rerun after
+updating the offline clean snapshot. Repair and combined uninstall have not inherited this pass and
+remain open. The candidate is unsigned, unattested, and not releasable; therefore the Phase 5
+clean-second-PC success criterion and overall rollout remain open.
+
+The rerun from snapshot `clean-with-ssh-defender-20260825` passed the same 9/9 matrix after Defender
+was updated and verified across reboot at engine `1.1.26070.7`, signatures `1.457.331.0`. No threat
+or Defender event 1116/1117 appeared in the gate window. The old-definition caveat is closed for
+clean install; repair, combined uninstall, attestation, and the remaining Phase 5 gates stay open.
+
+Repair and combined uninstall then passed separately on the same candidate and Defender snapshot.
+Repair passed 13/13 after deliberate damage to owned payload, shortcuts and registry metadata;
+operator profile/token/database state and Relay config survived, and post-repair launch served the
+control port. Uninstall passed 15/15: Browser payload, shortcuts, firewall rules, uninstall metadata
+and the Browser-owned Relay executable were removed; operator data and unrelated Relay state were
+preserved; no owned process or control listener remained. Defender recorded no detection or event
+1116/1117 in either gate window.
+
+This closes the VM installer lifecycle slice for current source. It does not close authenticated
+second-PC setup, attestation, reboot recovery, human input, network isolation or
+the Phase 5 success criterion as a whole.
 
 ## Test Scenario Matrix
 
@@ -245,11 +375,13 @@ Unit-tested only. The human gate stands: kill a browser, restart the app, confir
 
 ## Success Criteria
 
-- [ ] Two disposable proxy/profile assignments pass egress, DNS, WebRTC, and isolation checks.
+- [ ] Two disposable proxy/profile assignments pass egress, DNS, WebRTC, and isolation checks,
+  measured sequentially. Concurrent isolation is DEFERRED, not passed.
 - [ ] Human input/login works on both PCs without credential automation.
 - [ ] Live vendor lifecycle is measured and integrated; capacity is honest and fail-closed.
 - [ ] Normal close, hard kill, Electron crash, Relay restart, and reboot recover deterministically.
-- [ ] Clean second-PC install/setup/launch/repair/uninstall passes with the verified candidate.
+- [ ] Clean PC B install/setup/launch/repair/uninstall passes with the verified candidate on the VM
+  guest, with the evidence recording the machine as virtual.
 - [ ] Evidence is sanitized, bound to exact artifact hashes, and reviewed before canary.
 
 ## Risk Assessment

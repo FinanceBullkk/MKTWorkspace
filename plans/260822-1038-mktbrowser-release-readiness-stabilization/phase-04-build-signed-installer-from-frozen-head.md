@@ -258,6 +258,82 @@ satisfied, because three parts of the shape remain. The next clean-VM run is wha
 should run this build before any further shape change - a detection that persists tells us the
 stager shape is the cause, which is evidence worth more than another guess.
 
+## Current-Source Clean Combined Install Pass - 25 August 2026
+
+Evidence: `local-test-artifacts/vm/clean-install-evidence.json` and
+`local-test-artifacts/vm/defender-evidence.md`.
+
+The corrected harness restored the Windows 11 Home guest to `clean-with-ssh`, verified that no
+product path or Node runtime existed, waited for the installer process to exit, and then required
+the complete supported combined state. Candidate source `7849947`, tree `b060da0583a768580afb2fa54c00101a4c708150`,
+and installer SHA-256 `ad1af433cea4070b5860a3c841d170bb1ef91ec3df33e2c11309acd0ba5d945c`
+passed all 9 checks:
+
+| Item | Result |
+|---|---|
+| Clean guest and no Node preflight | PASS |
+| Receiving-machine installer SHA-256 | PASS |
+| Installer exit and supported Browser + Relay state | PASS |
+| Browser installed path and local control port | PASS |
+| Pinned Relay, two firewall rules, desktop/startup ownership and Publisher | PASS |
+| First-run MCP token and profile store | PASS |
+| Defender remained enabled and policy was unchanged | PASS |
+| Defender detections and events 1116/1117 in the gate window | None |
+| Combined clean-install gate | **PASS 9/9** |
+
+This reverses the 24 August environmental failure for the clean-install slice: removing the COM
+firewall reader and the execution-policy bypass was sufficient for this Defender definition to let
+the mandatory custom-install sequence complete. The guest recorded Defender engine `1.1.25080.5`
+and signatures `1.437.1.0`; a rerun from an offline snapshot updated to the current definitions is
+still required to remove that environment caveat.
+
+That follow-up rerun passed on 25 August from snapshot `clean-with-ssh-defender-20260825` (UUID
+`326357d7-35b1-4c91-92ca-856fb0f35e9b`). After reboot the guest retained Defender engine
+`1.1.26070.7` and signatures `1.457.331.0`, remained product-free with no Node runtime, and passed
+the same 9/9 matrix. `Get-MpThreatDetection` and Defender Operational events 1116/1117 were both
+empty in the new gate window. The stale-definition caveat is therefore closed for clean install.
+
+This result closes only the current-source clean combined install verdict. The artifact is unsigned,
+`attested: false`, and `releasable: false`; repair and combined uninstall remain separate open gates.
+It is not release GO and does not replace the exact-attested-artifact requirement.
+
+## Current-Source Repair and Combined Uninstall Pass - 25 August 2026
+
+Evidence:
+
+- `local-test-artifacts/vm/installer-repair-evidence.json`
+- `local-test-artifacts/vm/defender-repair-evidence.md`
+- `local-test-artifacts/vm/installer-uninstall-evidence.json`
+- `local-test-artifacts/vm/defender-uninstall-evidence.md`
+
+The same candidate and updated Defender snapshot passed the remaining installer lifecycle slices:
+
+| Gate | Result |
+|---|---|
+| Clean combined install | **PASS 9/9** |
+| Repair after damaging owned payload, shortcuts and Publisher metadata | **PASS 13/13** |
+| Combined uninstall ownership and data preservation | **PASS 15/15** |
+| Defender detections/events during repair | None |
+| Defender detections/events during uninstall | None |
+
+Repair restored the exact Browser tree digest, both shortcuts and uninstall Publisher; the MCP
+token, profile database, disposable profile marker and Relay config survived unchanged; the repaired
+Browser served port 47822. Combined uninstall then removed Browser payload, Browser shortcuts, both
+WebRTC rules, uninstall metadata and the Browser-owned Relay executable. Browser operator data and
+unrelated Relay state survived unchanged, no owned process remained, and port 47822 closed.
+
+Two harness defects were found rather than hidden. The repair harness initially hashed `profiles.db`
+while the installer-triggered relaunch held it open; it now stops owned processes before hashing.
+The uninstall harness initially checked before the temporary NSIS `Un_A` worker converged, then a
+leftover once-trigger overwrote a valid run by executing again. It now waits for the worker and all
+ownership state to disappear, and disables each task immediately after the explicit run. Failed
+attempt evidence is retained separately and is not counted as a product verdict.
+
+These results close clean install, repair and combined uninstall for current-source candidate
+`7849947` on the updated local VM. They do not make it an attested release artifact: Authenticode is
+absent by owner decision, `attested` and `releasable` remain false, and the exact retained artifact
+still needs the release-authority/attestation binding before promotion.
+
 ## Risk Assessment
 
 - An unsigned installer trains operators to dismiss SmartScreen, and a habit of dismissing warnings

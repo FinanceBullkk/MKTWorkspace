@@ -223,27 +223,46 @@ strengthen the evidence at the same time. It is not implemented, because impleme
 merge tree and therefore requires another required-gate run, which is exactly the spend that is
 currently unavailable.
 
-## Open Finding - Verifier Engine Is Not Pinned
+## Self-Hosted Runner Remediation - 26 August 2026
 
-`scripts/system-chrome-engine-fixture.cjs` links whichever Google Chrome the runner image ships.
-Run `32569415269` measured `151.0.7922.170`; the 22 August local sweep measured `151.0.7922.138`;
-the production pin in `apps/desktop/windows-engine-release.json` is CloakBrowser `151.0.7922.108.2`.
-Three engines, no assertion tying them together.
+PR run `32887170530` reached the packaged-contract job on the approved self-hosted Windows runner,
+but the job stopped before launching the app because Google Chrome was not installed. Chrome was
+then installed in the `mkt-ci-windows` image and verified as a Google-signed executable; measured
+version is `152.0.7977.65` with SHA-256
+`1978a6175a53db1a435d745d00222ae4b5f328f492c7bcdb63b93e78013fd728`.
 
-Consequences for the remaining gate:
+A local retry against the old artifact exposed a second runner-specific failure. The runner log and
+live inspection showed a newly-created `DevToolsActivePort` record, the matching profile process,
+and its loopback listener, but the timestamp freshness check still rejected the record. The fix
+removes filesystem timestamps as an authority: the caller's pre-spawn deletion is the freshness
+boundary, and exact data-directory process plus listener ownership remain mandatory authentication.
 
-- The seven-run streak spans days. A runner image refresh mid-streak means the runs did not measure
-  one engine, and nothing currently fails when that happens.
-- This phase's own risk register says to measure CFT and CloakBrowser because `DevToolsActivePort`
-  behaviour is engine-specific. System Chrome is neither.
+The fix was built from clean merge tree `5747a26685868fce320c329d2e7dee34f4b0127d` in the same VM.
+The resulting package has executable SHA-256
+`c76835a17d5ba43f87b3ca407fd670eb6a6c48b577ab83080c649670672ef030` and `app.asar` SHA-256
+`202dc283bfa7f4f0b7977a8e4498fa079757b83505c16218ec4768025f9e8c82`; packaged runtime/profile
+contract passed `5/5`, with the same Chrome version and hash on every iteration. The focused
+`test:mkb02` suite passed `120/120`, typecheck and lint passed.
 
-Running CloakBrowser inside the 20-iteration gate is rejected, not deferred: each cold launch takes a
-licence seat, so 140 launches would fail on seat refusal rather than on stability, and a refusal
-already presents as an exit code that reads like a crash. Live CloakBrowser proof belongs to the
-Phase 5 gates, which launch a handful of times under human observation.
+### Remediation delivered - 26 August 2026
 
-The engine version is recorded per iteration, so the drift is visible in evidence. Recording is not
-pinning, and this decision is open.
+Commit `62b86f6` pins the packaged verifier to Chrome for Testing `152.0.7977.64`, authenticates
+both archive SHA-256 `b0db25dea445822429d8ebd36d53344cadcd63127308759456964029bbe18004` and
+executable SHA-256 `79832d1e60cbad9323c07339f9608bc0ce93cb9242b9b5481c04a0c536720980`, and extracts
+only into the job's temporary directory. All Windows/Linux jobs now require the `mktbrowser` runner
+label; `secrets: inherit` was removed where no secret is used. The pull-request Windows pipeline
+runs only when the head repository is the base repository, so a fork PR is refused before any
+untrusted checkout reaches the persistent self-hosted runner and the required gate fails closed.
+
+Local Node 22 gates passed: installer suite, typecheck, lint, PowerShell parse, workflow YAML parse,
+and packaged runtime contract `5/5`. PR merge-tree run `32931672855` passed `quality`, `package`,
+`packaged-contract`, and `mktbrowser-pr-release-gate`; the packaged job recorded CFT `152.0.7977.64`
+and the pinned executable hash on all five iterations. The push run was cancelled because it is not
+merge authority. No release, signing, deployment, or publication was performed.
+
+This closes the unpinned-verifier finding and the missing-Chrome runner failure. The repository is
+still public and the runners are persistent; a private repository or ephemeral/isolated runner
+remains the stronger long-term boundary for arbitrary same-repository write access.
 
 ## Risk Assessment
 
