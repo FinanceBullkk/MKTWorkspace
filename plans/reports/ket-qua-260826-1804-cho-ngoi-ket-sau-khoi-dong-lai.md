@@ -80,14 +80,14 @@ journal lỗi → pool phát khoá, `journal.reserve` ném lỗi, launch chết.
 
 ## Nghiệm thu
 
+Chạy dưới Node 22 (`E:\tools\node-v22.23.1`), đúng runtime repo yêu cầu.
+
 | Gate | Kết quả |
 |---|---|
-| `test:mkb02` (phần main-process) | **128/128**, gồm 10 test mới |
-| `critical-coverage-contract` | exit 0 — `license-key-pool.ts` 100% line, `startup-license-lease-reconciliation.ts` 100% line / 90.63% branch |
+| `test:mkb02` **đầy đủ** | **171/171** — profile-manager 3, cdp-driver 5, mcp-server 35, desktop main 128 (gồm 10 test mới) |
+| `critical-coverage-contract` | exit 0, 101/101 — `license-key-pool.ts` 100% line, `startup-license-lease-reconciliation.ts` 100% line / 90.63% branch |
+| `yarn lint` đầy đủ (quality contract + eslint + js syntax) | exit 0 |
 | Workspace typecheck | exit 0 |
-| ESLint trên file đã sửa | sạch |
-| `workspace-quality-contract` + `check-javascript-syntax` | pass |
-| `profile-manager test:managed`, `mcp-server test:managed` | **CHẶN** — `better_sqlite3.node` build cho NODE_MODULE_VERSION 127 (Node 22), shell đang Node 24 cần 137. Máy này không có Node 22. Lỗi có sẵn, không liên quan thay đổi này; cả hai suite đều không đụng code licence |
 | App thật, đóng gói, dựng lại trạng thái reboot | **ĐẠT** — xem mục dưới |
 | Reboot thật (cắt điện / restart máy) | **CHƯA CHẠY** |
 
@@ -151,3 +151,9 @@ hành, và không ký.
    phút tính từ lúc mở app, dù ghế có thể đã trống từ lâu. Không có mốc nào chứng minh được sớm hơn.
    Chấp nhận được, nhưng nếu operator gặp thường xuyên thì đáng đo lại.
 3. Lỗ hổng giữa lúc spawn và lúc ghi `starting` (câu hỏi cũ từ báo cáo 24/08) vẫn chưa đo.
+
+## Đính chính
+
+Bản đầu của báo cáo này ghi `profile-manager test:managed` và `mcp-server test:managed` là **bị
+chặn**, với lý do "máy này không có Node 22". Sai. Node 22.23.1 nằm ở `E:\tools\node-v22.23.1`, cố ý
+không đưa vào PATH hệ thống. Đã chạy lại đầy đủ dưới Node 22: **171/171**, không có gate nào bị chặn.

@@ -331,10 +331,10 @@ again. Within one boot session, an app and browser that died together now rest t
 cooldown from now instead of blocking for ever. A process table that could not be read still frees
 nothing, which is the fail-closed case and unchanged.
 
-Gates: 128/128 desktop `test:mkb02` main-process tests including 10 new ones, critical-coverage
-contract exit 0 with `license-key-pool.ts` at 100% lines and
-`startup-license-lease-reconciliation.ts` at 100% lines / 90.63% branches, workspace typecheck exit
-0, ESLint clean, workspace-quality contract passed.
+Gates, run under Node 22 as the repo requires: full `test:mkb02` 171/171 including 10 new tests,
+critical-coverage contract exit 0 at 101/101 with `license-key-pool.ts` at 100% lines and
+`startup-license-lease-reconciliation.ts` at 100% lines / 90.63% branches, full `yarn lint` exit 0,
+workspace typecheck exit 0.
 
 ### Measured on the packaged app, 26 August 2026
 
