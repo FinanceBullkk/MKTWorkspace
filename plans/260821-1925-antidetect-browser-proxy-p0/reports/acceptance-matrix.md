@@ -56,7 +56,7 @@ labels during disposable gates.
 
 | Gate | Minimum evidence | Status |
 |---|---|---|
-| `G1-INPUT` | Valid cover control, interleaved A/B evidence, three packaged manual-login interactions | `OPEN` |
+| `G1-INPUT` | Valid cover control, interleaved A/B evidence, three packaged manual-login interactions | `OPEN` - one manual-login interaction now evidenced, see 27 August below |
 | `G2-NETWORK` | Two proxies, matching independent/in-browser route, no DNS/WebRTC bypass | `OPEN` |
 | `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `OPEN` |
 | `G2-CONCURRENT` | Two profiles open at once with no cross-wiring | `DEFERRED` - one seat, capped at one profile (25 Aug owner decision) |
@@ -65,6 +65,102 @@ labels during disposable gates.
 | `G4-OPERATOR` | Second-PC installer/setup with no manual secret or configuration copying; the clean VM guest is PC B and is recorded as virtual | `OPEN` |
 | `G5-CANARY` | Seven days of approved manual use with all metrics inside threshold | `OPEN` |
 | `G5-DECISION` | Signed GO or exact NO-GO blockers | `OPEN` |
+
+## 27 August first human input session
+
+Evidence: `local-test-artifacts/phase5/g1-input-first-human-session-evidence-20260827.json`, run
+`P0-G1-INPUT-FIRST-HUMAN-20260827124333`.
+
+The first time a person typed into this product. Every earlier gate was machine-measured. Packaged
+build of 27 August 02:45 from Browser source `137a849`, engine CloakBrowser `151.0.7922.108.2`,
+run against the real operator data root rather than a disposable one.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Typing, click, scroll on the packaged build | Operator reports normal behaviour with no stall, in the area whose history includes input-dispatch stall, ten-second profile death, and occlusion stall | `PASS` (human testimony) |
+| Real third-party login | A YouTube/Google sign-in completed inside a launched profile | `PASS` (human testimony) |
+| Session survives close and reopen | Closed 05:56:43Z, reopened 05:56:48Z, still signed in | `PASS` (human testimony) |
+| Launch/close discipline across five cycles | Four closes, all `Browser.close` with exit 0 and `SHUTDOWN-COMPLETE`; all four leases `confirmed-released` on one key; no kill, no cooling from a bad close, no stranded lease | `PASS` (machine) |
+| Cold versus warm launch | Cold 21.7s; warm relaunch 3-4s with `BOOTSTRAP-DONE` at 1.58s | `PASS` (machine) |
+| DevTools listener ownership on real hardware | Port resolved to the owned process on 127.0.0.1 at first try, with no listener-provider warm-up | `PASS` (machine) |
+| Licence key rotation under a live refusal | Key `...bdf2ae` refused with exit 76 and "session limit is reached"; the pool rotated to `...b8f6b7` and the launch succeeded with no operator-visible error | `PASS` (machine) |
+| State written to disk on close | Cookies and History written at close | `PASS` (machine) |
+
+`G1-INPUT` stays `OPEN`. It requires **three** packaged manual-login interactions plus valid cover
+control and interleaved A/B evidence; one interaction is now evidenced and the cover/A-B halves are
+untouched.
+
+This session carries **no network-identity claim**: the profile had no proxy, so egress used the
+operator's real IP. It is input evidence only.
+
+Two earlier claims are corrected by this run:
+
+- The second licence key is **not** proven invalid. The vendor refused it with "your plan's session
+  limit is reached", which means its seat was occupied at that moment - most likely a stale vendor
+  lease from an earlier run. It must be retested after its cooldown before anyone concludes the
+  install has only one usable key, and `G2-CONCURRENT`'s one-seat premise should be rechecked with it.
+- The `portOwnerPids=none` blocker seen twice in the disposable VM earlier the same day did not
+  reproduce on real hardware, supporting the existing note that it is an environment artifact rather
+  than a product defect.
+
+## 27 August Relay restart/spent-ticket continuation
+
+Evidence: `local-test-artifacts/phase5/relay-spent-ticket-restart-evidence-20260827.json`, run
+`P0-G3-RELAY-SPENT-20260826192828`.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Packaged Relay process restart | Relay v15 stopped and started as a real packaged process with an isolated disposable home | `PASS` |
+| Identity continuity | Relay device identity stayed stable across restart | `PASS` |
+| Spent-ticket replay | The previously consumed ticket was rejected after restart with `ALREADY_USED` | `PASS` |
+| Fresh-ticket route | A fresh ticket still reached the Browser-operation boundary after restart | `PASS` |
+| Evidence hygiene | Redacted evidence contains no secret values | `PASS` |
+
+This closes only the Relay restart/spent-ticket subset. The real power-cycle with a disposable
+profile and real licence key remains pending, and `G3-RECOVERY` stays `OPEN` until that evidence is
+checked by the owner. The earlier reboot blocker is retained; this subset does not claim full
+reboot or recovery convergence.
+
+## 27 August real power-cycle attempts
+
+Evidence: `local-test-artifacts/phase5/real-power-cycle-recovery-evidence-20260827.json`, run
+`P0-G3-POWER-CYCLE-ATTEMPT-20260826205642`; follow-up evidence:
+`local-test-artifacts/phase5/real-power-cycle-recovery-evidence-20260827-rerun.json`, run
+`P0-G3-POWER-CYCLE-RERUN-20260826214410`.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Browser/Relay artifact binding | Browser source `137a849`, packaged Browser hashes recorded, Relay archive v15 hash recorded, CloakBrowser engine pin `151.0.7922.108.2` | `PASS` |
+| Disposable profile and real key setup | Disposable VM profile path was used and a real key was supplied through a non-recording path | `PASS` |
+| Initial DevTools ownership diagnostic | First attempt reported a live Browser child/process set but `portOwnerPids=none`; no power cut followed | `SUPERSEDED` |
+| Listener ownership follow-up | Warming the Windows listener provider allowed the packaged Browser to attribute the DevTools listener to the owned process | `PASS` |
+| Single-key prelaunch capacity | Follow-up observed `total=1, free=1, active=0, pendingRecovery=0, cooling=0` before launch | `PASS` |
+| Active lease at a validated cut checkpoint | The scheduled arm task ran immediately and again at its one-minute trigger, invalidating the checkpoint; cleanup ended at `0 active / 0 pendingRecovery / 1 cooling` with no profile Browser process | `BLOCKED` |
+| Power-cycle and post-boot recovery | Not run because no valid stable active checkpoint existed | `NOT-RUN` |
+| Current blocker at this historical attempt | `HARNESS_DUPLICATE_SCHEDULED_TASK_RUN`; superseded by the owner-approved rerun recorded below | `SUPERSEDED` |
+
+No power-cycle was attempted after either precondition failure. These are environment/harness
+blockers, not recovery verdicts; the owner-approved continuation and its final blocker are recorded
+below, and `G3-RECOVERY` remains `OPEN` pending a runnable gate and owner evidence review.
+
+## 27 August owner-approved rerun: final pre-cut blocker
+
+Evidence: `local-test-artifacts/phase5/real-power-cycle-recovery-evidence-20260827-final.json`, run
+`P0-G3-POWER-CYCLE-GATE-20260827044719`.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Browser/Relay artifact binding | Browser source `137a849`, packaged Browser hashes, Relay v15 archive/executable hashes, and CloakBrowser `151.0.7922.108.2` remained bound | `PASS` |
+| Disposable profile and real key setup | Disposable linked clone used; real key entered through a non-recording guest path; no secret values written to evidence | `PASS` |
+| Harness single-run guard | `G3ArmPrecut`, `G3DisposableBrowser`, and `G3DisposableRelay` had no future triggers; Relay config included a random disposable `vaultKeyOperator` | `PASS` |
+| Active lease at a validated cut checkpoint | Packaged launch reached a live child and DevToolsActivePort, but ownership returned `portOwnerPids=none`; no `gate-state.json` checkpoint was written and cleanup settled `confirmed-released` | `BLOCKED` |
+| Power-cycle and post-boot recovery | Not run because no valid stable active checkpoint existed | `NOT-RUN` |
+| Cooldown/capacity cleanup | After the measured cooldown, capacity returned to `1 free / 0 active / 0 pendingRecovery / 0 cooling`; no profile Browser process remained | `PASS` |
+| Current blocker | `VM_PRECUT_ACTIVE_CHECKPOINT_UNAVAILABLE` | `BLOCKED` |
+
+The later disposable-VM poweroff was cleanup only and is not recovery evidence. This remains an
+environment/ownership blocker, not a recovery verdict; `G3-RECOVERY` stays `OPEN` pending a runnable
+owner-reviewed power-cycle gate.
 
 ## 24 August Lifecycle and Installer Reconciliation
 
@@ -75,7 +171,7 @@ labels during disposable gates.
 | Installer repair | Superseded by the R3 run below. The Defender block was caused by the installer's `EncodedCommand` pattern, not by the product contract | `SUPERSEDED` |
 | Normal close | Current local artifact reached `Browser.close`, child exit 0, and `SHUTDOWN-COMPLETE`; the used seat returned without new recovery/cooling state | `PASS` |
 | Hard kill / Electron crash | Superseded by the 25 August continuations below | `SUPERSEDED` |
-| Relay restart | Cause found and fixed in MKTTool `57e14fa`: the replay guard held its jti set in memory only, so a restart forgot every ticket spent in the previous 30s. Spent jtis now persist to `spent-tickets.json` through the Relay's existing atomic write, and the packaged smoke asserts the exact jti reaches disk. **The human gate has not been rerun**, so the gate itself is not closed | `FIXED-PENDING-RERUN` |
+| Relay restart | This 24 August fixed-pending-rerun record is replaced by the 27 August packaged Relay v15 continuation above, which stopped and started the real process and rejected the spent ticket as `ALREADY_USED` | `SUPERSEDED` |
 | Host reboot | Owner-approved real reboot failed closed: no false-free seat, but no convergence | `FAIL-CLOSED` |
 | Pending-recovery reboot | Persisted `active` became capacity `pendingRecovery=1`; launch blocked before spawn indefinitely | `FAIL` |
 
@@ -144,7 +240,8 @@ Evidence: `local-test-artifacts/phase5/active-electron-crash-evidence.json`, run
 | Artifact verification | Dirty source `38196691...067a`, EXE `50b0ccb3...5469`, `app.asar` `7160c85a...a557`; `test:mkb02` 120/120, coverage 93/93, build and final packaged contract pass | `PASS` |
 
 This closes active Electron crash recovery for the tested dirty-source artifact. `G3-RECOVERY`
-stays `OPEN` because Relay restart and reboot/startup now fail as recorded below.
+stays `OPEN`; the later Relay restart and reboot/startup results are recorded below and in the
+27 August continuation above.
 
 ### Relay restart and host reboot continuation
 
@@ -156,7 +253,7 @@ Evidence: `local-test-artifacts/phase5/relay-restart-recovery-evidence.json`, ru
 |---|---|---|
 | Relay active-session safety | Browser survived Relay stop/restart; identity and lease stayed stable; no false-free capacity | `PASS` |
 | Relay fresh operation | Fresh ticket accepted after restart; profile reached `confirmed-released` | `PASS` |
-| Relay replay protection | Still-valid spent ticket was accepted after restart because spent JTI state was not durable | `FAIL` |
+| Relay replay protection | This run accepted a still-valid spent ticket after restart. The result is retained but replaced by the 27 August packaged Relay v15 rerun, which returned `ALREADY_USED` | `SUPERSEDED` |
 | Real host reboot | Boot time changed; no Browser process survived; persisted journal remained `active` | `PASS` |
 | Reboot capacity safety | Startup reported `0 free / 0 active / 1 pending`; relaunch rejected before spawn | `PASS` |
 | Reboot deterministic convergence | Journal remained `active`; no bounded transition to cooling, release, or retry path | `FAIL` |
@@ -165,8 +262,9 @@ Evidence: `local-test-artifacts/phase5/relay-restart-recovery-evidence.json`, ru
 
 The valid reboot verdict is `FAIL-CLOSED`, not `PASS`: safety held, availability did not recover.
 The cleanup-only retry is not a second product observation because the first restore had already
-copied part of the original snapshot. `G3-RECOVERY` remains `OPEN` on
-`RELAY-RESTART-FORGETS-SPENT-TICKET` and `REBOOT_LEASE_STUCK_PENDING_RECOVERY`.
+copied part of the original snapshot. The 27 August packaged rerun closes
+`RELAY-RESTART-FORGETS-SPENT-TICKET`; `G3-RECOVERY` remains `OPEN` on the real power-cycle/licence-key
+gate, `REBOOT_LEASE_STUCK_PENDING_RECOVERY`, and owner evidence review.
 
 ## 24 August R3 Installer Repair Reconciliation
 
