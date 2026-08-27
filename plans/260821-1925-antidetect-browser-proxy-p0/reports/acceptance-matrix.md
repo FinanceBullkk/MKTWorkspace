@@ -95,13 +95,44 @@ operator's real IP. It is input evidence only.
 
 Two earlier claims are corrected by this run:
 
-- The second licence key is **not** proven invalid. The vendor refused it with "your plan's session
-  limit is reached", which means its seat was occupied at that moment - most likely a stale vendor
-  lease from an earlier run. It must be retested after its cooldown before anyone concludes the
-  install has only one usable key, and `G2-CONCURRENT`'s one-seat premise should be rechecked with it.
+- The second licence key was retested the same day and the reading above was wrong. See the
+  concurrency retest below.
 - The `portOwnerPids=none` blocker seen twice in the disposable VM earlier the same day did not
   reproduce on real hardware, supporting the existing note that it is an environment artifact rather
   than a product defect.
+
+## 27 August second-key concurrency retest
+
+Run `P0-G2-CONCURRENT-RETEST-20260827130127`. Same packaged build and data root as the human input
+session above.
+
+Method: with profile `78849f09` still live on key `...b8f6b7`, a second idle no-proxy profile was
+launched. Key `...bdf2ae` had left its cooldown and the pool reported it `free`, so the pool had to
+reach for it.
+
+| Gate subset | Current result | Status |
+|---|---|---|
+| Second concurrent launch | Refused after 17.9s with `ENGINE_UNAVAILABLE` and the vendor text "your plan's session limit is reached ... the free key allows one at a time" | `FAIL` (expected) |
+| First profile during the refusal | Stayed live and untouched; capacity settled to 1 active, 1 cooling, 0 free | `PASS` |
+| Operator-facing message | The vendor's own reason was surfaced verbatim rather than a generic failure | `PASS` |
+
+**The limit is per plan, not per key.** Both keys on this install sit under one free CloakBrowser
+plan, so holding two of them buys no concurrency at all. This confirms rather than falsifies the
+25 August one-seat decision, and `G2-CONCURRENT` stays `DEFERRED` on a now-measured premise instead
+of an assumed one.
+
+Two consequences worth acting on:
+
+- A second key on one install is **worse than none**: every launch spends about 18 seconds being
+  refused on it before rotating, and parks it in a 17-minute cooldown. Remove it from this install
+  unless it is proven to belong to a separate account.
+- The "one free key per person" model is untouched by this. It fails only when one person holds two
+  keys on one plan and expects two concurrent profiles. One person, one PC, one account, one profile
+  at a time still holds, and matches what manual operation needs.
+
+`G2-IDENTITY` remains reachable without a second seat: the gate already accepts sequential
+measurement, so cross-profile fingerprint separation can be measured by opening one profile at a
+time.
 
 ## 27 August Relay restart/spent-ticket continuation
 
