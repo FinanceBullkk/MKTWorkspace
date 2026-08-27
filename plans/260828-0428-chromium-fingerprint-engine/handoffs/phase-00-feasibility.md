@@ -48,8 +48,9 @@ status: blocked
 - `plans/260828-0428-chromium-fingerprint-engine/reports/phase-0-feasibility-measurements.md`
 - this handoff file
 
-Plan artifacts are committed locally as `a860601` (`docs(plan): add Chromium fingerprint engine
-feasibility gate`); nothing was pushed. No MKTBrowser/MKTTool source file was touched.
+Plan artifacts are committed locally in implementation commit `0d7118d` (`docs(plan): add Chromium
+fingerprint engine feasibility gate`); this handoff update is local and nothing was pushed. No
+MKTBrowser/MKTTool source file was touched.
 
 ## Open Gate
 
