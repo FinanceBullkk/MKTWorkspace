@@ -58,7 +58,7 @@ labels during disposable gates.
 |---|---|---|
 | `G1-INPUT` | Valid cover control, interleaved A/B evidence, three packaged manual-login interactions | `OPEN` - one manual-login interaction now evidenced, see 27 August below |
 | `G2-NETWORK` | Two proxies, matching independent/in-browser route, no DNS/WebRTC bypass | `OPEN` |
-| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `OPEN` |
+| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `FAIL` - measured 27 August, see below |
 | `G2-CONCURRENT` | Two profiles open at once with no cross-wiring | `DEFERRED` - one seat, capped at one profile (25 Aug owner decision) |
 | `G3-LICENSE` | Measured vendor schema and confirmed-release-only lease state | `OPEN` |
 | `G3-RECOVERY` | Normal close, hard kill, Electron crash, Relay restart, and reboot recovery | `OPEN` |
@@ -100,6 +100,72 @@ Two earlier claims are corrected by this run:
 - The `portOwnerPids=none` blocker seen twice in the disposable VM earlier the same day did not
   reproduce on real hardware, supporting the existing note that it is an environment artifact rather
   than a product defect.
+
+## 27 August cross-profile fingerprint measurement
+
+Evidence: `local-test-artifacts/phase5/g2-identity-cross-profile-fingerprint-evidence-20260827.json`,
+run `P0-G2-IDENTITY-20260827131800`. Two profiles measured sequentially on
+`browserscan.net/fingerprint`, same packaged build, same host, minutes apart.
+
+Neither profile had a proxy, so every IP-derived reading is the operator's real address. This is an
+identity-separation measurement only and carries no network claim.
+
+### Three surfaces are identical across profiles
+
+| Surface | Profile A | Profile B | |
+|---|---|---|---|
+| Fonts | `08050B16` (72) | `08050B16` (72) | **identical** |
+| Audio | `0B09CAEB` | `0B09CAEB` | **identical** |
+| WebGL | `BF16CA5C` | `BF16CA5C` | **identical** |
+
+The fonts result confirms the prediction in `research-260819-1234`. The audio and WebGL results were
+not predicted and **contradict** that report's note that canvas, WebGL and audio all rotate with the
+seed: canvas does, the WebGL image hash and audio do not.
+
+Together they are a three-field join that survives separate proxies, separate cookies and separate
+canvas noise. One flagged account can point at every sibling on the host.
+
+### What does rotate
+
+Canvas `D4D88270`/`D08CCA8E`, WebGL Report `55AEDBC1`/`87C03A8B`, Client Rects, WebGPU Report,
+visitor ID, hardware concurrency (6 vs 8), screen size, GPU renderer string, timezone, and the full
+language stack. Timezone and locale are coherent end to end: A reported `America/Vancouver` with
+Pacific Daylight Time and a date rolled back to 26 August, B reported `Asia/Jakarta` with Waktu
+Indonesia Barat, and each profile's JS languages, `Accept-Language` header and Intl API agreed.
+Neither profile reported the host's real GPU.
+
+### A separate defect found by the same run: screen scaling
+
+| Profile | Declared | Reported `screen` | Reported `avail` |
+|---|---|---|---|
+| A | 1680x1050 | **2520x1575** | 1680x1002 |
+| B | 1536x864 | **2304x1296** | 1536x816 |
+
+The host runs at 150% (`AppliedDPI 144`). `--fingerprint-screen-width/height` are multiplied by that
+scale; `availWidth/availHeight` and `--fingerprint-taskbar-height` are not. The halves end up in
+different units, which produces values no real machine can show: `availWidth` smaller than `width`,
+and a height-minus-availHeight of 573 and 480 pixels against a real taskbar of 40 to 72. It also
+makes a profile non-portable, since the same profile reports different screens on hosts with
+different scaling. The driver comment records the switch as honoured exactly on CloakBrowser 146, so
+either 151 regressed or the case was never exercised away from 100% scaling.
+
+### The score, and why it misleads
+
+Browserscan rated the profile **90% authentic**, deducting only for "Different time zones - IP
+timezone does not match local timezone" - which is exactly what an assigned proxy fixes. A correctly
+proxied profile should score 100%.
+
+That score is nonetheless the wrong instrument for this product. It is computed per profile, so it
+is structurally blind to the cross-profile joins above. Each account looks convincingly real on its
+own while every account carries the same three-field mark.
+
+### Effect
+
+`G2-IDENTITY` is `FAIL`. At two or three profiles the shared triple is tolerable; at ten channels it
+is a real linking risk, so this blocks scaling rather than blocking today's use. Ordered actions:
+wire the unused `--fingerprint-fonts-dir`; re-read the CloakBrowser 151 switch table for anything
+that rotates audio and the WebGL image hash; and fix the screen scaling, which is the only one of
+the three entirely within our own code.
 
 ## 27 August second-key concurrency retest
 
