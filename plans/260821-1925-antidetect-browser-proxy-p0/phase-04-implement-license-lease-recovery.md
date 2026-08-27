@@ -427,7 +427,7 @@ worth a version bump for a few minutes.
 - [x] Live protocol schema is measured and sanitized before implementation.
 - [ ] Each licensed profile owns one sidecar, bridge, key allocation, and journal row.
 - [ ] Confirmed release is the only transition to idle.
-- [ ] Normal close, hard kill, Electron crash, restart, and power-loss fixtures recover deterministically.
+- [x] Normal close, hard kill, Electron crash, Relay restart, and real power-cycle recovery converge deterministically on the hash-bound 27 August evidence.
 - [ ] Two simultaneous profiles cannot cross-wire keys or routes.
 - [ ] CFT behavior is unchanged.
 
