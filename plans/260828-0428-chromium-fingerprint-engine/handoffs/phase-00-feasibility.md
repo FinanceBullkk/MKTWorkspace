@@ -61,7 +61,8 @@ upstream Chromium versus a pinned Brave candidate. Do not infer approval from th
 ## Traps for Next Session
 
 - Do not stop/delete/compact VMs as an unreviewed cleanup; D: already contains dynamic VM files.
-- Do not build in the current MKTBrowser checkout or add a third engine kind to its shell yet.
+- Do not build in the current MKTBrowser checkout or add a third engine kind to its shell; any
+  future integration requires a new approved plan.
 - Do not promote Cloak Preview, add JS surface patches, or weaken `G2-IDENTITY=FAIL`.
 - BrowserScan/CreepJS remain measurement tools only. Keep old TikTok/CAPTCHA/checkpoint/rate-limit
   material out of scope even if a legacy document mentions it.
