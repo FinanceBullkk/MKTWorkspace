@@ -190,6 +190,60 @@ wire the unused `--fingerprint-fonts-dir`; re-read the CloakBrowser 151 switch t
 that rotates audio and the WebGL image hash; and fix the screen scaling, which is the only one of
 the three entirely within our own code.
 
+## 27 August switch experiment: the joins are not fixable with what 151 ships
+
+Evidence: `local-test-artifacts/phase5/cloakbrowser-151-switch-experiment-20260827.json`, run
+`P0-FP-SWITCH-EXPERIMENT-20260827135700`.
+
+### The engine's switch table is not the one the August research read
+
+Re-read from the running engine's `chrome.dll` (151.0.7922.108), not from 146:
+
+| Gone since 146 | New since 146 |
+|---|---|
+| `fingerprint-fonts-dir` | `fingerprint-windows-font-metrics` |
+| `fingerprint-location` | `fingerprint-sapi-voices`, `fingerprint-headless`, `fingerprint-allow-3p-cookies` |
+
+**This voids the 19 August recommendation.** That report's fix for the font join was to wire
+`--fingerprint-fonts-dir`; the switch no longer exists in the engine the product runs. Three
+switches present in 151 have never been passed by this build: `-noise`, `-windows-font-metrics`
+and `-sapi-voices`.
+
+### Both candidates were tried and both were reverted
+
+| Switch | Result |
+|---|---|
+| `--fingerprint-noise` (bare) | **No effect.** Audio stayed `0B09CAEB` and WebGL stayed `BF16CA5C` on both profiles. Canvas also unchanged, so it reached nothing. It may need a value; the binary carries the name with no help text. |
+| `--fingerprint-windows-font-metrics` (bare) | **Works, and makes things worse.** Fonts moved from `08050B16`/72 to `7072F8D3`/854 — but **identically on both profiles**, so the join column survived untouched. And 854 fonts on Windows 11, the list including Helvetica (which Windows does not ship) and Google Sans, is not a machine that exists. It appears to answer yes to every font probed rather than vary per profile. |
+
+Losing plausibility without gaining separation is worse than the defect it was meant to fix, so both
+were reverted. Client rects moved on both profiles, but client rects measure text layout, so that is
+most likely downstream of the font-metrics change rather than evidence for the noise switch.
+
+### A side finding that needs its own measurement
+
+Browserscan scored profile B **85%** with a new deduction — *Canvas Tampering, -5%, "your Canvas
+related functions have been artificially modified"* — while profile A scored 90% with no canvas
+deduction on the same build and the same switches.
+
+Probably not caused by the experiment: B's canvas hash was `D08CCA8E` both before and after, so
+the switches did not change canvas output. The likeliest reading is a per-seed lottery, where B's
+noise crosses browserscan's detection threshold and A's does not. **Unproven** — no authenticity
+score was captured for B before the experiment, so there is no baseline. Detectable canvas tampering
+is a first-order signal and deserves measuring across several seeds.
+
+### The screen fix held
+
+Browser `55b8587` confirmed independently on both profiles: A reported 1680x1050 against
+1680x1002, B reported 1536x864 against 1536x816, each a real 48px inset.
+
+### What this leaves
+
+The font, audio and WebGL joins **cannot be closed with what the engine ships today**. Until the
+vendor answers what value `--fingerprint-noise` expects and whether the font-metrics switch takes a
+seed, the mitigation is organisational rather than technical: **keep the number of profiles per
+physical machine low**, because every profile on one host carries the same three marks.
+
 ## 27 August second-key concurrency retest
 
 Run `P0-G2-CONCURRENT-RETEST-20260827130127`. Same packaged build and data root as the human input
