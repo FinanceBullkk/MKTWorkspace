@@ -149,6 +149,28 @@ makes a profile non-portable, since the same profile reports different screens o
 different scaling. The driver comment records the switch as honoured exactly on CloakBrowser 146, so
 either 151 regressed or the case was never exercised away from 100% scaling.
 
+### Screen scaling: fixed and re-measured the same day
+
+Browser  forces the engine's device scale factor to the persona's own , so the host's
+Windows scaling no longer reaches . Re-measured on profile A with
+the rebuilt package:
+
+| | Before | After |
+|---|---|---|
+|  | 2520x1575 | **1680x1050** (the declared size) |
+|  | 1680x1002 | 1680x1002 |
+|  | 573 | **48**, a real taskbar |
+|  vs  | 1680 inside 2520 | **equal** |
+
+Side effect, taken deliberately: the browser no longer follows the operator's Windows scaling, so a
+persona claiming a 1680x1050 screen at dpr 1 renders as that machine would. Personas declaring a dpr
+other than 1 have not been re-measured.
+
+**Still unpinned by any test.** The switch list cannot be asserted from a unit test today, because
+ does not load standalone under strip-types - it pulls in profile-manager and
+its native sqlite. That is precisely how this defect survived every automated gate. Pinning it needs
+the CloakBrowser arg builder extracted into its own module, as already was after that set regressed twice from the same file.
+
 ### The score, and why it misleads
 
 Browserscan rated the profile **90% authentic**, deducting only for "Different time zones - IP
