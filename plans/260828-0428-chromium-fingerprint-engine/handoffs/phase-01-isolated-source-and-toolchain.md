@@ -65,7 +65,8 @@ explicit review item.
 
 ## Commits
 
-The focused plan/evidence commit SHA must be recorded here before closing this phase.
+Focused plan/evidence commit: `ad06fbd4202ea3cc5c43e46f9a2b61689b724662` (`docs(engine): record isolated Chromium toolchain gate`).
+This commit is local on `codex/fingerprint-engine-phase0`; no push or distribution was performed.
 The external engine tree is not part of the workspace Git repository.
 
 ## Next-session procedure
