@@ -2,9 +2,9 @@
 phase: 1
 logicalPhase: 0
 title: "Feasibility Gate (Phase 0)"
-status: in-progress
+status: complete
 priority: P1
-effort: "1h measurement; owner decision pending"
+effort: "1h measurement; continuation decision recorded"
 dependencies: []
 ---
 
@@ -24,8 +24,17 @@ Read-only feasibility audit for an experimental, MKT-owned Chromium-compatible e
 where a build could run, how much capacity it needs, and what wall-time risk this host carries. It
 does not fetch source, install a toolchain, launch an engine, or modify MKT Browser.
 
-**Gate result:** measurement complete; `BLOCKED` pending owner choice. Current D: is only
-`CONDITIONAL` for a minimal pilot. It is not sufficient for a full/release build plus VM headroom.
+**Original gate result:** measurement complete; `BLOCKED` pending owner choice. At that
+measurement point D: was only `CONDITIONAL` for a minimal pilot and not sufficient for a
+full/release build plus VM headroom. The continuation decision below resolves the owner-choice
+part; it does not relax the resource guards.
+
+## Continuation Decision (2026-08-28)
+
+The owner later instructed Codex to decide and continue under the workspace rules. The recorded
+choice is the conditional D: pilot, upstream Chromium as the first candidate, and strict
+no-build/no-distribution gates when measured resources fail. No Brave checkout or MKT Browser
+integration is inherited by this decision.
 
 ## Key Insights
 
@@ -86,7 +95,7 @@ read-only audit does not need that permission; a junction under E: is not treate
 - Classify each candidate location as `REJECT`, `CONDITIONAL`, or `READY`; never infer readiness from
   the official 100 GB minimum alone.
 - Stop before any checkout, build, engine launch, binary distribution, or MKT Browser integration.
-- Require an explicit owner decision before Phase 1.
+- Record the continuation decision before Phase 1 and preserve the hard resource gates.
 
 ### Non-functional
 
@@ -117,6 +126,9 @@ No data path enters `MKTBrowser`, MKTTool, Relay, MCP, profile storage, or the i
 
 ## Implementation Steps
 
+These steps describe the completed historical feasibility audit; the continuation work is recorded
+in the Phase 1 handoff.
+
 1. Capture OS/CPU/RAM, volume free space, disk type, and filesystem using read-only probes.
 2. Inspect VirtualBox registration and running state; record VDI locations and allocations without
    changing VM state.
@@ -133,16 +145,17 @@ No data path enters `MKTBrowser`, MKTTool, Relay, MCP, profile storage, or the i
   (`162.24 GiB`); full/release admission threshold is recorded as `200–220 GiB` free.
 - [x] Required pilot guard is numeric: at least `150 GiB` free before fetch and at least `20 GiB`
   free after the pilot; available host RAM must exceed `12 GiB` and no VM may be running at compile.
-- [x] Toolchain readiness is not claimed: `gclient`, GN, Ninja, MSVC, and VS discovery are all
-  recorded absent on this host.
+- [x] Toolchain readiness was not claimed at the Phase 0 timestamp: `gclient`, GN, Ninja, MSVC,
+  and VS discovery were all recorded absent then.
 - [x] Fetch/build/launch count is **0** in this phase.
-- [ ] Owner chooses a capacity path and records approval before Phase 1 starts.
+- [x] Conditional D: pilot and upstream Chromium are recorded as the continuation choice; hard
+  compile and distribution gates remain enforced.
 
 ## Gate Verdict
 
-`BLOCKED — WAITING FOR OWNER DECISION.` The measurements support only a **conditional minimal pilot
-on D:\mkt-browser-engine\** after VM shutdown, writable-root approval, and a plan to preserve a
-20 GiB reserve. They do not support a full/release build on the current free space.
+**COMPLETE — continuation decision recorded.** The measurements support only a **conditional
+minimal pilot on D:\mkt-browser-engine\** with a 20 GiB reserve. A later phase must still stop
+before compilation when available host RAM is at or below 12 GiB.
 
 ## Risk Assessment
 
@@ -164,12 +177,10 @@ on D:\mkt-browser-engine\** after VM shutdown, writable-root approval, and a pla
 
 ## Next Steps
 
-- Wait for owner choice: (A) minimal D: pilot after freeing/relocating capacity, (B) add a volume with
-  `>=200–220 GiB` free, or (C) defer the engine experiment.
-- If approved, open a fresh session, read this phase's handoff, then prepare the isolated worktree;
-  do not touch the current MKTBrowser branch.
+- Open a fresh session, read the Phase 0 handoff addendum, then use the isolated-source phase
+  handoff; do not touch the current MKTBrowser branch.
 
 ## Unresolved Questions
 
-- Which capacity path does the owner approve: conditional minimal pilot, larger disk, or defer?
-- Is a Chromium upstream pilot preferred before evaluating Brave's additional source/toolchain layer?
+- Is the newer 10.0.28000.2526 SDK patch acceptable for a reproducibility pin against the
+  Chromium comment pin 10.0.28000.2270?

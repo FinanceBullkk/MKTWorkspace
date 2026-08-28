@@ -2,13 +2,17 @@
 phase: 2
 logicalPhase: 1
 title: "Isolated Source and Toolchain"
-status: pending
+status: blocked
 priority: P1
 effort: "90m active work; 1–4h fetch wall time"
 dependencies: [phase-01]
 ---
 
 # Phase 1: Isolated Source and Toolchain (CLI phase 2)
+
+Current verdict (2026-08-28): BLOCKED. The isolated checkout, host toolchain, and GN
+configuration are ready, but available host RAM is 6.58 GiB at the final check, below the
+mandatory >12 GiB compile guard. No compiler or Ninja build was started.
 
 ## Context Links
 
@@ -111,10 +115,34 @@ runtime dependency from MKT Browser into the experimental tree.
 
 ## Next Steps
 
-Proceed to the baseline harness only after this phase has a reproducible checkout and a clean,
-measured resource result. If any criterion fails, stop and record the exact blocker.
+Proceed to the baseline harness only after a fresh check reports available RAM >12 GiB and the
+toolchain replay remains identical. If any criterion fails, stop and record the exact blocker.
+
+## Execution Evidence
+
+- Candidate: upstream Chromium, detached at 5f2a9d7331c8bf53be5b6b88488f6e07fd01235f; depot_tools
+  at f70835271105ca56d2cd5382a0118152bc2bdeea; 1,241 dependency entries, 0 unsynced.
+- fetch --no-history --nohooks and serial gclient sync both exited 0. The selective DEPS
+  lastchange hook exited 0 so GN could consume LASTCHANGE.committime.
+- Visual Studio Build Tools 2026 18.9.12112.369, MSVC 14.51.36231, SDK package
+  10.0.28000.2526 (selected directory 10.0.28000.0), and Debugging Tools 10.0.28000.2526 are
+  present. The custom path requires vs2026_install in every shell.
+- gn gen out\Experimental exited 0 (32,783 targets, 5,030 files, 28,928 ms), and a matching
+  gn ls replay returned 32,783 target lines. autoninja was not invoked.
+- D: measured 235.05 GiB free after setup; the conservative Phase 0 pre-fetch measurement was
+  162.24 GiB (pilot floor 150 GiB, reserve floor 20 GiB). Final RAM was 6.58 GiB available on a
+  15.92 GiB host; no VirtualBox VM or WSL distro was running.
+- Two clean-shell replay logs have identical SHA-256
+  ebef50530eff947c603cfa7bd0a7ce3f1063fdc7a3065b408027f53af4901d85.
+- Machine-readable provenance (all dependency revisions, tool hashes, sanitized MKTBrowser
+  snapshots): D:\mkt-browser-engine\provenance-manifest.json
+  (SHA-256 9175b37fef6a9fbee4204a6fab370e8fbac88383e3f5826bcc3dcf8cfb77541a).
+- MKTBrowser tracked-index SHA-256 stayed
+  01fd23153759e8644c2dc1ee051fbf166c36581fd91b26e91844f59beaecdbe9; its three pre-existing
+  dirty files were unchanged, and no experimental binary was copied into that checkout.
 
 ## Unresolved Questions
 
-- Chromium upstream or a specific Brave revision for the first approved checkout?
-- Is a second volume available if the measured D: reserve drops below 20 GiB?
+- Is the newer SDK patch 10.0.28000.2526 acceptable as the reproducibility pin against the
+  Chromium source comment pin 10.0.28000.2270?
+- When can the host provide more than 12 GiB available RAM for the first compiler run?

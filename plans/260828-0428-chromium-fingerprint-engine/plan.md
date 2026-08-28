@@ -41,8 +41,8 @@ The CLI numbers phase files from 1; the table shows `CLI id (logical phase)` so 
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 (0) | [Feasibility Gate](./phase-01-feasibility-gate.md) | In progress — blocked on owner decision |
-| 2 (1) | [Isolated Source and Toolchain](./phase-02-isolated-source-and-toolchain.md) | Pending |
+| 1 (0) | [Feasibility Gate](./phase-01-feasibility-gate.md) | Completed — conditional D pilot decision recorded |
+| 2 (1) | [Isolated Source and Toolchain](./phase-02-isolated-source-and-toolchain.md) | Blocked — setup/GN complete; compile RAM gate |
 | 3 (2) | [Baseline Measurement Harness](./phase-03-baseline-measurement-harness.md) | Pending |
 | 4 (3) | [Native Audio and Fonts](./phase-04-native-audio-and-fonts.md) | Pending |
 | 5 (4) | [Graphics and Context Consistency](./phase-05-graphics-and-context-consistency.md) | Pending |
@@ -70,7 +70,7 @@ The CLI numbers phase files from 1; the table shows `CLI id (logical phase)` so 
 
 ## Success Criteria
 
-- Phase 0 records a reproducible host/resource budget and an explicit owner decision before any fetch.
+- Phase 0 records a reproducible host/resource budget and the continuation decision before fetch.
 - A candidate engine must show measured same-profile determinism and cross-profile joint-identity
   separation on the named surfaces; failures remain `FAIL`, `OPEN`, or `NOT-RUN`.
 - No release, install, publish, or MKT Browser contract change occurs from this plan without the

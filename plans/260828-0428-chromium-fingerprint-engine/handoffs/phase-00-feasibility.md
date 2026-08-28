@@ -1,8 +1,16 @@
 ---
 phase: 0
 date: 2026-08-28
-status: blocked
+status: complete
 ---
+
+## Resolution Addendum (2026-08-28)
+
+The owner subsequently authorized Codex to decide and continue under AGENTS.md. The decision
+recorded for the next phase is a conditional D: pilot with upstream Chromium first. The original
+resource guards remain unchanged: preserve at least 20 GiB free, require more than 12 GiB
+available RAM before compilation, keep VMs off during compilation, and do not distribute a binary
+without the separate license/approval gate.
 
 # Phase 0 Handoff — Feasibility Gate
 
