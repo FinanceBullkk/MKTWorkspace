@@ -1,5 +1,5 @@
 # Handoff U2 — Contracts in CI
-Date: 2026-08-30T11:20:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Browser runner OPEN)
+Date: 2026-08-30T15:30:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Browser runner OPEN)
 
 ## Done
 
@@ -20,10 +20,11 @@ Date: 2026-08-30T11:20:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
 
 ## NOT done / deliberately skipped
 
-- Latest MKTBrowser run `33296202751` failed before quality tests because the self-hosted Windows
-  PowerShell shell could not resolve `node` after setup; package/packaged-contract jobs were skipped.
-  The earlier `33291356306` run showed the same failure mode. This is an OPEN Browser/P4b runner
-  contract, not a MKTTool or P4a failure.
+- The original MKTBrowser runs `33296202751` and `33291356306` failed before quality tests because
+  the self-hosted Windows PowerShell shell could not resolve `node` after setup; package/
+  packaged-contract jobs were skipped. The repair is proven by the setup/pin steps in
+  `33301446012`, but that run fails closed at the private MKTTool sibling checkout and the package
+  jobs remain skipped. This is an OPEN Browser/P4b permission contract, not a MKTTool or P4a failure.
 - A remote scratch-branch Browser matrix has not been rerun. Skipped jobs are not promotion evidence.
 
 ## State the next session must know
@@ -32,7 +33,8 @@ Date: 2026-08-30T11:20:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
   `e6a55ee402d86f9c8528734c5232d4f02210008a`; `master` contains merge
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`.
 - MKTBrowser release branch is `release/consolidation-20260830` at
-  `4b9564a` (the failing CI run itself tested `7c9b7cf`); its Browser CI runner issue remains open.
+  `6d737f8` (the latest rerun is `33301446012`); Node resolution is fixed, while sibling-repository
+  read access remains open.
 
 ## Decisions still owed by the owner
 
@@ -41,3 +43,53 @@ Date: 2026-08-30T11:20:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
 ## Next unit
 
 U3 — retain the measured 103-byte outer-installer variance as OPEN; then reconcile U7 documentation.
+
+## U2 runner repair — 2026-08-30 15:20 +07:00
+
+The retained Browser runs `33296202751` and `33291356306` both failed in the first quality job at
+`Record MKTTool checkout status`: the self-hosted Windows PowerShell process reported that `node`
+was not recognized. `Setup Node.js 22` was ordered after that step, so package and
+`packaged-contract` were skipped. These runs remain FAIL/OPEN evidence, not promotion evidence.
+
+The repair is committed and pushed on the MKTBrowser branch (`ceafe30`, followed by the explicit
+cross-repository ref fix `6d737f8`). It is limited to the Windows pipeline and its native-dependency
+helper:
+
+- `.github/workflows/windows-pipeline.yml` now provisions Node 22 before any status step, captures a
+  verified absolute executable, invokes all direct Node/Corepack calls through that path, and
+  persists its directory through `GITHUB_PATH` for Yarn/native child processes.
+- `.github/scripts/prepare-windows-node22.ps1` validates major 22, prefers the setup-node toolcache
+  (with a fallback for a lost action-managed PATH), records `MKT_BROWSER_NODE22_EXE`/`NODE22_BIN`
+  and the bundled Corepack entrypoint in `GITHUB_ENV`, and logs the executable SHA-256.
+- `.github/scripts/prepare-windows-native-dependencies.ps1` reads ABI/platform/architecture from
+  `MKT_BROWSER_NODE22_EXE`, refusing an unpinned or missing runtime.
+
+Local validation: PowerShell parser PASS; helper exercised with downloaded Node `v22.14.0` both on
+PATH and via toolcache fallback, including bundled Corepack `4.5.0`; the full
+`runtime-contract.test.ts` passed `23/23` under Node 22. The host's default Node `v24.14.1` was
+deliberately not used for Browser tests because its ABI `137` conflicts with the reviewed
+`better-sqlite3` ABI `127`.
+
+The first post-repair remote rerun was `33301294829` (commit `b543d7c`) and exposed a separate
+cross-repository permission failure before the contract jobs could run. The follow-up with an
+explicit `ref: master` was `33301446012` (commit `6d737f8`): `Setup Node.js 22` and `Pin Node.js 22
+executable` both passed, proving the original Node-resolution defect is repaired. The MKTTool sibling
+checkout still returned `repository not found` for the private repository under the MKTBrowser
+workflow token; its required `mkttool-sibling-checkout` gate emitted `OPEN`, so the quality job
+failed closed and package/packaged-contract remained skipped. No release token was repurposed as a
+GitHub credential. Browser U2 therefore remains OPEN at the external repository-read permission
+boundary; the run is real failure evidence, not a promotion pass.
+
+Exact remote signatures:
+
+- `33301446012` / `windows / quality` — `Checkout MKTTool sibling...` was marked `success` only
+  because the step is `continue-on-error`; its outcome was `failure` after `fatal: repository
+  'https://github.com/Techieslab-app/MKTTool/' not found`. The required status helper then emitted
+  `{"gate":"mkttool-sibling-checkout","status":"OPEN",...}` and exited 1.
+- `33301446012` — `package` and `packaged-contract` were `skipped` by their existing required
+  dependency on the failed quality job. This is intentionally retained as OPEN, not relabelled.
+
+Owner action to close U2: grant the workflow a read-only GitHub credential for the private MKTTool
+repository (or provide an equivalent reviewed checkout/artifact), then rerun the same branch matrix.
+The existing `MKTTOOL_RELEASE_TOKEN` is scoped to the release download route and was not used as a
+GitHub credential.

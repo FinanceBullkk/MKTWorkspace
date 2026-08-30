@@ -24,6 +24,8 @@ Date: 2026-08-30T13:05:00+07:00 | Phase: 7 | Status: COMPLETE (reconciliation an
   explicit-path commits `f42a809` and `592e07d9cd07d09e906f5dc68fcb680a583a1af1`; no uncommitted
   changes remain under those two directories. The predecessor `MKTTool/plans/` qualifiers are a
   separate workspace-doc change set and are listed below for explicit review/commit.
+- P4-09 disposable rollback rehearsal, the `healthcheckTimeout: null` decision, P3-06 CI enforcement,
+  and the U2 Windows runner rerun are now recorded in the dated consolidation reports/handoffs.
 
 ## NOT done / deliberately skipped
 
@@ -32,8 +34,11 @@ Date: 2026-08-30T13:05:00+07:00 | Phase: 7 | Status: COMPLETE (reconciliation an
   in `e6a55ee402d86f9c8528734c5232d4f02210008a` and PR #42 is merged. Protected `AGENTS.md` and
   `AGENTS.md.bak-260828` remain untouched and intentionally uncommitted. Final master CI run
   `33297347911` passed.
-- Browser Windows runner repair, U3 outer-installer reproducibility, P4-08 credentialed smoke,
-  P4-09 rollback rehearsal, and owner-machine observations remain OPEN.
+- U2's Windows Node 22 repair is proven by remote setup/pin steps, but the Browser matrix remains
+  OPEN at the private MKTTool sibling checkout; package jobs are still skipped by that required
+  dependency. U3 outer-installer reproducibility, P4-08 credentialed smoke, the prior-image
+  healthcheck prerequisite for a real rollback, and owner-machine observations remain OPEN.
+- P4-09 itself is closed as a disposable drill; production rollback remains intentionally unexecuted.
 - No Browser five-artifact tuple was fabricated. Lane C is CLOSED due the absence of a CloakBrowser
   channel; no vendor request is to be sent.
 

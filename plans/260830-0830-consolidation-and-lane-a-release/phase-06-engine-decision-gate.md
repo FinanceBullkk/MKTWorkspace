@@ -107,6 +107,18 @@ future, separately funded product decision, not as an active release lever.
 - [x] Roadmap states Lane C is CLOSED with no implied date.
 - [x] No build, no reboot for build purposes, no seat consumed.
 
+## Bookkeeping verification — 30 August 2026
+
+The first two Success Criteria above are already checked: the custom-engine track was formally
+closed with the measured RAM result and the plan contains the explicit `>16 GiB`/funded-cloud plus
+named-owner reopening condition. No criterion is missing from this current successor phase.
+
+The similarly named `plans/260829-2125-internal-product-readiness/phase-06-real-environment-gates.md`
+is a **historical, reopen-only predecessor**. Its first two historical criteria remain unticked on
+purpose because no new Browser real-environment gate was run and Q16 closed Lane C; ticking them
+would falsely claim vendor, operator, network, and second-PC evidence. That file's header and
+historical-success-criteria label are the explanation, not an outstanding bookkeeping defect.
+
 ## Risk Assessment
 
 - **Closure read as "identity does not matter".** It does — the product simply will not solve it by

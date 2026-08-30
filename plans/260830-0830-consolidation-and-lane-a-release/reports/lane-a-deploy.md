@@ -124,19 +124,22 @@ remained 200/ready.
 | P4a readiness route | **PASS** | HTTP 200 and all checks `ok` |
 | P4a authorized v16 route | **PASS** | full GET/hash exact match |
 | P4a trusted-proxy warning | **PASS (qualified synthetic)** | zero warning logs; two labelled buckets |
-| P4-09 rollback rehearsal | **OPEN** | no production rollback executed; guardrail returns rollback to human |
+| P4-09 rollback rehearsal | **PASS (disposable, qualified)** | `reports/rollback-drill-p4-09.md`; restore/migration/prior-source start/cleanup timings recorded; no production rollback executed |
 | P4-08 Lane A smoke | **OPEN / bounded** | no credentialed OAuth/Facebook/destructive smoke was run here |
+| Rollback healthcheck prerequisite | **OPEN / owner decision** | prior commit returns 404 for `/api/healthz` while the live service setting targets it; choose a prior-compatible path before any real rollback |
 | P4b Browser five-artifact tuple | **OPEN** | exact Stable `.2` engine archive absent |
 | Lane C | **CLOSED** | no CloakBrowser channel; no request, date, or “coming soon” |
 
 **P4a decision:** the approved Lane A web deployment is live and route-first is satisfied. It is a
-qualified release record, not a claim that the unexecuted rollback drill or credentialed product
-smoke passed. The Relay floor remains 13 until U5's real-device gate is met.
+qualified release record, not a claim that the credentialed product smoke or a production rollback
+passed. The disposable rollback rehearsal did pass, with the prior-image healthcheck mismatch
+explicitly retained as an owner prerequisite. The Relay floor remains 13 until U5's real-device gate
+is met.
 
 ## Unresolved questions / external dependencies
 
-- P4-09 requires a separately approved disposable rollback rehearsal; no autonomous production
-  rollback was performed.
+- P4-09 disposable rehearsal is complete; any real rollback remains separately human-approved, and
+  the prior-compatible healthcheck setting must be decided first.
 - P4-08 requires an owner-led credentialed/admin smoke if Lane A promotion needs that evidence.
 - P5-03 requires observed v16 health after reinstall on both owner machines.
 - P4b remains open for the missing Browser archive; Lane C is closed because no vendor channel

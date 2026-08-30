@@ -38,8 +38,12 @@ Date: 2026-08-30T11:15:00+07:00 | Phase: 4 | Status: PARTIAL (P4a QUALIFIED; res
 
 ## NOT done / deliberately skipped
 
-- P4-08 bounded credentialed Lane A smoke and P4-09 disposable rollback rehearsal are OPEN; no GO
-  claim is made from synthetic or read-only evidence.
+- P4-08 bounded credentialed Lane A smoke remains OPEN; no GO claim is made from synthetic or
+  read-only evidence. P4-09 is now complete as a disposable rehearsal in
+  `../reports/rollback-drill-p4-09.md`; it did not execute a production rollback.
+- The rehearsal found the prior source returns 404 for `/api/healthz` while the live service
+  healthcheck targets that path. A prior-compatible healthcheck choice is an owner prerequisite
+  before any real rollback.
 - P4b Browser five-artifact tuple remains OPEN because the exact Stable `.2` engine archive is absent.
   It never gates P4a, and no tuple was fabricated.
 - No floor bump or v15 revocation was made; U5 requires observed self-serve reinstall responses from
@@ -54,7 +58,8 @@ Date: 2026-08-30T11:15:00+07:00 | Phase: 4 | Status: PARTIAL (P4a QUALIFIED; res
 
 ## Decisions still owed by the owner
 
-- None. Q13, Q14, Q15, Q16, and Q17 are answered. Any actual rollback remains human-approved.
+- None. Q13, Q14, Q15, Q16, and Q17 are answered. Any actual rollback remains human-approved;
+  the healthcheck prerequisite is recorded, not silently waived.
 
 ## Next unit
 

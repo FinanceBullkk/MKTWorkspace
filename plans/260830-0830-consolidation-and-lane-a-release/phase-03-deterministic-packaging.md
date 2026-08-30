@@ -91,7 +91,11 @@ two clean builds from one frozen source
 - [x] The normalizer provably still catches a one-byte payload change.
 - [x] Payload reproducibility and the `installerReproducibility` status are recorded with evidence;
   full-installer reproducibility remains OPEN.
-- [ ] CI enforces the twice-build comparison.
+- [x] CI enforces the twice-build comparison. `release-candidate.yml` retains the two-build matrix,
+  always runs the comparison/status job, uploads both manifests and the machine-readable result, and
+  fails closed when either build or manifest is missing. Source/static validation passed locally;
+  a real release-candidate dispatch remains OPEN because the exact Stable `.2` engine/archive and
+  private sibling checkout credentials are not available in this release window.
 
 Phase outcome: payload PASS; outer installer reproducibility OPEN pending a vendor/toolchain
 ordering fix. No installer was promoted or signed.

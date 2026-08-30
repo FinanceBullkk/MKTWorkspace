@@ -62,7 +62,11 @@
   "healthcheck": {
     "path": "/api/healthz",
     "verifiedBy": "Railway serviceInstance query",
-    "healthcheckTimeout": null
+    "healthcheckTimeout": null,
+    "effectiveTimeoutSeconds": 300,
+    "timeoutDecision": "Retain Railway's bounded platform default. A null service setting inherits the documented 300-second deploy-time healthcheck timeout; it is not unbounded.",
+    "explicitTimeoutVariablePresent": false,
+    "decisionEvidence": "reports/healthcheck-timeout-decision.md"
   },
   "preconditions": {
     "backup": {

@@ -89,8 +89,10 @@ in a second job. That is a real baseline — extend it, do not replace it.
    unsalted-checksum issue from the run; verify it does.
 
 8. **Decide the runner question (completed).** The configured self-hosted Linux/Windows runners are
-   authoritative, with fail-closed provisioning checks. The Browser runner failure remains an OPEN
-   operational defect; it is not silently treated as a pass.
+   authoritative, with fail-closed provisioning checks. The Windows Node-resolution repair is now
+   proven by the remote setup/pin steps, but the Browser matrix remains OPEN when its required
+   private MKTTool sibling checkout lacks a read credential; that boundary is not silently treated
+   as a pass.
 
 9. **Prove the net catches things.** For each contract, introduce a deliberate violation on a scratch
    branch and confirm CI goes red. A gate that has never failed is a gate nobody has tested.
@@ -117,8 +119,9 @@ in a second job. That is a real baseline — extend it, do not replace it.
   the green MKTTool contracts jobs (`33292005382`, `33292350436`).
 - [x] The known-bad v15/0.3.12 tuple is rejected by an executable assertion and source-level test.
 - [ ] Version coherence, one-seat, and payload reproducibility are wired as required Browser checks;
-  remote Windows execution remains OPEN after the latest runner `node` resolution failure
-  `33296202751` (the earlier `33291356306` failure is retained as historical evidence).
+  the Node 22 setup/pin now passes remotely (`33301446012`), but quality fails closed at the
+  private MKTTool sibling checkout and package/packaged-contract jobs remain skipped. The original
+  Node-resolution failures `33296202751` and `33291356306` remain historical evidence.
 - [ ] Every conditional skip in the Browser workflows has a completed remote proof; current skipped
   package jobs are recorded as OPEN/FAIL, never PASS.
 - [x] Secret scan is required in MKTTool CI and its planted-token test is covered by
@@ -142,12 +145,13 @@ not scheduled on a master push.
 
 The Browser-side contract wiring is present and its source-level negative tests cover status,
 known-bad tuple, unpinned engine, version drift, one-seat, payload, and planted-secret cases. The
-latest MKTBrowser push run `33296202751` is **OPEN/FAIL for runner setup**, not a product pass: the
-self-hosted Windows PowerShell shell could not resolve `node` immediately after setup, so the
-quality job stopped before contracts and the package/packaged-contract jobs were skipped. The same
-failure mode was first observed in `33291356306`; both are retained as Browser/P4b runner evidence.
-Keep this as a separate Browser/P4b runner gate; it did not gate the independent P4a MKTTool
-deployment.
+Windows runner repair is recorded in the U2 handoff and was exercised remotely in `33301446012`:
+`Setup Node.js 22` and `Pin Node.js 22 executable` both passed, including the absolute toolcache
+path. The quality job then failed closed at the private MKTTool sibling checkout (`repository not
+found` under the workflow token); package and packaged-contract were skipped by that required
+dependency. The original `33296202751` and `33291356306` Node-resolution failures remain retained
+as historical evidence. Keep this as a separate Browser/P4b runner/permission gate; it does not
+gate the independent P4a MKTTool deployment.
 The later PR #42 run `33296599912` and final master run `33297347911` both completed successfully
 for all applicable MKTTool jobs; the final master `deploy-verification` job also passed. The
 Windows Relay job is intentionally skipped on a master push by workflow condition.

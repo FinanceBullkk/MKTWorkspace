@@ -103,5 +103,22 @@ now and expensive to discover during an incident.
    required jobs and Railway deployed `ed972e5b-7597-4c6d-8066-24bc11c4ea0b` successfully.
 2. The 60-day unsigned-installer exception (expiring ~29 October 2026) still needs a named owner;
    this is an owner follow-up, not evidence of a signed release.
-3. `healthcheckTimeout: null` remains a configuration follow-up; `healthcheckPath=/api/healthz` is
-   set and the endpoint returned 200 in the final verification.
+3. **Resolved/documented:** `healthcheckTimeout: null` intentionally inherits Railway's bounded
+   300-second deploy-time default; `healthcheckPath=/api/healthz` is set and the endpoint returned
+   200 in the final verification. See the dated timeout decision in the consolidation plan.
+
+---
+
+## Reconciliation after this snapshot — 30 August 2026, 15:30 ICT
+
+This report's open-gate table is a point-in-time snapshot, not the latest status. Since its capture:
+
+- P4-09 was executed as a disposable rollback rehearsal and is now qualified PASS; the prior-image
+  `/api/healthz` mismatch is recorded as an owner prerequisite. No production rollback occurred.
+- The Windows Node 22 runner repair was proven remotely in `33301446012`; the remaining U2 failure is
+  the private MKTTool sibling checkout, with package jobs correctly skipped.
+- P3-06 twice-build comparison enforcement was wired and the manifest was set to OPEN with the
+  measured 103-byte `NSIS-RT_DIALOG-order-and-trailer` residual.
+
+The current source of truth is
+`plans/260830-0830-consolidation-and-lane-a-release/handoffs/final-20260830-closeout.md`.

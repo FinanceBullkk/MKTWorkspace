@@ -35,22 +35,28 @@ features.
   and `AGENTS.md.bak-260828`. MKTBrowser is pushed at `4b9564a` after its documentation follow-up;
   the accepted provenance source remains `5ef710dd`.
   The three Q14 files are in the dedicated commit `1decde437cf6495652b9d7bdbb76290ab2130411`.
-- **U2 MKTTool gates complete; Browser CI remains qualified OPEN.** PR #42 run
-  `33296599912` and final post-merge master run `33297347911` are successful for their required jobs;
-  earlier branch/master runs `33292005382` and `33292350436` remain historical evidence;
-  the earlier `33291209847` is retained only as failure evidence. The latest MKTBrowser push run
-  `33296202751` failed before quality tests because the self-hosted Windows PowerShell shell could
-  not resolve `node` after setup; its package jobs were skipped. The earlier `33291356306` run
-  showed the same failure mode and is retained as historical evidence. This is a Browser/P4b
-  runner gate, not evidence against the independent P4a web deployment.
-- **U3 open.** Normalized payloads are byte-identical, but the outer installer has a measured
-  103-byte NSIS/resource-order/trailer variance. No normalization or promotion is claimed.
+- **U2 MKTTool gates complete; Browser runner repair proven, matrix still OPEN at repository
+  permissions.** PR #42 run `33296599912` and final post-merge master run `33297347911` are
+  successful for their required jobs; earlier branch/master runs `33292005382` and `33292350436`
+  remain historical evidence; the earlier `33291209847` is retained only as failure evidence. The
+  Windows Node 22 repair passed its setup/pin steps in `33301446012`, but the required private
+  MKTTool sibling checkout returned `repository not found`; quality failed closed and package/
+  packaged-contract were skipped. The original `33296202751` and `33291356306` Node failures remain
+  historical evidence. This is a Browser/P4b permission gate, not evidence against P4a.
+- **U3 P3-06 enforcement complete; outer reproducibility OPEN.** `release-candidate.yml` now runs
+  the two-build normalized-payload comparison, emits/ uploads its result, and fails closed when
+  inputs are missing. The payload comparison is retained PASS, while the outer installer has a
+  measured **103-byte** NSIS RT_DIALOG/order/trailer variance. No normalization or promotion is
+  claimed; the manifest records `installerReproducibility=OPEN`.
 - **U4 split and P4a qualified.** PR #42 merged to `master` at
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432` after the fresh current-DB backup/restore and recorded
   rollback tuple. Final Railway deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b` succeeded;
   `/api/healthz` returned 200, the authorized full `/v16` GET matched the immutable SHA, the
   shared-IP warning was absent in the final log query, and `healthcheckPath=/api/healthz` is set.
-  P4a still has the bounded credentialed smoke and rollback rehearsal OPEN. P4b is the Browser
+  The disposable P4-09 rollback rehearsal is now complete and documented, with no production
+  mutation; it found the prior image returns 404 on the live `/api/healthz` setting, so a
+  prior-compatible healthcheck choice remains an owner prerequisite before any real rollback.
+  P4a still has the bounded credentialed smoke and signed GO/NO-GO OPEN. P4b is the Browser
   five-artifact tuple and remains OPEN because the Stable `.2` engine archive is absent; it does not
   gate P4a.
 - **U5 remains route-first.** `MIN_RELAY_VERSION` stays 13 after the post-deploy full GET/hash and
@@ -74,7 +80,9 @@ features.
 
 Evidence: the pre-Q14/pre-P4a [verification snapshot](../reports/verification-260830-0430-codex-autonomous-run.md)
 is historical. Current P4a evidence is in `reports/lane-a-deploy.md` and
-`reports/p4a-postdeploy-evidence.json`; the [predecessor plan](../260829-2125-internal-product-readiness/plan.md)
+`reports/p4a-postdeploy-evidence.json`; the P4-09 disposable drill is in
+`reports/rollback-drill-p4-09.md`; the healthcheck timeout decision is in
+`reports/healthcheck-timeout-decision.md`; the [predecessor plan](../260829-2125-internal-product-readiness/plan.md)
 and [engine plan](../260828-0428-chromium-fingerprint-engine/plan.md) retain historical context.
 
 ### Lane C, stated plainly
@@ -100,9 +108,9 @@ future reopening requires an engine that passes `G2-IDENTITY` under external mea
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | [land-the-work](./phase-01-land-the-work.md) | **Complete** — source commits landed; protected owner files preserved |
-| 2 | [enforce-contracts-in-ci](./phase-02-enforce-contracts-in-ci.md) | **Partial** — MKTTool required run green; Browser Windows runner failure remains OPEN and package jobs were skipped |
-| 3 | [deterministic-packaging](./phase-03-deterministic-packaging.md) | **Open** — normalized payload PASS; outer NSIS variance remains |
-| 4 | [ship-lane-a](./phase-04-ship-lane-a.md) | **Partial / P4a qualified** — deployment and route pass; rollback rehearsal and credentialed smoke OPEN; P4b separate OPEN |
+| 2 | [enforce-contracts-in-ci](./phase-02-enforce-contracts-in-ci.md) | **Partial** — MKTTool required run green; Windows Node pin is proven, but private sibling checkout blocks Browser quality and leaves package jobs skipped |
+| 3 | [deterministic-packaging](./phase-03-deterministic-packaging.md) | **Partial** — P3-06 CI comparison is wired and payload PASS; outer NSIS variance remains OPEN |
+| 4 | [ship-lane-a](./phase-04-ship-lane-a.md) | **Partial / P4a qualified** — deployment, route, and disposable rollback drill pass; healthcheck prerequisite, credentialed smoke, and signed GO remain OPEN; P4b separate OPEN |
 | 5 | [fleet-migration-and-floor](./phase-05-fleet-migration-and-floor.md) | **Partial** — route/inventory/self-serve path recorded; physical device observation and floor mutation OPEN |
 | 6 | [engine-path-closure-and-vendor-decision](./phase-06-engine-decision-gate.md) | **Complete** — custom engine and Lane C closed |
 | 7 | [docs-and-handoff](./phase-07-docs-and-handoff.md) | **Complete** — source docs, predecessor qualifiers, runbooks, and final evidence reconciled |
@@ -146,7 +154,8 @@ critical path.
 - Zero uncommitted run-work; protected MKTTool `AGENTS.md` files remain untouched, while the three
   Q14 Browser files are committed separately with the owner's explicit attribution decision.
 - Every safety contract built on 2026-08-30 is enforced automatically and fails the build when
-  violated; a skipped check reports `OPEN` and cannot satisfy a required gate.
+  violated; a skipped check reports `OPEN` and cannot satisfy a required gate. Browser package
+  execution still awaits a read credential for the private MKTTool sibling repository.
 - Lane A P4a runs the committed candidate in production with a verified health signal and live `/v16`
   route. A bounded credentialed smoke and disposable rollback rehearsal remain required before a
   final Lane A GO; neither is inferred from the deployment pass.
@@ -158,12 +167,18 @@ critical path.
 
 ### Current residual gates (not relabelled)
 
-- **P2 Browser CI:** latest run `33296202751` failed at the self-hosted Windows Node invocation;
-  package jobs were skipped (the earlier `33291356306` failure is retained as historical evidence).
-  Fix/re-run the runner contract before claiming Browser CI green.
-- **P3:** full installer reproducibility is OPEN on the measured NSIS RT_DIALOG/order/trailer delta.
-- **P4a:** credentialed Lane A smoke and disposable rollback rehearsal are OPEN; P4b's five-artifact
-  Browser tuple is independently OPEN because the exact Stable `.2` archive is absent.
+- **P2 Browser CI:** the Windows Node 22 setup/pin passes in run `33301446012`, but the required
+  private MKTTool sibling checkout returns `repository not found`; quality fails closed and package/
+  packaged-contract are skipped. Grant read-only repository access and rerun before claiming Browser
+  CI green.
+- **P3:** P3-06 comparison enforcement is wired and records a required result; full installer
+  reproducibility remains OPEN on the measured 103-byte NSIS RT_DIALOG/order/trailer delta.
+- **P4a:** disposable rollback rehearsal is complete, but its prior-image `/api/healthz` mismatch,
+  bounded credentialed Lane A smoke, and signed GO/NO-GO remain OPEN; P4b's five-artifact Browser
+  tuple is independently OPEN because the exact Stable `.2` archive is absent.
+- **Healthcheck timeout:** `healthcheckTimeout=null` is intentionally retained; it inherits Railway's
+  documented 300-second deploy-time bound. No explicit override is justified by the available
+  startup evidence; see `reports/healthcheck-timeout-decision.md`.
 - **P5:** both owner machines must self-serve reinstall and report v16 before changing the floor;
   no device or owner identifiers are stored in evidence.
 - **P6/Lane C:** CLOSED. There is no CloakBrowser channel, so no request, date, or waiting state exists.

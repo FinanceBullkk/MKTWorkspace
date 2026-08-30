@@ -14,6 +14,13 @@
   "candidateId": "20260830-browser-0.3.13-relay-16",
   "lanes": ["A", "B", "C"],
   "selectedLane": null,
+  "installerReproducibility": "OPEN",
+  "installerReproducibilityEvidence": {
+    "residualBytes": 103,
+    "classification": "NSIS-RT_DIALOG-order-and-trailer",
+    "normalized": false,
+    "evidencePath": "../../260830-0830-consolidation-and-lane-a-release/reports/u3-packaging-experiment.md"
+  },
   "mktTool": {
     "repository": "MKTTool",
     "branch": "ci/self-hosted-runners",
@@ -64,8 +71,10 @@
     "buildRun1InstallerSizeBytes": 145140515,
     "buildRun2InstallerSha256": "e5623b8a5275ca2ca917caebc9b4baa9640379747da8c9d5ba0fccbe256876cc",
     "buildRun2InstallerSizeBytes": 145140593,
-    "outerInstallerVariance": "OPEN_DOCUMENTED_78_BYTES",
-    "buildReproducibilityQualification": "FULL_NORMALIZED_PAYLOAD_EQUAL; OUTER_NSIS_VARIANCE_REMAINS_OPEN",
+    "outerInstallerVariance": "OPEN_DOCUMENTED_103_BYTES",
+    "outerInstallerVarianceBytes": 103,
+    "outerInstallerVarianceClassification": "NSIS-RT_DIALOG-order-and-trailer",
+    "buildReproducibilityQualification": "FULL_NORMALIZED_PAYLOAD_EQUAL; OUTER_NSIS_RT_DIALOG_ORDER_AND_TRAILER_VARIANCE_REMAINS_OPEN",
     "payloadManifestRun1Path": "reports/s4b-payload-manifest-run3.json",
     "payloadManifestRun2Path": "reports/s4b-payload-manifest-run4.json",
     "compatibilityEvidencePath": "MKTBrowser/apps/desktop/release/installer/windows-compatibility-artifacts.json",

@@ -1,6 +1,6 @@
 # Handoff U3 — deterministic packaging
 
-Date: 2026-08-30 (Asia/Saigon) | Phase: 3 | Status: **OPEN**
+Date: 2026-08-30 (Asia/Saigon) | Phase: 3 | Status: **PARTIAL (P3-06 WIRED; OUTER REPRODUCIBILITY OPEN)**
 
 ## Outcome
 
@@ -27,6 +27,11 @@ Date: 2026-08-30 (Asia/Saigon) | Phase: 3 | Status: **OPEN**
   different hashes). No normalizer or product fix was added.
 - One-byte disposable `app.asar` mutation (offset 1,269,446, `0x6f→0x6e`) made normalized
   comparison exit 1 with exactly `resources/app.asar`; normalizer honesty PASS.
+- `MKTBrowser/.github/workflows/release-candidate.yml` now runs both build attempts, always executes
+  the required comparison/status job, records `PASS`/`FAIL` machine evidence, and records the outer
+  installer as optional `OPEN` with the exact 103-byte classification. Static release-contract plus
+  normalized-payload tests pass 11/11. This closes the P3-06 wiring criterion without changing the
+  outer-installer result.
 
 ## Evidence
 

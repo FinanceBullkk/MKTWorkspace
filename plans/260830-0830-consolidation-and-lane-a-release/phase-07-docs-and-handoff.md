@@ -102,13 +102,15 @@ This phase makes the repository self-explanatory to someone who was not here.
 ## Current checkpoint — 30 August 2026, post-deploy reconciliation
 
 The MKTTool operational docs and three runbooks originated in `faa8661`; their current overlays now
-record the master/Railway P4a deployment, route/hash evidence, service-instance healthcheck, and
-the Q15 self-serve path. MKTBrowser README and the acceptance matrix identify the current Browser
-branch/provenance boundary. The reviewed predecessor records (including `baseline-capture.md`,
-`fleet-v13-v15-inventory.{md,json}`, `s5-handoff-runbook.md`, and `handoffs/S1a-relay-durability.md`)
-now carry explicit historical/current pointers and Q16 Lane C closure notices. The cold-operator
-review is complete for command/path consistency; no production rollback or owner-machine reinstall
-is claimed from documentation alone.
+record the master/Railway P4a deployment, route/hash evidence, service-instance healthcheck (including
+the bounded inherited timeout decision), and the Q15 self-serve path. MKTBrowser README and the
+acceptance matrix identify the current Browser branch/provenance boundary. The reviewed predecessor
+records (including `baseline-capture.md`, `fleet-v13-v15-inventory.{md,json}`, `s5-handoff-runbook.md`,
+and `handoffs/S1a-relay-durability.md`) now carry explicit historical/current pointers and Q16 Lane C
+closure notices. The P3-06 CI comparison, U2 Windows runner rerun, and P4-09 disposable rollback
+evidence are recorded in the dated consolidation reports. The cold-operator review is complete for
+command/path consistency; no production rollback or owner-machine reinstall is claimed from
+documentation alone.
 
 ## Success Criteria
 

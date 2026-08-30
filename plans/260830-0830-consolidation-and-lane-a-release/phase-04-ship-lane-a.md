@@ -165,7 +165,13 @@ ceremony, engine archive required. It is blocked on the vendor and does not gate
 ## Current P4a checkpoint — 30 August 2026
 
 The provenance rerun is accepted for the Browser source (`source.clean=true`) as P4b evidence. The
-fresh current-DB backup/restore passed and the rollback tuple was recorded before merge. PR #42's
+fresh current-DB backup/restore passed and the rollback tuple was recorded before merge. The
+disposable P4-09 rehearsal is now executed and qualified; it restored the recorded prior state,
+applied the candidate migration, rebuilt/started the exact prior source, and cleaned up with
+`CLEANUP_REMAINING=0`. It did not touch Railway production. The drill found that prior source serves
+`/api/health/run` but returns 404 for `/api/healthz`, while the live service healthcheck targets
+`/api/healthz`; a human-approved rollback therefore still needs a prior-compatible healthcheck
+decision. PR #42's
 required checks (`33296599912`) passed, then the approved merge reached `master` at
 `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`; final master run `33297347911` also passed. Railway
 deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b` is SUCCESS with the matching commit;
@@ -181,7 +187,9 @@ two physical networks. P4b remains OPEN and is not a P4a precondition.
 - [x] Browser provenance receipt is retained as P4b evidence; its five-artifact tuple remains OPEN
   for the missing engine archive and is not a P4a requirement.
 - [x] Rollback tuple recorded before any change.
-- [ ] Rollback rehearsal completed before a Lane A GO.
+- [x] Disposable rollback rehearsal completed and documented before a Lane A GO; the exact prior
+  tuple, restore/migration/build timings, cleanup, and failure-at-step signatures are in
+  `reports/rollback-drill-p4-09.md`. The operational healthcheck prerequisite remains OPEN.
 - [x] Backup and restore verified against the current database.
 - [x] Committed candidate deployed; deployed commit verified against Railway metadata after the fact.
 - [x] `/api/healthz` returns 200 and Railway's healthcheck points at it.
