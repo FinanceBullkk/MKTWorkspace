@@ -247,6 +247,58 @@ needs Railway's dashboard metrics or a log query over hours, not `railway logs`.
 restart *cause* is open, and the R1-R4 fixes remain hardening rather than a cure — which is what the
 incident note says, and it is right about that.
 
+## Metrics settle it (2026-08-31 04:05) -- OOM ruled out, no restarts
+
+Railway's GraphQL API exposes service metrics; `railway api` reaches them even though `railway logs`
+cannot reach the incident window. Both questions the investigation could not answer are now answered
+by measurement.
+
+### Across the whole window, 30/08 13:30 -> 31/08 04:00 ICT (175 samples, 5 min)
+
+| | MEMORY_USAGE_GB | CPU_USAGE |
+|---|---|---|
+| min | 0.179 | 0.000 |
+| max | **0.422** (30/08 13:35, a deploy) | 0.010 |
+
+Only **two** sharp memory discontinuities in 14.5 hours, and both align with a deployment: 30/08
+13:40 and 31/08 02:45 (the readiness-fix deploy). No third event.
+
+### Across the incident window itself, 17:15 -> 19:14 ICT (120 samples, 1 min)
+
+```
+min = 0.179 GB   max = 0.213 GB   spread = 0.034 GB
+drops greater than 30%: 0
+```
+
+Memory was **flat at ~0.19 GB for 120 consecutive minutes** — the lowest, calmest part of the day.
+
+### What this establishes
+
+1. **OOM is ruled out.** Peak usage across the entire window was 0.42 GB, at deploy time, nowhere
+   near any plausible container limit. During the incident it sat at the bottom of its range.
+2. **The instance did not restart during the incident.** A restart drops memory to near zero and
+   ramps back; 120 consecutive one-minute samples contain no such discontinuity.
+3. **The browser-launch mechanism is disconfirmed**, on top of already not fitting the timing
+   (schedule 09:00; incident 17:30 and 02:00).
+4. **"Multiple startup sequences" in the log is best explained by the migration container plus the
+   app container of one deployment** — the pattern originally observed at `06:38:49Z`,
+   `06:38:53Z`, `06:39:16Z`.
+
+### Correction to the 02:40 retraction
+
+The 02:40 entry retracted "there were no restarts". That retraction was **correct at the time** — the
+claim had been made from a truncated log window and was not supported by evidence then available. It
+is now superseded by measurement: there were no restarts in the incident window. The original
+conclusion was right, but it was asserted before it was earned.
+
+### What remains inferential
+
+That elevated R2 latency was the trigger is still an inference, not a measurement — no R2 latency
+series was captured during the incident. It is, however, the only proposed explanation still
+standing, and R1-R4 address it. The bodyless-503 mode reported in the incident note was never
+reproduced here and, now that restarts are excluded, would have to originate above the application
+(platform edge or proxy) rather than from the container.
+
 ## Not done
 
 No deploy, no restart, no setting change, no timeout edit. Diagnosis only. The route change and its
