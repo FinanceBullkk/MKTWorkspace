@@ -73,6 +73,21 @@ Prefer **C**. Choosing a timeout without measuring the dependency is how 450 ms 
 Do not "fix" this by widening the timeout until it stops failing without knowing the distribution —
 that reproduces the original error at a larger number.
 
+## Fix implemented, not deployed
+
+`MKTTool` commit `ba7960c` splits the budget per dependency: Postgres keeps 450 ms,
+the release read gets 3 s (candidate A). A regression test reproduces the production symptom --
+it fails at 455 ms against the old shared budget and passes against the split one. Full suite
+215 files / 1959 tests pass; `tsc --noEmit` and `eslint .` clean.
+
+Candidate B (demoting R2 to non-fatal) was **not** implemented. Whether a slow or broken object
+store should take the service out of rotation and block deployment promotion is a product
+decision about how core Relay distribution is, not a defect fix. It stays an owner decision.
+
+**The fix is not live.** Shipping it means merging to master, which is a production deployment,
+owner-gated, and unwise while the incident is still open. Nothing was deployed, restarted, or
+reconfigured.
+
 ## Not done
 
 No deploy, no restart, no setting change, no timeout edit. Diagnosis only. The route change and its
