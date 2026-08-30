@@ -1,5 +1,23 @@
 # Handoff U2 — Contracts in CI
-Date: 2026-08-30T15:30:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Browser runner OPEN)
+Date: 2026-08-30T16:05:00+07:00 | Phase: 2 | Status: COMPLETE (MKTTool + Browser)
+
+## Superseding closure update — 2026-08-30 16:05 +07:00
+
+The Browser runner permission boundary was resolved for this release branch and the complete
+matrix was rerun. Run `33303002259` (rerun attempt 2, source `b9f9477`) passed all three jobs with
+no skip: `windows / quality` (`99236866638`, 4m33s), `windows / package` (`99236871618`, 6m17s),
+and `windows / packaged-contract` (`99236855958`, 4m01s). The packaged contract completed five
+cold launches; timings were 8592/6987/6980/6902/6909 ms. Node `v22.23.2` was invoked through the
+absolute pinned executable and the sibling MKTTool checkout succeeded.
+
+The first attempt on the same source had one transient 90-second MCP timeout after two successful
+iterations; it is retained as failure evidence. The retry passed without weakening or skipping the
+verifier. Full hashes, job IDs, and the timeout signature are in
+`../reports/u2-browser-run-33303002259.md`.
+
+U2 is therefore closed for this release branch. A temporary repository-read secret used for the
+retry was deleted immediately afterward; future runs without an equivalent reviewed credential
+remain fail-closed.
 
 ## Done
 
@@ -16,16 +34,20 @@ Date: 2026-08-30T15:30:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
 
 - `../phase-02-enforce-contracts-in-ci.md` — gate matrix and exact run IDs.
 - `../reports/p4a-postdeploy-evidence.json` — sanitized branch/master CI evidence used by P4a.
+- `../reports/u2-browser-run-33303002259.md` — complete Windows Browser matrix, hashes, timings,
+  and retained transient-failure signature.
 - MKTTool commits `5c6c3af`, `25af07f`, `9863fe2`, and `35b977b` — explicit CI contract changes.
 
-## NOT done / deliberately skipped
+## NOT done / deliberately skipped (historical baseline; superseded where noted above)
 
 - The original MKTBrowser runs `33296202751` and `33291356306` failed before quality tests because
   the self-hosted Windows PowerShell shell could not resolve `node` after setup; package/
   packaged-contract jobs were skipped. The repair is proven by the setup/pin steps in
   `33301446012`, but that run fails closed at the private MKTTool sibling checkout and the package
-  jobs remain skipped. This is an OPEN Browser/P4b permission contract, not a MKTTool or P4a failure.
-- A remote scratch-branch Browser matrix has not been rerun. Skipped jobs are not promotion evidence.
+  jobs remained skipped in those historical runs. The permission contract was closed by the
+  successful rerun above; those runs remain failure history, not promotion evidence.
+- A separate scratch-branch negative matrix for every contract has not been run; this is a Phase 2
+  bookkeeping item, not a runner-resolution blocker.
 
 ## State the next session must know
 
@@ -33,8 +55,7 @@ Date: 2026-08-30T15:30:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
   `e6a55ee402d86f9c8528734c5232d4f02210008a`; `master` contains merge
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`.
 - MKTBrowser release branch is `release/consolidation-20260830` at
-  `6d737f8` (the latest rerun is `33301446012`); Node resolution is fixed, while sibling-repository
-  read access remains open.
+  `b9f9477`; the complete Windows matrix is recorded by run `33303002259` (attempt 2).
 
 ## Decisions still owed by the owner
 
@@ -44,7 +65,7 @@ Date: 2026-08-30T15:30:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
 
 U3 — retain the measured 103-byte outer-installer variance as OPEN; then reconcile U7 documentation.
 
-## U2 runner repair — 2026-08-30 15:20 +07:00
+## U2 runner repair — 2026-08-30 15:20 +07:00 (historical; closure update above controls)
 
 The retained Browser runs `33296202751` and `33291356306` both failed in the first quality job at
 `Record MKTTool checkout status`: the self-hosted Windows PowerShell process reported that `node`
@@ -77,8 +98,9 @@ executable` both passed, proving the original Node-resolution defect is repaired
 checkout still returned `repository not found` for the private repository under the MKTBrowser
 workflow token; its required `mkttool-sibling-checkout` gate emitted `OPEN`, so the quality job
 failed closed and package/packaged-contract remained skipped. No release token was repurposed as a
-GitHub credential. Browser U2 therefore remains OPEN at the external repository-read permission
-boundary; the run is real failure evidence, not a promotion pass.
+GitHub credential. At that time Browser U2 therefore remained OPEN at the external repository-read
+permission boundary; the run is real failure evidence, not a promotion pass. The superseding closure
+update above records the later successful matrix.
 
 Exact remote signatures:
 
@@ -93,3 +115,7 @@ Owner action to close U2: grant the workflow a read-only GitHub credential for t
 repository (or provide an equivalent reviewed checkout/artifact), then rerun the same branch matrix.
 The existing `MKTTOOL_RELEASE_TOKEN` is scoped to the release download route and was not used as a
 GitHub credential.
+
+> **Superseded by the closure update above.** That owner action was the pre-rerun state. The
+> temporary read credential was supplied for run `33303002259`, the matrix passed, and the temporary
+> secret was deleted. The standing future-run requirement remains fail-closed reviewed access.

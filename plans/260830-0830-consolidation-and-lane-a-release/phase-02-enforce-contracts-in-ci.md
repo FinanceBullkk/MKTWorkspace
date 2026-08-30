@@ -14,7 +14,8 @@ dependencies: [1]
 At the phase-start boundary, the autonomous run had built a genuine safety net — fail-closed journal,
 restore verification, trusted-proxy resolution, durable rate limiting, one-seat enforcement, version
 coherence, and payload reproducibility — but **CI ran none of it**. The current overlay below records
-the contracts now wired into MKTTool CI; Browser remote runner gaps remain explicitly OPEN.
+the contracts now wired into MKTTool CI and the completed Browser matrix; the separate scratch-branch
+negative-proof item remains open.
 
 This phase makes the machine remember instead.
 
@@ -89,10 +90,10 @@ in a second job. That is a real baseline — extend it, do not replace it.
    unsalted-checksum issue from the run; verify it does.
 
 8. **Decide the runner question (completed).** The configured self-hosted Linux/Windows runners are
-   authoritative, with fail-closed provisioning checks. The Windows Node-resolution repair is now
-   proven by the remote setup/pin steps, but the Browser matrix remains OPEN when its required
-   private MKTTool sibling checkout lacks a read credential; that boundary is not silently treated
-   as a pass.
+   authoritative, with fail-closed provisioning checks. The Windows Node-resolution repair and
+   sibling-repository access were proven by complete remote matrix `33303002259` (attempt 2): all
+   quality/package/packaged-contract jobs passed without a skip. The temporary read credential used
+   for that run was deleted afterward; future runs without reviewed access must fail closed.
 
 9. **Prove the net catches things.** For each contract, introduce a deliberate violation on a scratch
    branch and confirm CI goes red. A gate that has never failed is a gate nobody has tested.
@@ -118,12 +119,13 @@ in a second job. That is a real baseline — extend it, do not replace it.
 - [x] Restore verification and rate-limit concurrency run against a real disposable PostgreSQL in
   the green MKTTool contracts jobs (`33292005382`, `33292350436`).
 - [x] The known-bad v15/0.3.12 tuple is rejected by an executable assertion and source-level test.
-- [ ] Version coherence, one-seat, and payload reproducibility are wired as required Browser checks;
-  the Node 22 setup/pin now passes remotely (`33301446012`), but quality fails closed at the
-  private MKTTool sibling checkout and package/packaged-contract jobs remain skipped. The original
-  Node-resolution failures `33296202751` and `33291356306` remain historical evidence.
-- [ ] Every conditional skip in the Browser workflows has a completed remote proof; current skipped
-  package jobs are recorded as OPEN/FAIL, never PASS.
+- [x] Version coherence, one-seat, and payload reproducibility are wired as required Browser checks;
+  the complete Windows matrix `33303002259` (attempt 2) passed quality, package, and
+  packaged-contract with no skip. The original Node-resolution failures `33296202751` and
+  `33291356306`, plus the transient first-attempt timeout, remain historical failure evidence.
+- [ ] Every conditional skip in the Browser workflows has a completed remote proof; intentional
+  branch-only conditions outside the release matrix still need an explicit proof. The successful
+  U2 matrix itself had no skipped required job.
 - [x] Secret scan is required in MKTTool CI and its planted-token test is covered by
   `scripts/ci/secret-scan.test.cjs`.
 - [x] The runner-authority question is answered: the configured self-hosted Linux/Windows runners are
@@ -131,7 +133,7 @@ in a second job. That is a real baseline — extend it, do not replace it.
 - [ ] A separate scratch-branch CI red run has been captured for every contract. Source-level
   negative tests exist, but a remote scratch-branch matrix was not run in this release window.
 
-## Current checkpoint — 30 August 2026, post-merge reconciliation
+## Historical checkpoint — 30 August 2026, post-merge reconciliation (superseded for Browser by the closure update below)
 
 The first MKTTool run (`33291209847`) correctly caught two runner defects: the Linux contracts
 runner had no host `psql`, and the secret-scan job had no Node runtime. Commit `35b977b` adds a
@@ -143,9 +145,9 @@ job is correctly skipped on a branch push. The post-merge master run `3329235043
 `success` for `check`, `contracts`, `secret-scan`, and deploy-verification; its Windows Relay job is
 not scheduled on a master push.
 
-The Browser-side contract wiring is present and its source-level negative tests cover status,
+At that checkpoint, the Browser-side contract wiring was present and its source-level negative tests covered status,
 known-bad tuple, unpinned engine, version drift, one-seat, payload, and planted-secret cases. The
-Windows runner repair is recorded in the U2 handoff and was exercised remotely in `33301446012`:
+Windows runner repair was first exercised remotely in `33301446012`:
 `Setup Node.js 22` and `Pin Node.js 22 executable` both passed, including the absolute toolcache
 path. The quality job then failed closed at the private MKTTool sibling checkout (`repository not
 found` under the workflow token); package and packaged-contract were skipped by that required
@@ -157,6 +159,14 @@ for all applicable MKTTool jobs; the final master `deploy-verification` job also
 Windows Relay job is intentionally skipped on a master push by workflow condition.
 The Docker wrapper was tested against disposable PostgreSQL 16 and forwards connection environment
 names without printing values.
+
+The Browser closure rerun is recorded separately in
+`reports/u2-browser-run-33303002259.md`. On `33303002259` attempt 2, the self-hosted Windows
+runner checked out the private sibling, pinned Node `v22.23.2` by absolute executable, passed the
+quality and package jobs, and completed all five packaged-contract cold launches. No package or
+packaged-contract job was skipped. A temporary repository-read secret enabled the sibling checkout
+for this run and was deleted after success; the workflow remains fail-closed without reviewed
+future-run access.
 
 ## Risk Assessment
 

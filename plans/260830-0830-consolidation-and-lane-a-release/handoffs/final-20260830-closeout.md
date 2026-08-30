@@ -32,16 +32,23 @@ healthcheck choice. Full timings, hashes, commands, and failure signatures are i
 ### 2. U2 Windows Browser runner repair
 
 The deterministic Node 22 helper and workflow changes are committed on the MKTBrowser release
-branch (`ceafe30`, with the sibling-checkout ref correction `6d737f8`). Local PowerShell parsing,
-Node 22/toolcache fallback, Corepack, and the 23/23 runtime contract passed. Remote run
-`33301446012` proves `Setup Node.js 22` and `Pin Node.js 22 executable` now pass and report the
-absolute Node 22 toolcache executable.
+branch (`ceafe30`, `6d737f8`, `ba0faff`, `2444b08`, `d679a33`, `b9f9477`). Local PowerShell parsing,
+Node 22/toolcache fallback, Corepack, and the contract suite passed (`36/36` relevant tests).
 
-The original defect is closed. The overall Browser matrix is intentionally still **OPEN**: the
-required private `Techieslab-app/MKTTool` checkout returns `repository not found` under the workflow
-token, so quality fails closed and `windows / package` plus `windows / packaged-contract` are
-skipped. This is real failure evidence, not promotion evidence. The exact signatures are in
-`U2-contracts-in-ci.md`.
+The complete self-hosted Windows matrix is **PASS / closed for this release branch** in run
+`33303002259` (rerun attempt 2, source `b9f9477`):
+
+- `windows / quality` `99236866638` — PASS, 4m33s.
+- `windows / package` `99236871618` — PASS, 6m17s; exact directory package built, hashed, and
+  uploaded.
+- `windows / packaged-contract` `99236855958` — PASS, 4m01s; artifact manifest/hash verified and
+  all five cold-launch iterations passed (8592/6987/6980/6902/6909 ms).
+
+No package or packaged-contract job was skipped. The first attempt had one retained transient
+90-second MCP timeout after two successful iterations; retry passed without weakening the verifier.
+Node `v22.23.2` was invoked through its absolute pinned executable. Full hashes and failure history
+are in `../reports/u2-browser-run-33303002259.md` and `U2-contracts-in-ci.md`. The temporary
+private-sibling read secret used for the retry was deleted after success.
 
 ### 3. P3-06 twice-build comparison and manifest disposition
 
@@ -83,8 +90,9 @@ variable. The decision and recheck conditions are in `../reports/healthcheck-tim
 
 ## Remains OPEN (or explicitly closed outside this run)
 
-- **U2 Browser remote matrix:** private MKTTool sibling read access is missing. Until that is fixed,
-  the required quality/package/packaged-contract chain cannot produce a complete result.
+- **U2 Browser future reruns:** the current branch matrix is PASS and closed. The temporary private
+  sibling-read secret was deleted; future runs need an equivalent reviewed credential or checkout
+  artifact and must remain fail-closed if unavailable.
 - **P3 outer installer:** 103-byte `NSIS-RT_DIALOG-order-and-trailer` variance remains OPEN. A
   supported source/toolchain fix or a structurally justified future decision is required; do not
   widen a normalizer.
@@ -103,9 +111,9 @@ variable. The decision and recheck conditions are in `../reports/healthcheck-tim
 
 ## Exact remaining owner actions
 
-1. Add a reviewed read-only GitHub Actions credential (or an equivalent reviewed MKTTool checkout
-   artifact) to the MKTBrowser workflow, then rerun the Browser matrix from the repaired branch.
-   Require the quality, package, and packaged-contract jobs to complete; a skip is not closure.
+1. For future Browser reruns, provide a reviewed read-only GitHub Actions credential (or equivalent
+   reviewed MKTTool checkout artifact). The current U2 closure already has a complete matrix; any
+   new run must require quality, package, and packaged-contract to complete, with no skip.
 2. For a valid release candidate, dispatch the manual P3 workflow and retain
    `payload-reproducibility-evidence`; separately decide whether a supported NSIS/electron-builder
    source fix can remove the 103-byte residual. Do not normalize or sign around it.

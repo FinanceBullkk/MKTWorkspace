@@ -87,15 +87,36 @@
       "priorCommit": "c819e6a8dff5cac027d24b4a9d488ec241e2ccaa",
       "migrationAction": "npx prisma migrate deploy",
       "candidateCommit": "6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432",
-      "schemaState": "predeploy migration action recorded; merged deployment completed"
+      "schemaState": "predeploy migration action recorded; merged deployment completed",
+      "drillStatus": "PASS_DISPOSABLE_QUALIFIED",
+      "drillEvidence": "reports/rollback-drill-p4-09.md"
     }
   },
   "openGates": [
-    "P4-09 rollback rehearsal has not been executed; production rollback remains human-approved only.",
+    "P4-09 disposable rehearsal is complete and qualified; the prior image returns 404 on the live /api/healthz setting, so any real rollback remains human-approved and prior-healthcheck-gated.",
     "P5-03 real v15-to-v16 observation on both owner machines is unavailable from this host; keep the floor at 13.",
     "P4b Browser five-artifact tuple remains OPEN because the exact Stable .2 engine archive is absent.",
     "Lane C is CLOSED: there is no CloakBrowser channel and no request or date exists."
   ],
+  "followUp": {
+    "capturedOn": "2026-08-30T15:30:00+07:00",
+    "rollbackDrill": {
+      "status": "PASS_DISPOSABLE_QUALIFIED",
+      "report": "reports/rollback-drill-p4-09.md",
+      "backupMs": 22575,
+      "restoreVerifyMs": 7897,
+      "migrationMs": 12053,
+      "priorSourceBuildMs": 19651,
+      "cleanupRemaining": 0,
+      "productionMutated": false
+    },
+    "u2BrowserMatrix": {
+      "status": "PASS",
+      "run": "33303002259",
+      "attempt": 2,
+      "evidence": "reports/u2-browser-run-33303002259.md"
+    }
+  },
   "finalVerification": {
     "deploymentId": "ed972e5b-7597-4c6d-8066-24bc11c4ea0b",
     "deploymentCreatedAt": "2026-08-30T06:38:14.156Z",

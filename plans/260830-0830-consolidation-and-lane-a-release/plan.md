@@ -30,19 +30,18 @@ features.
 ## Current execution truth — 30 August 2026, post-deploy reconciliation
 
 - **U1 complete.** MKTTool branch `release/consolidation-20260830` is pushed at
-  `e6a55ee` after the source/docs follow-up; PR #42 is merged to `master` at
+  `38a8de1` after the source/docs and healthcheck follow-up; PR #42 is merged to `master` at
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`. The only MKTTool dirt is the protected `AGENTS.md`
-  and `AGENTS.md.bak-260828`. MKTBrowser is pushed at `4b9564a` after its documentation follow-up;
+  and `AGENTS.md.bak-260828`. MKTBrowser is pushed at `b9f9477` after the runner/contract follow-up;
   the accepted provenance source remains `5ef710dd`.
   The three Q14 files are in the dedicated commit `1decde437cf6495652b9d7bdbb76290ab2130411`.
-- **U2 MKTTool gates complete; Browser runner repair proven, matrix still OPEN at repository
-  permissions.** PR #42 run `33296599912` and final post-merge master run `33297347911` are
-  successful for their required jobs; earlier branch/master runs `33292005382` and `33292350436`
-  remain historical evidence; the earlier `33291209847` is retained only as failure evidence. The
-  Windows Node 22 repair passed its setup/pin steps in `33301446012`, but the required private
-  MKTTool sibling checkout returned `repository not found`; quality failed closed and package/
-  packaged-contract were skipped. The original `33296202751` and `33291356306` Node failures remain
-  historical evidence. This is a Browser/P4b permission gate, not evidence against P4a.
+- **U2 MKTTool and Browser gates complete for this release branch.** PR #42 run `33296599912` and
+  final post-merge master run `33297347911` remain successful MKTTool evidence. Browser run
+  `33303002259` (rerun attempt 2, source `b9f9477`) passed `windows / quality`, `windows / package`,
+  and `windows / packaged-contract` with no skips; the packaged verifier completed five cold
+  launches. The original Node-resolution failures `33296202751`/`33291356306`, the permission
+  failure in `33301446012`, and the transient first-attempt timeout are retained as historical
+  failure evidence. Full Browser timings/hashes are in `reports/u2-browser-run-33303002259.md`.
 - **U3 P3-06 enforcement complete; outer reproducibility OPEN.** `release-candidate.yml` now runs
   the two-build normalized-payload comparison, emits/ uploads its result, and fails closed when
   inputs are missing. The payload comparison is retained PASS, while the outer installer has a
@@ -108,7 +107,7 @@ future reopening requires an engine that passes `G2-IDENTITY` under external mea
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | [land-the-work](./phase-01-land-the-work.md) | **Complete** — source commits landed; protected owner files preserved |
-| 2 | [enforce-contracts-in-ci](./phase-02-enforce-contracts-in-ci.md) | **Partial** — MKTTool required run green; Windows Node pin is proven, but private sibling checkout blocks Browser quality and leaves package jobs skipped |
+| 2 | [enforce-contracts-in-ci](./phase-02-enforce-contracts-in-ci.md) | **Partial** — MKTTool and the complete Browser matrix are green; separate scratch-branch negative proof remains open |
 | 3 | [deterministic-packaging](./phase-03-deterministic-packaging.md) | **Partial** — P3-06 CI comparison is wired and payload PASS; outer NSIS variance remains OPEN |
 | 4 | [ship-lane-a](./phase-04-ship-lane-a.md) | **Partial / P4a qualified** — deployment, route, and disposable rollback drill pass; healthcheck prerequisite, credentialed smoke, and signed GO remain OPEN; P4b separate OPEN |
 | 5 | [fleet-migration-and-floor](./phase-05-fleet-migration-and-floor.md) | **Partial** — route/inventory/self-serve path recorded; physical device observation and floor mutation OPEN |
@@ -142,7 +141,7 @@ critical path.
 | Window | Work | Exit |
 |---|---|---|
 | Hour 0–2 (planned; executed) | P1 land the work | Owned run-work landed on branches; protected MKTTool AGENTS files untouched; Q14 Browser files later landed in their dedicated commit |
-| Day 1–3 (planned; executed/partial) | P2 CI enforcement (parallel with P3) | MKTTool required contracts green; unavailable Browser runner remains OPEN/FAIL rather than satisfying promotion |
+| Day 1–3 (planned; executed/partial) | P2 CI enforcement (parallel with P3) | MKTTool required contracts and Browser quality/package/packaged-contract matrix green; scratch-branch negative proof remains |
 | Day 1–2 (planned; residual) | P3 packaging determinism | 103-byte controlled NSIS delta remains OPEN; no unsupported normalization |
 | Day 2–3 (planned; executed P4a) | P4 ship Lane A | Committed MKTTool web candidate deployed; `/api/healthz` 200; `/v16` reachable (no Browser tuple required) |
 | Day 3–4 (planned; residual) | P5 fleet migration and floor `13→16` | Route verified live; floor remains 13 pending observed owner-machine reinstalls |
@@ -154,8 +153,9 @@ critical path.
 - Zero uncommitted run-work; protected MKTTool `AGENTS.md` files remain untouched, while the three
   Q14 Browser files are committed separately with the owner's explicit attribution decision.
 - Every safety contract built on 2026-08-30 is enforced automatically and fails the build when
-  violated; a skipped check reports `OPEN` and cannot satisfy a required gate. Browser package
-  execution still awaits a read credential for the private MKTTool sibling repository.
+  violated; a skipped check reports `OPEN` and cannot satisfy a required gate. The complete Browser
+  quality/package/packaged-contract execution is proven by run `33303002259` (attempt 2); future
+  runs without reviewed private-sibling access remain fail-closed.
 - Lane A P4a runs the committed candidate in production with a verified health signal and live `/v16`
   route. A bounded credentialed smoke and disposable rollback rehearsal remain required before a
   final Lane A GO; neither is inferred from the deployment pass.
@@ -167,10 +167,10 @@ critical path.
 
 ### Current residual gates (not relabelled)
 
-- **P2 Browser CI:** the Windows Node 22 setup/pin passes in run `33301446012`, but the required
-  private MKTTool sibling checkout returns `repository not found`; quality fails closed and package/
-  packaged-contract are skipped. Grant read-only repository access and rerun before claiming Browser
-  CI green.
+- **P2 Browser CI:** **PASS for this branch.** Run `33303002259` (attempt 2) completed the
+  self-hosted Windows quality, package, and packaged-contract jobs with no skip, using absolute Node
+  `v22.23.2`; five cold launches passed. The temporary sibling-read credential was deleted after
+  the run. A future run needs an equivalent reviewed credential/artifact or must remain fail-closed.
 - **P3:** P3-06 comparison enforcement is wired and records a required result; full installer
   reproducibility remains OPEN on the measured 103-byte NSIS RT_DIALOG/order/trailer delta.
 - **P4a:** disposable rollback rehearsal is complete, but its prior-image `/api/healthz` mismatch,

@@ -34,10 +34,11 @@ Date: 2026-08-30T13:05:00+07:00 | Phase: 7 | Status: COMPLETE (reconciliation an
   in `e6a55ee402d86f9c8528734c5232d4f02210008a` and PR #42 is merged. Protected `AGENTS.md` and
   `AGENTS.md.bak-260828` remain untouched and intentionally uncommitted. Final master CI run
   `33297347911` passed.
-- U2's Windows Node 22 repair is proven by remote setup/pin steps, but the Browser matrix remains
-  OPEN at the private MKTTool sibling checkout; package jobs are still skipped by that required
-  dependency. U3 outer-installer reproducibility, P4-08 credentialed smoke, the prior-image
-  healthcheck prerequisite for a real rollback, and owner-machine observations remain OPEN.
+- U2's complete Browser matrix is now PASS/closed for the release branch: run `33303002259`
+  (attempt 2) completed quality, package, and packaged-contract with no skip; five cold launches
+  passed. The temporary sibling-read credential was deleted after success. U3 outer-installer
+  reproducibility, P4-08 credentialed smoke, the prior-image healthcheck prerequisite for a real
+  rollback, and owner-machine observations remain OPEN.
 - P4-09 itself is closed as a disposable drill; production rollback remains intentionally unexecuted.
 - No Browser five-artifact tuple was fabricated. Lane C is CLOSED due the absence of a CloakBrowser
   channel; no vendor request is to be sent.
@@ -48,8 +49,9 @@ Date: 2026-08-30T13:05:00+07:00 | Phase: 7 | Status: COMPLETE (reconciliation an
   `ed972e5b-7597-4c6d-8066-24bc11c4ea0b`, `/api/healthz` 200, `/v16` full GET/hash exact,
   `healthcheckPath=/api/healthz`; rollback tuple and fresh backup/restore are in the P4a evidence.
 - Root plan branch remains `codex/fingerprint-engine-phase0`; MKTTool release branch is
-  `e6a55ee`, and MKTBrowser branch is `4b9564a`. The accepted Browser provenance source is still
-  `5ef710dd`.
+  `e6a55ee`, and MKTBrowser release branch is `b9f9477` (`release/consolidation-20260830`). The
+  accepted Browser provenance source is still `5ef710dd`; U2's complete matrix is recorded in
+  `../reports/u2-browser-run-33303002259.md`.
 
 ## Decisions still owed by the owner
 

@@ -17,7 +17,7 @@ state and must not be restarted from U1:
 | Unit | Current result | Next action |
 |---|---|---|
 | U1 | COMPLETE; both release branches landed and pushed | none |
-| U2 | MKTTool PR/master CI green (`33296599912`, `33297347911`); Windows Node 22 setup/pin pass in `33301446012`, but private MKTTool sibling checkout fails and package jobs skip | retain OPEN; grant read access and rerun; do not call skipped jobs PASS |
+| U2 | MKTTool PR/master CI green (`33296599912`, `33297347911`); complete Browser Windows matrix `33303002259` (attempt 2) passes quality/package/packaged-contract with no skip | closed for this branch; retain the transient first-attempt timeout and require reviewed access for future runs |
 | U3 | Payload/provenance manifests PASS; outer NSIS variance is **103 bytes**, full installer OPEN; P3-06 comparison is wired | retain residual; no lying normalizer |
 | U4 / P4a | MKTTool Web deployed from `master` at `6ce28d0f…`, final deployment `ed972e5b…`; healthz and authorized v16 full GET/hash PASS; disposable P4-09 drill qualified PASS | retain prior-image healthcheck prerequisite, P4-08 smoke, and P4b tuple as OPEN |
 | U5 | Route-first PASS; floor remains 13 pending observed owner-machine reinstalls | do not bump floor or claim device PASS |
