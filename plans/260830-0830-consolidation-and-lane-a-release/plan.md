@@ -32,7 +32,7 @@ features.
 - **U1 complete.** MKTTool branch `release/consolidation-20260830` is pushed at
   `e6a55ee` after the source/docs follow-up; PR #42 is merged to `master` at
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`. The only MKTTool dirt is the protected `AGENTS.md`
-  and `AGENTS.md.bak-260828`. MKTBrowser is pushed at `c329820` after its documentation follow-up;
+  and `AGENTS.md.bak-260828`. MKTBrowser is pushed at `4b9564a` after its documentation follow-up;
   the accepted provenance source remains `5ef710dd`.
   The three Q14 files are in the dedicated commit `1decde437cf6495652b9d7bdbb76290ab2130411`.
 - **U2 MKTTool gates complete; Browser CI remains qualified OPEN.** PR #42 run

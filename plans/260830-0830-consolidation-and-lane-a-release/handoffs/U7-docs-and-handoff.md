@@ -43,7 +43,7 @@ Date: 2026-08-30T13:05:00+07:00 | Phase: 7 | Status: COMPLETE (reconciliation an
   `ed972e5b-7597-4c6d-8066-24bc11c4ea0b`, `/api/healthz` 200, `/v16` full GET/hash exact,
   `healthcheckPath=/api/healthz`; rollback tuple and fresh backup/restore are in the P4a evidence.
 - Root plan branch remains `codex/fingerprint-engine-phase0`; MKTTool release branch is
-  `e6a55ee`, and MKTBrowser branch is `c329820`. The accepted Browser provenance source is still
+  `e6a55ee`, and MKTBrowser branch is `4b9564a`. The accepted Browser provenance source is still
   `5ef710dd`.
 
 ## Decisions still owed by the owner
