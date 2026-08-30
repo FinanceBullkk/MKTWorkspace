@@ -49,7 +49,7 @@ Date: 2026-08-30T11:15:00+07:00 | Phase: 4 | Status: PARTIAL (P4a QUALIFIED; res
 
 - MKTTool release branch is `release/consolidation-20260830` at `e6a55ee`; `master` is merged at
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`. Protected MKTTool files remain outside commits.
-- MKTBrowser branch head is `7c9b7cf` after documentation follow-ups; provenance receipt source is
+- MKTBrowser branch head is `c329820` after documentation follow-ups; provenance receipt source is
   `5ef710dd931028d4d608bea098311bf54bf5dc31`, with P4b tuple still open.
 
 ## Decisions still owed by the owner

@@ -32,7 +32,7 @@ Date: 2026-08-30T11:20:00+07:00 | Phase: 2 | Status: PARTIAL (MKTTool PASS; Brow
   `e6a55ee402d86f9c8528734c5232d4f02210008a`; `master` contains merge
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`.
 - MKTBrowser release branch is `release/consolidation-20260830` at
-  `7c9b7cf`; its Browser CI runner issue remains open.
+  `c329820` (the failing CI run itself tested `7c9b7cf`); its Browser CI runner issue remains open.
 
 ## Decisions still owed by the owner
 
