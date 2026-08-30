@@ -38,10 +38,11 @@ features.
 - **U2 MKTTool gates complete; Browser CI remains qualified OPEN.** PR #42 run
   `33296599912` and final post-merge master run `33297347911` are successful for their required jobs;
   earlier branch/master runs `33292005382` and `33292350436` remain historical evidence;
-  the earlier `33291209847` is retained only as failure evidence. The MKTBrowser push run
-  `33291356306` failed before quality tests because the self-hosted Windows PowerShell shell could
-  not resolve `node` after setup; its package jobs were skipped. This is a Browser/P4b runner gate,
-  not evidence against the independent P4a web deployment.
+  the earlier `33291209847` is retained only as failure evidence. The latest MKTBrowser push run
+  `33296202751` failed before quality tests because the self-hosted Windows PowerShell shell could
+  not resolve `node` after setup; its package jobs were skipped. The earlier `33291356306` run
+  showed the same failure mode and is retained as historical evidence. This is a Browser/P4b
+  runner gate, not evidence against the independent P4a web deployment.
 - **U3 open.** Normalized payloads are byte-identical, but the outer installer has a measured
   103-byte NSIS/resource-order/trailer variance. No normalization or promotion is claimed.
 - **U4 split and P4a qualified.** PR #42 merged to `master` at
