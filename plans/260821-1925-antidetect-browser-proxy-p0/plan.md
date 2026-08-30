@@ -16,6 +16,11 @@ source: skill
 
 # P0 Antidetect Browser and Proxy Operational Readiness
 
+> **Historical predecessor plan — superseded 30 August 2026.** Its Browser/Relay identity and
+> canary gates remain evidence, not active instructions. Current consolidation status is in
+> `plans/260830-0830-consolidation-and-lane-a-release/`: P4a Web is deployed, P4b is OPEN, Q15 is
+> owner-machine self-serve, and Lane C is **CLOSED** because no CloakBrowser channel exists.
+
 ## Overview
 
 P0 is the shortest path from the current technical foundation to a browser operators can trust:

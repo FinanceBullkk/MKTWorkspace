@@ -2,7 +2,7 @@
 phase: 2
 logicalPhase: 1
 title: "Isolated Source and Toolchain"
-status: blocked
+status: complete
 priority: P1
 effort: "90m active work; 1–4h fetch wall time"
 dependencies: [phase-01]
@@ -10,9 +10,9 @@ dependencies: [phase-01]
 
 # Phase 1: Isolated Source and Toolchain (CLI phase 2)
 
-Current verdict (2026-08-28): BLOCKED. The isolated checkout, host toolchain, and GN
-configuration are ready, but available host RAM is 6.58 GiB at the final check, below the
-mandatory >12 GiB compile guard. No compiler or Ninja build was started.
+Current verdict (2026-08-28): COMPLETE for isolated checkout, toolchain, and GN replay. The
+6.58 GiB observation blocked compilation; compilation is deliberately owned by the new Phase 1B
+build gate. No compiler or Ninja build was started in this phase.
 
 ## Context Links
 
@@ -25,7 +25,8 @@ mandatory >12 GiB compile guard. No compiler or Ninja build was started.
 ## Overview
 
 Create one disposable engine checkout/worktree on the approved host volume and verify the compiler
-toolchain. This phase owns only the new engine tree; it does not add an engine kind or edit MKTBrowser.
+toolchain. This phase owns only the new engine tree; it does not add an engine kind, compile an
+artifact, or edit MKTBrowser. Artifact production is a separate Phase 1B gate.
 
 ## Key Insights
 
@@ -73,29 +74,33 @@ runtime dependency from MKT Browser into the experimental tree.
 
 ## Implementation Steps
 
-1. Confirm owner approval, writable-root grant, `D:` free space `>=150 GiB` for a pilot (or
-   `>=200–220 GiB` for full/release), and host available RAM `>12 GiB`; power off all VMs before work.
+1. Confirm owner approval, writable-root grant, and the setup disk guard (`D:` free space `>=150 GiB`
+   for a pilot or `>=200 GiB` for full/release). Record RAM and VM state, but reserve the stricter
+   `>12 GiB` compile check for Phase 1B; power off all VMs before any compiler work.
 2. Install/verify the pinned Visual Studio C++ workload, MFC/ATL, Windows SDK/debugging tools,
    direct Git, depot_tools, and Python precedence from a `cmd.exe` shell.
 3. Create the single engine checkout with `--no-history` unless the owner explicitly funds a shared
    cache; record fetch start/end, exit code, source SHA, DEPS state, and bytes consumed.
 4. Generate one component/debug output directory only; do not start a compiler in this phase.
-5. Snapshot MKTBrowser and workspace status before and after; write the provenance manifest and handoff.
+5. Snapshot MKTBrowser and workspace status before and after; write the provenance manifest and handoff
+   to Phase 1B.
 
 ## Success Criteria
 
-- [ ] Exactly one engine checkout/worktree exists on the approved volume; no engine files are under
+- [x] Exactly one engine checkout/worktree exists on the approved volume; no engine files are under
   the MKTBrowser checkout.
-- [ ] Required toolchain checks are `100%` present and version-pinned; a fresh `cmd.exe` reproduces
+- [x] Required toolchain checks are `100%` present and version-pinned; a fresh `cmd.exe` reproduces
   the same `where python3`, compiler, SDK, and depot_tools results.
-- [ ] Source SHA and all dependency revisions are recorded; fetch exit code is `0`; no secrets enter
+- [x] Source SHA and all dependency revisions are recorded; fetch exit code is `0`; no secrets enter
   the manifest.
-- [ ] Free space is `>=150 GiB` before a minimal pilot and `>=20 GiB` after setup; otherwise verdict
-  is `BLOCKED`, not a partial pass.
-- [ ] MKTBrowser pre/post status and tracked-file hashes are identical; `0` MKTBrowser source files
+- [x] Free space is `>=150 GiB` before a minimal pilot and `>=20 GiB` after setup; otherwise verdict
+  is `BLOCKED`, not a partial pass. The stricter `D: >=200 GiB` admission is checked again by
+  Phase 1B immediately before compilation.
+- [x] MKTBrowser pre/post status and tracked-file hashes are identical; `0` MKTBrowser source files
   changed and `0` experimental binaries copied into it.
-- [ ] No compiler/build process runs concurrently with another engine build or a VM.
-- [ ] One machine-readable provenance manifest and `2/2` clean-shell replays produce identical
+- [x] No compiler/build process runs in this setup phase; the Phase 1B handoff explicitly owns the
+  single artifact invocation and its no-VM rule.
+- [x] One machine-readable provenance manifest and `2/2` clean-shell replays produce identical
   revision/toolchain hashes; `0` undocumented local patches or dependency overrides are present.
 
 ## Risk Assessment
@@ -115,8 +120,9 @@ runtime dependency from MKT Browser into the experimental tree.
 
 ## Next Steps
 
-Proceed to the baseline harness only after a fresh check reports available RAM >12 GiB and the
-toolchain replay remains identical. If any criterion fails, stop and record the exact blocker.
+Proceed to [Phase 1B — Minimal Chromium Build Gate](./phase-02a-minimal-chromium-build-gate.md),
+not directly to the baseline harness. Phase 1B must recheck RAM, D: capacity, and VM/WSL state and
+must produce and launch-test exactly one `chrome` artifact before Phase 3 can start.
 
 ## Execution Evidence
 
@@ -131,7 +137,8 @@ toolchain replay remains identical. If any criterion fails, stop and record the 
   gn ls replay returned 32,783 target lines. autoninja was not invoked.
 - D: measured 235.05 GiB free after setup; the conservative Phase 0 pre-fetch measurement was
   162.24 GiB (pilot floor 150 GiB, reserve floor 20 GiB). Final RAM was 6.58 GiB available on a
-  15.92 GiB host; no VirtualBox VM or WSL distro was running.
+  15.92 GiB host; no VirtualBox VM or WSL distro was running. This RAM result is a carried-forward
+  compile blocker for Phase 1B, not a failed setup/toolchain result.
 - Two clean-shell replay logs have identical SHA-256
   ebef50530eff947c603cfa7bd0a7ce3f1063fdc7a3065b408027f53af4901d85.
 - Machine-readable provenance (all dependency revisions, tool hashes, sanitized MKTBrowser
@@ -145,4 +152,5 @@ toolchain replay remains identical. If any criterion fails, stop and record the 
 
 - Is the newer SDK patch 10.0.28000.2526 acceptable as the reproducibility pin against the
   Chromium source comment pin 10.0.28000.2270?
-- When can the host provide more than 12 GiB available RAM for the first compiler run?
+- Can the host provide more than 12 GiB available physical RAM after one minimal reboot session,
+  or must Phase 1B move to a Windows build host with at least 32 GiB installed RAM?

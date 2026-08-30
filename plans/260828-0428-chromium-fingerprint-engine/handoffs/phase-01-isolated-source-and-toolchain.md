@@ -2,7 +2,7 @@
 phase: 1
 logicalPhase: 1
 date: 2026-08-28
-status: blocked
+status: complete
 ---
 
 # Phase 1 Handoff — Isolated Source and Toolchain
@@ -46,16 +46,17 @@ status: blocked
 
 ## Verdict
 
-BLOCKED, not partial PASS. Disk and toolchain/replay gates pass, but compile admission fails:
-6.58 GiB is not greater than the required 12 GiB. No compiler, Ninja, browser launch, installer,
-binary handoff, or distribution occurred. The exact SDK source comment pin is 10.0.28000.2270;
-the installed 10.0.28000.2526 is newer in the same source-required family and must remain an
-explicit review item.
+COMPLETE for setup/toolchain/GN, with the compile admission intentionally split into Phase 1B.
+The historical 6.58 GiB observation is retained as the Phase 1B blocker. No compiler, Ninja,
+browser launch, installer, binary handoff, or distribution occurred. The exact SDK source comment
+pin is 10.0.28000.2270; the installed 10.0.28000.2526 is newer in the same source-required family
+and remains an explicit review item.
 
 ## Files and state
 
 - Root plan files changed: plan.md, phase-01-feasibility-gate.md,
-  phase-02-isolated-source-and-toolchain.md, this handoff, and the Phase 1 evidence report.
+  phase-02-isolated-source-and-toolchain.md, phase-02a-minimal-chromium-build-gate.md, this handoff,
+  and the Phase 1 evidence report.
 - External evidence: D:\mkt-browser-engine\provenance-manifest.json
   (SHA-256 9175b37fef6a9fbee4204a6fab370e8fbac88383e3f5826bcc3dcf8cfb77541a).
 - External generated output: D:\mkt-browser-engine\src\out\Experimental.
@@ -75,8 +76,9 @@ The external engine tree is not part of the workspace Git repository.
 2. Re-measure D: reserve, available RAM, and VM/WSL state.
 3. Replay the clean-shell environment with depot_tools first, DEPOT_TOOLS_WIN_TOOLCHAIN=0, and
    vs2026_install=D:\mkt-browser-engine\vs2026.
-4. Do not run autoninja until available RAM is greater than 12 GiB. If it is not, keep status
-   BLOCKED and stop.
+4. Continue through the Phase 1B reboot/preflight procedure. Do not run autoninja until available
+   physical RAM is greater than 12 GiB, D: free is at least 200 GiB, and no VM/WSL instance is
+   active. If any gate fails, keep Phase 1B `BLOCKED` and stop.
 5. Before any binary leaves the experiment root, re-check MKTBrowser README license, notices,
    checksum, and approval status. No binary distribution is covered by this handoff.
 

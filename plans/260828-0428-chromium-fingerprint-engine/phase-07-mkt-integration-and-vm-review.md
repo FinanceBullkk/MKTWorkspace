@@ -10,6 +10,10 @@ dependencies: [phase-06]
 
 # Phase 6: Compatibility and VM Review (CLI phase 7)
 
+> **Parked by U6 closure — 30 August 2026.** This phase is retained as historical/reopen-only
+> procedure. No custom-engine build, integration, or VM review is scheduled for this release; do not
+> execute until a new owner decision explicitly reopens the parent engine plan.
+
 ## Context Links
 
 - Plan: [plan.md](./plan.md)

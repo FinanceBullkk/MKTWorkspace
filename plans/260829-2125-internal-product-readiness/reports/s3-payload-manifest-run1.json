@@ -1,0 +1,788 @@
+{
+  "schemaVersion": 1,
+  "type": "mktbrowser.normalized-payload-manifest",
+  "manifestSha256": "5a8385a27ed70e67ae5368aa5e5f09e8db23dc47b52e67bdb281ce7965fddf37",
+  "fileCount": 130,
+  "entries": [
+    {
+      "path": "LICENSE.electron.txt",
+      "size": 1096,
+      "sha256": "5154e165bd6c2cc0cfbcd8916498c7abab0497923bafcd5cb07673fe8480087d",
+      "peNormalized": false
+    },
+    {
+      "path": "LICENSES.chromium.html",
+      "size": 20367775,
+      "sha256": "5d545ce8065079f38a82472ab93bd62fcdf73cd319f0771ef51c45c7e243f1d4",
+      "peNormalized": false
+    },
+    {
+      "path": "MKTBrowser.exe",
+      "size": 221933568,
+      "sha256": "268f962a5062978b1c76ad656bcd4acf24cb4bce95456c18f0dac1423c3d5a1d",
+      "peNormalized": true
+    },
+    {
+      "path": "chrome_100_percent.pak",
+      "size": 119889,
+      "sha256": "15a5bcb49a5c02d6a4e736e8dfa11dabb0bac0589641a4e25f0c06472ccaae6d",
+      "peNormalized": false
+    },
+    {
+      "path": "chrome_200_percent.pak",
+      "size": 197073,
+      "sha256": "b7acfb068fa681f4ecb8f782bd4e3926590076c61fd0de3de4a12dde227cf52b",
+      "peNormalized": false
+    },
+    {
+      "path": "d3dcompiler_47.dll",
+      "size": 4741488,
+      "sha256": "8baf6d9aa1bc925a325dd929df311ed49294eee0c2623f5c69af408912361057",
+      "peNormalized": true
+    },
+    {
+      "path": "dxcompiler.dll",
+      "size": 25640448,
+      "sha256": "54965599627c629fd904c1699944adad9b0f2b1ade5ec82571afca79a600eeac",
+      "peNormalized": true
+    },
+    {
+      "path": "dxil.dll",
+      "size": 1509760,
+      "sha256": "3091643007188712fa3e1eb986fac896ad9fb2ecc7fddb52e1bbecfe890a7a69",
+      "peNormalized": true
+    },
+    {
+      "path": "ffmpeg.dll",
+      "size": 3063808,
+      "sha256": "258385d4372c393427ac763bda77903ad31396b048718280f4a0ab53e2790adb",
+      "peNormalized": true
+    },
+    {
+      "path": "icudtl.dat",
+      "size": 10876560,
+      "sha256": "bd8c145abdf3f8383276ce01dfa4ae48709bef9fef1c0711eb7c3fab4f6eb7c2",
+      "peNormalized": false
+    },
+    {
+      "path": "libEGL.dll",
+      "size": 484352,
+      "sha256": "31421c709abceb88a150ed6efc31574497530015b9dc41386663e727c77bf1ee",
+      "peNormalized": true
+    },
+    {
+      "path": "libGLESv2.dll",
+      "size": 8003584,
+      "sha256": "5b5f296e7450ac8ade4c7c0b5b63fd888f14e734efd55ef524185867d5d58abf",
+      "peNormalized": true
+    },
+    {
+      "path": "locales/af.pak",
+      "size": 620482,
+      "sha256": "d990f4ced39e31a1149d2a1842ce2504706885e6ab05957ee2f338c77d94c16b",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/am.pak",
+      "size": 1006731,
+      "sha256": "8d3d5dfc64acfbb0c35036d74561d09ddf3b22058eeed0f8d26a2e9c0703248e",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ar.pak",
+      "size": 1109717,
+      "sha256": "c54e67e232852d9b14b2bbf4c1a83f0e13a4970c2a83fd26dfb8d8c9eb40e3d6",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/bg.pak",
+      "size": 1150764,
+      "sha256": "2789212aac5f2133ed23c1f84623bc64eb4cfbd93aef7af751d1221e27a21daa",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/bn.pak",
+      "size": 1479936,
+      "sha256": "e72b72977b40fb10472fe1a3fcffcda8b434bf52e2bb2da2935faa80da224812",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ca.pak",
+      "size": 699615,
+      "sha256": "bc72ff7dd7c4286c1abb52da11c4dfdc42c917cdb267004eb2a906201850bca6",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/cs.pak",
+      "size": 726069,
+      "sha256": "8386f70e830a565d0674014ae4ad385a61eb43d7e7b99d4d373d14388dfd32ce",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/da.pak",
+      "size": 652598,
+      "sha256": "ff687bb6dc79bb638bca4f6a9226544a783209645922d323cf777b169690b25a",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/de.pak",
+      "size": 700828,
+      "sha256": "d2dab9943eeb4c4792dc1105d58bceee0e55f5008d87e97708ffde5d725a36b9",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/el.pak",
+      "size": 1265039,
+      "sha256": "3ee2e46a5a569e411ccf9d77ee4f356e1833bfccbaefcc5e71b7c1517206ab5f",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/en-GB.pak",
+      "size": 565496,
+      "sha256": "aac3b4904d021d58d053bdea2d8056a219ecda1e341d87cb70070aea2cee418f",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/en-US.pak",
+      "size": 571518,
+      "sha256": "bce3ec06227dba2273c4ff12482cba37b709cc8bf5fd29c4380f9a07b92bf821",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/es-419.pak",
+      "size": 690701,
+      "sha256": "385691afee6f73d929007ecceca62afeccaa5411015af04cb02d49b2a757ae35",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/es.pak",
+      "size": 686785,
+      "sha256": "bcffeb2649d529c69ca2c310040f09708208bb76414b1ee6f402c5a9661acafe",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/et.pak",
+      "size": 627098,
+      "sha256": "ecc838878412cc9f28dda9efed2fc60b67315f5fdf64e912db33cee7571a5939",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/fa.pak",
+      "size": 1038215,
+      "sha256": "5061cb29280711363d3bf7d8ec1e7e4057393056af5ae2b6e94f31714dfcaac9",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/fi.pak",
+      "size": 638637,
+      "sha256": "18d904efd7d15a49ef3638c45a40b3aa604e5ec4b68e017ab3f568e6a8202fd4",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/fil.pak",
+      "size": 723756,
+      "sha256": "4034bd7ef11f48d7d646aacb7006562f0f9caec888785a13c36e31b9724dd798",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/fr.pak",
+      "size": 746436,
+      "sha256": "1972f718698d83dd9af8ca7c77062dee0cb888de2eb096259c776752322077ae",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/gu.pak",
+      "size": 1462607,
+      "sha256": "b207f2046791aa8150015ca78f9f76f2f6509953a00c5e89b155bb40e3a26474",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/he.pak",
+      "size": 908716,
+      "sha256": "0600c34932b58b18f1d3196567af67de09ecf9eee8ea4378a22aef74fdb0eca2",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/hi.pak",
+      "size": 1549617,
+      "sha256": "8465aa28c6a2c74d98b2c29ea50c4f8e09aee553f8b01f9bccd1236dab3dc85d",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/hr.pak",
+      "size": 698898,
+      "sha256": "6990ba056fcd1cac97ed5b48024be4ab366846a9c517d43a181cbb0eefa095d1",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/hu.pak",
+      "size": 747469,
+      "sha256": "b83fc60c6d3ce3a04338ea16ba4627d6dfdf81f4373fe4921ac01c7c9558bcb6",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/id.pak",
+      "size": 618259,
+      "sha256": "01f3853d21d4543ecad1ceeeee40fd9cfd4fd31e6822c590618aa965eb9c46c5",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/it.pak",
+      "size": 675899,
+      "sha256": "683bc613c4ee53ea46824856a4b56d5b187355d2e2f6e52284c8e7fb9eee4e01",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ja.pak",
+      "size": 824122,
+      "sha256": "ba5b0b157956274ed1b8e1af1d858ca9862d59ce3ba5b833f54a613697153825",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/kn.pak",
+      "size": 1681341,
+      "sha256": "d154c50013245a268ba9b4b49639516ab0593922d893bdd551e4aa30ee6a3e2f",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ko.pak",
+      "size": 701225,
+      "sha256": "8a899f9df64736f4f8b295361bcb95f501835350b9320c2396e1d6f03cde5ee8",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/lt.pak",
+      "size": 759941,
+      "sha256": "0c755ce72d1b71e77d58ab014228458d8ce2b0c51a9b00769635c6609255c9f2",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/lv.pak",
+      "size": 757295,
+      "sha256": "911f922f6ab11d04c4913b04088619276994104979b2c5f132182953fabc24a9",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ml.pak",
+      "size": 1728736,
+      "sha256": "8beb5df27b5a1b88d0f441518a807b2c6acd99a81820cd0249710ea12bc179d0",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/mr.pak",
+      "size": 1431694,
+      "sha256": "1971da05e4868841c9d9f78be5e17ab09178af99b86a6c07df385015a0c9d9ef",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ms.pak",
+      "size": 651309,
+      "sha256": "b60c552a9ced5d0e1f4ed408f65a04068acad7d80db7cf88528fbebbcd337e23",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/nb.pak",
+      "size": 623206,
+      "sha256": "cb50908b03c77263297e63ff75d4d3c58fb0cb491c69a8964239e787c762f52d",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/nl.pak",
+      "size": 649223,
+      "sha256": "b6a6cecceeb0097d5fd9628c684d53339f7871948655740e0f625bfedbf526ae",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/pl.pak",
+      "size": 725422,
+      "sha256": "dee5b710ca72425cd4d1236ce260f8d68b41bfdfceaeb2f98c8e89217b24208f",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/pt-BR.pak",
+      "size": 680416,
+      "sha256": "4ce3dd9bdfe8042134cebe618aadd1d29daa91dc3bd7776a2a42639f97bef101",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/pt-PT.pak",
+      "size": 684180,
+      "sha256": "266e49a497c6bf9e48502c7eb01aea1fa90260b6fb1609165ff50307a3d81b59",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ro.pak",
+      "size": 710046,
+      "sha256": "16b11fb73ea0c5d0336de453d3e2abd2de69b3e6c66dcd72bae318666525bb18",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ru.pak",
+      "size": 1177506,
+      "sha256": "f3c1d6a7344a98a150d2731f0a7009bcf3adfd0b712dc7dc41f1ba5fcd13eeda",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/sk.pak",
+      "size": 738140,
+      "sha256": "d9cf65b23dd452e4a42331b32e39b890ab47152b71ea247dff628d7cb1dbda9c",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/sl.pak",
+      "size": 706747,
+      "sha256": "1550f8df161a3484a6c7af9bc5321fae524e10d6853467afcb8749054a73e601",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/sr.pak",
+      "size": 1088532,
+      "sha256": "a76930f2c72e49dc3a2c9be7e7bce0f9da0c93de03b6e275521fa86da0d2d39c",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/sv.pak",
+      "size": 630664,
+      "sha256": "b101225f190ed1f1738059283058703afb7eb2e0fb245dd076f919d993427b04",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/sw.pak",
+      "size": 667143,
+      "sha256": "f4e0e2f5b49d9d767884074cc3ee8d0dd83a986f7c1d2de236885998d7a53460",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ta.pak",
+      "size": 1720220,
+      "sha256": "9fbc40727cf1143d181fe6b21b63ee0f8ac020360ef23ce76759cbc0e4c009a8",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/te.pak",
+      "size": 1591885,
+      "sha256": "8b20dbd1ce97d4bde6273051991c593d74d51e90966dd6291b38b0185f4d0fe7",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/th.pak",
+      "size": 1337498,
+      "sha256": "55cdaecc9ee85290679c7c7331afa321eaa346ea33e77f2f587c0844199df7ec",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/tr.pak",
+      "size": 679613,
+      "sha256": "81a2cedd23026b21e617356a057839ef0f94530b51fc325c0f91ddb5b11bc932",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/uk.pak",
+      "size": 1185537,
+      "sha256": "39e272f1acb9c0b0bc791efa0347b92cb29e20cfbb5ae14f539628f10f45b0f1",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/ur.pak",
+      "size": 1021689,
+      "sha256": "0c1cfa61d9a9be6338b0a160b43ff362a982003053ae5be3b3ec867e78374d7b",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/vi.pak",
+      "size": 808053,
+      "sha256": "0458ac35755d2b86a116fa4a15de9c3ca7813a12852e43d697dcff2547c323ed",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/zh-CN.pak",
+      "size": 577797,
+      "sha256": "c2b05a5970bbb02226905b9e74fe44f32cd2796d4efc0669481c25f95a0882bb",
+      "peNormalized": false
+    },
+    {
+      "path": "locales/zh-TW.pak",
+      "size": 570095,
+      "sha256": "39e6196432e79380a812d6af2e99fd198a5ca3e81565435af136531a4c9cbf42",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar",
+      "size": 51723341,
+      "sha256": "51cd6272112d91eea79890323492c1faa08435562201584ff4993d98e27569f7",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/LICENSE",
+      "size": 1078,
+      "sha256": "09856b52897c91ab67e7456ef43067019f31dfd3b87fda72e655736b1ebdee55",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/build/Release/better_sqlite3.node",
+      "size": 1920512,
+      "sha256": "5e3abfaddbc6a47bbcf20f33b2c78d63af7fd1327cc5c39f8a144e81f91fd066",
+      "peNormalized": true
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/common.gypi",
+      "size": 1584,
+      "sha256": "e71a565cd7733e05efc3a2792b54e260126f03f490325aa2a201202acbbdb315",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/copy.js",
+      "size": 897,
+      "sha256": "05a2bd41dbd96e33e2fc6cf4bcbc722b4bc8c529813b882f92113d7dbbbece67",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/defines.gypi",
+      "size": 1160,
+      "sha256": "029426d3d6528d56ea75682a67a49e48747ccb7439faa75107601d4e2cafabc3",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/download.sh",
+      "size": 3913,
+      "sha256": "cc2c1539a4c906bd0ec38104264f9bc1d45120e79de8cc595c29a2319d5c4628",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/patches/1208.patch",
+      "size": 597,
+      "sha256": "5d1f22d69fee3551b70a7b7b9b14be43fcfd04dbc8683233667abfa75905011a",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/sqlite3/sqlite3.c",
+      "size": 9507980,
+      "sha256": "60d2f39a3726cd6b9021da6f4e868608d66fbb6528a9f513dc8ffcc640493422",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/sqlite3/sqlite3.h",
+      "size": 690725,
+      "sha256": "9e69a1353a4288450b0d5239ede11fc7f1f4c8e5eb07491fc8317eacb5b7de7e",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/sqlite3/sqlite3ext.h",
+      "size": 39175,
+      "sha256": "ac9645e5c9ff0cf176efdd6e75cb5e98f46295d38e02db5c4d208826a39ab4be",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/sqlite3.gyp",
+      "size": 2542,
+      "sha256": "a009b8f80cf0a944eacaf71a84e590504f353fbd8f8b341138d0c3094e372d18",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/deps/test_extension.c",
+      "size": 587,
+      "sha256": "948af88dbf356835f5496c1a3d047fdbcc58f3717aa9bc94d0943d7de2b7cf5b",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/database.js",
+      "size": 4149,
+      "sha256": "02ea23bdd23d7ac5de0675a2f32fc686e76d5c6a32bd3e3891f360e72e07f61f",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/index.js",
+      "size": 110,
+      "sha256": "82db11c4ee43a41d859988c5db42c3771dff565371f94bacbd1e4d8d6ceb47cd",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/aggregate.js",
+      "size": 1932,
+      "sha256": "e9f74eb919ec93fe089c95ddf25a98f1f631c80418fa34fb2346ca1bc29f1b82",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/backup.js",
+      "size": 2380,
+      "sha256": "ea29d34992bb02e006d0fdeda9675ac5d2bb227aaf57468decd997e9fc9c7dbf",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/function.js",
+      "size": 1396,
+      "sha256": "f431d49303b8bbdc044b1f1b455bdad21fc9b74b007de0acb22f08f25b4febd3",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/inspect.js",
+      "size": 174,
+      "sha256": "4975a78daee850adee62ba98719d0f223819a0ec135a07c0e302994bd8dbff61",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/pragma.js",
+      "size": 536,
+      "sha256": "8b1c54475bd4340b15e25c50d53d06308be65f8f919ecbe4aa9d285ca859ad5a",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/serialize.js",
+      "size": 625,
+      "sha256": "7a10ee5c2735384b7f0c361811bc6d017db29f62b203fd3c68a35f667e2c2605",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/table.js",
+      "size": 7144,
+      "sha256": "97c42d9ded1aa96c7d916b5b92f96b4e59581d50eaf629cd2c7afb78ff26a9ea",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/transaction.js",
+      "size": 2792,
+      "sha256": "bc8624a3ef689d8f78e5669020ad121e17acbc93b1d5ee5afe26860b1084c66c",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/methods/wrappers.js",
+      "size": 1145,
+      "sha256": "a150a6271d23f4e5f8953b129f370ff096c7cdc4b812afbf080a6cf4ab741bcf",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/sqlite-error.js",
+      "size": 717,
+      "sha256": "2582d61c27680dead168543f392eb102be621dfbef282a4ca4c7c21aa5e7c75d",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/lib/util.js",
+      "size": 331,
+      "sha256": "92b2e39e2151b43a2252e10b6d6de876ecaf0008336a4fa1dfe1317b20f1916f",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/package.json",
+      "size": 945,
+      "sha256": "35f5841195912569932e7816ca09d03f6567a9c37a6668d4fdd450314d46e24b",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/addon.cpp",
+      "size": 1283,
+      "sha256": "20f19f480ce060900521cf9510922e5ca1c8e76936f07ac2916f316e549a0190",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/better_sqlite3.cpp",
+      "size": 2851,
+      "sha256": "01b2333517538a24919cc0b916c5a436561d7f712bac7befb6850e9f4b042dc5",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/backup.cpp",
+      "size": 4146,
+      "sha256": "16a67102c49c9312eb1deecd08c27064325840df51d6957fe134b871f5d8798c",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/backup.hpp",
+      "size": 705,
+      "sha256": "02d57e03a1a03b3f8bb2fc503fc1704d4143b76d939fe37230fbb3b44177c44a",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/database.cpp",
+      "size": 14198,
+      "sha256": "081c514fb0a472a0e0962f0619149c187b6cf424e09baa7f39cc5246c17f75aa",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/database.hpp",
+      "size": 3129,
+      "sha256": "f47ab5d6bb775cadd0b2b73c4fcb6faf5cb2ae783a049ff4691fafc5d29a0bca",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/statement-iterator.cpp",
+      "size": 3339,
+      "sha256": "6ac791fbb786fc498450e843f2a043eddeb03093eb6b31012a04ae7b84a8d7ab",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/statement-iterator.hpp",
+      "size": 1391,
+      "sha256": "c064f10ad6bca99154d4f5325e187978d4c6d6cc6fedaa047a4d2f3b4b4f9655",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/statement.cpp",
+      "size": 13173,
+      "sha256": "4875a4d1942b89b1dc715b50f3f01e0899530a0772d0fef6f26c358d7e3d12a3",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/objects/statement.hpp",
+      "size": 1373,
+      "sha256": "3dca186418c62d81f4b9170904fdc02e624c3d76a0c0c61e6aa95486799808e9",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/bind-map.cpp",
+      "size": 1587,
+      "sha256": "7026e107a7f662b6460fbd05e91d9594f5114ffa69de7a8ddb082911f6e90876",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/binder.cpp",
+      "size": 6060,
+      "sha256": "64e2ebe910f2efc1d7a847672565745da2c4f5656d951033d99567e7593409d8",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/constants.cpp",
+      "size": 9068,
+      "sha256": "bbf4a3f983631f01f723627ee0e897f92b12cd6ca3e8b8b965318931bba0f2b4",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/custom-aggregate.cpp",
+      "size": 3952,
+      "sha256": "742d03187a7b8483c9f42bb7b77ed29d0f6877450584fba2662164d2b8dd11b6",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/custom-function.cpp",
+      "size": 1550,
+      "sha256": "6a1f826df2cc2c402d8a3dd747a57dbcedb52fe9220a2bbda6a5e01f038b13d1",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/custom-table.cpp",
+      "size": 14960,
+      "sha256": "7549b38f24b7e69e78d407534a5cde8814a8a08628a421b122644a43940e0aaf",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/data-converter.cpp",
+      "size": 460,
+      "sha256": "3cb73d0911e92893abf840752e9cfd6baded604d49b39ec4000599eec7c8c594",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/data.cpp",
+      "size": 9639,
+      "sha256": "74de42f9a0fa68277d8ea9cbaf8ee5f455bbd99cc41297696546c0ec8408c882",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/helpers.cpp",
+      "size": 4439,
+      "sha256": "7b763d2caa40f70bf6726c0f70ea50c1db69c7fa453b3bc2ec19577e99800984",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/macros.cpp",
+      "size": 4574,
+      "sha256": "09d5605bb65c8d43c0e235f878cbbffc98d79b1e35ee05b7c33766ce114a13a4",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/query-macros.cpp",
+      "size": 4138,
+      "sha256": "0dcf68c3ff527398ebe0a6b874b38aa23b3fb87f285b9701636c3b19282dde8c",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/app.asar.unpacked/node_modules/better-sqlite3/src/util/row-builder.cpp",
+      "size": 1017,
+      "sha256": "d5b352ac4959a07db22a825019286e085910310d6363c61fbdf037e3f32d56fc",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/companion/cs.js",
+      "size": 11834,
+      "sha256": "b5ee907e720e94e0b264240219e7ce2e5e19b2994feebad647586533d336b07f",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/companion/manifest.json",
+      "size": 353,
+      "sha256": "fb037a6ad4b0cba699f12ddbc7cecd83f9582d34a40a34b5bb37d45fd6e8b2b1",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/default_app.asar",
+      "size": 111073,
+      "sha256": "06d4a28be095a80eff94dbd18edcfac5b5805e1b5538e0fb7cee7c7ae81db76a",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/elevate.exe",
+      "size": 107520,
+      "sha256": "d91df82952d2bb5ba67969b325b334b911323141d7e69f7e2abafe7387ab5d80",
+      "peNormalized": true
+    },
+    {
+      "path": "resources/installer/windows-install-conflict-detection.ps1",
+      "size": 8575,
+      "sha256": "88369acaea959a894d11d55800f54b03a88b7616fdf7c66cfc2377cd84c80df8",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/relay/MKTTool-Relay.zip",
+      "size": 33342752,
+      "sha256": "5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e",
+      "peNormalized": false
+    },
+    {
+      "path": "resources/relay/relay-release.json",
+      "size": 207,
+      "sha256": "e9af4c3846d34308a707e6e3772b3a7cf143e998af74fffa69770cf8bbd6b313",
+      "peNormalized": false
+    },
+    {
+      "path": "resources.pak",
+      "size": 6876023,
+      "sha256": "3868fdbc90fe7c482c6fed8bc9423a1f1fe2a64ed045791289b540444ba3b9e5",
+      "peNormalized": false
+    },
+    {
+      "path": "snapshot_blob.bin",
+      "size": 346432,
+      "sha256": "e37f69376add891bdd0a22668df06b6aec04ed29d9a9f59a5a27d590c3cc1d93",
+      "peNormalized": false
+    },
+    {
+      "path": "v8_context_snapshot.bin",
+      "size": 721176,
+      "sha256": "35044db1201ea5bc10286206003b16100f63f7505c9481441c9cc3bdad0b53fe",
+      "peNormalized": false
+    },
+    {
+      "path": "version",
+      "size": 6,
+      "sha256": "db1f67db1ac6e90b67a7ef18173cd48530578b6311695e5fef00d4903849fa26",
+      "peNormalized": false
+    },
+    {
+      "path": "vk_swiftshader.dll",
+      "size": 5526016,
+      "sha256": "f7be2d0406f9af3c7b2cad18a04912d2775bc4928f180c7f4310ec50808d479c",
+      "peNormalized": true
+    },
+    {
+      "path": "vk_swiftshader_icd.json",
+      "size": 106,
+      "sha256": "32d83ff113fef532a9f97e0d2831f8656628ab1c99e9060f0332b1532839afd9",
+      "peNormalized": false
+    },
+    {
+      "path": "vulkan-1.dll",
+      "size": 931840,
+      "sha256": "5302162e9164392adacace2b3c99d2787338b020390e13c336178c54726e2a03",
+      "peNormalized": true
+    }
+  ]
+}

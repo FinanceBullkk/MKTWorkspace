@@ -1,0 +1,12 @@
+{
+  "capturedAt": "2026-08-30T04:55:33.4569813Z",
+  "source": "production Postgres via Railway TCP proxy; aggregate-only query",
+  "query": "RelayDevice grouped by relayVersion with active/revoked counts, distinct database owner IDs, and linked active accounts",
+  "rows": [
+    { "reportedVersion": "15", "total": 2, "active": 2, "revoked": 0, "distinctActiveOwners": 2, "linkedActiveAccounts": 1 },
+    { "reportedVersion": "unknown", "total": 3, "active": 0, "revoked": 3, "distinctActiveOwners": 0, "linkedActiveAccounts": 0 }
+  ],
+  "aggregateTotals": { "rows": 5, "active": 2, "revoked": 3 },
+  "identifiersEmitted": false,
+  "interpretation": "Both active v15 rows are the owner's machines per Q15. The distinctActiveOwners value is a database grouping only, not a physical-operator count. RelayDevice is a latest self-report and does not prove installed installer bytes or a completed reinstall."
+}

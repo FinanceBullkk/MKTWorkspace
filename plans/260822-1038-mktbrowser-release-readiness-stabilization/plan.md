@@ -16,7 +16,19 @@ source: skill
 
 # MKTBrowser Release Readiness Stabilization
 
+> **Historical predecessor plan — superseded 30 August 2026.** Its 0.3.12/old-branch baseline and
+> in-progress status are retained for traceability. Current truth is in the consolidation plan:
+> P4a Web is deployed, P4b Browser five-artifact provenance is OPEN, Q15 is owner-only self-serve,
+> and Lane C is **CLOSED** because no CloakBrowser channel exists.
+
 ## Overview
+
+**Internal beta boundary, 29 August 2026:** a clean `0.3.12` Windows candidate from source
+`6d1b0a2` was hash-bound, packaged-smoked, and published for a controlled admin-led beta. This plan
+continues to govern broad Browser rollout and does not read that beta as closure of the human,
+network, identity, vendor, operator, or canary gates. The Web/Facebook handoff may proceed without
+waiting for Phases 5-6. Custom-engine, macOS, updater, concurrency, and automation work stay outside
+the immediate delivery path.
 
 Move MKT Browser from a strong internal technical build to an evidence-backed operator release.
 The critical path is strict: remove vulnerable runtime extraction, eliminate packaged-contract CI

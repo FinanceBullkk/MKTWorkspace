@@ -8,6 +8,12 @@ status: blocked
 
 # Phase 1 Evidence — Isolated Chromium Source and Toolchain
 
+## Scope Amendment (2026-08-28)
+
+This report retains the original observation that compilation was blocked at 6.58 GiB available
+RAM. The plan now treats checkout/toolchain/GN setup as complete and carries that observation into
+the separate Phase 1B artifact gate; this historical report is not evidence that a compiler ran.
+
 ## Verdict
 
 BLOCKED. The source checkout, dependencies, host compiler toolchain, and GN configuration are

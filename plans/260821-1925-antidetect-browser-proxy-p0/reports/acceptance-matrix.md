@@ -37,7 +37,7 @@ Secret-like error values must be redacted longest-first before they can enter a 
 No real account, existing operational profile, or production proxy may be substituted for these
 labels during disposable gates.
 
-## G0 Baseline Gates
+## G0 Baseline Gates (historical 21 August snapshot)
 
 | Gate | Expected evidence | Current result | Status |
 |---|---|---|---|
@@ -52,16 +52,16 @@ labels during disposable gates.
 | `G0-PAIRS` | Two approved disposable profile/proxy pairs | Not supplied | `BLOCKED` |
 | `G0-REDACTION` | Owner approves this evidence contract | Approved by owner on 21 August 2026 | `PASS` |
 
-## Downstream Gates
+## Downstream Gates (ledger snapshot; current candidate reconciliation below)
 
 | Gate | Minimum evidence | Status |
 |---|---|---|
 | `G1-INPUT` | Valid cover control, interleaved A/B evidence, three packaged manual-login interactions | `OPEN` - one manual-login interaction now evidenced, see 27 August below |
 | `G2-NETWORK` | Two proxies, matching independent/in-browser route, no DNS/WebRTC bypass | `OPEN` |
-| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `FAIL` - measured 27 August, see below |
+| `G2-IDENTITY` | Same-profile stability plus cross-profile fingerprint/storage separation, measured sequentially | `FAIL` - reaffirmed 2026-08-30 from the licensed Stable `.2` evidence: fonts `08050B16`, `OfflineAudioContext` `0B09CAEB`, and WebGL `BF16CA5C` collide; see the reconciliation below |
 | `G2-CONCURRENT` | Two profiles open at once with no cross-wiring | `DEFERRED` - one seat, capped at one profile (25 Aug owner decision) |
 | `G3-LICENSE` | Measured vendor schema and confirmed-release-only lease state | `OPEN` |
-| `G3-RECOVERY` | Normal close, hard kill, Electron crash, Relay restart, and reboot recovery | `PASS` - final bounded real power-cycle evidence below |
+| `G3-RECOVERY` | Normal close, hard kill, Electron crash, Relay restart, and reboot recovery | `OPEN` - 2026-08-30 reconciliation: the historical dirty-source/v15 power-cycle subset is PASS, but the exact v16 candidate still lacks clean-VM and power-cycle evidence; see the reconciliation below |
 | `G4-OPERATOR` | Second-PC installer/setup with no manual secret or configuration copying; the clean VM guest is PC B and is recorded as virtual | `OPEN` |
 | `G5-CANARY` | Seven days of approved manual use with all metrics inside threshold | `OPEN` |
 | `G5-DECISION` | Signed GO or exact NO-GO blockers | `OPEN` |
@@ -243,6 +243,44 @@ The font, audio and WebGL joins **cannot be closed with what the engine ships to
 vendor answers what value `--fingerprint-noise` expects and whether the font-metrics switch takes a
 seed, the mitigation is organisational rather than technical: **keep the number of profiles per
 physical machine low**, because every profile on one host carries the same three marks.
+
+## 28 August Preview 151.0.7922.108.3 candidate measurement
+
+Evidence: `plans/260821-1925-antidetect-browser-proxy-p0/reports/fingerprint-isolation-preview-151-0-7922-108-3-20260828.md`
+and sanitized probe outputs under `local-test-artifacts/engine-switch-audit/`.
+
+The checksum-verified Windows Preview archive was measured outside the installed runtime. Stable
+`.2` remained installed and the signed engine release record was not changed. Two fresh profile
+directories used the same locale, timezone, screen, GPU, cores, and memory; only the deterministic
+fingerprint seed changed. A third run repeated the first seed.
+
+| BrowserScan surface | Stable `.2` | Preview `.3` | Candidate verdict |
+|---|---|---|---|
+| Fonts | `08050B16` / `08050B16` | `8BA38B6D` / `8BA38B6D` | Initial pair collided; later seeds found more buckets |
+| Audio | `0B09CAEB` / `0B09CAEB` | `0B09CAEB` / `0B09CAEB` | Still joined |
+| WebGL image | `BF16CA5C` / `BF16CA5C` | `2FF52706` / `1C093001` | Seed-sensitive on Preview; repeated seed reproduced exactly |
+
+Follow-up with vendor-recommended seeds `47091`/`10035` produced different BrowserScan font hashes
+(`8BA38B6D`/`6B101CA5`), proving that fonts are seed-bucketed rather than universally joined. The same
+pair collided on BrowserScan WebGL (`2FF52706` both) and still joined on audio (`0B09CAEB` both).
+Removing every MKT Browser-style override and passing only `--fingerprint=<seed>` produced the same
+result, so the audio invariant is inside the engine rather than an interaction with this driver.
+
+Across nine explicit Preview seeds, BrowserScan exposed only three font buckets, one audio bucket,
+and two WebGL image buckets. The local native probe exposed ten distinct font-metric and ten distinct
+WebGL readback hashes across ten seeds, but only one audio render hash. Custom local hashes therefore
+overstate the isolation visible to the named external gate.
+
+`--fingerprint-windows-font-metrics` did not change the Windows font result; vendor documentation
+limits that switch to aligning a Linux host with a spoofed Windows platform. The documented
+`--fingerprint-noise=false` disables native noise rather than creating a new per-profile seed and
+does not repair the remaining joins.
+
+This is a real partial vendor improvement, but the scanner-visible seed pool has high collision and
+audio remains build-invariant. No JS preload was added: it would violate the native C++ boundary and
+create cross-API tampering signals.
+`G2-IDENTITY` stays **FAIL**, machine profile count stays low, and Preview `.3` is **not promoted** to
+the Windows engine pin.
 
 ## 27 August second-key concurrency retest
 
@@ -596,3 +634,62 @@ unexplained process owner also invalidates the run.
 
 Skipped machine and human gates remain `OPEN` or `BLOCKED`; they are never converted to `PASS` from
 unit, mock, source-shape, or unpackaged evidence.
+
+## 30 August consolidation reconciliation
+
+Candidate: `20260830-browser-0.3.13-relay-16`. Evidence reviewed: the 30 August identity decision
+(`plans/260829-2125-internal-product-readiness/reports/identity-measurement.md`), the current gate
+ledger, and the Lane A preflight record. This section is authoritative for the current candidate;
+all dated sections above remain retained history.
+
+### G2-IDENTITY — FAIL (reaffirmed 2026-08-30)
+
+No new licensed-engine launch was performed on 30 August. The approved binary threshold was
+re-applied to the existing hash-bound native Stable `.2` measurement (`P0-G2-IDENTITY-20260827131800`)
+and remains a fail-fast result:
+
+| Required surface | Profile A | Profile B | Result |
+|---|---|---|---|
+| Fonts | `08050B16` | `08050B16` | **Collision** |
+| `OfflineAudioContext` | `0B09CAEB` | `0B09CAEB` | **Collision** |
+| WebGL parameter/image surface | `BF16CA5C` | `BF16CA5C` | **Collision** |
+
+The formal fresh three-profile × five-run matrix is still `OPEN`; that qualification does not turn
+the observed required-surface collisions into a pass. Preview `.3` remains an experimental,
+not-promoted result, and the custom-engine track is closed. No document may infer fingerprint
+uniqueness or identity isolation from this candidate.
+
+### G3-RECOVERY — OPEN for the current candidate
+
+Before this update, the summary row at line 64 said `PASS`; the final bounded power-cycle section at
+lines 414–437 records a PASS on a **dirty-source** Browser artifact (`55b8587`) carrying Relay v15.
+The separate historical restart/reboot continuation at lines 520–541 explicitly retained an
+`OPEN`/`FAIL-CLOSED` availability result. Those entries describe different artifact scopes and are
+not silently interchangeable.
+
+The reconciliation is:
+
+- The historical dirty-source/v15 power-cycle subset at lines 414–437 stays visible and remains
+  `PASS` for that tested subset.
+- The previously published `0.3.12`/Relay v15 installer has a different embedded payload and a
+  failed restart-replay result. The current `0.3.13`/Relay v16 candidate has host/local contract
+  and replay evidence, but no clean-VM lifecycle run and no candidate-bound physical
+  power-cycle/recovery run. Those checks are `OPEN`/`NOT-RUN`, not implied by the historical result.
+- Accordingly, the current summary row at line 64 is `OPEN`; the old `PASS` wording is superseded
+  by artifact qualification, not deleted. Lane B promotion cannot use the historical PASS as an
+  exact-candidate recovery proof, and Lane C is **CLOSED** for this product shape (not a pending
+  recovery or vendor-promotion path).
+
+### Lane and owner status — current consolidation
+
+The following rows are the current 30 August release truth and supersede any older lane or owner
+wording retained in the dated sections above:
+
+| Area | Current status | Boundary |
+|---|---|---|
+| **U2 / CI** | **Qualified** — required MKTTool contract jobs are green; Browser Windows runner setup failed before quality jobs (`33291356306`), so package jobs were skipped. | The skipped Browser jobs remain **OPEN** and cannot be called PASS. |
+| **U3 / packaging** | **OPEN** — normalized payloads are byte-identical, but the controlled outer installer still has a measured 103-byte NSIS/resource-order/trailer variance. | No normalizer or full-installer reproducibility claim is made. |
+| **P4a / Lane A Web** | **Qualified deployment** — MKTTool merged to `master` at `380962a49576a4663438ef50685dcb386c86aa08`; the merge deployment `8e1123a3-c7f6-49a8-bb97-68c35bd4807a` and later docs deployment `c4ac6781-6c41-486f-9e24-eeaf67aed22b` both returned SUCCESS, with `/api/healthz` 200 and the authorized full `/api/relay/download/v16` GET hash-exact. The latest active deployment is maintained in the successor P4a receipt. | This is deployment/route evidence only. Credentialed smoke (P4-08) and rollback rehearsal (P4-09) remain `OPEN`. |
+| **P4b / Browser five-artifact tuple** | **OPEN** — the exact tuple is not published because the CloakBrowser Stable `.2` engine archive is absent. | P4b is independent of P4a; no Browser tuple is fabricated or inferred from Web deployment evidence. |
+| **U5 / Q15 Relay floor** | **OPEN** — both v15 devices are the owner's machines; the path is self-serve `0.3.13` reinstall with no notification channel. | Keep `MIN_RELAY_VERSION=13` until observed v16 health responses from both owner machines and the full probe/revocation procedure are complete. |
+| **U6 / Q16 Lane C** | **CLOSED** — there is no CloakBrowser channel, so no vendor request, date, or waiting state exists. | `G2-IDENTITY` remains **FAIL**; any alternative-vendor route requires a new product decision and is outside this release. |

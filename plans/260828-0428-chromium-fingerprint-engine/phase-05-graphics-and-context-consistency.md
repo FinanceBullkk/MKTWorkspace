@@ -10,6 +10,10 @@ dependencies: [phase-04]
 
 # Phase 4: Graphics and Context Consistency (CLI phase 5)
 
+> **Parked by U6 closure — 30 August 2026.** This phase is retained as historical/reopen-only
+> procedure. No custom-engine build, graphics measurement, or identity claim is scheduled for this
+> release; do not execute until a new owner decision explicitly reopens the parent engine plan.
+
 ## Context Links
 
 - Plan: [plan.md](./plan.md)

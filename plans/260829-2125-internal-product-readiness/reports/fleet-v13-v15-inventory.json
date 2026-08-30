@@ -1,0 +1,143 @@
+{
+  "lifecycle": "HISTORICAL_SUPERSEDED",
+  "supersededBy": "plans/260830-0830-consolidation-and-lane-a-release/reports/fleet-inventory-postdeploy.json",
+  "currentQualification": "Q15 confirms both active v15 devices are owner machines; self-serve reinstall and no notification channel.",
+  "schemaVersion": 1,
+  "status": "PASS_WITH_OPEN_MIGRATION",
+  "queriedAt": "2026-08-29T19:03:15.188Z",
+  "queriedAtTimezone": "UTC",
+  "source": "PRODUCTION_DATABASE_URL",
+  "readOnly": true,
+  "table": "RelayDevice",
+  "queryCommand": "tsx --env-file=.env <one-off read-only PrismaPg query using PRODUCTION_DATABASE_URL>",
+  "queryShape": {
+    "model": "RelayDevice.findMany",
+    "select": [
+      "userId (used only for distinct-owner count; never emitted)",
+      "relayVersion",
+      "lastSeenAt",
+      "revokedAt",
+      "createdAt",
+      "operatorKeyReadyAt",
+      "operatorKeyGrantedAt",
+      "_count.accounts"
+    ],
+    "orderBy": ["relayVersion ASC", "createdAt ASC"]
+  },
+  "currentSecurityFloor": 13,
+  "plannedSecurityFloor": 16,
+  "total": 5,
+  "targetVersions": [
+    {
+      "relayVersion": 13,
+      "total": 0,
+      "active": 0,
+      "revoked": 0,
+      "withLastSeen": 0,
+      "withoutLastSeen": 0,
+      "lastSeenAt": { "oldest": null, "newest": null },
+      "createdAt": { "oldest": null, "newest": null },
+      "ageBuckets": { "unknown": 0, "under24h": 0, "1to7d": 0, "over7d": 0 },
+      "distinctOwners": 0,
+      "linkedAccountCount": 0,
+      "operatorKeyReady": 0,
+      "withOperatorKeyGrantedAt": 0
+    },
+    {
+      "relayVersion": 14,
+      "total": 0,
+      "active": 0,
+      "revoked": 0,
+      "withLastSeen": 0,
+      "withoutLastSeen": 0,
+      "lastSeenAt": { "oldest": null, "newest": null },
+      "createdAt": { "oldest": null, "newest": null },
+      "ageBuckets": { "unknown": 0, "under24h": 0, "1to7d": 0, "over7d": 0 },
+      "distinctOwners": 0,
+      "linkedAccountCount": 0,
+      "operatorKeyReady": 0,
+      "withOperatorKeyGrantedAt": 0
+    },
+    {
+      "relayVersion": 15,
+      "total": 2,
+      "active": 2,
+      "revoked": 0,
+      "withLastSeen": 2,
+      "withoutLastSeen": 0,
+      "lastSeenAt": {
+        "oldest": "2026-08-19T01:55:37.312Z",
+        "newest": "2026-08-19T07:13:16.881Z"
+      },
+      "createdAt": {
+        "oldest": "2026-08-06T11:01:32.990Z",
+        "newest": "2026-08-18T04:17:03.317Z"
+      },
+      "ageBuckets": { "unknown": 0, "under24h": 0, "1to7d": 0, "over7d": 2 },
+      "distinctOwners": 2,
+      "linkedAccountCount": 1,
+      "operatorKeyReady": 2,
+      "withOperatorKeyGrantedAt": 2
+    }
+  ],
+  "byVersion": {
+    "unknown": {
+      "total": 3,
+      "active": 0,
+      "revoked": 3,
+      "withLastSeen": 0,
+      "withoutLastSeen": 3,
+      "lastSeenAt": { "oldest": null, "newest": null },
+      "createdAt": {
+        "oldest": "2026-08-06T09:40:51.225Z",
+        "newest": "2026-08-06T11:24:31.969Z"
+      },
+      "ageBuckets": { "unknown": 3, "under24h": 0, "1to7d": 0, "over7d": 0 },
+      "distinctOwners": 2,
+      "linkedAccountCount": 0,
+      "operatorKeyReady": 1,
+      "withOperatorKeyGrantedAt": 1
+    },
+    "v15": {
+      "total": 2,
+      "active": 2,
+      "revoked": 0,
+      "withLastSeen": 2,
+      "withoutLastSeen": 0,
+      "lastSeenAt": {
+        "oldest": "2026-08-19T01:55:37.312Z",
+        "newest": "2026-08-19T07:13:16.881Z"
+      },
+      "createdAt": {
+        "oldest": "2026-08-06T11:01:32.990Z",
+        "newest": "2026-08-18T04:17:03.317Z"
+      },
+      "ageBuckets": { "unknown": 0, "under24h": 0, "1to7d": 0, "over7d": 2 },
+      "distinctOwners": 2,
+      "linkedAccountCount": 1,
+      "operatorKeyReady": 2,
+      "withOperatorKeyGrantedAt": 2
+    }
+  },
+  "schemaAvailableFields": [
+    "relayVersion",
+    "lastSeenAt",
+    "revokedAt",
+    "createdAt",
+    "operatorKeyReadyAt",
+    "operatorKeyGrantedAt",
+    "accounts relation count"
+  ],
+  "unavailableFields": [
+    "installer version/metadata (RelayDevice has no installer columns)",
+    "rollback floor history (not stored on RelayDevice)",
+    "per-device historical version timeline (relayVersion/lastSeenAt are latest snapshots)"
+  ],
+  "limitations": [
+    "No device identifiers, names, owner identifiers, public keys, or account identifiers are emitted.",
+    "relayVersion and lastSeenAt are latest self-reported snapshots, not an audit history; an offline device can be older than its recorded lastSeenAt.",
+    "The three null-version rows are revoked and cannot be assigned to v13/v14/v15 from this table snapshot.",
+    "Installer bytes, installer-side version metadata, rollback floors, and update acknowledgements require compatibility-manifest/update records or operator evidence, not RelayDevice alone.",
+    "The query used the hosted URL's existing TLS settings and added the pg/libpq compatibility flag in memory only; no .env value was printed or changed."
+  ]
+}

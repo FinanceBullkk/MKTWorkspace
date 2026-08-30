@@ -10,6 +10,13 @@ dependencies: []
 
 # Phase 0: Feasibility Gate
 
+## Phase 1B Amendment (2026-08-28)
+
+The measurements below remain the original Phase 0 snapshot. Later host checks measured D: at
+235.05 GiB free but only 6.79-7.02 GiB available physical RAM, so the new Phase 1B build gate
+remains blocked until the one-time reboot/minimal-shell check or a 32 GiB+ Windows build host.
+Compilation and the 100-launch baseline are intentionally not part of this phase.
+
 ## Context Links
 
 - Plan: [plan.md](./plan.md)
@@ -177,8 +184,9 @@ before compilation when available host RAM is at or below 12 GiB.
 
 ## Next Steps
 
-- Open a fresh session, read the Phase 0 handoff addendum, then use the isolated-source phase
-  handoff; do not touch the current MKTBrowser branch.
+- Open a fresh session, read the Phase 0 handoff addendum, then use the isolated-source handoff and
+  [Phase 1B — Minimal Chromium Build Gate](./phase-02a-minimal-chromium-build-gate.md); do not touch
+  the current MKTBrowser branch.
 
 ## Unresolved Questions
 

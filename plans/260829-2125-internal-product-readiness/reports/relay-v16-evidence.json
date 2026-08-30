@@ -1,0 +1,108 @@
+{
+  "candidateId": "20260830-browser-0.3.13-relay-16",
+  "phase": "S1b",
+  "status": "EXACT_LOCAL_AND_R2_GATE_PASS_WITH_COMPATIBILITY_OPEN",
+  "capturedAt": "2026-08-30T02:56:00+07:00",
+  "source": {
+    "repository": "MKTTool",
+    "headCommit": "1ade2c4a921507fac9e10c30843b67b5944197dd",
+    "headTree": "2eb0f14174c794625ca799d961adcb30c1774bbc",
+    "workingTreeDirty": true,
+    "dirtyPathsOwnedByThisUnit": [
+      "relay/src/main.ts",
+      "relay/src/relay-config.ts",
+      "relay/src/relay-identity.ts",
+      "relay/src/spent-ticket-journal.test.ts",
+      "relay/src/spent-ticket-journal.ts",
+      "scripts/build-relay-executable.ts",
+      "scripts/relay-executable-harness.ts",
+      "scripts/smoke-test-relay-executable.ts",
+      "src/components/setup/relay-download-section.tsx",
+      "src/lib/antidetect/mkt-browser-contract.test.ts",
+      "src/lib/relay/relay-endpoints.ts",
+      "src/lib/relay/relay-release-metadata.ts",
+      "src/lib/tickets/ticket-replay-guard.test.ts",
+      "src/lib/tickets/ticket-replay-guard.ts",
+      "src/lib/tickets/ticket-verifier.ts"
+    ],
+    "requiredAncestor": "57e14fac8e4aed69f30a9fdab95b3a087f04a4e7"
+  },
+  "build": {
+    "host": {
+      "os": "Windows",
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v22.23.2",
+      "defaultNodeObservedBeforeSwitch": "v24.14.1"
+    },
+    "webOrigin": "https://mkttool-web-production.up.railway.app",
+    "compatibilityInstallerFloorSequence": 1,
+    "relayVersion": 16,
+    "securityFloorAtBuild": 13,
+    "archive": {
+      "path": "MKTTool/relay/dist/MKTTool-Relay.zip",
+      "sizeBytes": 33342752,
+      "sha256": "5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e"
+    },
+    "executable": {
+      "pathInsideArchive": "MKTTool-Relay.exe",
+      "sizeBytes": 87987200,
+      "sha256": "300646e1ea35aa47ece1b0d608d9b9681ee5bde82dd084bcdc5145345d07b60e"
+    },
+    "sidecar": "MKTTool/relay/dist/MKTTool-Relay.metadata.json",
+    "authenticode": "ABSENT_UNSIGNED_INTERNAL_EXCEPTION_NOT_YET_APPROVED"
+  },
+  "tests": {
+    "focusedRelay": {
+      "command": "npm exec -- vitest run --no-cache relay/src/spent-ticket-journal.test.ts src/lib/tickets/ticket-replay-guard.test.ts",
+      "result": "18 passed"
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "node": "v22.23.2",
+      "result": "pass"
+    },
+    "exactArchiveHarness": {
+      "command": "npm run relay:verify -- --archive=relay/dist/MKTTool-Relay.zip",
+      "result": "pass",
+      "checks": {
+        "archiveAndExtractedExeHashBinding": true,
+        "sameRunDuplicateRejected": true,
+        "restartDuplicateRejected": true,
+        "freshTicketAfterRestartAcceptedOnce": true,
+        "forcedTerminationDuplicateRejected": true,
+        "corruptJournalMakesHealthNotReady": true,
+        "expiredTicketRejected": true,
+        "secretRoundTrip": true,
+        "retirementLifecycle": true
+      }
+    },
+    "journalFailureMatrix": {
+      "missingAfterInitialization": "pass",
+      "invalidJson": "pass",
+      "nonArray": "pass",
+      "partialJson": "pass",
+      "invalidRecord": "pass",
+      "duplicateJti": "pass",
+      "interruptedTempOnFirstRun": "pass",
+      "flushFaultInjection": "pass",
+      "renameFaultInjection": "pass",
+      "unwritableHomeSimulation": "pass",
+      "serializedConcurrentWrites": "pass",
+      "physicalPowerLoss": "OPEN_EXTERNAL"
+    }
+  },
+  "release": {
+    "r2Version16Published": true,
+    "r2ReadBack": true,
+    "floor13To16": "NOT_YET_RAISED_ROUTE_FIRST",
+    "fleetV13V14V15Inventory": "PASS_WITH_OPEN_MIGRATION",
+    "compatibilityBundle": "OPEN_EXTERNAL_BROWSER_ENGINE_AND_INSTALLER",
+    "immutableV15Preserved": true
+  },
+  "notes": [
+    "The postject build printed a signature-corruption warning because the executable is unsigned; no Authenticode signature was claimed.",
+    "The working tree was intentionally not clean because unrelated AGENTS.md changes and other repository work must be preserved; the candidate hashes bind the exact bytes tested.",
+    "R2 publication and floor migration remain S1b work and are not implied by this local PASS."
+  ]
+}

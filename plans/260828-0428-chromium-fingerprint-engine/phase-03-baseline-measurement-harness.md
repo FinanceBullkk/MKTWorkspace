@@ -3,17 +3,23 @@ phase: 3
 logicalPhase: 2
 title: "Baseline Measurement Harness"
 status: pending
+gateStatus: locked-until-phase-1b-pass
 priority: P1
 effort: "<=2h active harness slice; 2–6h unattended measurement wall time"
-dependencies: [phase-02]
+dependencies: [phase-02a]
 ---
 
 # Phase 2: Baseline Measurement Harness (CLI phase 3)
+
+> **Parked by U6 closure — 30 August 2026.** This phase is retained as historical/reopen-only
+> procedure. No custom-engine build, baseline measurement, or identity claim is scheduled for this
+> release; do not execute until a new owner decision explicitly reopens the parent engine plan.
 
 ## Context Links
 
 - Plan: [plan.md](./plan.md)
 - Source gate: [isolated source and toolchain](./phase-02-isolated-source-and-toolchain.md)
+- Artifact gate: [Phase 1B — Minimal Chromium Build Gate](./phase-02a-minimal-chromium-build-gate.md)
 - Existing acceptance vocabulary: `plans/260821-1925-antidetect-browser-proxy-p0/reports/acceptance-matrix.md:7-28,104-135,628-636`
 - Existing harness concept (coverage gap): `MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs`
 - Diagnostic tools: BrowserScan and CreepJS (measurement only; no score target)
@@ -22,7 +28,9 @@ dependencies: [phase-02]
 
 Build a standalone, repeatable probe against the unmodified experimental runtime before any native
 patch. The harness separates measurement completeness from identity quality, so a baseline collision
-is recorded as evidence rather than hidden by a score.
+is recorded as evidence rather than hidden by a score. This phase is hard-blocked until Phase 1B
+has a PASS verdict with a hashed `chrome` binary and a clean empty-profile shutdown; the planned
+100-launch run is `NOT-RUN` while that gate is blocked.
 
 ## Key Insights
 
@@ -71,15 +79,19 @@ test order, host) for every run.
 
 ## Implementation Steps
 
-1. Define a versioned evidence schema and deterministic fixture generator for 10 disposable profiles.
-2. Implement one cold-start and one warm-restart path; verify the profile-owned DevTools endpoint.
-3. Add probes for the named surfaces and context matrix; mark unsupported contexts explicitly.
-4. Run 10 profiles × 10 launches sequentially (100 records), then repeat one seed in a fresh data root.
-5. Summarize per-surface collisions, exact repeats, context disagreement, and cleanup; do not tune output.
+1. Verify the Phase 1B PASS report, binary SHA-256, source/toolchain manifest, and no-change MKTBrowser
+   snapshot before creating any measurement fixture.
+2. Define a versioned evidence schema and deterministic fixture generator for 10 disposable profiles.
+3. Implement one cold-start and one warm-restart path; verify the profile-owned DevTools endpoint.
+4. Add probes for the named surfaces and context matrix; mark unsupported contexts explicitly.
+5. Run 10 profiles × 10 launches sequentially (100 records), then repeat one seed in a fresh data root.
+6. Summarize per-surface collisions, exact repeats, context disagreement, and cleanup; do not tune output.
 
 ## Success Criteria
 
 - [ ] `100/100` launches emit schema-valid, sanitized records with source/artifact/run identifiers.
+- [ ] The Phase 1B report is a documented PASS; if it is `BLOCKED`, `FAIL`, or `NOT-RUN`, this phase
+  remains `NOT-RUN` and emits no baseline claim.
 - [ ] The repeated seed in a fresh data root reproduces every measured surface `10/10` times, or the
   phase verdict is `FAIL` with the first divergent record retained.
 - [ ] Main frame, iframe, worker, and offscreen-canvas coverage is reported `4/4` where supported;

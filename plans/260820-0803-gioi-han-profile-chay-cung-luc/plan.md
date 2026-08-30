@@ -1,5 +1,10 @@
 # Giới hạn số profile chạy cùng lúc — nói bằng ngôn ngữ người dùng
 
+> **Historical predecessor note — superseded 30 August 2026.** This one-seat/cooldown plan is
+> retained for product history. Current Q15 status is owner-only self-serve on two machines with no
+> notification channel; U6/Lane C is closed, and P4a Web does not depend on Browser artifacts. Do not
+> schedule its old vendor or capacity steps as current work.
+
 **Tạo:** 20/08/2026 08:03 · **Trạng thái:** phase-01 xong · 02–04 chờ plan sidecar
 
 ## Vấn đề
