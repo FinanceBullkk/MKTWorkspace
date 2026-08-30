@@ -84,9 +84,82 @@ Candidate B (demoting R2 to non-fatal) was **not** implemented. Whether a slow o
 store should take the service out of rotation and block deployment promotion is a product
 decision about how core Relay distribution is, not a defect fix. It stays an owner decision.
 
+Gates for `a20056c`: full suite 216 files / 1965 tests pass (exit 0), `eslint .` exit 0,
+`tsc --noEmit` exit 0. An intermediate run had 3 failures in `relay-release-r2.test.ts` from the
+new module-level cache bleeding between test cases; fixed by clearing it in that file's
+`beforeEach`, which is the correct isolation for process-global state.
+
 **The fix is not live.** Shipping it means merging to master, which is a production deployment,
 owner-gated, and unwise while the incident is still open. Nothing was deployed, restarted, or
 reconfigured.
+
+## Root-cause audit (added 2026-08-30 19:00)
+
+The timeout budget was the shallowest of three layers. Auditing the call path found two deeper
+defects, and the deepest one explains why the failure was *bursty* rather than proportional to R2
+latency.
+
+### R1 — immutable metadata is re-fetched over the network on every call
+
+`readRelayRelease()` -> `readFromR2()` -> `headRelayRelease()` -> `headObject()` performs a signed
+`HEAD` to R2 **every time**. There was a cache for the *disk* path
+(`relay-release-file.ts:200 cachedChecksum`) and **none** for the R2 path.
+
+Callers, all of which hit the network on every invocation:
+
+| Caller | Frequency |
+|---|---|
+| `src/app/api/healthz/route.ts` | every readiness probe |
+| `src/components/setup/relay-download-section.tsx` | every render of the setup page (server component) |
+| `src/app/api/relay/download/route.ts` and `download/[version]/route.ts` | every device download |
+| `relay-compatibility-manifest-file.ts`, `release-provenance.ts` | per call |
+
+This contradicts the workspace's own invariant. `decisions.md` prohibition 7: *"Never overwrite an
+immutable object. v15 and v16 in R2 keep their bytes forever."* The `HEAD` result for a given
+version is therefore a fact that cannot change, and it was being re-derived over a network hop on
+every probe and every page render.
+
+### R2 — the timeout did not cancel the work it timed out (the amplifier)
+
+`withTimeout` is a `Promise.race`. It rejects the *outer* promise; the underlying `fetch` keeps
+running until its own `AbortSignal.timeout(15_000)` in `headObject` fires. Each timed-out probe
+therefore left an orphaned R2 request alive for up to **15 seconds** with nobody waiting on it.
+
+That closes a positive feedback loop:
+
+```
+R2 latency rises -> probe exceeds its budget -> 503, orphaned HEAD keeps running 15 s
+                 -> next probe starts another HEAD -> orphans accumulate
+                 -> more concurrent load on R2 exactly while it is slow -> latency rises
+```
+
+This is why the incident arrived in bursts and then cleared on its own, rather than tracking R2
+latency smoothly.
+
+### R3 — budget mismatch
+
+450 ms for a cross-network object-storage call whose own client budgets 60 s. Real, but the
+shallowest layer, and fixed first in `ba7960c`.
+
+## What was fixed
+
+| Layer | Fix | Commit |
+|---|---|---|
+| R3 | Split the budget per dependency: Postgres 450 ms, release read 3 s | `ba7960c` |
+| R1 | Per-version, TTL-bounded, success-only cache for the R2 metadata read | `a20056c` |
+| R2 | Thread an `AbortSignal` through `readRelayRelease -> headRelayRelease -> headObject`; the readiness probe now passes `AbortSignal.timeout(...)` so expiry cancels the request instead of orphaning it | `a20056c` |
+
+### Why the cache does not weaken readiness
+
+A cold process has an empty cache, so a **new deployment still performs a real R2 read** before it
+can report ready. That is exactly what deployment-promotion gating needs to prove. What disappears
+is a long-running instance re-proving R2 reachability every 10-30 seconds, which was never the
+point and was the thing generating the load. The TTL is 5 minutes so a long-lived process still
+re-verifies periodically; it is a deliberate balance, not a measured number, and is documented as
+such in the module.
+
+Negative results (`available: false`) are deliberately **not** cached: that state changes the moment
+someone publishes, and caching it would make a freshly published release look absent.
 
 ## Not done
 
