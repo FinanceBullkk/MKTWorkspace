@@ -96,7 +96,11 @@ variable. The decision and recheck conditions are in `../reports/healthcheck-tim
 - **P3 outer installer:** 103-byte `NSIS-RT_DIALOG-order-and-trailer` variance remains OPEN. A
   supported source/toolchain fix or a structurally justified future decision is required; do not
   widen a normalizer.
-- **P4a Lane A:** P4-08 bounded credentialed/admin smoke and a signed GO/NO-GO remain OPEN. The
+- **P4a Lane A:** P4-08 bounded credentialed/admin smoke and a signed GO/NO-GO remain OPEN. A
+  decision-ready, unsigned GO/NO-GO with the residual risks named is prepared in
+  `../reports/lane-a-go-no-go.md`; it recommends a conditional GO and needs the owner's
+  signature plus conditions C1 (rollback-compatible healthcheck) and C2 (P4-08 run or scoped
+  out). The
   disposable rollback rehearsal is complete, but the prior-image healthcheck mismatch must be
   resolved by the owner before any real rollback. Production rollback was not executed.
 - **P4b Browser tuple:** OPEN because the exact Stable `.2` engine archive is absent on both drives.
