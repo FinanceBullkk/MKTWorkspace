@@ -200,6 +200,53 @@ logs could neither confirm nor deny.
 Fixed in `9105e1a`: the cause is logged server-side (error name and message only). The public body
 keeps its exact shape and still carries no cause.
 
+## Retraction and re-analysis (2026-08-31 02:40)
+
+### Retracted: "there were no restarts"
+
+That claim was **unsupported and should not have been made**. `railway logs` returns only 69 lines
+spanning `06:38:49Z -> 06:43:37Z` — a five-minute window at the very start of the deployment. It does
+not return recent logs. Every conclusion drawn from it about the incident window was drawn from a
+window that did not contain the incident:
+
+- "No restarts, a single container start" — later restarts were simply outside what the CLI returned.
+- "The app logged nothing during the incident" — that window was never observed.
+
+The incident note's observation of **multiple startup sequences** comes from a longer window and is
+the better evidence. Treat the instance as restarting.
+
+("The cited `TimeoutError` is timestamped `06:43:37Z`" remains accurate for that specific line; it
+just does not license any claim about what happened later.)
+
+### Qualified: the browser-launch mechanism does not fit the observed timing
+
+The incident note's structural facts check out — `daily-health-check-scheduler.ts:46,249` really is
+`setInterval(tick, 60_000)`, `src/instrumentation.ts:26` really does start it inside the web process,
+and `health-check-runner.ts:167` really does call `openObserverSession`. But the chain from tick to
+browser does not hold:
+
+- Most ticks return at `TOO_EARLY` or `ALREADY_DECIDED` (`daily-health-check-scheduler.ts:99-101`) —
+  a keyed database read, not a browser launch.
+- The browser runs **once per day** at the configured time, logged at container start as
+  `[lịch dò] Bật: 09:00 mỗi ngày`.
+- It is not in-process: `launch()` is `launchHealthCheckProcess`, which is
+  `spawn(..., { detached: true })` (`health-check-process-launcher.ts:21,31,47`).
+
+The incident began around 17:30 ICT and recurred around 02:00 ICT. Neither is 09:00. A once-daily
+detached spawn cannot produce restarts at those times or a sustained ~20 % failure rate.
+
+Worth carrying forward: the same startup log shows a **second** in-process schedule,
+`[sao lưu] Bật: 03:00 mỗi ngày theo Asia/Ho_Chi_Minh, lên R2` — a daily backup that uploads to R2.
+Closer to the 02:00 recurrence than 09:00 is, though still not a match, and it is an R2 workload on
+the same replica.
+
+### What would actually settle it
+
+Neither party has read a memory metric, and the CLI cannot reach the incident window. Settling this
+needs Railway's dashboard metrics or a log query over hours, not `railway logs`. Until then the
+restart *cause* is open, and the R1-R4 fixes remain hardening rather than a cure — which is what the
+incident note says, and it is right about that.
+
 ## Not done
 
 No deploy, no restart, no setting change, no timeout edit. Diagnosis only. The route change and its
