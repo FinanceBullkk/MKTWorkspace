@@ -161,6 +161,45 @@ such in the module.
 Negative results (`available: false`) are deliberately **not** cached: that state changes the moment
 someone publishes, and caching it would make a freshly published release look absent.
 
+## Log evidence re-read (2026-08-30 19:45) -- two corrections
+
+`railway logs --json` for deployment `ed972e5b`, with timestamps:
+
+```
+06:38:49Z  Starting Container      <- pre-deploy migration container
+06:38:53Z  Stopping Container      <- `npx prisma migrate deploy` finished
+06:39:16Z  Starting Container      <- application container
+06:39:16Z  Ready in 112ms
+06:43:37Z  TimeoutError / failed to pipe response
+```
+
+**Correction 1 -- there were no restarts.** The incident note's "periodic restarts" hypothesis, and
+its reading of `200 not_ready` as an instance mid-startup, are disconfirmed. The two
+`Starting Container` lines are one normal Railway deploy: the migration container, then the app
+container. The application has had a single start, at `06:39:16Z`, and has been up since.
+
+**Correction 2 -- the cited log evidence predates the incident by about four hours.** The
+`TimeoutError` / `failed to pipe response` pair is timestamped `06:43:37Z` (13:43 ICT). The
+incident began around 17:30 ICT (10:30 UTC). That pair is almost certainly the already-recorded
+aborted Relay download (27,286,912 of 33,342,752 bytes), not evidence of this incident.
+
+**Correction 3 -- to this report's own earlier framing.** The first pass attributed the whole
+incident to the R2 readiness budget. Every 503 *this agent* sampled carried an application body
+(`{"ok":false,"status":"not_ready",...}`), which is consistent with that. The incident note reported
+bodyless 503s as well; those were not reproduced here and remain unexplained by the R1/R2/R3 fixes.
+Do not treat the fixes as accounting for a bodyless 503.
+
+### R4 -- the incident was invisible because the health check swallowed its own cause
+
+The whole deployment logged **69 lines in six hours**. Nothing was written during the incident
+window. Both readiness checks caught their cause and discarded it, and the release check carried a
+comment stating the detail belongs in server logs while never writing one. That is why the
+investigation had to reason from response bodies alone and reached for restart and OOM theories the
+logs could neither confirm nor deny.
+
+Fixed in `9105e1a`: the cause is logged server-side (error name and message only). The public body
+keeps its exact shape and still carries no cause.
+
 ## Not done
 
 No deploy, no restart, no setting change, no timeout edit. Diagnosis only. The route change and its
