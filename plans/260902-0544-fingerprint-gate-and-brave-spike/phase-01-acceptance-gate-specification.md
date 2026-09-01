@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "Đặc tả gate nghiệm thu"
-status: pending
+status: complete
 priority: P1
 effort: "2-3 ngày"
 dependencies: []
@@ -18,7 +18,8 @@ dependencies: []
 
 ## Overview
 
-**Ưu tiên:** P1, làm trước mọi thứ · **Trạng thái:** chưa bắt đầu
+**Ưu tiên:** P1, làm trước mọi thứ · **Trạng thái:** XONG 02/09/2026 —
+[`MKTBrowser/docs/fingerprint-acceptance-gate.md`](../../MKTBrowser/docs/fingerprint-acceptance-gate.md)
 
 Viết đặc tả tiếng Việt/Anh cho một gate nghiệm thu **đúng**, thay cho gate hiện tại vốn đòi mỗi
 profile phải có font/audio/WebGL hash **duy nhất**. Không sửa code engine, không đo, không promote gì
@@ -31,7 +32,7 @@ profile phải có font/audio/WebGL hash **duy nhất**. Không sửa code engin
   trùng nhau; bịa giá trị độc nhất làm máy **dễ nhận ra hơn**.
 - Vì gate sai, **`G2-IDENTITY=FAIL` hiện tại chưa chắc phản ánh khoảng cách thật**. Có thể một phần
   cái FAIL đó là do đo nhầm tiêu chí. Chưa đo lại theo gate đúng thì chưa ai biết.
-- Gate mới có **hai tiêu chí độc lập**, và gộp chúng thành một điểm đạt/trượt là lặp lại đúng sai
+- Gate mới có **ba tiêu chí độc lập**, và gộp chúng thành một điểm đạt/trượt là lặp lại đúng sai
   lầm cũ.
 - Pool 3-5 (không phải 10) đổi tiêu chí đụng độ từ bất khả thi thành khả thi. Con số pool **là một
   phần của định nghĩa gate**, không phải tham số cấu hình.
@@ -96,15 +97,15 @@ Tạo mới:
 
 ## Todo List
 
-- [ ] Liệt kê mâu thuẫn giữa acceptance matrix cũ và mục tiêu mới
-- [ ] Chốt và ghi pool = 3-5
-- [ ] Viết tiêu chí A (nhất quán)
-- [ ] Viết tiêu chí B (không đụng độ joint tuple)
-- [ ] Viết tiêu chí C (cohort hợp lý) kèm thủ tục đối chứng stock Chrome/CFT
-- [ ] Liệt kê bề mặt + API phải đo
-- [ ] Ghi quy tắc báo cáo tách rời ba tiêu chí
-- [ ] Ghi điều kiện rút gate cũ
-- [ ] Ghi vùng phủ thiếu của harness
+- [x] Liệt kê mâu thuẫn giữa acceptance matrix cũ và mục tiêu mới
+- [x] Chốt và ghi pool = 3-5
+- [x] Viết tiêu chí A (nhất quán)
+- [x] Viết tiêu chí B (không đụng độ joint tuple)
+- [x] Viết tiêu chí C (cohort hợp lý) kèm thủ tục đối chứng stock Chrome/CFT
+- [x] Liệt kê bề mặt + API phải đo
+- [x] Ghi quy tắc báo cáo tách rời ba tiêu chí
+- [x] Ghi điều kiện rút gate cũ
+- [x] Ghi vùng phủ thiếu của harness
 
 ## Success Criteria
 

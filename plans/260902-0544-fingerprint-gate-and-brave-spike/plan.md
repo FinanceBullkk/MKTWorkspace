@@ -43,7 +43,7 @@ Thực thi bằng phiên Codex riêng cho từng phase — xem
 
 | # | Giai đoạn | Công sức | Trạng thái |
 |---|---|---|---|
-| 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | chưa bắt đầu |
+| 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | **XONG 02/09** |
 | 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | chưa bắt đầu |
 | 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | chưa bắt đầu |
 | 04 | [Spike Brave — danh tính & cohort](phase-04-brave-identity-and-cohort-verdict.md) | 3-4 ngày | chưa bắt đầu |
@@ -53,7 +53,7 @@ Thực thi bằng phiên Codex riêng cho từng phase — xem
 
 Plan này **thiết kế để chết sớm và rẻ**. Dừng ngay, không đi tiếp, khi:
 
-- **Sau phase 02:** nếu Cloak đạt cả hai tiêu chí gate mới ở pool 3-5 → không cần Brave. Ghi kết
+- **Sau phase 02:** nếu Cloak đạt cả ba tiêu chí gate mới ở pool 3-5 → không cần Brave. Ghi kết
   quả, đóng plan, tiết kiệm 5-7 ngày.
 - **Sau phase 03:** nếu MKT không lái được Brave (CDP, `DevToolsActivePort`, `Browser.close`,
   extension, proxy fail-closed) → dừng. Đo fingerprint của một engine không điều khiển được là vô
