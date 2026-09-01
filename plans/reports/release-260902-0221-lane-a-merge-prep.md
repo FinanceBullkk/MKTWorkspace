@@ -34,9 +34,10 @@
 trả về rỗng. Deploy này không đổi được cấu trúc database, nên rủi ro giới hạn ở tầng code và
 rollback bằng tuple ở trên là đủ.
 
-## Nội dung vào master (6 commit, 17 file)
+## Nội dung vào master (7 commit)
 
 ```
+9707c90 docs(runbook): name the CI jobs the release gate actually requires
 0da37ff docs: withdraw Reddit and Facebook from the team rollout scope
 28d7f70 fix(queue): stop concurrent publishes from double-posting
 1318ace test(ci): require GitHub-hosted runners instead of the self-hosted pool
@@ -75,8 +76,19 @@ HEAD không đủ.
 - Runbook bước 1 dặn giữ `AGENTS.md` ngoài staging. PR #44 có sẵn commit `6a6764a` đụng `AGENTS.md`
   từ trước phiên này; không gỡ ra vì gỡ phải viết lại lịch sử đã push.
 
-## Câu hỏi chưa trả lời
+## Hai quyết định (chủ dự án ủy quyền 02/09/2026)
 
-1. Có muốn tôi sửa luôn câu "self-hosted" trong runbook sau khi merge không?
-2. Backup `mkttool-prod-20260902-021956.sql` đang nằm trên máy dev cạnh `.env`. Chính script cảnh
-   báo không để chung khóa với bản sao — cất sang chỗ khác hay xóa sau khi release xong?
+**1. Sửa runbook: LÀM NGAY, gộp vào chính PR này** thay vì để sau merge. Commit `9707c90`. Gộp vào
+vì PR chưa merge — một lượt CI và một lượt merge, thay vì mở PR thứ hai cho một dòng chữ. Câu cũ
+đòi "green self-hosted CI jobs", tức là bảo người đọc đi tìm một runner pool không còn phục vụ repo
+này nữa. Câu mới gọi tên bốn job thật (`check`, `contracts`, `secret-scan`, `relay-executable`),
+ghi rõ `deploy-verification` SKIPPED trước merge là đúng chứ không phải thiếu, và nói thẳng: thấy
+self-hosted trong báo cáo là file workflow cũ, không phải một lượt pass.
+
+**2. Backup: GIỮ tới khi verify xong deploy, RỒI XÓA.** Không xóa bây giờ — nó đang là bảo hiểm
+rollback của chính lần release này, xóa trước khi deploy được xác nhận là làm ngược. Xóa ngay sau
+bước 5 vì lúc đó nó hết nhiệm vụ, và để một bản dump kho danh tính production nằm cùng thư mục với
+`.env` (nơi giữ `VAULT_KEY_SERVER`) đúng là cặp mà script cảnh báo: có bản sao lại có luôn chìa.
+Muốn giữ lâu hơn thì chép ra ổ rời rồi xóa bản trên máy, đừng để nguyên tại chỗ.
+
+Đường dẫn phải xóa sau khi verify: `MKTTool/data/backups/mkttool-prod-20260902-021956.sql`
