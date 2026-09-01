@@ -34,6 +34,11 @@ Còn đúng hai việc với tới được, cả hai miễn phí, không cần 
 Có đồng hồ đếm ngược: không ngân sách nghĩa là seat CloakBrowser hiện tại cũng có hạn. Spike Brave
 là bản thay thế miễn phí cho một dependency có thể hết hạn.
 
+## Bắt đầu
+
+Thực thi bằng phiên Codex riêng cho từng phase — xem
+[kickoff-codex-session.md](kickoff-codex-session.md) để lấy prompt và kỷ luật seat.
+
 ## Các giai đoạn
 
 | # | Giai đoạn | Công sức | Trạng thái |
