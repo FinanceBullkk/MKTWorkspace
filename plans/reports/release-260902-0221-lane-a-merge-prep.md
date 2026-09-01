@@ -1,8 +1,23 @@
-# Chuẩn bị release Lane A — PR #44
+# Release Lane A — PR #44
 
-**Ngày:** 02/09/2026 02:21 ICT
-**Trạng thái:** mọi tiền đề runbook XONG. **Chưa merge** — thao tác merge bị chặn ở phiên này.
+**Ngày:** 02/09/2026 02:21 ICT, cập nhật 04:10 sau khi merge
+**Trạng thái:** **ĐÃ MERGE, ĐÃ DEPLOY, ĐÃ VERIFY.** Chủ dự án bấm merge lúc 03:01 ICT.
 **Runbook:** [deployment-guide.md](../../MKTTool/docs/deployment-guide.md) mục "Consolidation release procedure"
+
+## Kết quả sau merge (bước 4-5)
+
+| Hạng mục | Kết quả |
+|---|---|
+| Merge commit | `7d58f9fa11370a3d87667d06a573fe14e18fa7e6`, 2026-09-01T20:01:17Z |
+| Deployment mới | `ffd193db-f27e-4f4a-90d0-fa03edc3be5d`, branch `master`, RUNNING |
+| Commit đang chạy | `7d58f9fa…` — khớp merge commit |
+| CI master | run `33552869681` **success** 5m04s; `check`, `contracts`, `secret-scan`, `deploy-verification` đều xanh (`relay-executable` skipped trên master) |
+| `/api/healthz` | HTTP 200, `ok:true`, `status:"ready"`, database/releaseMetadata/r2 đều `ok`, `relayVersion 16` |
+| Full GET `/v16` | HTTP 200, **33.342.752 bytes** khớp, **SHA-256 `5c98cf46…842e` khớp chính xác** |
+
+**Điểm đáng giá nhất của lần release này:** `deploy-verification` chỉ chạy trên `master`, nên đây là
+lần đầu nó thực sự chạy sau khi pipeline rời self-hosted. Nó xanh — cổng CI của master lại hoạt động
+đúng chính sách `AGENTS.md`. Trước merge, master còn trỏ cả 5 job vào self-hosted.
 
 ## Rollback tuple (bước 3 — ghi TRƯỚC khi merge)
 
@@ -91,4 +106,16 @@ bước 5 vì lúc đó nó hết nhiệm vụ, và để một bản dump kho d
 `.env` (nơi giữ `VAULT_KEY_SERVER`) đúng là cặp mà script cảnh báo: có bản sao lại có luôn chìa.
 Muốn giữ lâu hơn thì chép ra ổ rời rồi xóa bản trên máy, đừng để nguyên tại chỗ.
 
-Đường dẫn phải xóa sau khi verify: `MKTTool/data/backups/mkttool-prod-20260902-021956.sql`
+**Đã thực thi 04:10 ICT:** `mkttool-prod-20260902-021956.sql` (66.897 bytes) đã xóa sau khi verify
+xong bước 5.
+
+### Phát hiện kèm theo — 12 dump production khác vẫn nằm đó
+
+Lúc xóa mới thấy `MKTTool/data/backups/` còn **24 file, trong đó 12 file `mkttool-prod-*.sql`** từ
+06/08/2026 tới nay. Tổng chỉ 1,5 MB nên đây không phải chuyện dung lượng — đây là chuyện phơi nhiễm:
+mỗi file là một bản kho danh tính production, nằm cùng máy với `.env` đang giữ `VAULT_KEY_SERVER`.
+Đúng cặp mà `backup-database.ts` cảnh báo, nhân lên 12 lần.
+
+**Chưa xóa file nào trong số đó** — chúng có trước phiên này, xóa bản sao lưu của người khác là thao
+tác không đảo lại được và không nằm trong phần được giao. Đề nghị: giữ 1-2 bản gần nhất, chép ra ổ
+rời, xóa phần còn lại trên máy. Cần quyết định của chủ dự án.
