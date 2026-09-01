@@ -106,10 +106,20 @@ Rồi mới `publishToPage`. Thành công thì POSTED, lỗi thì FAILED. `statu
 ## Còn lại sau bản vá F1+F2
 
 - **F3 chưa động tới.** Cần chủ dự án quyết trước (cố ý mở hay quên đóng) rồi mới viết test khai ý định.
-- **`@@unique([accountId, threadKey])` trên `Interaction` chưa thêm.** Bản vá chặn race ở tầng ứng
-  dụng bằng cập nhật có điều kiện, đã đủ cho các đường ghi hiện có. Ràng buộc DB là lưới thứ hai
-  bắt cả những đường ghi tương lai, nhưng phải quét dữ liệu production tìm cặp trùng hợp lệ trước
-  — thêm mù là migration đổ giữa chừng.
+- **`@@unique([accountId, threadKey])`: RÚT LẠI — đề xuất này SAI, không được thêm.** Kiểm lại thì
+  cùng một nick chạm nhiều lần vào một thread là hợp lệ **có chủ ý**: form ghi tương tác
+  (`interaction-actions.ts`) cho ghi POST/COMMENT/UPVOTE lên bất kỳ thread nào, và luật 8 loại trừ
+  thẳng nick của chính mình (`rule-context-queries.ts:132` — `accountId: { not: accountId }`), kèm
+  comment giải thích *"trả lời dưới bài của chính mình là chăm sóc khách hàng"*. Thêm ràng buộc đó
+  là chặn đúng việc đó. `@@unique([accountId, threadKey, kind])` cũng sai nốt: trả lời hai người
+  bình luận là hai COMMENT cùng thread.
+
+  Thứ cần duy nhất một là **dấu vết tự ghi của một job**, và khóa đúng của nó là `jobId` chứ không
+  phải thread — `Interaction` hiện không có cột đó. Muốn có lưới DB thì phải thêm
+  `jobId String? @unique` (NULL cho tương tác ghi tay, Postgres cho phép nhiều NULL), kèm migration,
+  và nhân tiện làm đường gỡ chính xác hơn: `post-job-revert.ts` đang dò lại dấu vết bằng chuỗi
+  `note` + threadKey. Theo YAGNI thì chưa cần: cập nhật có điều kiện đã chặn race và có test chứng
+  minh. Ghi lại đây để lần sau không ai thêm nhầm ràng buộc.
 - **Chưa quét production xem race đã nổ thật chưa.** Query bị chặn ở phiên này (xem câu hỏi 2).
 
 ## Chưa đụng tới ở tầng này
