@@ -162,16 +162,16 @@ ceremony, engine archive required. It is blocked on the vendor and does not gate
 | P4-08 | Lane A smoke | Bounded admin-led run | Passes recorded honestly, with scope labelled |
 | P4-09 | Rollback drill | Disposable restore of the prior tuple | Bounded recovery, documented |
 
-## Current P4a checkpoint — 30 August 2026
+## Current P4a checkpoint — 1 September 2026
 
 The provenance rerun is accepted for the Browser source (`source.clean=true`) as P4b evidence. The
 fresh current-DB backup/restore passed and the rollback tuple was recorded before merge. The
 disposable P4-09 rehearsal is now executed and qualified; it restored the recorded prior state,
 applied the candidate migration, rebuilt/started the exact prior source, and cleaned up with
-`CLEANUP_REMAINING=0`. It did not touch Railway production. The drill found that prior source serves
-`/api/health/run` but returns 404 for `/api/healthz`, while the live service healthcheck targets
-`/api/healthz`; a human-approved rollback therefore still needs a prior-compatible healthcheck
-decision. PR #42's
+`CLEANUP_REMAINING=0`. It did not touch Railway production. The drill found that the historical
+`c819e6a8` source serves `/api/health/run` but returns 404 for `/api/healthz`, while the live service
+healthcheck targets `/api/healthz`; that specific tuple is not a compatible rollback target without
+a healthcheck-setting decision. PR #42's
 required checks (`33296599912`) passed, then the approved merge reached `master` at
 `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`; final master run `33297347911` also passed. Railway
 deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b` is SUCCESS with the matching commit;
@@ -182,6 +182,17 @@ the evidence report. The Better Auth shared-IP warning is absent in the final lo
 `TRUSTED_PROXY_IP_HEADERS=x-real-ip`; the burst proof is explicitly synthetic/header-labelled, not
 two physical networks. P4b remains OPEN and is not a P4a precondition.
 
+The successor hardening deployment is `0a696033-b610-492c-b75a-3e918cca102a`, master commit
+`2734e2f0ba9c2a2f9c3731a44540c01d263b36e2`. After the intermittent readiness incident, the latest
+24-hour evidence is 947/947 health requests at HTTP 200 with zero server 5xx; a fresh 24-request
+burst is 24/24 ready. The authorized `/v16` full GET is reverified at 33,342,752 bytes and the exact
+published SHA. OOM and restart hypotheses are excluded by the available memory/restart metrics; the
+historical R2-latency trigger remains inferential. The immediate rollback target is now `ed972e5b` /
+`6ce28d0f`, which serves `/api/healthz`; the older 404 tuple is not the current rollback target.
+P4-08 credentialed smoke is PASS and recorded in `reports/lane-a-credentialed-smoke-20260901.md`;
+the owner signed CONDITIONAL GO on 2026-09-01 (ICT), accepting residual risks 1–8. P4b remains OPEN,
+so this phase remains partial.
+
 ## Success Criteria
 
 - [x] Browser provenance receipt is retained as P4b evidence; its five-artifact tuple remains OPEN
@@ -189,14 +200,17 @@ two physical networks. P4b remains OPEN and is not a P4a precondition.
 - [x] Rollback tuple recorded before any change.
 - [x] Disposable rollback rehearsal completed and documented before a Lane A GO; the exact prior
   tuple, restore/migration/build timings, cleanup, and failure-at-step signatures are in
-  `reports/rollback-drill-p4-09.md`. The operational healthcheck prerequisite remains OPEN.
+  `reports/rollback-drill-p4-09.md`. The immediate rollback target is healthcheck-compatible;
+  re-check the setting before any real rollback.
 - [x] Backup and restore verified against the current database.
 - [x] Committed candidate deployed; deployed commit verified against Railway metadata after the fact.
 - [x] `/api/healthz` returns 200 and Railway's healthcheck points at it.
 - [x] `/v16` serves the exact published bytes — route-first is satisfied for Phase 5.
 - [x] Production rate limiting uses the configured client header and the shared-IP warning is gone
   in the bounded synthetic production burst; physical second-network evidence is not claimed.
-- [ ] A signed Lane A GO/NO-GO exists with residual risks named.
+- [x] Bounded credentialed/admin smoke completed; no content was posted and no session, token, Page,
+  or Relay device was revoked or changed. Queue was empty, so posting execution remains unexercised.
+- [x] Owner-signed Lane A CONDITIONAL GO exists; residual risks 1–8 are named and accepted.
 
 ## Risk Assessment
 

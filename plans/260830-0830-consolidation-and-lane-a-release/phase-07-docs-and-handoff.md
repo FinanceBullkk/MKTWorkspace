@@ -48,7 +48,7 @@ This phase makes the repository self-explanatory to someone who was not here.
    supersede them, the way the run superseded its own S3 payload manifests.
 
 2. **Rewrite `development-roadmap.md`** with real gate statuses and dates. Lane A: P4a deployed,
-   with credentialed smoke and rollback rehearsal still named. Lane B: demo-only with the 60-day
+   with credentialed smoke and rollback rehearsal results named. Lane B: demo-only with the 60-day
    unsigned exception and its expiry date. Lane C: **CLOSED** because there is no CloakBrowser
    channel. No lane carries a date it cannot justify.
 
@@ -99,7 +99,7 @@ This phase makes the repository self-explanatory to someone who was not here.
 | P7-05 | Versions current | Grep for `0.3.2`, `0.3.12`, `v15` | Only as labelled negative evidence |
 | P7-06 | Plans cross-linked | Follow links both ways | Reader reaches the full picture from either |
 
-## Current checkpoint — 30 August 2026, post-deploy reconciliation
+## Current checkpoint — 1 September 2026, post-incident reconciliation
 
 The MKTTool operational docs and three runbooks originated in `faa8661`; their current overlays now
 record the master/Railway P4a deployment, route/hash evidence, service-instance healthcheck (including
@@ -109,8 +109,9 @@ records (including `baseline-capture.md`, `fleet-v13-v15-inventory.{md,json}`, `
 and `handoffs/S1a-relay-durability.md`) now carry explicit historical/current pointers and Q16 Lane C
 closure notices. The P3-06 CI comparison, U2 Windows runner rerun, and P4-09 disposable rollback
 evidence are recorded in the dated consolidation reports. The cold-operator review is complete for
-command/path consistency; no production rollback or owner-machine reinstall is claimed from
-documentation alone.
+command/path consistency. The 2026-09-01 follow-up records the hardening deployment's 24-hour
+stability window, authorized v16 replay, and one observed owner-machine reinstall; the second
+owner-machine action and any production rollback remain unexecuted.
 
 ## Success Criteria
 
@@ -120,7 +121,7 @@ documentation alone.
 - [x] Deployment guide covers healthz, backup/restore, rollback tuple, route-first-then-floor.
 - [x] Architecture and codebase summary include the new modules.
 - [x] Three runbooks exist and received a cold-operator command/path review; production rollback and
-  physical owner-machine actions remain intentionally unexecuted.
+  the second physical owner-machine action remain intentionally unexecuted.
 - [x] Both plan directories are cross-linked with outcomes recorded, including the superseded
   predecessor and Q16 closure notice.
 - [x] No unsupported uniqueness, identity-isolation, stealth, or TikTok-rollout claim remains in the

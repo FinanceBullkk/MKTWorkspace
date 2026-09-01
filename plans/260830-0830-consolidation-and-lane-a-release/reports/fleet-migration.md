@@ -1,11 +1,12 @@
 # Fleet migration and Relay floor record
 
-Date: 2026-08-30 (ICT)
-Status: **ROUTE PASS / FLOOR HELD AT 13 / DEVICE GATE OPEN**
+Date: 2026-08-30 (ICT); revalidated 2026-09-01 (ICT)
+Status: **ROUTE PASS / ONE DEVICE OBSERVED / FLOOR HELD AT 13**
 
 The Lane A deployment is live and `/v16` is reachable. The compatibility floor was deliberately
-not changed: the two owner machines have not been observed reinstalling and reporting Relay v16
-from this host. Route-first is satisfied; device evidence is still required before promotion.
+not changed: one owner machine has been observed reinstalling and reporting Relay v16, while the
+second remains unobserved from this host. Route-first is satisfied; the fleet device gate is still
+required before promotion.
 
 ## Fresh post-deploy inventory
 
@@ -29,9 +30,28 @@ count and does not override Q15's owner statement.
 `RelayDevice.relayVersion` is a latest self-report. It cannot prove the EXE currently installed,
 the installer hash, or that a reinstall happened; those facts must come from the machines.
 
+## 2026-09-01 owner-machine observation
+
+One owner machine was observed through the complete self-serve path. Before installation, the local
+Relay reported v15 and Browser 0.3.12; MCP listed 18 profiles with 0 running, and the lease journal
+had no active, cooling, or pending-recovery records. Browser and Relay were closed normally. The
+owner-approved 0.3.13 installer (SHA-256
+`e5623b8a5275ca2ca917caebc9b4baa9640379747da8c9d5ba0fccbe256876cc`) then installed successfully.
+After restart, local health reported Relay v16, Browser 0.3.13, contract-compatible, and the pinned
+CloakBrowser engine ready. Full receipt: `reports/relay-v16-local-reinstall-20260901.md`.
+
+This is one physical-machine observation, not both. The second owner machine remains open.
+
+## Credentialed production inventory recheck - 2026-09-01 15:43 ICT
+
+The authenticated `/relay-devices` page still rendered both active registry rows as `bản 15`.
+That is not evidence that the local reinstall failed; `RelayDevice.relayVersion` is a self-report and
+the local v16 observation is separate. It does mean the server-side inventory has not yet reconciled
+the upgrade proof, so the floor must remain 13 and no v15 revocation is safe.
+
 ## Route-first evidence
 
-After final deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b`, an authorized **full GET** (not HEAD)
+After predecessor deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b`, an authorized **full GET** (not HEAD)
 of `/api/relay/download/v16` returned:
 
 | HTTP | Bytes | SHA-256 | Match |
@@ -42,9 +62,13 @@ The hash matches the immutable published v16 object. The downloaded bytes were r
 comparison. One earlier client attempt ended before the complete body; the successful retry returned
 all 33,342,752 bytes and the exact hash. This closes the route half of the gate, not the device half.
 
-The final deployment is `SUCCESS` at master commit
+The predecessor deployment was `SUCCESS` at master commit
 `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432`, with one running instance and
 `healthcheckPath=/api/healthz`. Master CI run `33297347911` and its deploy-verification job passed.
+The successor hardening deployment `0a696033-b610-492c-b75a-3e918cca102a` at commit
+`2734e2f0ba9c2a2f9c3731a44540c01d263b36e2` is the current production deployment. Its 24-hour
+health window is 947/947 HTTP 200 with zero server 5xx, and the authorized `/v16` full GET/hash
+was reverified after that deploy.
 
 ## Self-serve upgrade path (Q15)
 
@@ -69,8 +93,8 @@ but no live under-floor request was generated against an owner device.
 | Gate | Result | Evidence / next condition |
 |---|---|---|
 | P5-01 fresh post-deploy inventory | **PASS** | receipt at `reports/fleet-inventory-postdeploy.json` |
-| P5-02 authorized full GET/hash `/v16` | **PASS** | final deployment `ed972e5b…`; 200 / 33,342,752 / exact SHA |
-| P5-03 owner v15→v16 reinstall observation | **OPEN** | physical owner-machine action unavailable from this host |
+| P5-02 authorized full GET/hash `/v16` | **PASS** | current deployment `0a696033…`; 200 / 33,342,752 / exact SHA |
+| P5-03 owner v15→v16 reinstall observation | **PARTIAL** | one owner machine reports v16; second machine remains unobserved |
 | P5-04 actionable under-floor rejection | **PASS (source/tests)** | no live device probe |
 | P5-05 v13/v14/v15/v16/unknown/too-new probe | **OPEN** | run after device observations and floor candidate |
 | P5-06 per-kind floor derivation | **PASS (source)** | `Math.max` follows the floor; floor still 13 |
@@ -89,6 +113,6 @@ date or “coming soon” promise.
 
 ## Unresolved questions / external dependencies
 
-- Physical access to both owner machines for the reinstall and v16 health observations.
+- Physical access to the second owner machine for its reinstall and v16 health observation.
 - Owner decision/deployment for the eventual `MIN_RELAY_VERSION` 13→16 change after those proofs.
 - P4b Browser tuple remains open independently; Lane C remains closed for this product shape.

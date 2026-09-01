@@ -25,7 +25,19 @@ AbortSignal threading), `9105e1a` (log readiness failure causes), `d8b1cd3` (run
 | `/api/healthz` | **8/8 HTTP 200**, `ok=true`, `status=ready`, `database=ok`, `releaseMetadata=ok`, `r2=ok`, `relayVersion=16`, `releaseSource=r2` |
 | Better Auth shared-IP warning | **Absent** — zero matches for shared-IP / trusted-proxy / Better Auth warnings in the new deployment's logs |
 | Container startup | One migration container, one app container, `Ready in 179ms`; both in-process schedules armed (`[lịch dò] 09:00`, `[sao lưu] 03:00 lên R2`) |
-| `/api/relay/download/v16` full GET + hash | **NOT re-verified.** The route returns 401 to anonymous probes; an authorized GET is required. The last full GET with hash comparison against `5c98cf46...1842e` is the earlier `ed972e5b` evidence and was not repeated for this deployment. |
+| `/api/relay/download/v16` full GET + hash | **PASS, reverified 2026-09-01.** Authorized HTTP 200, 33,342,752 bytes, SHA-256 `5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e`, 1.3 s. Anonymous access remains 401 by design. |
+
+## 1 September stability follow-up
+
+- Last 24-hour production query: `/api/healthz` 947/947 successful, zero non-2xx, zero server 5xx.
+- Fresh external burst: 24/24 HTTP 200/ready, 88-397 ms.
+- Health upstream latency in the 24-hour evidence: p95 179 ms, max 767 ms.
+- Memory/restart review: peak 0.42 GB; 120 one-minute samples showed no restart discontinuity.
+- Direct R2 HEAD from this host: 20/20 pass, 243-886 ms, median 289 ms. This does not measure the
+  Railway serving region, but shows why the former 450 ms shared readiness deadline was unsafe.
+
+The incident is mitigated and under monitoring. The hardening mechanism is evidenced; the original
+external R2-latency trigger is still inferential, not a confirmed root cause.
 
 ## Rollback position after this deploy
 
@@ -35,17 +47,14 @@ tuple, not to this one, so this deployment's recovery path is healthy.
 
 ## What this does NOT establish
 
-The fixes are hardening, not a proven cure. The incident's restart cause remains unidentified: the
-external verifier observed multiple startup sequences over a longer log window, and no memory metric
-has been read by anyone. `railway logs` returns only the first ~5 minutes of a deployment, so it
-cannot answer this. Whether the 503s recur is the real test, and it needs hours of observation
-rather than a post-deploy probe.
+The exact upstream event that produced historical elevated R2 latency remains unknown. Healthy R2
+reads exceeding 450 ms prove the old budget could create false `not_ready`; they do not identify why
+the incident window was slower. A future bodyless 503 must be correlated at the platform edge before
+attributing it to the container.
 
 ## Unresolved questions
 
-- What restarts the instance? Railway dashboard memory metrics around 17:30 and 02:00 ICT would
-  settle the OOM question that neither party can currently answer.
-- Does `/api/relay/download/v16` still serve the published bytes for authenticated devices on this
-  deployment?
-- Should `/api/relay/download/v16` stream 33 MB through an app worker at all, or redirect to a
-  signed R2 URL?
+- What external event caused the historical R2 slowdown? Serving-region timing is not yet recorded.
+- Keep proxy streaming or redesign the installer protocol? Current decision: retain streaming because
+  the pinned installer rejects redirects, depends on Range/resume, and the latest transfer completed
+  in 1.3 s without a server 5xx.

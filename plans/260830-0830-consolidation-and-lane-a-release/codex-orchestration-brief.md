@@ -1,15 +1,18 @@
 # Codex Orchestration Brief — Consolidation and Lane A Release
 
-> **Current-state override — read before the historical run instructions below (30 August 2026).**
+> **Current-state override — read before the historical run instructions below (1 September 2026).**
 > The later owner decisions in `decisions.md` supersede the original start-state language: U1 is
 > landed; Q14's three Browser files were committed in dedicated commit `1decde437cf6495652b9d7bdbb76290ab2130411`;
 > Q13 merge/deploy is complete; P4a Web does not require the Browser five-artifact tuple; U3's
 > current residual is 103 bytes; Q15 is owner-only self-serve with no notification channel; Q16
 > records no CloakBrowser channel and Lane C **CLOSED**; U6 custom-engine build is closed; and the
-> floor remains 13 pending observed owner-machine reinstalls. Use `plan.md` and the latest handoffs
-> as the operational source of truth. Do not repeat superseded push/commit/vendor/build instructions.
+> floor remains 13 pending the second observed owner-machine reinstall. The historical 503 incident
+> is mitigated under monitoring: current 24-hour health evidence is 947/947 HTTP 200 with zero server
+> 5xx, and the authorized v16 replay is exact. The owner signed CONDITIONAL GO for Lane A on
+> 2026-09-01, accepting residual risks 1–8. Use `plan.md` and the latest reports/handoffs as the
+> operational source of truth. Do not repeat superseded push/commit/vendor/build instructions.
 
-## Current execution override — 30 August 2026 (latest owner decisions)
+## Current execution override — 1 September 2026 (latest evidence)
 
 The start-of-run instructions below are retained for audit history. The run is now at the following
 state and must not be restarted from U1:
@@ -19,8 +22,8 @@ state and must not be restarted from U1:
 | U1 | COMPLETE; both release branches landed and pushed | none |
 | U2 | MKTTool PR/master CI green (`33296599912`, `33297347911`); complete Browser Windows matrix `33303002259` (attempt 2) passes quality/package/packaged-contract with no skip | closed for this branch; retain the transient first-attempt timeout and require reviewed access for future runs |
 | U3 | Payload/provenance manifests PASS; outer NSIS variance is **103 bytes**, full installer OPEN; P3-06 comparison is wired | retain residual; no lying normalizer |
-| U4 / P4a | MKTTool Web deployed from `master` at `6ce28d0f…`, final deployment `ed972e5b…`; healthz and authorized v16 full GET/hash PASS; disposable P4-09 drill qualified PASS | retain prior-image healthcheck prerequisite, P4-08 smoke, and P4b tuple as OPEN |
-| U5 | Route-first PASS; floor remains 13 pending observed owner-machine reinstalls | do not bump floor or claim device PASS |
+| U4 / P4a | Hardening deployment `0a696033…` / `2734e2f0…` SUCCESS; 947/947 health 200s in 24h; authorized v16 full GET/hash PASS; P4-08 bounded smoke PASS; disposable P4-09 drill qualified PASS; owner-signed CONDITIONAL GO | retain residual risks 1–8 and scope boundary; immediate rollback target `ed972e5b…` serves `/api/healthz`; P4b tuple OPEN |
+| U5 | Route-first PASS; one owner machine now reports v16/0.3.13; floor remains 13 pending the second machine | do not bump floor or claim fleet device PASS |
 | U6 / Lane C | Custom-engine build closed; no CloakBrowser channel; Lane C **CLOSED** | no reboot/build/vendor request |
 | U7 | Reconciliation, runbooks, P3/U2/P4-09/healthcheck evidence, and final handoff complete | preserve owner-only boundaries; no further autonomous release action |
 

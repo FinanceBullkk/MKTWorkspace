@@ -97,7 +97,7 @@ binary is on a machine or whether an update was applied. Do not infer either.
 | P5-07 | Revocation | Request the revoked v15 tuple | Marked revoked; hashes retained as negative evidence |
 | P5-08 | No premature stranding | Timeline review | No rejection predates route availability |
 
-## Current checkpoint — 30 August 2026
+## Current checkpoint — 1 September 2026
 
 Q15 is closed: both active v15 devices are the owner's machines, so the documented path is a
 self-serve 0.3.13 reinstall with no notification channel. After final P4a deployment
@@ -106,15 +106,20 @@ self-serve 0.3.13 reinstall with no notification channel. After final P4a deploy
 unknown/null=3 revoked (`reports/fleet-inventory-postdeploy.json`). An authorized full GET of
 `/v16` returned 200 and the immutable published SHA; master CI/deploy-verification run
 `33297347911` passed and the service healthcheck is `/api/healthz`. The source floor nevertheless remains 13:
-neither owner machine has supplied an observed post-install v16 health response from this host.
-No device identifier is recorded in the evidence.
+one owner machine completed the verified 0.3.13 reinstall and now reports Relay v16 plus Browser
+0.3.13/contract-compatible health. The second owner machine has not supplied an observed post-install
+v16 health response, so the fleet gate is partial and the floor remains 13. A later authenticated
+production inventory still rendered both active registry rows as `bản 15`; this is stale/self-reporting
+evidence, not a reason to infer the local install failed, and it keeps the floor at 13 until both
+machines are observed and reconciled. No device identifier is recorded in the evidence. See
+`reports/relay-v16-local-reinstall-20260901.md`.
 
 ## Success Criteria
 
 - [x] Fresh inventory captured after the Phase 4 deploy.
 - [x] `/v16` verified reachable by full GET before any floor change.
-- [x] A self-serve upgrade path is documented for the owner's two machines; real-device
-  post-install observation remains OPEN.
+- [x] A self-serve upgrade path is documented for the owner's two machines.
+- [ ] Both real devices have post-install v16 observations. One of two is complete.
 - [ ] `MIN_RELAY_VERSION` is 16 in production; per-kind floors follow.
 - [ ] v13/v14/v15 rejected, v16 accepted, unknown/too-new fail safely.
 - [ ] v15 bytes revoked, with the limits of revocation stated honestly.

@@ -27,7 +27,7 @@ boundaries. This plan turns that work into something durable: committed, enforce
 Lane A, and no longer hostage to a single vendor answer. It is a consolidation plan, not new
 features.
 
-## Current execution truth — 30 August 2026, post-deploy reconciliation
+## Current execution truth — 1 September 2026, post-incident reconciliation
 
 - **U1 complete.** MKTTool branch `release/consolidation-20260830` is pushed at
   `38a8de1` after the source/docs and healthcheck follow-up; PR #42 is merged to `master` at
@@ -47,20 +47,24 @@ features.
   inputs are missing. The payload comparison is retained PASS, while the outer installer has a
   measured **103-byte** NSIS RT_DIALOG/order/trailer variance. No normalization or promotion is
   claimed; the manifest records `installerReproducibility=OPEN`.
-- **U4 split and P4a qualified.** PR #42 merged to `master` at
+- **U4 split and P4a signed CONDITIONAL GO.** PR #42 merged to `master` at
   `6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432` after the fresh current-DB backup/restore and recorded
   rollback tuple. Final Railway deployment `ed972e5b-7597-4c6d-8066-24bc11c4ea0b` succeeded;
   `/api/healthz` returned 200, the authorized full `/v16` GET matched the immutable SHA, the
   shared-IP warning was absent in the final log query, and `healthcheckPath=/api/healthz` is set.
   The disposable P4-09 rollback rehearsal is now complete and documented, with no production
-  mutation; it found the prior image returns 404 on the live `/api/healthz` setting, so a
-  prior-compatible healthcheck choice remains an owner prerequisite before any real rollback.
-  P4a still has the bounded credentialed smoke and signed GO/NO-GO OPEN. P4b is the Browser
+  mutation; it found the historical `c819e6a8` image returns 404 on the live `/api/healthz` setting.
+  The immediate rollback target is now `ed972e5b` / `6ce28d0f`, which serves `/api/healthz`.
+  Successor hardening deployment `0a696033-b610-492c-b75a-3e918cca102a` / commit
+  `2734e2f0ba9c2a2f9c3731a44540c01d263b36e2` is `SUCCESS`; current evidence is 947/947 health 200s
+  in 24 hours, zero server 5xx, 24/24 fresh ready probes, and an exact authorized `/v16` replay.
+  P4a bounded credentialed smoke is PASS and the owner signed CONDITIONAL GO on 2026-09-01,
+  accepting residual risks 1–8. P4b is the Browser
   five-artifact tuple and remains OPEN because the Stable `.2` engine archive is absent; it does not
   gate P4a.
 - **U5 remains route-first.** `MIN_RELAY_VERSION` stays 13 after the post-deploy full GET/hash and
-  aggregate inventory. The two owner-machine self-serve reinstalls cannot be observed from this
-  host, so no floor or revocation mutation is claimed.
+  aggregate inventory. One owner-machine self-serve reinstall is now observed at Relay v16 and
+  Browser 0.3.13; the second machine remains open, so no floor or revocation mutation is claimed.
 - **U6 complete.** The custom-engine track and Lane C are CLOSED: there is no CloakBrowser channel,
   no vendor request, no date, and no “coming soon” promise. `G2-IDENTITY` remains FAIL.
 
@@ -78,8 +82,8 @@ features.
 | 2 active v15 devices on the owner's machines | Self-serve 0.3.13 reinstall is the path; no notification channel is needed. Database inventory cannot prove installed binary versions. |
 
 Evidence: the pre-Q14/pre-P4a [verification snapshot](../reports/verification-260830-0430-codex-autonomous-run.md)
-is historical. Current P4a evidence is in `reports/lane-a-deploy.md` and
-`reports/p4a-postdeploy-evidence.json`; the P4-09 disposable drill is in
+is historical. Current P4a evidence is in `reports/lane-a-deploy.md`,
+`reports/lane-a-credentialed-smoke-20260901.md`, and `reports/p4a-postdeploy-evidence.json`; the P4-09 disposable drill is in
 `reports/rollback-drill-p4-09.md`; the healthcheck timeout decision is in
 `reports/healthcheck-timeout-decision.md`; the [predecessor plan](../260829-2125-internal-product-readiness/plan.md)
 and [engine plan](../260828-0428-chromium-fingerprint-engine/plan.md) retain historical context.
@@ -109,8 +113,8 @@ future reopening requires an engine that passes `G2-IDENTITY` under external mea
 | 1 | [land-the-work](./phase-01-land-the-work.md) | **Complete** — source commits landed; protected owner files preserved |
 | 2 | [enforce-contracts-in-ci](./phase-02-enforce-contracts-in-ci.md) | **Partial** — MKTTool and the complete Browser matrix are green; separate scratch-branch negative proof remains open |
 | 3 | [deterministic-packaging](./phase-03-deterministic-packaging.md) | **Partial** — P3-06 CI comparison is wired and payload PASS; outer NSIS variance remains OPEN |
-| 4 | [ship-lane-a](./phase-04-ship-lane-a.md) | **Partial / P4a qualified** — deployment, route, and disposable rollback drill pass; healthcheck prerequisite, credentialed smoke, and signed GO remain OPEN; P4b separate OPEN |
-| 5 | [fleet-migration-and-floor](./phase-05-fleet-migration-and-floor.md) | **Partial** — route/inventory/self-serve path recorded; physical device observation and floor mutation OPEN |
+| 4 | [ship-lane-a](./phase-04-ship-lane-a.md) | **Partial / P4a SIGNED CONDITIONAL GO** — deployment, stability window, route, disposable rollback drill, and bounded credentialed smoke pass; owner accepts residual risks 1–8; P4b separate OPEN |
+| 5 | [fleet-migration-and-floor](./phase-05-fleet-migration-and-floor.md) | **Partial** — route/inventory pass and one owner machine reports v16; second device observation and floor mutation OPEN |
 | 6 | [engine-path-closure-and-vendor-decision](./phase-06-engine-decision-gate.md) | **Complete** — custom engine and Lane C closed |
 | 7 | [docs-and-handoff](./phase-07-docs-and-handoff.md) | **Complete** — source docs, predecessor qualifiers, runbooks, and final evidence reconciled |
 
@@ -143,7 +147,7 @@ critical path.
 | Hour 0–2 (planned; executed) | P1 land the work | Owned run-work landed on branches; protected MKTTool AGENTS files untouched; Q14 Browser files later landed in their dedicated commit |
 | Day 1–3 (planned; executed/partial) | P2 CI enforcement (parallel with P3) | MKTTool required contracts and Browser quality/package/packaged-contract matrix green; scratch-branch negative proof remains |
 | Day 1–2 (planned; residual) | P3 packaging determinism | 103-byte controlled NSIS delta remains OPEN; no unsupported normalization |
-| Day 2–3 (planned; executed P4a) | P4 ship Lane A | Committed MKTTool web candidate deployed; `/api/healthz` 200; `/v16` reachable (no Browser tuple required) |
+| Day 2–3 (planned; executed P4a) | P4 ship Lane A | Committed MKTTool web candidate deployed; `/api/healthz` 200; `/v16` reachable; owner signed CONDITIONAL GO (no Browser tuple required) |
 | Day 3–4 (planned; residual) | P5 fleet migration and floor `13→16` | Route verified live; floor remains 13 pending observed owner-machine reinstalls |
 | Day 0–1 (planned; executed) | P6 engine closure + Lane C closure | Build track and Lane C formally closed with reasons; alternative vendors are future scope |
 | Day 5 (planned; reconciliation) | P7 docs and handoff | `docs/` reflects reality; source-doc delivery and residual gate review are recorded |
@@ -157,8 +161,8 @@ critical path.
   quality/package/packaged-contract execution is proven by run `33303002259` (attempt 2); future
   runs without reviewed private-sibling access remain fail-closed.
 - Lane A P4a runs the committed candidate in production with a verified health signal and live `/v16`
-  route. A bounded credentialed smoke and disposable rollback rehearsal remain required before a
-  final Lane A GO; neither is inferred from the deployment pass.
+  route. The disposable rollback rehearsal and bounded credentialed smoke are complete; the owner
+  signed CONDITIONAL GO on 2026-09-01 and accepted residual risks 1–8.
 - The Relay security floor remains `13` until the route-first evidence is followed by observed
   self-serve reinstalls on both owner machines and the complete version probe/revocation procedure.
 - The custom-engine track and Lane C are both formally closed with written reasons and a reopening
@@ -173,14 +177,15 @@ critical path.
   the run. A future run needs an equivalent reviewed credential/artifact or must remain fail-closed.
 - **P3:** P3-06 comparison enforcement is wired and records a required result; full installer
   reproducibility remains OPEN on the measured 103-byte NSIS RT_DIALOG/order/trailer delta.
-- **P4a:** disposable rollback rehearsal is complete, but its prior-image `/api/healthz` mismatch,
-  bounded credentialed Lane A smoke, and signed GO/NO-GO remain OPEN; P4b's five-artifact Browser
+- **P4a:** disposable rollback rehearsal and bounded credentialed Lane A smoke are complete; the
+  immediate rollback target serves `/api/healthz`, while the older `c819e6a8` mismatch remains
+  historical evidence. Owner-signed CONDITIONAL GO accepts residual risks 1–8; P4b's five-artifact Browser
   tuple is independently OPEN because the exact Stable `.2` archive is absent.
 - **Healthcheck timeout:** `healthcheckTimeout=null` is intentionally retained; it inherits Railway's
   documented 300-second deploy-time bound. No explicit override is justified by the available
   startup evidence; see `reports/healthcheck-timeout-decision.md`.
-- **P5:** both owner machines must self-serve reinstall and report v16 before changing the floor;
-  no device or owner identifiers are stored in evidence.
+- **P5:** one owner machine now reports v16; the second must self-serve reinstall and report v16
+  before changing the floor. No device or owner identifiers are stored in evidence.
 - **P6/Lane C:** CLOSED. There is no CloakBrowser channel, so no request, date, or waiting state exists.
 
 ## Owner decisions
@@ -197,3 +202,6 @@ critical path.
 5. ~~Reboot timing~~ — **answered** (2026-08-30): authorized after P1 lands. Work stays on this
    machine; a VM is acceptable where a second machine is needed, but **never concurrently with the
    P6 build gate** — 15.9 GB total cannot serve both a VM and a >12 GB build.
+6. ~~Lane A GO/NO-GO~~ — **ANSWERED 2026-09-01: CONDITIONAL GO signed by the workspace owner.**
+   Residual risks 1–8 are accepted for P4a only. P4b remains OPEN, and anything beyond Lane A
+   remains NO-GO.

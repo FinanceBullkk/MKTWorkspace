@@ -1,7 +1,16 @@
 # Lane A deployment record
 
 Date: 2026-08-30 (ICT)
-Status: **P4a DEPLOYED / QUALIFIED; P4b OPEN**
+Status: **P4a DEPLOYED / SIGNED CONDITIONAL GO; P4b OPEN**
+
+> **Successor verification, 2026-09-01:** current deployment is
+> `0a696033-b610-492c-b75a-3e918cca102a`, master commit
+> `2734e2f0ba9c2a2f9c3731a44540c01d263b36e2`, status `SUCCESS`. The last 24-hour health evidence is
+> 947/947 HTTP 200 with zero server 5xx; a fresh 24-request burst is 24/24 ready. Authorized `/v16`
+> full GET remains exact at 33,342,752 bytes and SHA-256
+> `5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e`. The immediate rollback
+> target is this report's `ed972e5b` / `6ce28d0f`, which serves `/api/healthz`; the older
+> `c819e6a8` healthcheck mismatch is not the current target.
 
 This record separates the MKTTool web deployment from the Browser five-artifact contract. P4a is
 the Next.js service on Railway. It does not contain the Browser engine and does not require a
@@ -125,22 +134,23 @@ remained 200/ready.
 | P4a authorized v16 route | **PASS** | full GET/hash exact match |
 | P4a trusted-proxy warning | **PASS (qualified synthetic)** | zero warning logs; two labelled buckets |
 | P4-09 rollback rehearsal | **PASS (disposable, qualified)** | `reports/rollback-drill-p4-09.md`; restore/migration/prior-source start/cleanup timings recorded; no production rollback executed |
-| P4-08 Lane A smoke | **OPEN / bounded** | no credentialed OAuth/Facebook/destructive smoke was run here |
-| Rollback healthcheck prerequisite | **OPEN / owner decision** | prior commit returns 404 for `/api/healthz` while the live service setting targets it; choose a prior-compatible path before any real rollback |
+| P4-08 Lane A smoke | **PASS / bounded** | `reports/lane-a-credentialed-smoke-20260901.md`; OAuth/admin, Facebook token health, destructive confirmation, scheduler, and backup freshness passed; queue was empty so posting was not exercised |
+| Rollback healthcheck compatibility | **PASS for immediate target / recheck before action** | `ed972e5b` / `6ce28d0f` serves `/api/healthz`; older `c819e6a8` does not |
 | P4b Browser five-artifact tuple | **OPEN** | exact Stable `.2` engine archive absent |
 | Lane C | **CLOSED** | no CloakBrowser channel; no request, date, or “coming soon” |
 
-**P4a decision:** the approved Lane A web deployment is live and route-first is satisfied. It is a
-qualified release record, not a claim that the credentialed product smoke or a production rollback
-passed. The disposable rollback rehearsal did pass, with the prior-image healthcheck mismatch
-explicitly retained as an owner prerequisite. The Relay floor remains 13 until U5's real-device gate
-is met.
+**P4a decision:** the approved Lane A web deployment is live and route-first is satisfied. The
+bounded credentialed smoke and disposable rollback rehearsal passed; no production rollback was
+performed. The historical prior-image healthcheck mismatch is retained as a warning for that old
+tuple; the immediate rollback target is healthcheck-compatible, subject to a fresh pre-action
+setting check. The owner signed CONDITIONAL GO on 2026-09-01 (ICT), accepting residual risks 1–8.
+The Relay floor remains 13 until U5's real-device gate is met.
 
 ## Unresolved questions / external dependencies
 
 - P4-09 disposable rehearsal is complete; any real rollback remains separately human-approved, and
-  the prior-compatible healthcheck setting must be decided first.
-- P4-08 requires an owner-led credentialed/admin smoke if Lane A promotion needs that evidence.
-- P5-03 requires observed v16 health after reinstall on both owner machines.
+  the selected target plus `/api/healthz` setting must be rechecked immediately before action.
+- P4-08 bounded credentialed/admin smoke is complete; see `reports/lane-a-credentialed-smoke-20260901.md`.
+- P5-03 has one owner-machine v16 observation; the second remains open.
 - P4b remains open for the missing Browser archive; Lane C is closed because no vendor channel
   exists.

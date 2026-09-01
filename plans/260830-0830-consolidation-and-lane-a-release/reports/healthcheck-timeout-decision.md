@@ -1,6 +1,6 @@
 # Healthcheck timeout decision
 
-Captured: 30 August 2026
+Captured: 30 August 2026; revalidated 1 September 2026
 
 ## Decision
 
@@ -25,6 +25,15 @@ either condition changes.
 - Effective deploy-time bound: `300` seconds, inherited from Railway.
 - Five external GETs returned HTTP 200 in `1284`, `550`, `841`, `423`, and `841` ms. These are
   route-response observations, not container-startup measurements.
+- Current deployment `0a696033-b610-492c-b75a-3e918cca102a` is `SUCCESS` at master commit
+  `2734e2f0ba9c2a2f9c3731a44540c01d263b36e2` with one running instance.
+- The last 24-hour query returned 947/947 health requests as HTTP 200, with zero server 5xx.
+- A fresh 24-request burst returned 24/24 HTTP 200/ready in 88-397 ms.
+- Direct R2 HEAD from this host returned 20/20 success in 243-886 ms, median 289 ms. This is not
+  serving-region evidence, but it proves the historical shared 450 ms dependency budget was below
+  observed healthy R2 latency.
+- The application release-metadata deadline is now 3 s per dependency and aborts the R2 request at
+  the source. Keep this value provisional until serving-region latency is measured.
 
 ## Verification commands
 
