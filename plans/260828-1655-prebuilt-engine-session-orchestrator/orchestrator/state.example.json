@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "planId": "260828-1655-prebuilt-engine-session-orchestrator",
+  "runId": "00000000-0000-0000-0000-000000000000",
+  "status": "PENDING",
+  "currentPhaseId": "O0",
+  "childSession": {
+    "runId": null,
+    "codexThreadId": null,
+    "pid": null,
+    "startedAt": null,
+    "completedAt": null,
+    "exitCode": null
+  },
+  "manifestSha256": null,
+  "workspaceSnapshot": {
+    "rootGitStatusSha256": null,
+    "mktBrowserGitStatusSha256": null,
+    "mktToolGitStatusSha256": null,
+    "resourceSnapshotPath": null
+  },
+  "workerResultPath": null,
+  "reviewResultPath": null,
+  "stopReason": null,
+  "updatedAt": null
+}

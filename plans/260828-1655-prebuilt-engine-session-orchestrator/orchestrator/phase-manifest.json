@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "planId": "260828-1655-prebuilt-engine-session-orchestrator",
+  "workspaceRoot": "E:\\MKTWorkspace",
+  "productRoots": [
+    "E:\\MKTWorkspace\\MKTBrowser",
+    "E:\\MKTWorkspace\\MKTTool"
+  ],
+  "codexCliPath": "C:\\Users\\anhha\\AppData\\Local\\OpenAI\\Codex\\bin\\8e8bf206e63ac436\\codex.exe",
+  "sessionMode": "ephemeral",
+  "maxConcurrent": 1,
+  "defaultTimeoutMinutes": 120,
+  "reviewRequiredByDefault": true,
+  "initialHandoff": "handoffs/planning-session-to-o0.md",
+  "statePath": "orchestrator/state.json",
+  "logRoot": "orchestrator/logs",
+  "lockPath": "orchestrator/run.lock",
+  "immutableInputs": [
+    "plan.md",
+    "orchestrator/README.md",
+    "orchestrator/phase-manifest.json",
+    "orchestrator/result.schema.json",
+    "orchestrator/context-packet.schema.json",
+    "orchestrator/state.example.json",
+    "phases/",
+    "prompts/",
+    "kickoff-new-session.md",
+    "handoffs/planning-session-to-o0.md"
+  ],
+  "phases": [
+    {
+      "id": "O0",
+      "title": "Fresh-session orchestrator foundation",
+      "dependencies": [],
+      "phaseFile": "phases/phase-o0-orchestrator-foundation.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-o0-result.md",
+      "handoffPath": "handoffs/phase-o0-handoff.md",
+      "resultPath": "orchestrator/results/O0.json",
+      "reviewResultPath": "orchestrator/results/O0.review.json",
+      "reviewReportPath": "reports/phase-o0-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P0",
+      "title": "Park custom Chromium build and freeze the pivot",
+      "dependencies": ["O0"],
+      "phaseFile": "phases/phase-p0-park-custom-build.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p0-result.md",
+      "handoffPath": "handoffs/phase-p0-handoff.md",
+      "resultPath": "orchestrator/results/P0.json",
+      "reviewResultPath": "orchestrator/results/P0.review.json",
+      "reviewReportPath": "reports/phase-p0-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P1",
+      "title": "Engine inventory and approval",
+      "dependencies": ["P0"],
+      "phaseFile": "phases/phase-p1-engine-inventory-and-approval.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p1-result.md",
+      "handoffPath": "handoffs/phase-p1-handoff.md",
+      "resultPath": "orchestrator/results/P1.json",
+      "reviewResultPath": "orchestrator/results/P1.review.json",
+      "reviewReportPath": "reports/phase-p1-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": true
+    },
+    {
+      "id": "P2",
+      "title": "Acquire, verify, activate, and roll back",
+      "dependencies": ["P1"],
+      "phaseFile": "phases/phase-p2-acquire-verify-rollback.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p2-result.md",
+      "handoffPath": "handoffs/phase-p2-handoff.md",
+      "resultPath": "orchestrator/results/P2.json",
+      "reviewResultPath": "orchestrator/results/P2.review.json",
+      "reviewReportPath": "reports/phase-p2-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "runtimeWriteScopes": ["%LOCALAPPDATA%\\MKTTool\\MKTBrowser\\chromium\\"],
+      "reviewRequired": true,
+      "manualGate": true
+    },
+    {
+      "id": "P3",
+      "title": "Standalone lifecycle smoke",
+      "dependencies": ["P2"],
+      "phaseFile": "phases/phase-p3-standalone-lifecycle-smoke.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p3-result.md",
+      "handoffPath": "handoffs/phase-p3-handoff.md",
+      "resultPath": "orchestrator/results/P3.json",
+      "reviewResultPath": "orchestrator/results/P3.review.json",
+      "reviewReportPath": "reports/phase-p3-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P4",
+      "title": "Profile and proxy isolation",
+      "dependencies": ["P3"],
+      "phaseFile": "phases/phase-p4-profile-proxy-isolation.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p4-result.md",
+      "handoffPath": "handoffs/phase-p4-handoff.md",
+      "resultPath": "orchestrator/results/P4.json",
+      "reviewResultPath": "orchestrator/results/P4.review.json",
+      "reviewReportPath": "reports/phase-p4-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": true
+    },
+    {
+      "id": "P5-10",
+      "title": "Ten-launch pilot measurement",
+      "dependencies": ["P4"],
+      "phaseFile": "phases/phase-p5-staged-measurement.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p5-10-result.md",
+      "handoffPath": "handoffs/phase-p5-10-handoff.md",
+      "resultPath": "orchestrator/results/P5-10.json",
+      "reviewResultPath": "orchestrator/results/P5-10.review.json",
+      "reviewReportPath": "reports/phase-p5-10-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P5-30",
+      "title": "Thirty-launch extended measurement",
+      "dependencies": ["P5-10"],
+      "phaseFile": "phases/phase-p5-staged-measurement.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p5-30-result.md",
+      "handoffPath": "handoffs/phase-p5-30-handoff.md",
+      "resultPath": "orchestrator/results/P5-30.json",
+      "reviewResultPath": "orchestrator/results/P5-30.review.json",
+      "reviewReportPath": "reports/phase-p5-30-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P5-100",
+      "title": "One-hundred-launch full measurement",
+      "dependencies": ["P5-30"],
+      "phaseFile": "phases/phase-p5-staged-measurement.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p5-100-result.md",
+      "handoffPath": "handoffs/phase-p5-100-handoff.md",
+      "resultPath": "orchestrator/results/P5-100.json",
+      "reviewResultPath": "orchestrator/results/P5-100.review.json",
+      "reviewReportPath": "reports/phase-p5-100-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": false
+    },
+    {
+      "id": "P6",
+      "title": "Managed MKTTool to Relay to MKTBrowser integration",
+      "dependencies": ["P5-100"],
+      "phaseFile": "phases/phase-p6-managed-integration.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p6-result.md",
+      "handoffPath": "handoffs/phase-p6-handoff.md",
+      "resultPath": "orchestrator/results/P6.json",
+      "reviewResultPath": "orchestrator/results/P6.review.json",
+      "reviewReportPath": "reports/phase-p6-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": true
+    },
+    {
+      "id": "P7",
+      "title": "Release and internal demo gate",
+      "dependencies": ["P6"],
+      "phaseFile": "phases/phase-p7-release-demo-gate.md",
+      "promptFile": "prompts/phase-session-template.md",
+      "reportPath": "reports/phase-p7-result.md",
+      "handoffPath": "handoffs/phase-p7-handoff.md",
+      "resultPath": "orchestrator/results/P7.json",
+      "reviewResultPath": "orchestrator/results/P7.review.json",
+      "reviewReportPath": "reports/phase-p7-review.md",
+      "allowedWriteRoots": [
+        "plans/260828-1655-prebuilt-engine-session-orchestrator/"
+      ],
+      "reviewRequired": true,
+      "manualGate": true
+    }
+  ]
+}

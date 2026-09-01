@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mktbrowser-prebuilt-orchestrator-result-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "planId",
+    "phaseId",
+    "runId",
+    "status",
+    "startedAt",
+    "completedAt",
+    "reportPath",
+    "handoffPath",
+    "evidencePaths",
+    "changedPaths",
+    "tests",
+    "unresolvedQuestions"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "planId": {"type": "string", "minLength": 1},
+    "phaseId": {"type": "string", "minLength": 1},
+    "runId": {"type": "string", "format": "uuid"},
+    "codexThreadId": {"type": ["string", "null"]},
+    "engineKind": {"type": ["string", "null"]},
+    "engineVersion": {"type": ["string", "null"]},
+    "archiveSha256": {"type": ["string", "null"]},
+    "treeSha256": {"type": ["string", "null"]},
+    "resourceSnapshotPath": {"type": ["string", "null"]},
+    "status": {
+      "enum": ["PASS", "DONE", "DONE_WITH_CONCERNS", "BLOCKED", "FAIL", "NOT_RUN", "NEEDS_CONTEXT", "NEEDS_OWNER"]
+    },
+    "startedAt": {"type": "string", "format": "date-time"},
+    "completedAt": {"type": "string", "format": "date-time"},
+    "reportPath": {"type": "string", "minLength": 1},
+    "handoffPath": {"type": "string", "minLength": 1},
+    "evidencePaths": {"type": "array", "items": {"type": "string"}},
+    "changedPaths": {"type": "array", "items": {"type": "string"}},
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"enum": ["PASS", "FAIL", "SKIP", "OPEN"]},
+          "details": {"type": "string"}
+        }
+      }
+    },
+    "unresolvedQuestions": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}
