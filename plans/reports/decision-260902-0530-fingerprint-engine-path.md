@@ -6,6 +6,20 @@ Reddit/Facebook đã rút khỏi phạm vi bàn giao 02/09.
 **Nguồn:** `research-260828-0109`, `research-260828-0153`, plan `260828-0428-chromium-fingerprint-engine`,
 plan `260828-1655-prebuilt-engine-session-orchestrator`. Không nghiên cứu lại, chỉ tổng hợp và đối chiếu.
 
+> ## Cập nhật 02/09/2026 05:35 — hai ràng buộc đã chốt, nấc 3-4 ĐÓNG
+>
+> Chủ dự án trả lời hai câu quyết định:
+>
+> - **Không ai viết được C++ Chromium/Blink.**
+> - **Không có máy >16 GiB RAM khả dụng.**
+>
+> Mỗi câu một mình đã đủ chặn nấc 3 và 4, và chúng chặn ở hai chỗ độc lập: không build được từ
+> nguồn, và không viết được patch native. Kể cả vượt được cả hai thì gánh **rebase CVE vĩnh viễn**
+> vẫn đòi đúng kỹ năng đó, mãi mãi. Nấc 3-4 **ra khỏi bàn**, không phải "để sau".
+>
+> Phần dưới giữ nguyên để thấy đường suy luận; đọc mục "Đề nghị sau khi chốt ràng buộc" ở cuối
+> thay cho mục "Đề nghị" cũ.
+
 ## Điều quan trọng nhất: câu hỏi tôi đặt ra hôm qua là câu hỏi sai
 
 Tôi đã trình bày lựa chọn là **(a) hạ kỳ vọng xuống "cohort hợp lý"** hay **(b) sở hữu patch set
@@ -42,8 +56,8 @@ thu*, (b) là *cách đạt được nó*. Câu hỏi thật là: **leo tới n�
 | **0. Sửa gate** | Định nghĩa lại tiêu chí nghiệm thu theo joint identity + cohort | **2-3 ngày** | không | — |
 | **1. Cohort allocator trên Cloak hiện tại** | Cấp phát/cách ly seed, giảm đụng độ font/WebGL | nhỏ | nhỏ | **KHÔNG** |
 | **2. Spike Brave** | Chạy Brave nguyên bản, đo lifecycle + CDP + scanner | **5-7 ngày** | không | trả lời được câu đó |
-| **3. PoC seed-plumbing** | Build engine, cắm identity manifest, farbling audio trước | **2-4 tuần** | cao | có, nếu PoC đạt |
-| **4. Sản phẩm hoá** | Rebase security branch, SBOM, ký số, CVE SLA, canary | **4-8 tuần trở lên** | **rất cao, vĩnh viễn** | có |
+| ~~3. PoC seed-plumbing~~ | ~~Build engine, cắm identity manifest, farbling audio~~ | **ĐÓNG** | — | — |
+| ~~4. Sản phẩm hoá~~ | ~~Rebase security branch, SBOM, ký số, CVE SLA~~ | **ĐÓNG** | — | — |
 
 Tổng nếu đi hết: **khoảng 3-4 tháng**, và research nói thẳng con số đó **giả định người làm đã thạo
 Chromium/Blink C++**; lần đầu fork Chromium "can take materially longer".
@@ -113,15 +127,71 @@ sống được trên đó không — với chi phí một tuần thay vì một
 **Nấc 1 (cohort allocator trên Cloak)** chỉ nên làm nếu cần một bản dùng tạm ngay. Nó không sửa được
 audio, tức không đóng được `G2-IDENTITY` — "temporary risk control only".
 
+## Đề nghị sau khi chốt ràng buộc
+
+Nấc 3-4 đóng, nên chỉ còn ba đường, và chúng chạy song song được:
+
+### 1. Nấc 0 — sửa gate. 2-3 ngày. Làm trước, vô điều kiện.
+
+Càng đáng làm hơn sau khi mất cửa engine: khi không còn đòn bẩy kỹ thuật nào, đòn bẩy còn lại là
+**đo cho đúng**. Rất có thể khoảng cách thật nhỏ hơn cái gate sai đang báo — và đó là thông tin miễn
+phí. Không cần phần cứng, không cần C++, không cam kết gì.
+
+### 2. Spike Brave — nấc 2. 5-7 ngày. Đường engine duy nhất còn với tới được.
+
+**Không cần C++, không cần build.** Brave đã **biên dịch sẵn** đúng phần đang thiếu:
+`BraveAudioFarblingHelper`, WebGL native, font whitelist chặn cả `src: local(...)`, seeded PRNG
+farbling theo origin. Đây là *chạy* một engine prebuilt, không phải *vá* nó — chính là đường mà plan
+`1655` pivot tới.
+
+Spike trả lời hai câu, cả hai đều đo được:
+
+1. Danh tính Brave nhìn từ scanner có **thật sự** tốt hơn Cloak `.3` không?
+2. Lifecycle MKT có sống trên đó không — `DevToolsActivePort`, CDP, `Browser.close`, nạp extension,
+   proxy fail-closed?
+
+Giới hạn phải nhớ khi đọc kết quả: threat model của Brave là **chống tracker**, không phải antidetect;
+ngữ nghĩa seed/session của nó không phải hợp đồng profile bền của MKT; và bản thân Brave có thể là
+một cohort dễ nhận riêng.
+
+### 3. Khảo sát vendor thay thế. Không tốn giờ kỹ thuật.
+
+Lane C đóng vì **CloakBrowser** không có kênh, không phải vì mọi vendor đều hết.
+`internal-beta-release.md` đã tự ghi: *"The only possible future path is a separately funded and
+owned **alternative-vendor decision** outside this release."*
+
+Khi build và patch đều đã loại, đây là đường **thực tế nhất còn lại**: mua đúng thứ đội không tự làm
+được — engine fingerprint native kèm người bảo trì và vá CVE. Đổi tiền lấy thứ không đổi bằng thời
+gian được.
+
+### Không nên làm
+
+- **Nấc 1 (cohort allocator trên Cloak)** chỉ nếu cần bản dùng tạm ngay. **Không sửa được audio**,
+  tức không đóng `G2-IDENTITY`.
+- **Camoufox** vẫn là dự phòng cuối. Lưu ý nó **không** vướng rào C++ (cũng prebuilt) — nó vướng vì
+  là **migration sản phẩm** từ CDP sang Firefox/Juggler, tức viết lại browser driver. Việc TypeScript
+  nặng, không phải C++.
+
+## Nếu cả ba đường đều không ra kết quả
+
+Phải nói thẳng để không ai tự lừa mình: khi đó sản phẩm này là **công cụ quản lý profile + proxy +
+quyền sở hữu**, không phải công cụ cách ly danh tính. README của MKTBrowser vốn đã viết đúng vậy —
+*"no identity-isolation claim"*.
+
+Nó vẫn có ích thật: một nick một proxy một máy một người chịu trách nhiệm, ghi sổ rõ ràng, ranh giới
+quyền enforce ở tầng dữ liệu. Nhưng đừng bàn giao cho team dưới cái tên "antidetect", vì cái tên đó
+hứa thứ chưa chứng minh được.
+
 ## Câu hỏi chưa trả lời
 
-1. **Ai viết C++ Chromium/Blink?** Ước lượng 3-4 tháng giả định người đã thạo. Nếu không có người
-   như vậy, con số đó không dùng được và nấc 3-4 phải tính lại từ đầu — đây là câu hỏi quyết định
-   nhiều nhất mà research không trả lời thay được.
-2. **Có máy >16 GiB RAM khả dụng không?** Quyết định plan `0428` mở lại được hay vĩnh viễn phải đi
-   đường prebuilt của plan `1655`.
-3. **Chấp nhận gánh rebase CVE vĩnh viễn không?** Đây là cam kết vận hành, không phải cam kết dự án.
-4. **Pool bao nhiêu profile mỗi máy?** Research đề xuất khởi điểm 10. Con số này định nghĩa "không
-   đụng độ" nghĩa là gì, nên phải chốt ở nấc 0.
-5. Một seat vendor = một profile tại một thời điểm (`G2 concurrency` DEFERRED) vẫn là trần cứng
+1. **Pool bao nhiêu profile mỗi máy?** Research đề xuất khởi điểm 10. Con số này *định nghĩa* "không
+   đụng độ" nghĩa là gì, nên phải chốt ngay ở nấc 0 trước khi đo.
+2. **Có ngân sách cho vendor thay thế không?** Quyết định đường 3 có thật sự mở hay chỉ trên giấy.
+3. Một seat vendor = một profile tại một thời điểm (`G2 concurrency` DEFERRED) vẫn là trần cứng
    chừng nào còn dùng Cloak, độc lập với mọi thứ ở trên.
+
+### Đã trả lời 02/09/2026
+
+- ~~Ai viết C++ Chromium/Blink?~~ → **không ai.** Đóng nấc 3-4.
+- ~~Có máy >16 GiB khả dụng?~~ → **không.** Đóng đường build từ nguồn; plan `0428` không mở lại được.
+- ~~Chấp nhận gánh rebase CVE vĩnh viễn?~~ → moot, vì nó đòi đúng kỹ năng vừa xác nhận là không có.
