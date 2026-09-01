@@ -49,23 +49,24 @@ Boundaries that remain, because they protect the owner rather than gate the owne
   stale: if one produces no output within a few minutes, stop it and continue inline rather than
   blocking on it.
 
-## CI/CD Execution — run it on the local VM
+## CI/CD Execution — GitHub Actions is the gate
 
-The local disposable VirtualBox VM is the primary CI/CD environment for this workspace. Run the full
-pipeline there. GitHub Actions is optional, not a required gate.
+GitHub Actions is the authoritative CI gate for this workspace. Every workflow runs on
+GitHub-hosted runners; no job targets a self-hosted runner. The local disposable VirtualBox VM
+stays useful, but as a pre-check, not as the gate.
 
-- Default: build, install, test, and verify on the local disposable VM. A clean-VM pass there counts
-  as a real clean-environment pass and is sufficient to proceed with commit, push, release, publish,
-  and deploy.
-- For MKT Browser Windows installer and lifecycle work, the disposable VirtualBox VM gate is the
-  gate. Do not wait on GitHub Windows runners for it.
-- Reach for GitHub Actions only when the VM genuinely cannot reproduce the environment, or when a
-  second independent confirmation is worth the wait. Codex decides; no approval needed either way.
-- Reset the VM to a clean snapshot for gates that depend on a clean machine (fresh install, first
-  run, uninstall, registry and profile state).
-- Diagnose failures on the VM or locally and batch coherent fixes. Do not rerun a pipeline after
-  every speculative edit, and do not rerun a failed job until its failure is understood or it is a
-  proven transient fault.
-- Cancel superseded runs when safe.
+- Run the closest local checks first — targeted tests, typecheck, lint, build — and use the
+  disposable VM for installer, first-run, uninstall, and registry/profile behaviour. A failure
+  caught locally is free; the same failure caught on a hosted runner is not.
+- A local or VM pass is evidence, never a substitute for the GitHub result. Promotion, release, and
+  deploy decisions cite the GitHub run.
+- Both repositories are private, so Actions minutes are billed and Windows jobs bill at the 2x rate.
+  That is a reason to batch coherent fixes instead of pushing after every speculative edit — not a
+  reason to ask permission. Codex triggers, reruns, and cancels runs on its own judgment under the
+  standing authorization above.
+- Do not rerun a failed job until its failure is understood or it is a proven transient fault.
+  Cancel superseded runs when safe.
+- `ubuntu-latest` and `windows-latest` give every job a fresh VM that is discarded afterwards, so a
+  hosted job is a real clean-machine result. A pass on the developer host is not.
 - Report local results, VM results, GitHub Actions results, skipped gates, and remaining blockers
-  separately. A host-machine pass is not a clean-VM pass — never present one as the other.
+  separately. Never present one as another, and never read a skipped required check as a pass.
