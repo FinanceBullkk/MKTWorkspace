@@ -116,6 +116,15 @@ Lúc xóa mới thấy `MKTTool/data/backups/` còn **24 file, trong đó 12 fil
 mỗi file là một bản kho danh tính production, nằm cùng máy với `.env` đang giữ `VAULT_KEY_SERVER`.
 Đúng cặp mà `backup-database.ts` cảnh báo, nhân lên 12 lần.
 
-**Chưa xóa file nào trong số đó** — chúng có trước phiên này, xóa bản sao lưu của người khác là thao
-tác không đảo lại được và không nằm trong phần được giao. Đề nghị: giữ 1-2 bản gần nhất, chép ra ổ
-rời, xóa phần còn lại trên máy. Cần quyết định của chủ dự án.
+**Đã dọn 02/09/2026 05:20 ICT** sau khi chủ dự án đồng ý. Xóa 10, giữ 2 bản mới nhất
+(`mkttool-prod-20260830-150725.sql`, `mkttool-prod-20260830-202039.sql`). Chạy hai bước — liệt kê
+khô trước, đối chiếu đủ 10 dòng và xác nhận hai bản giữ lại không có trong danh sách, rồi mới xóa.
+
+Thư mục còn 14 file, trong đó **2 dump production** (phần còn lại là backup dev, giá trị thấp vì
+database dev đang rỗng).
+
+Ghi lại một cái bẫy: lệnh xóa đầu tiên tôi đưa viết bằng cú pháp bash (`rm -f`, nối dòng bằng `\`)
+trong khi terminal là PowerShell. `rm -f` nhập nhằng giữa `-Filter` và `-Force`, và `\` không phải
+ký tự nối dòng của PowerShell — nên lệnh vỡ ra thành nhiều dòng lỗi và **không xóa gì**. Bản đúng
+dùng `Remove-Item -Force` với danh sách giữ lại trong biến. Terminal của workspace này là
+PowerShell; đừng đưa lệnh bash cho nó.
