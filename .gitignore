@@ -15,3 +15,15 @@
 !CLAUDE.md
 !plans/
 !plans/**
+
+# Re-deny inside the allowlisted plan tree. Last matching pattern wins.
+#
+# .codex-home-probe/ is a 2.5 MB copy of a Codex home directory captured while probing the
+# orchestrator runner: installation id, goals/logs/memories SQLite databases, and vendored system
+# skills. Machine state, not plan material.
+plans/**/.codex-home-probe/
+#
+# Raw restore-verification receipts carry production schema field names and token-bearing record
+# structures. Only the sanitized receipt belongs in Git — see
+# plans/260829-2125-internal-product-readiness/reports/restore-verify-receipt-redaction.md
+plans/**/restore-verify-*.json
