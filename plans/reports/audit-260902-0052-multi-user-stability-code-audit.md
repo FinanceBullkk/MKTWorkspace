@@ -105,7 +105,10 @@ Rồi mới `publishToPage`. Thành công thì POSTED, lỗi thì FAILED. `statu
 
 ## Còn lại sau bản vá F1+F2
 
-- **F3 chưa động tới.** Cần chủ dự án quyết trước (cố ý mở hay quên đóng) rồi mới viết test khai ý định.
+- **F3 hết gấp, chưa đóng.** Chủ dự án quyết 02/09/2026 rút Reddit và Facebook khỏi phạm vi bàn
+  giao, nên không còn ai được giao đăng Fanpage để mà đụng vào lỗ hổng này. Nhưng code vẫn nằm
+  trong cây và nút vẫn bấm được, nên đây là món **hoãn**, không phải món **xong**: mở lại nền tảng
+  mà quên nó là mở lại nguyên trạng.
 - **`@@unique([accountId, threadKey])`: RÚT LẠI — đề xuất này SAI, không được thêm.** Kiểm lại thì
   cùng một nick chạm nhiều lần vào một thread là hợp lệ **có chủ ý**: form ghi tương tác
   (`interaction-actions.ts`) cho ghi POST/COMMENT/UPVOTE lên bất kỳ thread nào, và luật 8 loại trừ

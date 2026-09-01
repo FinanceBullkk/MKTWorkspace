@@ -67,7 +67,12 @@ Workflow `Windows Technical Build` của MKTBrowser chạy theo lịch trên nh�
 
 1. Sửa B1 trước mọi merge. Rẻ, và đang chặn đường ra master.
 2. Dựng uptime monitor bên ngoài trỏ `/api/healthz` + 1 kênh báo (B2). Rẻ nhất trong danh sách, rủi ro cao nhất nếu bỏ.
-3. Roll Lane A cho team **chỉ với Facebook Pages + ghi sổ Reddit tay**. Nói rõ ranh giới, đừng để ai suy ra là có browser.
+3. ~~Roll Lane A cho team chỉ với Facebook Pages + ghi sổ Reddit tay.~~ **RÚT — chủ dự án quyết
+   02/09/2026: Reddit và Facebook ra khỏi phạm vi bàn giao.** Không xóa code, chỉ thu phạm vi. Phần
+   còn bàn giao cho team: kho nick, kho proxy, sổ máy Relay. Hệ quả cần nói thẳng: **phạm vi
+   roll-out gần như rỗng** — bỏ hai nền tảng này thì không còn đường đăng nào, nên câu hỏi "ready
+   to roll chưa" mất phần lớn nội dung của nó. Món còn lại là một kho danh tính dùng chung, tự nó
+   vẫn có giá trị nhưng là sản phẩm nhỏ hơn nhiều so với những gì đã dựng.
 4. Xong máy owner thứ hai lên v16 rồi mới nâng sàn Relay (B3).
 5. Diễn tập cài từ máy sạch với đúng 1 người không phải owner, quay màn hình, lấp chỗ thiếu ảnh trong docs — trước khi mời người thứ 5-6 (B4).
 6. Sửa trigger scheduled workflow của MKTBrowser về nhánh có thật.
