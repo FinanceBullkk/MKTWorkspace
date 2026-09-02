@@ -1,8 +1,8 @@
 # Phase 02 - Cloak Stable `.2` baseline remeasurement
 
 **Date:** 2 September 2026
-**Status:** `BLOCKED` - no valid Cloak profile dataset was obtained
-**Decision:** do not start Phase 03 from this result
+**Status:** `CLOSED-BLOCKED` - no valid Cloak profile dataset was obtained
+**Decision:** close Phase 02 without measurement; Phase 03 is unblocked for a later session
 
 ## Scope
 
@@ -33,6 +33,19 @@ The recording table was created before the first seat attempt:
 | Same-machine stock control | Chrome `151.0.7922.174`, SHA-256 `b6d40f55e48e61760335d18f46abcec929e1a11b8330e7f2b501037584af4aa4` |
 | Local preflight before the final attempt | `1 free / 0 active / 0 pendingRecovery / 0 cooling`, and `0` Cloak processes |
 | Valid Cloak readings | `0/10` profile runs |
+
+## Recorded local seat-state evidence
+
+This verification was already completed on 2 September 2026 and is recorded here without another
+measurement or seat attempt:
+
+| Item | Evidence |
+|---|---|
+| `license-leases.json` | 18 records; every record is terminal (`expired`, `confirmed-released`, or `terminal-refused`) |
+| Current lease states | No `active`, `cooling`, or `pendingRecovery` entry |
+| Most recent terminal record | `confirmed-released` at `2026-09-01T08:53:12Z` |
+| Installed CloakBrowser runtime | Nothing under the runtime was modified after `07:00` local on 2 September |
+| Local holder conclusion | A local process or lease holding the seat is ruled out by evidence, not assumption |
 
 The stock control was run by the harness in each final attempt and stored only in disposable
 temporary evidence. Because no paired Cloak profile run succeeded, the stock readings cannot be used
@@ -81,29 +94,40 @@ removed or modified.
 - The extended harness passed its targeted regression tests, lint, typecheck, and the full Node 22
   installer suite (exit `0`; one pre-existing live machine integration test remained explicitly
   skipped).
-- Local capacity was free immediately before the final attempt, while the vendor refused the first
-  profile launch three times after cooldown. A separate API-only start/end diagnostic returned HTTP
-  200 for both operations but did not make the packaged engine launch succeed.
+- Across roughly one hour, four packaged engine launch attempts were refused after proper cooldowns;
+  the final preflight showed a free local seat and no Cloak process. A separate API-only start/end
+  diagnostic returned HTTP 200 for both operations but did not make the packaged engine launch
+  succeed.
 - No local Cloak process was present after each refusal.
 
 ### Inferred
 
-- The refusal indicates either a seat held outside the local process table, a vendor-side
-  session-state mismatch, or a difference between the API diagnostic identity and the packaged
-  engine launch identity. The evidence does not identify which external session, machine, or server
-  record holds it.
+- The terminal-only lease journal, absent local Cloak process, and unchanged installed runtime rule
+  out a local process or lease holding the seat. The remaining possibilities are external/server-side
+  session state or a difference between the API diagnostic identity and the packaged engine launch
+  identity. The evidence does not identify which external session, machine, or server record is
+  responsible.
+- `session/start` returned HTTP `200` and `session/end` returned HTTP `200`, so the account had
+  capacity at that moment. A genuine `session limit reached` condition would have failed
+  `session/start`. The later refusal is therefore more likely scoped to the engine launch identity or
+  a device registration than to a session count. This is inference, not measurement; if it is
+  device-scoped, buying additional seats would not fix it.
 - The blocker cannot be cleared locally because the available `session/end` path requires the lease
   and instance identifiers belonging to the holder; those identifiers are not available from the
   refused launch.
 
-## Unblock and next action
+## Closure and bounded self-service check
 
-An owner/vendor action is required to clear or reassign the server-side session for the licensed key,
-or to provide a confirmed free seat. After that action, rerun this exact harness once at pool five;
-do not lower the pool, change the engine pin, or substitute Preview `.3`. Until a valid five-profile
-dataset exists, Phase 02 remains `BLOCKED`, `G2-IDENTITY` remains unchanged, and Phase 03 must not
-start automatically.
+Phase 02 is `CLOSED-BLOCKED`, not waiting. Vendor contact is ruled out by the owner decision; there is
+no vendor request, ticket, or "coming soon" action.
+
+The only remaining self-service check is on the second owner machine: power off MKT Browser and
+CloakBrowser completely, then retry once. If that is not the cause, Phase 02 cannot be measured at all
+and remains closed-blocked. Do not lower the pool, change the engine pin, or substitute Preview `.3`.
+`G2-IDENTITY` remains unchanged. Phase 03 is ready independently and is not started by this session.
 
 ## Unresolved questions
 
-- Which external Cloak session or vendor record is consuming the single licensed seat?
+- Whether the bounded second-owner-machine power-off check clears the launch refusal.
+- If it does not, the engine-launch identity or device-registration reason remains unobservable; no
+  further Phase 02 measurement path is available.

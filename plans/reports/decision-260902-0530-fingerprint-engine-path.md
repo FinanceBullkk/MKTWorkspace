@@ -230,6 +230,20 @@ bao lâu.
   là **migration sản phẩm** từ CDP sang Firefox/Juggler, tức viết lại browser driver. Việc TypeScript
   nặng, không phải C++.
 
+## Phát hiện availability mới — 02/09/2026
+
+Nghiên cứu tháng 8 chưa bao phủ availability của engine được pin. Trong khoảng một giờ ngày 2/9,
+sau các cooldown đúng quy định và một local preflight sạch, engine pin đã từ chối khởi chạy **4 lần**
+(bốn lần đều trước khi có profile đọc được). Hiện không có kênh được phép để hỏi nguyên nhân.
+
+Đây là **khuyết tật availability độc lập với chất lượng fingerprint**: engine không khởi chạy được thì
+chất lượng fingerprint của nó không còn ý nghĩa vận hành. Với sản phẩm mà operator phải mở profile mỗi
+ngày, rủi ro này có mức ưu tiên vận hành **cao hơn `G2-IDENTITY`**.
+
+Đây cũng là một lý do mới cho Brave, hoàn toàn không liên quan đến identity: một engine prebuilt miễn
+phí không thể bị giữ lại bởi giới hạn seat/licence. Đây là finding availability, không phải kết luận
+rằng Brave đã đạt gate fingerprint.
+
 ## Nếu cả ba đường đều không ra kết quả
 
 Phải nói thẳng để không ai tự lừa mình: khi đó sản phẩm này là **công cụ quản lý profile + proxy +

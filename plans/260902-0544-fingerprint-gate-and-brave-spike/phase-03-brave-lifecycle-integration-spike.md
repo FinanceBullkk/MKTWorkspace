@@ -1,10 +1,9 @@
 ---
 phase: 3
 title: "Spike Brave — lifecycle & tích hợp"
-status: pending
+status: ready
 priority: P1
 effort: "2-3 ngày"
-dependencies: [phase-02]
 ---
 
 # Phase 03 — Spike Brave: lifecycle & tích hợp
@@ -16,13 +15,20 @@ dependencies: [phase-02]
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** chưa bắt đầu
+**Ưu tiên:** P1 · **Trạng thái:** sẵn sàng (chưa bắt đầu)
 
 Chạy Brave Windows **nguyên bản, có kiểm checksum**, trong data root dùng-một-lần, và trả lời đúng
 một câu: **MKT Browser có lái được nó không?**
 
 Làm trước phần đo fingerprint (phase 04) vì đây là **điểm chết rẻ hơn**. Nếu không lái được thì đo
 fingerprint của nó cũng vô nghĩa, và ta tiết kiệm 3-4 ngày.
+
+## Dependency clarification
+
+Phase 02 was an **early-exit branch**, not a prerequisite for this phase. It existed to end the plan
+early if Cloak passed the acceptance gate. Closing Phase 02 as `CLOSED-BLOCKED` removes that early
+exit and nothing else. Phase 03 and Phase 04 use Brave and stock Chrome, both free, so neither needs
+a CloakBrowser seat. This phase is ready for a later session; this closeout does not start it.
 
 ## Key Insights
 

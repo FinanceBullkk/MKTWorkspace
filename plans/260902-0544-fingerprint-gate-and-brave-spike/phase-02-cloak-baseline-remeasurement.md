@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Đo lại Cloak theo gate mới"
-status: blocked
+status: closed-blocked
 priority: P1
 effort: "1-2 ngày"
 dependencies: [phase-01]
@@ -17,7 +17,7 @@ dependencies: [phase-01]
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** `BLOCKED` 02/09/2026 - vendor từ chối seat trước P1
+**Ưu tiên:** P1 · **Trạng thái:** `CLOSED-BLOCKED` 02/09/2026 - không có dataset hợp lệ; vendor contact bị loại trừ
 
 Đo engine **đang dùng** (Cloak Stable `.2`) theo đặc tả vừa viết, ở pool 3-5. Mục đích không phải để
 Cloak đạt — mà để biết **khoảng cách thật còn bao xa** trước khi bỏ 5-7 ngày vào Brave.
@@ -91,8 +91,8 @@ Chỉ đọc: driver hiện tại của MKT Browser, để biết override nào 
 - [ ] Đo lần 1 → khởi động lại → đo lần 2 (tiêu chí A)
 - [ ] Ghép joint tuple (tiêu chí B)
 - [ ] Đo đối chứng stock Chrome/CFT cùng máy (tiêu chí C)
-- [x] Viết `reports/cloak-baseline.md` với trạng thái `BLOCKED`
-- [x] Dừng trước phase 03; chờ owner/vendor giải phóng seat
+- [x] Viết `reports/cloak-baseline.md` với trạng thái `CLOSED-BLOCKED`
+- [x] Đóng phase 02; không có đường vendor và không tự động khởi động phase 03
 
 ## Success Criteria
 
@@ -115,7 +115,13 @@ Chỉ đọc: driver hiện tại của MKT Browser, để biết override nào 
 Profile dùng-một-lần, không nick thật, không dữ liệu thật. Không ghi giá trị fingerprint thật của
 máy chủ dự án vào repo dưới dạng có thể tra ngược ra máy đó.
 
-## Next Steps
+## Closure and bounded self-service check
 
-Trượt → [phase 03](phase-03-brave-lifecycle-integration-spike.md).
-Đạt cả ba → dừng plan, đưa kết quả sang [phase 05](phase-05-go-no-go-decision-record.md).
+Phase 02 is closed-blocked, not waiting. The only remaining self-service check is on the second owner
+machine: power off MKT Browser and CloakBrowser completely, then retry once. If that is not the cause,
+this phase cannot be measured at all. Do not lower the pool, change the engine pin, or substitute
+Preview `.3`; `G2-IDENTITY` remains unchanged.
+
+Phase 03 is unblocked independently and can be started in a later session. If a valid dataset is ever
+obtained, send its separate A/B/C verdicts to [phase 05](phase-05-go-no-go-decision-record.md); no
+vendor request or seat purchase is a next step.

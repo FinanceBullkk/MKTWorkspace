@@ -1,7 +1,7 @@
 ---
 title: "Gate nghiệm thu đúng + spike Brave prebuilt"
 description: "Sửa tiêu chí nghiệm thu fingerprint về joint identity/cohort, đo lại Cloak theo tiêu chí đó, rồi spike Brave prebuilt để quyết đường engine miễn phí duy nhất còn lại."
-status: blocked
+status: in-progress
 priority: P1
 effort: "9-13 ngày kỹ thuật"
 branch: "codex/fingerprint-engine-phase0"
@@ -44,10 +44,14 @@ Thực thi bằng phiên Codex riêng cho từng phase — xem
 | # | Giai đoạn | Công sức | Trạng thái |
 |---|---|---|---|
 | 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | **XONG 02/09** |
-| 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | **BLOCKED 02/09 - vendor từ chối seat trước P1** |
-| 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | chưa bắt đầu |
+| 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | **CLOSED-BLOCKED 02/09 - không có dataset Stable `.2`; vendor contact bị loại trừ** |
+| 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | **READY 02/09 - độc lập với phase 02, không cần seat Cloak** |
 | 04 | [Spike Brave — danh tính & cohort](phase-04-brave-identity-and-cohort-verdict.md) | 3-4 ngày | chưa bắt đầu |
 | 05 | [Bản ghi Go/No-Go](phase-05-go-no-go-decision-record.md) | 0.5 ngày | chưa bắt đầu |
+
+> Phase 02 là nhánh thoát sớm, không phải prerequisite của phase 03. Đóng-block phase 02 chỉ làm mất
+> cửa thoát sớm; phase 03 và 04 dùng Brave/stock Chrome miễn phí và không cần seat Cloak. Phase 03
+> được đánh dấu **READY**, nhưng chưa được bắt đầu trong phiên closeout này.
 
 ## Điều kiện dừng sớm
 
@@ -66,7 +70,8 @@ Plan này **thiết kế để chết sớm và rẻ**. Dừng ngay, không đi 
 - Máy Windows x64 hiện tại. **Không** cần phần cứng mới — đây là điểm khác căn bản với plan
   [`260828-0428`](../260828-0428-chromium-fingerprint-engine/plan.md) đã đóng vì thiếu RAM.
 - Bản Brave Windows chính thức, có kiểm checksum. Chỉ chạy trong data root dùng-một-lần.
-- Cloak Stable `.2` giữ nguyên pin để làm đối chứng. **Không** promote Preview `.3`.
+- Cloak Stable `.2` giữ nguyên pin làm mốc lịch sử; phase 03/04 không khởi chạy nó và không cần seat.
+  Đối chứng live của phase 04 là stock Chrome/CFT. **Không** promote Preview `.3`.
 - Harness đo: `MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs` (đã có, cần mở rộng
   vùng phủ), BrowserScan, CreepJS.
 
@@ -76,7 +81,7 @@ Plan này **thiết kế để chết sớm và rẻ**. Dừng ngay, không đi 
 - Không nới `G2-IDENTITY` hiện tại. Gate mới chạy **song song** như gate thực nghiệm cho tới khi có
   quyết định riêng.
 - Không dùng nick thật ở bất kỳ phase nào.
-- Không tiêu seat Cloak cho việc đo nếu tránh được — xem ghi chú ở phase 02.
+- Phase 03/04 không chạm seat Cloak; phase 02 đã `CLOSED-BLOCKED`.
 
 ## Liên quan
 
