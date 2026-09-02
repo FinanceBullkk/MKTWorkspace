@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Đo lại Cloak theo gate mới"
-status: pending
+status: blocked
 priority: P1
 effort: "1-2 ngày"
 dependencies: [phase-01]
@@ -17,7 +17,7 @@ dependencies: [phase-01]
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** chưa bắt đầu
+**Ưu tiên:** P1 · **Trạng thái:** `BLOCKED` 02/09/2026 - vendor từ chối seat trước P1
 
 Đo engine **đang dùng** (Cloak Stable `.2`) theo đặc tả vừa viết, ở pool 3-5. Mục đích không phải để
 Cloak đạt — mà để biết **khoảng cách thật còn bao xa** trước khi bỏ 5-7 ngày vào Brave.
@@ -84,15 +84,15 @@ Chỉ đọc: driver hiện tại của MKT Browser, để biết override nào 
 
 ## Todo List
 
-- [ ] Liệt kê vùng phủ thiếu của harness (đầu vào từ phase 01)
-- [ ] Mở rộng harness
-- [ ] Chuẩn bị bảng ghi số **trước khi** mở profile
+- [x] Liệt kê vùng phủ thiếu của harness (đầu vào từ phase 01)
+- [x] Mở rộng harness
+- [x] Chuẩn bị bảng ghi số **trước khi** mở profile
 - [ ] Dựng 3-5 profile dùng-một-lần trên Stable `.2`
 - [ ] Đo lần 1 → khởi động lại → đo lần 2 (tiêu chí A)
 - [ ] Ghép joint tuple (tiêu chí B)
 - [ ] Đo đối chứng stock Chrome/CFT cùng máy (tiêu chí C)
-- [ ] Viết `reports/cloak-baseline.md`
-- [ ] Ra quyết định dừng hay đi tiếp
+- [x] Viết `reports/cloak-baseline.md` với trạng thái `BLOCKED`
+- [x] Dừng trước phase 03; chờ owner/vendor giải phóng seat
 
 ## Success Criteria
 

@@ -1,7 +1,7 @@
 ---
 title: "Gate nghiệm thu đúng + spike Brave prebuilt"
 description: "Sửa tiêu chí nghiệm thu fingerprint về joint identity/cohort, đo lại Cloak theo tiêu chí đó, rồi spike Brave prebuilt để quyết đường engine miễn phí duy nhất còn lại."
-status: ready
+status: blocked
 priority: P1
 effort: "9-13 ngày kỹ thuật"
 branch: "codex/fingerprint-engine-phase0"
@@ -44,7 +44,7 @@ Thực thi bằng phiên Codex riêng cho từng phase — xem
 | # | Giai đoạn | Công sức | Trạng thái |
 |---|---|---|---|
 | 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | **XONG 02/09** |
-| 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | chưa bắt đầu |
+| 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | **BLOCKED 02/09 - vendor từ chối seat trước P1** |
 | 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | chưa bắt đầu |
 | 04 | [Spike Brave — danh tính & cohort](phase-04-brave-identity-and-cohort-verdict.md) | 3-4 ngày | chưa bắt đầu |
 | 05 | [Bản ghi Go/No-Go](phase-05-go-no-go-decision-record.md) | 0.5 ngày | chưa bắt đầu |
