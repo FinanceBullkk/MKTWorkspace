@@ -1,5 +1,10 @@
 # Rescope UI về TikTok-only + sửa hồi quy bản redesign
 
+> **Historical rescope — not an active product direction (superseded 30 August 2026).** The TikTok-
+> only assumptions and uncommitted-work references below are retained for context. TikTok content,
+> scheduling, warmup, and posting automation are parked; current copy allows technical-only setup/demo
+> and makes no identity-isolation claim. Lane C is **CLOSED** because no CloakBrowser channel exists.
+
 **Ngày:** 19/08/2026 · **Nhánh:** master · **Trạng thái:** P0, P03, P05 xong (19/08 18:02). Còn **P04** — dựng lại tile/layout, cần xem bằng mắt.
 
 ## Bối cảnh

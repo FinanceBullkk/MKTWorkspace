@@ -16,6 +16,11 @@ source: skill
 
 # Per-Profile License Sidecar and Crash Recovery
 
+> **Historical/closed-scope predecessor plan — superseded 30 August 2026.** The sidecar and
+> one-seat engineering history is retained, but its pending vendor/capacity steps are not current.
+> U6 closed the custom-engine/vendor track; P4a Web is independent, and Lane C is **CLOSED** because
+> no CloakBrowser channel exists. See the consolidation plan for current evidence.
+
 ## Overview
 
 Implement a transparent, per-profile license sidecar for the unmodified CloakBrowser engine. The

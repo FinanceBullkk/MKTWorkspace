@@ -1,0 +1,160 @@
+{
+  "capturedOn": "2026-08-30T06:48:21.5495365Z",
+  "lane": "P4a",
+  "source": {
+    "branch": "master",
+    "commit": "6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432",
+    "ciRun": "33297347911",
+    "ciStatus": "success"
+  },
+  "deployment": {
+    "project": "renewed-benevolence",
+    "environment": "production",
+    "service": "mkttool-web",
+    "id": "ed972e5b-7597-4c6d-8066-24bc11c4ea0b",
+    "status": "SUCCESS",
+    "metaCommitHash": "6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432",
+    "branch": "master",
+    "runningInstances": 1
+  },
+  "healthz": {
+    "httpStatus": 200,
+    "bytes": 166,
+    "sha256": "7fac32dc21433db23cb4995006a08a7d054831530bbcab436ad15bd022dbf224",
+    "bodyContract": {
+      "ok": true,
+      "status": "ready",
+      "database": "ok",
+      "releaseMetadata": "ok",
+      "r2": "ok",
+      "relayVersion": 16,
+      "releaseSource": "r2"
+    }
+  },
+  "relayV16": {
+    "method": "GET",
+    "authorization": "approved runtime token; value omitted",
+    "httpStatus": 200,
+    "bytes": 33342752,
+    "sha256": "5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e",
+    "matchesPublishedObject": true,
+    "localDownloadRetained": false
+  },
+  "trustedProxy": {
+    "runtimeVariable": "TRUSTED_PROXY_IP_HEADERS=x-real-ip",
+    "deployment": "ed972e5b-7597-4c6d-8066-24bc11c4ea0b",
+    "burst": {
+      "clientARequests": 101,
+      "clientAHttp200": 100,
+      "clientAHttp429": 1,
+      "clientBRequests": 1,
+      "clientBHttp200": 1,
+      "warningLogCount": 0,
+      "burstDeployment": "8e1123a3-c7f6-49a8-bb97-68c35bd4807a",
+      "finalDeploymentWarningQuery": {
+        "linesChecked": 69,
+        "matchingLines": 0,
+        "note": "Latest deployment logs contained no Better Auth shared-IP warning. The labelled two-client burst remains historical synthetic evidence from the prior successful deployment."
+      }
+    },
+    "qualification": "Synthetic header-labelled clients through the direct Railway domain; all observed edge source IPs were the test host. This proves the configured header resolves separate buckets and removes the shared-bucket warning, not two physical networks. Re-verify if a CDN or another proxy is introduced."
+  },
+  "healthcheck": {
+    "path": "/api/healthz",
+    "verifiedBy": "Railway serviceInstance query",
+    "healthcheckTimeout": null,
+    "effectiveTimeoutSeconds": 300,
+    "timeoutDecision": "Retain Railway's bounded platform default. A null service setting inherits the documented 300-second deploy-time healthcheck timeout; it is not unbounded.",
+    "explicitTimeoutVariablePresent": false,
+    "decisionEvidence": "reports/healthcheck-timeout-decision.md"
+  },
+  "preconditions": {
+    "backup": {
+      "path": "MKTTool/data/backups/mkttool-prod-20260830-101918.sql",
+      "bytes": 64270,
+      "sha256": "40ba103453a764db5ecd4288bba7a8537fa911832e9216c56303a31e9ef1694f"
+    },
+    "restoreVerify": {
+      "status": "PASS",
+      "aggregateSourceRows": 100,
+      "aggregateRestoredRows": 100,
+      "mismatches": 0,
+      "cleanup": "PASS",
+      "reportSha256": "b5f652ec178d037f3c3353769d79926cd42327b33375a6c7f278e850d5955804"
+    },
+    "rollbackTuple": {
+      "priorDeployment": "3621f603-1c51-4246-824c-55cc0e6b5764",
+      "priorCommit": "c819e6a8dff5cac027d24b4a9d488ec241e2ccaa",
+      "migrationAction": "npx prisma migrate deploy",
+      "candidateCommit": "6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432",
+      "schemaState": "predeploy migration action recorded; merged deployment completed",
+      "drillStatus": "PASS_DISPOSABLE_QUALIFIED",
+      "drillEvidence": "reports/rollback-drill-p4-09.md"
+    }
+  },
+  "openGates": [
+    "P4-09 disposable rehearsal is complete and qualified; the prior image returns 404 on the live /api/healthz setting, so any real rollback remains human-approved and prior-healthcheck-gated.",
+    "P5-03 real v15-to-v16 observation on both owner machines is unavailable from this host; keep the floor at 13.",
+    "P4b Browser five-artifact tuple remains OPEN because the exact Stable .2 engine archive is absent.",
+    "Lane C is CLOSED: there is no CloakBrowser channel and no request or date exists."
+  ],
+  "followUp": {
+    "capturedOn": "2026-08-30T15:30:00+07:00",
+    "rollbackDrill": {
+      "status": "PASS_DISPOSABLE_QUALIFIED",
+      "report": "reports/rollback-drill-p4-09.md",
+      "backupMs": 22575,
+      "restoreVerifyMs": 7897,
+      "migrationMs": 12053,
+      "priorSourceBuildMs": 19651,
+      "cleanupRemaining": 0,
+      "productionMutated": false
+    },
+    "u2BrowserMatrix": {
+      "status": "PASS",
+      "run": "33303002259",
+      "attempt": 2,
+      "evidence": "reports/u2-browser-run-33303002259.md"
+    }
+  },
+  "finalVerification": {
+    "deploymentId": "ed972e5b-7597-4c6d-8066-24bc11c4ea0b",
+    "deploymentCreatedAt": "2026-08-30T06:38:14.156Z",
+    "masterCommit": "6ce28d0f2cc04d606eacb8d52b2e7fdbe5805432",
+    "masterCiRun": "33297347911",
+    "masterCiStatus": "success",
+    "healthzCheckedAt": "2026-08-30T06:48:21.5495365Z",
+    "relayFullGet": {
+      "method": "GET",
+      "status": 200,
+      "bytes": 33342752,
+      "sha256": "5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e",
+      "exact": true,
+      "clientAttempts": 2,
+      "httpLogSummary": [
+        { "status": 200, "txBytes": 27286912, "durationMs": 148835, "note": "client transfer ended before the complete body" },
+        { "status": 200, "txBytes": 33342752, "durationMs": 91105, "note": "complete body; hash exact" }
+      ]
+    },
+    "serviceManifest": {
+      "healthcheckPath": "/api/healthz",
+      "preDeployCommand": "npx prisma migrate deploy",
+      "runningInstances": 1,
+      "imageDigest": "sha256:76ae3d4f964123b5fec4a492c9c57cd494299efa2f759cf951630da375d3e2de"
+    }
+  },
+  "historicalDeployments": [
+    {
+      "id": "8e1123a3-c7f6-49a8-bb97-68c35bd4807a",
+      "commit": "380962a49576a4663438ef50685dcb386c86aa08",
+      "status": "SUCCESS",
+      "role": "prior P4a merge deployment; retained for audit history"
+    },
+    {
+      "id": "c4ac6781-6c41-486f-9e24-eeaf67aed22b",
+      "commit": "d2a274ce0bc926721240f39eb3cdbe5d1b45f818",
+      "status": "SUCCESS",
+      "role": "intermediate documentation deployment; superseded by final merge deployment"
+    }
+  ]
+}

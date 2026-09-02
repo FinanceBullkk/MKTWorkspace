@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mktbrowser-prebuilt-orchestrator-context-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "planId",
+    "phaseId",
+    "runId",
+    "objective",
+    "phaseFile",
+    "allowedWriteRoots",
+    "references",
+    "constraints",
+    "previousHandoff",
+    "resultPath",
+    "reportPath",
+    "handoffPath"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "planId": {"type": "string"},
+    "phaseId": {"type": "string"},
+    "runId": {"type": "string", "format": "uuid"},
+    "objective": {"type": "string", "minLength": 1},
+    "phaseFile": {"type": "string"},
+    "allowedWriteRoots": {"type": "array", "items": {"type": "string"}},
+    "references": {"type": "array", "items": {"type": "string"}},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "previousHandoff": {"type": ["string", "null"]},
+    "resultPath": {"type": "string"},
+    "reportPath": {"type": "string"},
+    "handoffPath": {"type": "string"},
+    "reviewResultPath": {"type": ["string", "null"]},
+    "reviewMode": {"type": "boolean"}
+  }
+}

@@ -379,7 +379,7 @@ the Phase 5 success criterion as a whole.
   measured sequentially. Concurrent isolation is DEFERRED, not passed.
 - [ ] Human input/login works on both PCs without credential automation.
 - [ ] Live vendor lifecycle is measured and integrated; capacity is honest and fail-closed.
-- [ ] Normal close, hard kill, Electron crash, Relay restart, and reboot recover deterministically.
+- [x] Normal close, hard kill, Electron crash, Relay restart, and real power-cycle reboot recover deterministically on the hash-bound 27 August evidence.
 - [ ] Clean PC B install/setup/launch/repair/uninstall passes with the verified candidate on the VM
   guest, with the evidence recording the machine as virtual.
 - [ ] Evidence is sanitized, bound to exact artifact hashes, and reviewed before canary.

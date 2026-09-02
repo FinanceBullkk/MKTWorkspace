@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "lifecycle": "HISTORICAL_SUPERSEDED",
+  "supersededBy": "../260830-0830-consolidation-and-lane-a-release/reports/p4a-postdeploy-evidence.json",
+  "currentState": {
+    "p4a": "DEPLOYED_QUALIFIED",
+    "p4aMergeSha": "380962a49576a4663438ef50685dcb386c86aa08",
+    "p4aDeploymentId": "8e1123a3-c7f6-49a8-bb97-68c35bd4807a",
+    "p4b": "OPEN_ENGINE_ARCHIVE_ABSENT",
+    "laneC": "CLOSED_NO_CLOAKBROWSER_CHANNEL",
+    "floor": 13
+  },
+  "candidateId": "20260830-browser-0.3.13-relay-16",
+  "lanes": ["A", "B", "C"],
+  "selectedLane": null,
+  "installerReproducibility": "OPEN",
+  "installerReproducibilityEvidence": {
+    "residualBytes": 103,
+    "classification": "NSIS-RT_DIALOG-order-and-trailer",
+    "normalized": false,
+    "evidencePath": "../../260830-0830-consolidation-and-lane-a-release/reports/u3-packaging-experiment.md"
+  },
+  "mktTool": {
+    "repository": "MKTTool",
+    "branch": "ci/self-hosted-runners",
+    "sourceSha": "1ade2c4a921507fac9e10c30843b67b5944197dd",
+    "treeSha": "2eb0f14174c794625ca799d961adcb30c1774bbc",
+    "dirtyDiffSha256": "9284ca324eaa9c9886ade7f3b860888409e185cf6749ef592d952b279d8f8b39",
+    "dirty": true,
+    "relayFixSourceSha": "57e14fac8e4aed69f30a9fdab95b3a087f04a4e7"
+  },
+  "mktBrowser": {
+    "repository": "MKTBrowser",
+    "branch": "feat/installed-contract-on-clean-runner",
+    "sourceSha": "3f3765360eae6de83fd617bf8e19949fb70719af",
+    "treeSha": "cf28f24c5373b9a9c65c82b256accab0d9023c1a",
+    "dirtyDiffSha256": "856761f62eef522e817a4e3f347d68689a449a7bc8c1f14a3f6ab861db3e4e63",
+    "dirty": true,
+    "joinKeyDecision": "3f37653",
+    "joinKeyReason": "HEAD; the only commit after audit baseline 6d1b0a2 is a docs-only internal-beta record."
+  },
+  "relay": {
+    "targetVersion": 16,
+    "floorTransition": "13->16",
+    "floorDecision": "required",
+    "archiveSha256": "5c98cf460e62f83b484c9ecd55bc80b650f2e19a09e8ded6e99eafb682e1842e",
+    "archiveSizeBytes": 33342752,
+    "exeSha256": "300646e1ea35aa47ece1b0d608d9b9681ee5bde82dd084bcdc5145345d07b60e",
+    "exeSizeBytes": 87987200,
+    "sourceFixSha": "57e14fac8e4aed69f30a9fdab95b3a087f04a4e7",
+    "publishStatus": "PUBLISHED_READBACK_VERIFIED"
+  },
+  "installer": {
+    "version": "0.3.13",
+    "sha256": "e5623b8a5275ca2ca917caebc9b4baa9640379747da8c9d5ba0fccbe256876cc",
+    "sizeBytes": 145140593,
+    "appAsarSha256": "579b634d29ff0ddfff74cafcf37a79f2cd1b3646ecb3f56642888bc56458e063",
+    "appAsarSizeBytes": 51723396,
+    "compatibilityEvidenceSha256": "ed9118cf5a96b856796d4d1003477da7355abf73ec88f870a40a017c18cf450a",
+    "compatibilityEvidenceSizeBytes": 1283,
+    "signing": "UNSIGNED_INTERNAL_EXCEPTION_60_DAYS_FROM_S3_BUILD",
+    "signingStatus": "unsigned-internal-exception",
+    "signingExceptionExpiresAt": "2026-10-28T20:50:00.000Z",
+    "signingExceptionEvidence": "reports/unsigned-internal-exception.md"
+  },
+  "buildEvidence": {
+    "payloadManifestSha256": "517272ad864410c278ef59e3c5ef9955c6ddafd99226259452b2206145d03566",
+    "payloadFileCount": 130,
+    "buildRun1InstallerSha256": "1f8d04d440800216bffe82d00e19bdbfcc4e4d47b604022cff9066ff4d141044",
+    "buildRun1InstallerSizeBytes": 145140515,
+    "buildRun2InstallerSha256": "e5623b8a5275ca2ca917caebc9b4baa9640379747da8c9d5ba0fccbe256876cc",
+    "buildRun2InstallerSizeBytes": 145140593,
+    "outerInstallerVariance": "OPEN_DOCUMENTED_103_BYTES",
+    "outerInstallerVarianceBytes": 103,
+    "outerInstallerVarianceClassification": "NSIS-RT_DIALOG-order-and-trailer",
+    "buildReproducibilityQualification": "FULL_NORMALIZED_PAYLOAD_EQUAL; OUTER_NSIS_RT_DIALOG_ORDER_AND_TRAILER_VARIANCE_REMAINS_OPEN",
+    "payloadManifestRun1Path": "reports/s4b-payload-manifest-run3.json",
+    "payloadManifestRun2Path": "reports/s4b-payload-manifest-run4.json",
+    "compatibilityEvidencePath": "MKTBrowser/apps/desktop/release/installer/windows-compatibility-artifacts.json",
+    "provenanceStatus": "OPEN_DIRTY_SOURCE_AND_EXACT_ENGINE_ARCHIVE_ABSENT",
+    "identityStageAStatus": "NO_CHANCE_EXISTING_STABLE_DOT2_COLLISIONS",
+    "identityEvidencePath": "reports/identity-measurement.md",
+    "cleanVmStatus": "OPEN_NOT_RUN",
+    "publicationStatus": "NOT_PUBLISHED"
+  },
+  "engine": {
+    "channel": "licensed-channel",
+    "kind": "cloakbrowser",
+    "version": "151.0.7922.108.2",
+    "sha256": "7b16ae3070bfcbed9cd381d03d1a8d57a8baf8f4540650397d620eb8dbe89561",
+    "status": "FROZEN_NO_CHANCE_G2_IDENTITY_FAIL"
+  },
+  "deployment": {
+    "railwayService": "mkttool-web",
+    "currentRollbackCommitSha": "c819e6a8dff5cac027d24b4a9d488ec241e2ccaa",
+    "currentDeploymentId": "3621f603-1c51-4246-824c-55cc0e6b5764",
+    "targetCommitSha": null,
+    "deployStatus": "NOT_AUTHORIZED"
+  },
+  "negativeEvidence": {
+    "publishedInstallerVersion": "0.3.12",
+    "publishedInstallerSha256": "d570ccc3326b5a046d91b7b677f4232ab76908f2fb034c60799e31695f43fc4b",
+    "publishedRelayVersion": 15,
+    "publishedRelayArchiveSha256": "cfeefc7f1284492a64f5cf8b29603b3e9a36e5d488ac676d2d109b2c4364b261",
+    "publishedRelayExeSha256": "eb37eb544ef87b772185272aa2de4cf23000f2e2fbd92f6bde99a20e47b210d1",
+    "replayVerdict": "FAIL",
+    "replayBlocker": "RELAY-RESTART-FORGETS-SPENT-TICKET",
+    "immutable": true,
+    "useForPositiveEvidence": false
+  },
+  "gateLedgerRef": "./gate-ledger.md",
+  "evidenceInvalidationRules": [
+    "Any source, artifact, engine, host image, proxy, firewall, schema, or test-order change invalidates downstream evidence.",
+    "A skipped, not-observed, or local-only result remains OPEN.",
+    "The published v15 object is immutable and remains quarantined negative evidence."
+  ],
+  "ownerDecisionsPending": [],
+  "historicalOwnerDecisionsPending": [
+    "vendor channel/contact and SLA",
+    "P6 disposable resources and clean second PC",
+    "Lane A/B operator roster and canary dates after S4a",
+    "operator names for the unsigned internal exception"
+  ],
+  "currentEvidenceRefs": [
+    "../../260830-0830-consolidation-and-lane-a-release/reports/lane-a-deploy.md",
+    "../../260830-0830-consolidation-and-lane-a-release/reports/p4a-postdeploy-evidence.json"
+  ]
+}

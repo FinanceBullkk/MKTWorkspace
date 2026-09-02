@@ -1,0 +1,96 @@
+---
+title: "Gate nghiệm thu đúng + spike Brave prebuilt"
+description: "Sửa tiêu chí nghiệm thu fingerprint về joint identity/cohort, đo lại Cloak theo tiêu chí đó, rồi spike Brave prebuilt để quyết đường engine miễn phí duy nhất còn lại."
+status: completed
+priority: P1
+effort: "9-13 ngày kỹ thuật"
+branch: "codex/fingerprint-engine-phase0"
+tags: [mktbrowser, fingerprint, engine, brave, spike, windows]
+created: "2026-09-02"
+---
+
+# Gate nghiệm thu đúng + spike Brave prebuilt
+
+## Đây là plan QUYẾT ĐỊNH, không phải plan giao hàng
+
+Đầu ra là một phán quyết **Go/No-Go** kèm bằng chứng, **không** phải một engine mới được ship.
+Spike xanh **không** mở rollout, **không** đóng `G2-IDENTITY`, **không** cho phép dùng nick thật.
+Ai đọc kết quả phase 4 mà kết luận "xong rồi, dùng được" là đọc sai plan này.
+
+## Vì sao làm bây giờ
+
+Quyết định 02/09/2026 ([báo cáo](../reports/decision-260902-0530-fingerprint-engine-path.md)):
+
+- Sản phẩm tập trung là **antidetect browser**; Reddit/Facebook đã rút khỏi phạm vi bàn giao.
+- **Không ai viết được C++ Chromium/Blink** và **không có máy >16 GiB khả dụng** → nấc PoC và sản
+  phẩm hoá **đóng**. Không build từ nguồn, không vá native.
+- **Không có ngân sách** → đường vendor thay thế đóng. Chỉ còn thứ miễn phí.
+- **Pool 3-5 profile, một profile tại một thời điểm** → bài toán nhỏ hơn hẳn giả định tháng 8 (10
+  profile đồng thời).
+
+Còn đúng hai việc với tới được, cả hai miễn phí, không cần C++, không cần build: **sửa gate** và
+**spike Brave prebuilt**.
+
+Có đồng hồ đếm ngược: không ngân sách nghĩa là seat CloakBrowser hiện tại cũng có hạn. Spike Brave
+là bản thay thế miễn phí cho một dependency có thể hết hạn.
+
+## Bắt đầu
+
+Thực thi bằng phiên Codex riêng cho từng phase — xem
+[kickoff-codex-session.md](kickoff-codex-session.md) để lấy prompt và kỷ luật seat.
+
+## Các giai đoạn
+
+| # | Giai đoạn | Công sức | Trạng thái |
+|---|---|---|---|
+| 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | **XONG 02/09** |
+| 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | **CLOSED-BLOCKED 02/09 - không có dataset Stable `.2`; vendor contact bị loại trừ** |
+| 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | **XONG 02/09 - 4 PASS / 2 FAIL; early stop NOT TRIGGERED** |
+| 04 | [Spike Brave — danh tính & cohort](phase-04-brave-identity-and-cohort-verdict.md) | 3-4 ngày | **XONG 02/09 - Brave FAIL A/B/C** |
+| 05 | [Bản ghi Go/No-Go](phase-05-go-no-go-decision-record.md) | 0.5 ngày | **XONG 02/09 - owner ký NO-GO** |
+
+> Phase 02 là nhánh thoát sớm, không phải prerequisite của phase 03. Đóng-block phase 02 chỉ làm mất
+> cửa thoát sớm; phase 03 và 04 dùng Brave/stock Chrome miễn phí và không cần seat Cloak. Phase 03
+> đã **XONG** với 4 PASS / 2 FAIL; cả hai gap là TypeScript/renderer/installer thông thường khoảng
+> 3-5 ngày, không cần C++, Chromium build, hay hạ ranh giới an toàn. Phase 04 đã **XONG** với
+> Brave trượt A/B/C; phase 05 đã đóng bằng phán quyết owner-signed `NO-GO`.
+
+## Điều kiện dừng sớm
+
+Plan này **thiết kế để chết sớm và rẻ**. Trạng thái các nhánh dừng:
+
+- **Sau phase 02 - CLOSED-BLOCKED:** nhánh thoát sớm "Cloak đạt cả ba tiêu chí" không còn khả năng
+  kích hoạt vì không có dataset Stable `.2` hợp lệ và vendor contact bị loại trừ. Đây không còn là
+  một lựa chọn live của plan.
+- **Sau phase 03 - NOT TRIGGERED 02/09:** kết quả 4 PASS / 2 FAIL vẫn cho thấy MKT lái được Brave.
+  Hai gap cần khoảng 3-5 ngày TypeScript/renderer/installer, không cần C++, Chromium build, hay hạ
+  ranh giới an toàn, nên không đạt điều kiện dừng.
+- **Trong phase 04 - audio vendor-mark branch NOT TRIGGERED:** Brave audio không bất biến thành dấu
+  vendor; nó drift qua restart. Dù vậy Phase 04 vẫn trượt A/B/C vì identity không bền, stable subset
+  đụng cả `10/10` pair, và còn invariant khác stock. Phase 05 vì thế ghi outcome 3 / NO-GO.
+
+## Phụ thuộc
+
+- Máy Windows x64 hiện tại. **Không** cần phần cứng mới — đây là điểm khác căn bản với plan
+  [`260828-0428`](../260828-0428-chromium-fingerprint-engine/plan.md) đã đóng vì thiếu RAM.
+- Bản Brave Windows chính thức, có kiểm checksum. Chỉ chạy trong data root dùng-một-lần.
+- Cloak Stable `.2` giữ nguyên pin làm mốc lịch sử; phase 03/04 không khởi chạy nó và không cần seat.
+  Đối chứng live của phase 04 là stock Chrome/CFT. **Không** promote Preview `.3`.
+- Harness đo: `MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs` (đã có, cần mở rộng
+  vùng phủ), BrowserScan, CreepJS.
+
+## Ranh giới không được vượt
+
+- Không cài Brave như MKT Browser, không phân phối, không đổi engine pin của sản phẩm.
+- Không nới `G2-IDENTITY` hiện tại. Gate mới chạy **song song** như gate thực nghiệm cho tới khi có
+  quyết định riêng.
+- Không dùng nick thật ở bất kỳ phase nào.
+- Phase 03/04 không chạm seat Cloak; phase 02 đã `CLOSED-BLOCKED`.
+
+## Liên quan
+
+- [Báo cáo quyết định 02/09](../reports/decision-260902-0530-fingerprint-engine-path.md)
+- [Research: vendor-independent isolation](../reports/research-260828-0153-vendor-independent-fingerprint-isolation.md)
+- [Research: solution options](../reports/research-260828-0109-fingerprint-isolation-solution-options.md)
+- [Plan engine đã đóng (thiếu RAM)](../260828-0428-chromium-fingerprint-engine/plan.md)
+- [Plan prebuilt engine (deferred, lý do đã hết hiệu lực)](../260828-1655-prebuilt-engine-session-orchestrator/plan.md)

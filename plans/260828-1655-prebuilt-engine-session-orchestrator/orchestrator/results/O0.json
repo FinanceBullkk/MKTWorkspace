@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "planId": "260828-1655-prebuilt-engine-session-orchestrator",
+  "phaseId": "O0",
+  "runId": "425d4d29-37b4-44a0-b779-3892f32314d5",
+  "codexThreadId": null,
+  "status": "BLOCKED",
+  "startedAt": "2026-08-28T10:40:59.000Z",
+  "completedAt": "2026-08-28T10:41:02.000Z",
+  "reportPath": "reports/phase-o0-result.md",
+  "handoffPath": "handoffs/phase-o0-handoff.md",
+  "evidencePaths": [
+    "orchestrator/logs/1aca7e80-5a16-4b8c-bc0f-4dc4a4edf80b/O0-worker/stderr.log",
+    "orchestrator/logs/0a2217b6-2217-40af-a3bb-91a304adb005/O0-worker/stderr.log",
+    "orchestrator/logs/1a3c1068-4e29-4518-97ed-d09b5e9fb172/O0-worker/stderr.log",
+    "orchestrator/logs/425d4d29-37b4-44a0-b779-3892f32314d5/O0-worker/stderr.log"
+  ],
+  "changedPaths": [
+    "plans/260828-1655-prebuilt-engine-session-orchestrator/orchestrator/logs/"
+  ],
+  "tests": [
+    {
+      "name": "codex exec home resolution",
+      "status": "FAIL",
+      "details": "First attempt could not resolve the Codex home directory."
+    },
+    {
+      "name": "codex exec app-server initialization (default home)",
+      "status": "FAIL",
+      "details": "Retry reached Codex startup but failed with Access denied (os error 5)."
+    },
+    {
+      "name": "codex exec app-server initialization (full-access flags)",
+      "status": "FAIL",
+      "details": "Both -s danger-full-access and --dangerously-bypass-approvals-and-sandbox reproduced the same app-server ACL error before model work."
+    },
+    {
+      "name": "worker implementation",
+      "status": "SKIP",
+      "details": "Child exited before model work."
+    }
+  ],
+  "unresolvedQuestions": [
+    "Can a normal user terminal write the Codex app-server/sqlite temp directory?",
+    "Is a different local Codex state directory or CLI update required?"
+  ],
+  "notes": [
+    "No child session persisted because --ephemeral was used.",
+    "Four fresh processes were attempted; changing CLI approval/sandbox flags did not bypass the outer managed-shell ACL.",
+    "No MKTBrowser/MKTTool source, engine, profile, or binary was changed."
+  ]
+}

@@ -16,6 +16,11 @@ source: skill
 
 # P0 Antidetect Browser and Proxy Operational Readiness
 
+> **Historical predecessor plan — superseded 30 August 2026.** Its Browser/Relay identity and
+> canary gates remain evidence, not active instructions. Current consolidation status is in
+> `plans/260830-0830-consolidation-and-lane-a-release/`: P4a Web is deployed, P4b is OPEN, Q15 is
+> owner-machine self-serve, and Lane C is **CLOSED** because no CloakBrowser channel exists.
+
 ## Overview
 
 P0 is the shortest path from the current technical foundation to a browser operators can trust:
@@ -75,7 +80,7 @@ MKTTool account and proxy checks
 | 1 | [Freeze P0 Baseline and Acceptance Contract](./phase-01-freeze-p0-baseline-and-acceptance-contract.md) | In Progress |
 | 2 | [Stabilize Browser Input and Manual Login](./phase-02-stabilize-browser-input-and-manual-login.md) | Pending |
 | 3 | [Prove Proxy DNS WebRTC and Fingerprint Isolation](./phase-03-prove-proxy-dns-webrtc-and-fingerprint-isolation.md) | In Progress - 23 Aug: live egress/DNS/WebRTC pass per profile, measured sequentially; concurrent two-profile proof DEFERRED out of v1 by the 25 Aug one-seat cap |
-| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 26 Aug: hard-kill cooling and active Electron-crash pass; the Relay-restart replay hole is fixed in MKTTool `57e14fa` and awaits a gate rerun; the reboot-stranded seat is fixed in Browser `137a849` and measured on the packaged app, and awaits one real power cycle on a real key |
+| 4 | [Implement License Lease Recovery](./phase-04-implement-license-lease-recovery.md) | In Progress - 27 Aug: hard-kill cooling, active Electron-crash startup recovery, packaged Relay v15 spent-ticket replay, and the final real VirtualBox power-cycle/reboot convergence gate pass; vendor sidecar/driver integration and confirmed-release-only capacity publication remain open |
 | 5 | [Integrate Operator Readiness and Capacity UX](./phase-05-integrate-operator-readiness-and-capacity-ux.md) | In Progress - readiness UX complete; authoritative capacity withheld |
 | 6 | [Run Canary Pilot and Issue GO-NO-GO](./phase-06-run-canary-pilot-and-issue-go-no-go.md) | Pending |
 
@@ -103,8 +108,10 @@ Current automated verification on Node 22:
 - `git diff --check` is clean in both repositories.
 
 This is not rollout approval. Two disposable assignments, real proxy/browser egress equality,
-DNS/WebRTC and fingerprint isolation, manual login/input, live vendor lease recovery, second-PC
-setup, packaged crash/reboot recovery, the seven-day canary, and owner GO/NO-GO remain open.
+DNS/WebRTC and fingerprint isolation, manual login/input, live vendor sidecar/schema integration,
+second-PC setup, the seven-day canary, and owner GO/NO-GO remain open. Packaged crash/reboot and
+Relay v15 spent-ticket restart recovery are covered by the 27 August evidence recorded in the
+acceptance matrix.
 
 ## Dependencies
 

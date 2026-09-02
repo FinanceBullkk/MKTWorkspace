@@ -1,5 +1,11 @@
 # TikTok — vận hành và chiến lược IP
 
+> **Historical, not approved for rollout (superseded 30 August 2026).** TikTok automation/content,
+> real-channel setup, and IP strategy below remain parked technical history. Current roadmap wording
+> permits only a controlled technical demo; Browser real-account rollout is NO-GO, Lane C is
+> **CLOSED** because no CloakBrowser channel exists, and no posting schedule or vendor request is
+> active. See `MKTTool/docs/development-roadmap.md` and the consolidation plan.
+
 **Trạng thái:** sẵn sàng chạy GĐ 0 · **Tạo:** 19/08/2026 · **Giả định chưa xác nhận:** thị trường Việt Nam
 
 Ghi lại các quyết định của phiên 19/08/2026. Trước phiên này hướng sản phẩm là Facebook; chủ dự án

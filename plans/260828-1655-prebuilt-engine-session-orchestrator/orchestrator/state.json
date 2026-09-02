@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "planId": "260828-1655-prebuilt-engine-session-orchestrator",
+  "runId": "425d4d29-37b4-44a0-b779-3892f32314d5",
+  "status": "BLOCKED",
+  "currentPhaseId": "O0",
+  "childSession": {
+    "runId": "425d4d29-37b4-44a0-b779-3892f32314d5",
+    "codexThreadId": null,
+    "pid": null,
+    "startedAt": "2026-08-28T10:40:59.000Z",
+    "completedAt": "2026-08-28T10:41:02.000Z",
+    "exitCode": 1
+  },
+  "manifestSha256": null,
+  "workspaceSnapshot": {
+    "rootGitStatusSha256": null,
+    "mktBrowserGitStatusSha256": null,
+    "mktToolGitStatusSha256": null,
+    "resourceSnapshotPath": null
+  },
+  "workerResultPath": "orchestrator/results/O0.json",
+  "reviewResultPath": null,
+  "stopReason": "Codex CLI app-server initialization failed with Access denied (os error 5).",
+  "updatedAt": "2026-08-28T10:55:00.000Z"
+}
