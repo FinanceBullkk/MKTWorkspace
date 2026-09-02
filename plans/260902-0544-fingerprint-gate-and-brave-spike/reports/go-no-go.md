@@ -1,8 +1,8 @@
 # Phase 05 - Fingerprint engine Go/No-Go decision
 
 - **Prepared:** 2 September 2026
-- **Status:** `AWAITING OWNER SIGNATURE`
-- **Proposed decision:** `NO-GO` for Brave integration and for any identity-isolation claim
+- **Status:** `SIGNED - OWNER APPROVED`
+- **Final decision:** `NO-GO` for Brave integration and for any identity-isolation claim
 
 ## Decision
 
@@ -20,8 +20,8 @@ product plan and new evidence; it is not follow-on work inside this spike.
 1. **Cloak Stable `.2`:** `BLOCKED` on A, B, and C at pool five; Phase 02 obtained `0/10` valid readings, so no PASS/FAIL verdict or comparison rank is fabricated.
 2. **Brave lifecycle:** MKT can drive Brave, but product selection needs roughly `3-5 engineering days` of TypeScript/renderer/installer work; Phase 03 closed `4 PASS / 2 FAIL` and the existing proxied product boundary remains fail-closed.
 3. **Brave identity:** A=`FAIL`, B=`FAIL`, C=`FAIL`; audio is not an invariant Brave vendor mark, but its five rendered hashes change after restart, so it is session-drifting rather than a persistent cohort identity.
-4. **`G2-IDENTITY`:** no, there is not enough evidence to retire it; the current pinned engine lacks a valid A/B/C dataset, Brave fails A/B/C, and owner sign-off is still pending. `G2-IDENTITY=FAIL` stands.
-5. **Next action and owner:** the workspace owner signs or rejects this NO-GO; MKTBrowser maintainers do no Brave integration work, release owners keep Browser real-account use closed, and any future engine path starts as a separate owner-approved plan.
+4. **`G2-IDENTITY`:** no, there is not enough evidence to retire it; the current pinned engine lacks a valid A/B/C dataset, Brave fails A/B/C, and the signed owner decision explicitly retains the gate. `G2-IDENTITY=FAIL` stands.
+5. **Next action and owner:** the workspace owner approved this NO-GO; MKTBrowser maintainers do no Brave integration work, release owners keep Browser real-account use closed, and any future engine path requires a separate owner-approved plan.
 
 ## Consolidated evidence
 
@@ -90,14 +90,15 @@ rollout state changes.
 
 ## Owner sign-off
 
-Decision to sign: **NO-GO for Brave integration; retain `G2-IDENTITY=FAIL`; keep MKTBrowser scoped as
+Signed decision: **NO-GO for Brave integration; retain `G2-IDENTITY=FAIL`; keep MKTBrowser scoped as
 a profile/proxy/ownership manager without an identity-isolation claim.**
 
-- Owner name: _pending_
-- Decision: `[ ] APPROVE`  `[ ] REJECT / REVISE`
-- Date: _pending_
-- Signature or explicit chat confirmation: _pending_
+- Owner name: `anhha` (workspace owner)
+- Decision: `[x] APPROVE`  `[ ] REJECT / REVISE`
+- Date: 2 September 2026
+- Confirmation: `APPROVE` received in this Codex task at
+  `2026-09-02 16:56 Asia/Saigon`
 
 ## Unresolved questions
 
-- Owner signature is the only remaining closeout gate for this plan.
+- None.

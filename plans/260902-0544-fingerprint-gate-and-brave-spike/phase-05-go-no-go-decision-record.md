@@ -1,7 +1,7 @@
 ---
 phase: 5
 title: "Bản ghi Go/No-Go"
-status: awaiting-owner-signature
+status: complete
 priority: P1
 effort: "0.5 ngày"
 dependencies: [phase-04]
@@ -16,18 +16,18 @@ dependencies: [phase-04]
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** DECISION DRAFTED 02/09/2026 - chờ owner ký
+**Ưu tiên:** P1 · **Trạng thái:** XONG 02/09/2026 - owner ký `NO-GO`
 
 Gộp số liệu bốn phase thành **một phán quyết chủ dự án ký được**, và cập nhật docs cho khớp. Phase
 này chạy **bất kể kết quả** — kể cả khi plan dừng sớm ở phase 02 hoặc 03.
 
 ## Outcome
 
-- [Decision draft](reports/go-no-go.md): `NO-GO` cho Brave integration và identity-isolation claim.
+- [Signed decision](reports/go-no-go.md): `NO-GO` cho Brave integration và identity-isolation claim.
 - Cloak Stable `.2`: A/B/C `BLOCKED`, `0/10` readings.
 - Brave: lifecycle `4 PASS / 2 FAIL`, cost `3-5 days`; identity A/B/C đều `FAIL`.
 - `G2-IDENTITY` giữ `FAIL`; không engine-migration plan, không rollout, không real accounts.
-- Docs MKTBrowser/MKTTool đã cập nhật theo outcome 3. Còn đúng một gate: owner signature.
+- Owner đã phê duyệt outcome 3; docs MKTBrowser/MKTTool khớp phán quyết đã ký.
 
 ## Key Insights
 
@@ -87,7 +87,7 @@ Tạo mới:
 - [x] Cập nhật bảng gate ở internal-beta-release
 - [x] Cập nhật README MKTBrowser
 - [x] Kết cục 3: không mở plan chuyển engine
-- [ ] Chủ dự án ký phán quyết
+- [x] Chủ dự án ký phán quyết
 
 ## Success Criteria
 
@@ -113,5 +113,5 @@ biết mình đang chịu**, và đó là loại sai nguy hiểm hơn cả lỗi
 
 ## Next Steps
 
-Owner ký [decision draft](reports/go-no-go.md) → đóng plan. Nếu owner từ chối, chỉ revise decision;
-không tự bắt đầu integration hay phase mới.
+Plan đóng bằng [phán quyết `NO-GO` đã ký](reports/go-no-go.md). Không tự bắt đầu Brave integration,
+engine migration, rollout, hay phase mới.
