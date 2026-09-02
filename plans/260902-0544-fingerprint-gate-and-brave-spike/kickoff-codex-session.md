@@ -86,9 +86,79 @@ five, say so explicitly: that ends the plan and phase 03 and 04 are skipped.
 
 ---
 
+## Closeout phase 02 + gỡ khoá phase 03
+
+> Chạy phiên này trước phase 03. Thuần tài liệu + merge, không chạm engine, không thử seat.
+
+```text
+Close out phase 02 of the fingerprint acceptance-gate plan and unblock phase 03. This is a
+documentation and merge session: no measurement, no engine launch, no seat attempt.
+
+Read first:
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-02-cloak-baseline-remeasurement.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-03-brave-lifecycle-integration-spike.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\cloak-baseline.md
+- E:\MKTWorkspace\plans\reports\decision-260902-0530-fingerprint-engine-path.md
+
+OWNER DECISION, 2 September 2026: no vendor contact, ever. Lane C is closed - no request, no
+ticket, no "coming soon". Do not draft or send a vendor message, and do not add one as a next step.
+
+Verification already performed on this machine. Record it; do not redo it, it needs no seat:
+- license-leases.json holds 18 records and every one is terminal: expired, confirmed-released, or
+  terminal-refused. There is no active, cooling or pendingRecovery entry. The most recent record is
+  confirmed-released at 2026-09-01T08:53:12Z.
+- Nothing under the installed CloakBrowser runtime was modified after 07:00 local on 2 September.
+- Therefore "a local process or lease holds the seat" is ruled out by evidence, not by assumption.
+
+Tasks:
+
+1. Update reports/cloak-baseline.md:
+   - Phase 02 is CLOSED-BLOCKED, not "waiting". With vendor contact ruled out, the only remaining
+     self-service check is powering off MKT Browser and CloakBrowser on the second owner machine and
+     retrying once. If that is not the cause, phase 02 cannot be measured at all.
+   - Record the local evidence above.
+   - Record this contradiction and what follows from it: session/start returned HTTP 200 and
+     session/end returned HTTP 200, so the account had capacity at that moment. A genuine "session
+     limit reached" would have failed session/start. The refusal is therefore more likely scoped to
+     the engine launch identity or a device registration than to a session count - and if it is
+     device-scoped, buying additional seats would not fix it. Mark this as inference, not
+     measurement.
+
+2. Edit phase-03-brave-lifecycle-integration-spike.md: remove `dependencies: [phase-02]`. Explain in
+   the file that phase 02 was the early-exit branch rather than a prerequisite - it existed to end
+   the plan if Cloak already passed the gate. Blocking it removes the early exit and nothing else.
+   Phases 03 and 04 need no CloakBrowser seat: Brave and stock Chrome are both free.
+
+3. Add a section to plans/reports/decision-260902-0530-fingerprint-engine-path.md recording an
+   availability finding the August research did not cover. Over roughly one hour on 2 September,
+   with proper cooldowns and a clean local preflight, the pinned engine refused to launch four
+   times, and there is no channel to ask why. That is an availability defect independent of
+   fingerprint quality: an engine that cannot be launched makes its fingerprint quality irrelevant.
+   For a product whose operators must open profiles daily this ranks above G2-IDENTITY as an
+   operational risk. It is also a new argument for Brave that has nothing to do with identity - a
+   free prebuilt engine cannot be withheld.
+
+4. Merge PR #13 on MKTBrowser (target main). Its CI is green and it carries the extended harness
+   that phases 03 and 04 reuse.
+
+5. Update the phase table in plan.md: phase 02 CLOSED-BLOCKED, phase 03 ready.
+
+Boundaries: do not launch any engine, do not attempt the seat, do not contact the vendor, do not
+weaken G2-IDENTITY, do not start phase 03.
+
+Batch the workspace documentation into one push. The MKTBrowser side is a merge of an existing PR,
+not a new one.
+
+Stop when the documents are updated and PR #13 is merged.
+```
+
+---
+
 ## Phase 03 — Brave: lifecycle & tích hợp
 
-> Bỏ qua phase này nếu phase 02 kết luận Cloak đạt cả ba tiêu chí.
+> Phase 02 bị chặn **không** chặn phase này — nó chỉ làm mất cửa thoát sớm. Phase 03/04 không cần
+> seat Cloak.
 
 ```text
 Execute phase 03 of the fingerprint acceptance-gate plan. Read first:
