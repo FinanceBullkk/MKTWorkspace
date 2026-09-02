@@ -45,25 +45,27 @@ Thực thi bằng phiên Codex riêng cho từng phase — xem
 |---|---|---|---|
 | 01 | [Đặc tả gate nghiệm thu](phase-01-acceptance-gate-specification.md) | 2-3 ngày | **XONG 02/09** |
 | 02 | [Đo lại Cloak theo gate mới](phase-02-cloak-baseline-remeasurement.md) | 1-2 ngày | **CLOSED-BLOCKED 02/09 - không có dataset Stable `.2`; vendor contact bị loại trừ** |
-| 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | **READY 02/09 - độc lập với phase 02, không cần seat Cloak** |
+| 03 | [Spike Brave — lifecycle & tích hợp](phase-03-brave-lifecycle-integration-spike.md) | 2-3 ngày | **XONG 02/09 - 4 PASS / 2 FAIL; early stop NOT TRIGGERED** |
 | 04 | [Spike Brave — danh tính & cohort](phase-04-brave-identity-and-cohort-verdict.md) | 3-4 ngày | chưa bắt đầu |
 | 05 | [Bản ghi Go/No-Go](phase-05-go-no-go-decision-record.md) | 0.5 ngày | chưa bắt đầu |
 
 > Phase 02 là nhánh thoát sớm, không phải prerequisite của phase 03. Đóng-block phase 02 chỉ làm mất
 > cửa thoát sớm; phase 03 và 04 dùng Brave/stock Chrome miễn phí và không cần seat Cloak. Phase 03
-> được đánh dấu **READY**, nhưng chưa được bắt đầu trong phiên closeout này.
+> đã **XONG** với 4 PASS / 2 FAIL; cả hai gap là TypeScript/renderer/installer thông thường khoảng
+> 3-5 ngày, không cần C++, Chromium build, hay hạ ranh giới an toàn. Phase 04 chưa bắt đầu.
 
 ## Điều kiện dừng sớm
 
-Plan này **thiết kế để chết sớm và rẻ**. Dừng ngay, không đi tiếp, khi:
+Plan này **thiết kế để chết sớm và rẻ**. Trạng thái các nhánh dừng:
 
-- **Sau phase 02:** nếu Cloak đạt cả ba tiêu chí gate mới ở pool 3-5 → không cần Brave. Ghi kết
-  quả, đóng plan, tiết kiệm 5-7 ngày.
-- **Sau phase 03:** nếu MKT không lái được Brave (CDP, `DevToolsActivePort`, `Browser.close`,
-  extension, proxy fail-closed) → dừng. Đo fingerprint của một engine không điều khiển được là vô
-  nghĩa.
-- **Trong phase 04:** nếu audio của Brave là dấu *"tôi là Brave"* thay vì cohort Windows thật →
-  dừng. Đổi dấu vendor này lấy dấu vendor khác không giải quyết gì.
+- **Sau phase 02 - CLOSED-BLOCKED:** nhánh thoát sớm "Cloak đạt cả ba tiêu chí" không còn khả năng
+  kích hoạt vì không có dataset Stable `.2` hợp lệ và vendor contact bị loại trừ. Đây không còn là
+  một lựa chọn live của plan.
+- **Sau phase 03 - NOT TRIGGERED 02/09:** kết quả 4 PASS / 2 FAIL vẫn cho thấy MKT lái được Brave.
+  Hai gap cần khoảng 3-5 ngày TypeScript/renderer/installer, không cần C++, Chromium build, hay hạ
+  ranh giới an toàn, nên không đạt điều kiện dừng.
+- **Trong phase 04 - còn hiệu lực:** nếu audio của Brave là dấu *"tôi là Brave"* thay vì cohort
+  Windows thật → dừng. Đổi dấu vendor này lấy dấu vendor khác không giải quyết gì.
 
 ## Phụ thuộc
 

@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Spike Brave — lifecycle & tích hợp"
-status: ready
+status: complete
 priority: P1
 effort: "2-3 ngày"
 ---
@@ -15,7 +15,7 @@ effort: "2-3 ngày"
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** sẵn sàng (chưa bắt đầu)
+**Ưu tiên:** P1 · **Trạng thái:** XONG 02/09/2026 - 4 PASS / 2 FAIL; early stop không kích hoạt
 
 Chạy Brave Windows **nguyên bản, có kiểm checksum**, trong data root dùng-một-lần, và trả lời đúng
 một câu: **MKT Browser có lái được nó không?**
@@ -28,7 +28,16 @@ fingerprint của nó cũng vô nghĩa, và ta tiết kiệm 3-4 ngày.
 Phase 02 was an **early-exit branch**, not a prerequisite for this phase. It existed to end the plan
 early if Cloak passed the acceptance gate. Closing Phase 02 as `CLOSED-BLOCKED` removes that early
 exit and nothing else. Phase 03 and Phase 04 use Brave and stock Chrome, both free, so neither needs
-a CloakBrowser seat. This phase is ready for a later session; this closeout does not start it.
+a CloakBrowser seat. Phase 03 is now complete; this closeout does not start Phase 04.
+
+## Outcome
+
+- [Report](reports/brave-lifecycle.md): **4 PASS / 2 FAIL** across all six required checks.
+- Early stop: **NOT TRIGGERED**. Both failures are ordinary TypeScript, renderer, and Windows
+  installer/verifier work estimated at roughly **3-5 engineering days**.
+- No failure requires C++, a Chromium source build, sandbox/CSP weakening, or a weaker WebRTC
+  boundary. The product launch path remains fail-closed for an unsupported Brave runtime.
+- Phase 04 is technically reachable but remains **not started** in this closeout.
 
 ## Key Insights
 
@@ -93,16 +102,16 @@ Tạo mới:
 
 ## Todo List
 
-- [ ] Tải Brave, ghi phiên bản + SHA-256
-- [ ] Dựng data root dùng-một-lần
-- [ ] Kiểm `DevToolsActivePort` + nối CDP
-- [ ] Kiểm `Browser.close` + sở hữu tiến trình + khởi động lại
-- [ ] Kiểm proxy fail-closed + DNS/WebRTC
-- [ ] Kiểm nạp extension đồng hành
-- [ ] Kiểm profile bền qua khởi động lại
-- [ ] Xác nhận không hạ ranh giới an toàn nào
-- [ ] Ghi chi phí sửa cho từng mục trượt
-- [ ] Viết `reports/brave-lifecycle.md` + quyết dừng/đi tiếp
+- [x] Tải Brave, ghi phiên bản + SHA-256
+- [x] Dựng data root dùng-một-lần
+- [x] Kiểm `DevToolsActivePort` + nối CDP
+- [x] Kiểm `Browser.close` + sở hữu tiến trình + khởi động lại
+- [x] Kiểm proxy fail-closed + DNS/WebRTC
+- [x] Kiểm nạp extension đồng hành
+- [x] Kiểm profile bền qua khởi động lại
+- [x] Xác nhận không hạ ranh giới an toàn nào
+- [x] Ghi chi phí sửa cho từng mục trượt
+- [x] Viết `reports/brave-lifecycle.md` + quyết dừng/đi tiếp
 
 ## Success Criteria
 
@@ -127,5 +136,5 @@ loopback — kể cả tạm thời để thử. Một ranh giới bị hạ "ch
 
 ## Next Steps
 
-Đạt → [phase 04](phase-04-brave-identity-and-cohort-verdict.md).
-Trượt → [phase 05](phase-05-go-no-go-decision-record.md) ghi No-Go kèm lý do.
+Phase 03 complete; its early-stop condition was not triggered. The next decision phase is
+[phase 04](phase-04-brave-identity-and-cohort-verdict.md), but this closeout does not start it.
