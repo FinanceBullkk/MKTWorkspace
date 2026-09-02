@@ -1,92 +1,226 @@
-# Cách bắt đầu phiên thực thi
+# Prompt cho từng phiên Codex
 
-Mở một **phiên Codex mới** trong `E:\MKTWorkspace`. **Không** dán lại hội thoại cũ — plan đã chứa đủ
-ngữ cảnh. Chỉ trỏ phiên mới vào file này và thư mục plan.
+**Một phase = một phiên mới.** Mở phiên Codex mới trong `E:\MKTWorkspace`, dán đúng khối prompt của
+phase đó, không dán lại hội thoại cũ. Ranh giới giữa các phase là chỗ chủ dự án đọc kết quả rồi mới
+quyết đi tiếp — gộp hai phase vào một phiên là bỏ qua đúng cái quyết định đó.
 
-Mỗi phase là **một phiên riêng**. Đừng gộp hai phase vào một phiên: điểm dừng giữa các phase là chỗ
-chủ dự án quyết có đi tiếp không, và gộp lại là bỏ qua đúng cái quyết định đó.
+## Trạng thái hiện tại
 
-## Tin nhắn đầu tiên — phase 01
+| | |
+|---|---|
+| Phase 01 | **XONG 02/09/2026.** Đặc tả: `MKTBrowser/docs/fingerprint-acceptance-gate.md`, đã merge vào `main` qua PR #12 |
+| MKTBrowser | `main` đã có đặc tả. Bắt nhánh mới từ `main` |
+| Workspace repo | nhánh `codex/fingerprint-engine-phase0` |
+| Phase 02-05 | chưa bắt đầu |
 
-```text
-Execute phase 01 of the fingerprint acceptance-gate plan.
+## Bốn ràng buộc — nhắc trong mọi prompt, đừng bỏ
 
-Read first:
-- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
-- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-01-acceptance-gate-specification.md
-- E:\MKTWorkspace\plans\reports\decision-260902-0530-fingerprint-engine-path.md
-
-Phase 01 is a specification task. Write MKTBrowser/docs/fingerprint-acceptance-gate.md defining the
-three separate criteria (consistency, no joint-tuple collision within a 3-5 profile pool, cohort
-plausibility measured against stock Chrome/CFT on the same machine).
-
-Hard boundaries for this session:
-- Do NOT run any browser engine, do NOT measure anything, do NOT touch the CloakBrowser seat.
-- Do NOT weaken or remove the existing G2-IDENTITY gate. The new gate runs in parallel as an
-  experimental gate only.
-- Do NOT modify MKTBrowser source. Read the existing harness at
-  MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs only to record what it does not cover.
-
-Stop when the specification exists and the phase-01 todo list is complete. Write a short report
-into the plan's reports/ directory. Do not start phase 02.
-```
-
-## Ngữ cảnh phải nói rõ cho Codex, kẻo nó đi nhầm hướng
-
-Codex đọc `AGENTS.md` và có standing authorization, nên nó **sẽ** tự commit/push. Điều nó không tự
-biết là **vì sao các đường khác đã đóng** — nếu không nói, nó rất dễ đề xuất build Chromium hoặc vá
-native, đúng hai thứ vừa bị loại.
-
-Bốn ràng buộc chốt ngày 02/09/2026, đã ghi trong plan nhưng nên nhắc lại nếu nó đi chệch:
+Phiên mới không tự biết vì sao các đường khác đã đóng, và sẽ đề xuất build Chromium hoặc viết C++
+nếu không nói:
 
 | Ràng buộc | Hệ quả |
 |---|---|
 | Không ai viết được C++ Chromium/Blink | Không vá native. Không PoC, không sản phẩm hoá |
 | Không có máy >16 GiB RAM khả dụng | Không build từ nguồn |
-| Không có ngân sách, chỉ dùng được thứ miễn phí | Không đổi vendor. Brave/Camoufox vì chúng free |
-| Pool 3-5 profile, một profile tại một thời điểm | Bài toán nhỏ hơn hẳn giả định tháng 8 |
+| Không ngân sách, chỉ dùng thứ miễn phí | Không đổi vendor. Brave/Camoufox vì chúng free |
+| Pool 3-5 profile, một profile tại một thời điểm | Đo ở **5** |
 
-Nếu Codex đề xuất bất cứ việc gì cần build Chromium hoặc viết C++, đó là dấu nó chưa đọc
-`decision-260902-0530-fingerprint-engine-path.md`. Bắt đọc lại trước khi đi tiếp.
+## Chi phí CI — quan trọng
 
-## Thứ tự phiên
+**Mỗi PR trên MKTBrowser tốn ~20 phút GitHub Actions bị tính** (3 job Windows, giá 2x). `pr-release-gate.yml`
+cố ý không có `paths-ignore` vì nó mang tên check bắt buộc để merge.
 
-| Phiên | Phase | Chạm engine? | Chạm seat Cloak? |
-|---|---|---|---|
-| 1 | 01 — đặc tả gate | không | không |
-| 2 | 02 — đo lại Cloak | có | **có, xem kỷ luật seat** |
-| 3 | 03 — Brave lifecycle | có (Brave) | không |
-| 4 | 04 — Brave danh tính | có (Brave + stock Chrome) | không |
-| 5 | 05 — Go/No-Go | không | không |
+→ **Gom hết thay đổi của một phase vào MỘT PR.** Không mở PR cho từng commit. Repo workspace
+(markdown) thì rẻ, push thoải mái.
 
-## Kỷ luật seat cho phiên phase 02
+---
 
-Chỉ có **một seat** CloakBrowser và **không có ngân sách** để mua thêm. Nhắc thẳng vào prompt của
-phiên đó:
+## Phase 02 — đo lại Cloak theo gate mới
 
-- Gom mọi phép đo vào **một lượt liên tục**. Không mở lại profile vì quên ghi số.
-- **Chuẩn bị bảng ghi trước khi mở profile đầu tiên.**
-- Đóng đúng cách bằng `Browser.close` để trả seat. Kill tiến trình là để seat nằm cooling.
-- Seat bị từ chối trông giống hệt crash (exit 76 sau khi CDP đã phục vụ). Xác nhận seat còn trống
-  **trước** mỗi lượt đo, đừng đoán từ triệu chứng.
+```text
+Execute phase 02 of the fingerprint acceptance-gate plan. Read first:
 
-## Điểm dừng — phải hỏi chủ dự án, không tự quyết
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-02-cloak-baseline-remeasurement.md
+- E:\MKTWorkspace\MKTBrowser\docs\fingerprint-acceptance-gate.md   (the gate you must measure against)
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\phase-01-gate-specification.md
 
-Plan thiết kế để chết sớm. Ba chỗ Codex **phải dừng và báo**, không được tự đi tiếp:
+Context you will not infer from code: nobody available writes Chromium/Blink C++, no machine has
+>16 GiB available RAM, there is no budget. Building an engine and patching native code are both
+closed. Do not propose either.
 
-1. **Sau phase 02:** Cloak đạt cả ba tiêu chí ở pool 3-5 → dừng cả plan, không cần Brave.
-2. **Sau phase 03:** MKT không lái được Brave → dừng, đừng đo fingerprint của engine không điều
-   khiển được.
-3. **Trong phase 04:** audio của Brave khác stock Chrome và bất biến qua mọi profile → đó là dấu
-   *"tôi là Brave"*, dừng. Đổi dấu vendor này lấy dấu vendor khác không giải quyết gì.
+Task: measure CloakBrowser Stable .2 against the three criteria in the gate document, at a pool of
+FIVE disposable profiles on this machine.
 
-## Điều dễ hiểu sai nhất
+1. Extend MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs first. It currently reads
+   canvas, deviceMemory, hardwareConcurrency, language, platform, screen, timezone, userAgent and
+   WebGL. It does NOT read fonts or audio - two of the three surfaces that produced the recorded
+   collision - and does not read WebGPU or client rects, and does not exercise iframe, worker or
+   offscreen-canvas contexts. No verdict may be issued from the unextended harness.
+2. Measure five profiles, restart, measure again (criterion A).
+3. Compute the stable subset: surfaces whose value is identical across all five. Publish that list.
+   It is COMPUTED from the data, never chosen after seeing whether the check passes. Run the
+   collision check on that subset (criterion B), and report the full-tuple comparison separately as
+   the weaker informational check.
+4. Measure stock Chrome or CFT on THIS machine in the same session, and compare each surface
+   (criterion C). A value that differs from stock and is invariant across every profile is a vendor
+   mark and fails C even if B passes.
+5. Write plans/260902-0544-fingerprint-gate-and-brave-spike/reports/cloak-baseline.md with raw
+   readings and three separate verdicts. Never a combined score.
 
-**Đây là plan quyết định, không phải plan giao hàng.** Đầu ra là một phán quyết Go/No-Go kèm bằng
-chứng. Một phase 04 xanh **không** mở rollout, **không** đóng `G2-IDENTITY`, **không** cho phép dùng
-nick thật. Nếu báo cáo của Codex viết theo kiểu "engine mới sẵn sàng dùng" thì nó đã hiểu sai plan.
+SEAT DISCIPLINE - there is one CloakBrowser seat and no budget to replace it:
+- Prepare the recording table BEFORE opening the first profile.
+- Do every measurement in one continuous pass. Do not reopen a profile because a number was missed.
+- Close through Browser.close to return the seat. Killing the process leaves it cooling.
+- A refused seat looks exactly like a crash (exit 76 after CDP is already serving). Confirm the seat
+  is free before each run rather than guessing from symptoms.
 
-## Sau mỗi phiên
+Boundaries: disposable profiles only, no real accounts, do not promote Preview .3, do not change the
+engine pin, do not weaken G2-IDENTITY.
 
-Codex ghi báo cáo vào `plans/260902-0544-fingerprint-gate-and-brave-spike/reports/` và cập nhật
-`status` trong file phase. Chủ dự án đọc rồi mới mở phiên kế tiếp.
+Batch all changes into ONE pull request - each MKTBrowser PR costs about 20 billed Windows minutes.
+
+Stop when the report is written. Do not start phase 03. If Cloak passes all three criteria at pool
+five, say so explicitly: that ends the plan and phase 03 and 04 are skipped.
+```
+
+---
+
+## Phase 03 — Brave: lifecycle & tích hợp
+
+> Bỏ qua phase này nếu phase 02 kết luận Cloak đạt cả ba tiêu chí.
+
+```text
+Execute phase 03 of the fingerprint acceptance-gate plan. Read first:
+
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-03-brave-lifecycle-integration-spike.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\cloak-baseline.md
+
+Context: nobody available writes Chromium/Blink C++, no machine has >16 GiB available RAM, no
+budget. Brave is viable precisely because it is PREBUILT and free - you run it, you do not patch or
+build it. Do not propose patching or building anything.
+
+Task: run official Brave for Windows, unmodified and checksum-verified, in a disposable data root,
+and answer one question: can MKT Browser drive it?
+
+Check each, with evidence, pass or fail:
+1. DevToolsActivePort discovery and CDP connection
+2. Browser.close, process ownership, restart behaviour
+3. proxy fail-closed path plus DNS and WebRTC checks
+4. companion extension loading and the APIs it needs
+5. profile persistence across restart with the same --user-data-dir
+6. no existing security boundary weakened - sandbox stays on, CSP unchanged, CDP stays on loopback
+
+Record the Brave version and SHA-256. Do not install Brave as MKT Browser, do not distribute it, do
+not change the product engine pin.
+
+Where a check fails, record exactly what would need to change on the MKT side and estimate the cost.
+Do NOT make those changes in this phase - the cost estimate is the deliverable, not the fix.
+
+Write plans/260902-0544-fingerprint-gate-and-brave-spike/reports/brave-lifecycle.md.
+
+Batch all changes into ONE pull request - each MKTBrowser PR costs about 20 billed Windows minutes.
+
+Stop when the report is written. Do not start phase 04. If any check fails in a way that cannot be
+fixed in TypeScript in a few days, say so explicitly: the plan stops and goes to phase 05.
+```
+
+---
+
+## Phase 04 — Brave: danh tính & phán quyết cohort
+
+```text
+Execute phase 04 of the fingerprint acceptance-gate plan. Read first:
+
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-04-brave-identity-and-cohort-verdict.md
+- E:\MKTWorkspace\MKTBrowser\docs\fingerprint-acceptance-gate.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\cloak-baseline.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\brave-lifecycle.md
+
+Task: measure Brave against the same three criteria, using the SAME harness and the SAME procedure
+phase 02 used, at a pool of five. Do not modify the harness between the two runs - changing the
+method destroys comparability, which is the whole point of this phase.
+
+The decisive question is criterion C, and specifically audio:
+
+  Is Brave's audio value a real Windows cohort value, or is it a "this is Brave" mark?
+
+Test it by comparing Brave against stock Chrome or CFT on THIS machine. Matches stock means a real
+cohort. Differs from stock AND invariant across every profile means a product signature - which is
+exactly the defect that failed CloakBrowser. Apply the same standard to Brave. Do not go easy on it
+because it is free and it is the last option.
+
+Produce a three-column table - Cloak .2 | Brave | stock Chrome - for every surface the gate lists.
+Report criteria A, B and C separately. State plainly whether Brave is better, equal or worse than
+Cloak ON EACH criterion; "better overall" is not an acceptable conclusion.
+
+Remember Brave's threat model is tracker resistance, not antidetect, and its seed and session
+semantics are not MKT's persistent profile contract. Research warned Brave may form its own cohort.
+That is the hypothesis you are testing, not a footnote.
+
+Write plans/260902-0544-fingerprint-gate-and-brave-spike/reports/brave-identity.md.
+
+Batch all changes into ONE pull request - each MKTBrowser PR costs about 20 billed Windows minutes.
+
+Stop when the report is written. Do not start phase 05. A good result here does NOT open rollout,
+does NOT close G2-IDENTITY and does NOT permit real accounts.
+```
+
+---
+
+## Phase 05 — bản ghi Go/No-Go
+
+> Chạy phase này **bất kể** kết quả, kể cả khi plan dừng sớm ở phase 02 hoặc 03.
+
+```text
+Execute phase 05 of the fingerprint acceptance-gate plan. Read first:
+
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-05-go-no-go-decision-record.md
+- every report in plans/260902-0544-fingerprint-gate-and-brave-spike/reports/
+- E:\MKTWorkspace\plans\reports\decision-260902-0530-fingerprint-engine-path.md
+
+Task: consolidate the measurements into one verdict the project owner can sign, and update the docs
+to match. This phase runs even if the plan stopped early at phase 02 or 03 - a short plan still
+needs its conclusion written down.
+
+Answer these five, one decisive line each:
+1. Does Cloak Stable .2 pass or fail each of criteria A, B and C at pool five?
+2. Can MKT drive Brave? At what fix cost?
+3. Does Brave pass or fail each criterion? Is its audio a real cohort or a vendor mark?
+4. Is there enough evidence to retire G2-IDENTITY? If not, what is missing?
+5. What happens next, and who does it?
+
+Separate what was MEASURED from what was INFERRED. Do not state anything the evidence does not
+support.
+
+Then update: MKTTool/docs/development-roadmap.md, MKTTool/docs/internal-beta-release.md if the gate
+table changes, MKTBrowser/README.md if its status claims change, and record the first application of
+the gate in MKTBrowser/docs/fingerprint-acceptance-gate.md.
+
+Three outcomes are all valid and none is a failure of the plan:
+- Cloak is good enough at pool 3-5, so the engine question closes.
+- Brave is genuinely better, so open a SEPARATE plan for an engine change. This spike is not that
+  change; do not extend this plan into it.
+- Nothing reaches the gate. Then the product is a profile, proxy and ownership manager, not an
+  identity-isolation tool, and the docs must say so - including MKTBrowser's own description. A
+  wrong description here makes people accept a risk they do not know they are carrying, which is
+  worse than any technical defect in this plan.
+
+Write plans/260902-0544-fingerprint-gate-and-brave-spike/reports/go-no-go.md, then stop and ask the
+owner to sign it.
+```
+
+---
+
+## Nếu Codex đi chệch
+
+- Đề xuất build Chromium hoặc viết C++ → nó chưa đọc `decision-260902-0530-fingerprint-engine-path.md`.
+  Bắt đọc rồi làm lại.
+- Chọn tập bề mặt ổn định sau khi thấy kết quả → sai nguyên tắc cốt lõi của tiêu chí B. Tập ổn định
+  **tính từ dữ liệu**, không chọn.
+- Gộp ba tiêu chí thành một điểm → lặp lại đúng sai lầm của gate cũ.
+- Kết luận "engine mới sẵn sàng dùng" → đọc sai plan. Đầu ra là Go/No-Go, không phải giấy phép.
+- Mở PR cho từng commit → đốt ~20 phút Actions mỗi lượt. Gom một PR mỗi phase.
