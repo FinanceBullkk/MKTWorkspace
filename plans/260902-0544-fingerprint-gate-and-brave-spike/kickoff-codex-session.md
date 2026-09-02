@@ -198,6 +198,71 @@ fixed in TypeScript in a few days, say so explicitly: the plan stops and goes to
 
 ---
 
+## Closeout phase 03 — commit + đính chính FAIL #3
+
+> Chạy trước phase 04. Thuần tài liệu + commit, không chạm engine, không đo lại.
+
+```text
+Close out phase 03 of the fingerprint acceptance-gate plan. This is a documentation and commit
+session: no engine launch, no measurement, no Brave download, no seat attempt.
+
+Read first:
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\plan.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\phase-03-brave-lifecycle-integration-spike.md
+- E:\MKTWorkspace\plans\260902-0544-fingerprint-gate-and-brave-spike\reports\brave-lifecycle.md
+
+Tasks:
+
+1. VERIFY THEN RECORD a correction to how check 3 reads. Do not take this on trust - read the code
+   and confirm it before writing anything.
+
+   Read apps/desktop/src/main/windows-webrtc-firewall.ts. The guard near the top computes
+   expectedSuffix as chromium\<engine>\runtime\chrome.exe and then throws
+   protectionError(engine, "unexpected-runtime") when the binary's basename is not chrome.exe or the
+   path does not end with that suffix. The PowerShell check below it also throws on 'rule-count' and
+   'rule-invalid'.
+
+   If that is what the code does, then Brave - whose executable is brave.exe - cannot pass this
+   guard, and the product path REFUSES TO LAUNCH rather than leaking. The direct STUN datagram the
+   spike observed came from driving the MKT components directly, which bypasses this gate. The spike
+   measured a path the product does not take.
+
+   Record this in brave-lifecycle.md as a clarification to check 3, keeping the FAIL verdict:
+   - What does not change: Brave still needs its own installer-managed outbound-UDP rule and
+     verifier coverage before the product can select it. The 0.5-1 day estimate stands.
+   - What does change: the product does not leak WebRTC when asked to run Brave; it declines to
+     start it. The boundary is fail-closed as designed, which is a better security posture than the
+     bare FAIL row implies. Someone reading only the verdict table would otherwise conclude the
+     product currently leaks, and that would be wrong.
+   - Say plainly that the spike's own path bypassed the gate, so the FAIL is about missing Brave
+     coverage rather than about a hole in the existing boundary.
+
+   If the code does NOT match the description above, do not write the clarification. Report what the
+   code actually does instead.
+
+2. Commit the untracked phase 03 report and push. The workspace repo is markdown and cheap.
+
+   MKTBrowser has no source changes from phase 03, so do NOT open a MKTBrowser pull request - each
+   one costs about 20 billed Windows minutes and there is nothing to build.
+
+3. Mark phase 03 complete: status in phase-03-brave-lifecycle-integration-spike.md, and the phase
+   table row in plan.md. Record the outcome as 4 PASS / 2 FAIL with the early stop NOT triggered,
+   because both failures are ordinary TypeScript and installer work of roughly 3-5 days with no C++,
+   no Chromium build, and no security weakening.
+
+4. Fix a stale line in plan.md. Under "Điều kiện dừng sớm" the first bullet still offers the phase 02
+   early exit - "nếu Cloak đạt cả ba tiêu chí ... không cần Brave". That branch can no longer fire
+   because phase 02 is CLOSED-BLOCKED. Rewrite it so the list does not present a dead branch as live.
+
+Boundaries: do not launch any engine, do not download Brave again, do not attempt the CloakBrowser
+seat, do not contact the vendor, do not change G2-IDENTITY, do not begin the Brave integration work
+the report costs out, and do not start phase 04.
+
+Stop when the report is corrected, phase 03 is marked complete, and the workspace push is done.
+```
+
+---
+
 ## Phase 04 — Brave: danh tính & phán quyết cohort
 
 ```text
