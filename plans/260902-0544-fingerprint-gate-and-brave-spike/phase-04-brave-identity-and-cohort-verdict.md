@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: "Spike Brave — danh tính & phán quyết cohort"
-status: pending
+status: complete
 priority: P1
 effort: "3-4 ngày"
 dependencies: [phase-03]
@@ -16,10 +16,21 @@ dependencies: [phase-03]
 
 ## Overview
 
-**Ưu tiên:** P1 · **Trạng thái:** chưa bắt đầu
+**Ưu tiên:** P1 · **Trạng thái:** XONG 02/09/2026 - Brave trượt A/B/C
 
 Đo Brave theo **đúng gate của phase 01**, cùng phương pháp và cùng máy như phase 02, rồi so trực tiếp
 với Cloak. Đây là phase trả lời câu đắt nhất của cả plan.
+
+## Outcome
+
+- [Report](reports/brave-identity.md): Brave `FAIL` cả A, B, C ở pool 5.
+- A: `65` restart mismatches, `20` cross-context mismatches, `0` coverage gaps.
+- B: stable subset `62`/`63` components; `10/10` pair collisions ở cả hai run; full tuple `0/10`
+  chỉ là weaker check.
+- C: audio không phải vendor mark bất biến, nhưng năm rendered hashes drift qua restart; UA-CH và
+  available screen height còn có invariant khác exact-revision stock CFT.
+- Cloak Stable `.2` vẫn `BLOCKED` (`0/10`), nên không bịa xếp hạng better/equal/worse giữa hai
+  engine. Phase 05 dùng kết luận chắc chắn hơn: Brave tự nó trượt cả ba gate.
 
 ## Key Insights
 
@@ -83,15 +94,15 @@ Tạo mới:
 
 ## Todo List
 
-- [ ] Dựng 3-5 profile Brave dùng-một-lần
-- [ ] Đo lần 1 → khởi động lại → đo lần 2 (A)
-- [ ] Ghép joint tuple (B)
-- [ ] So audio với stock Chrome cùng máy (C — câu quyết định)
-- [ ] So font với stock (C)
-- [ ] So WebGL/WebGPU với stock (C)
-- [ ] Kiểm nhất quán frame/worker/offscreen canvas
-- [ ] Lập bảng ba cột Cloak | Brave | stock
-- [ ] Viết `reports/brave-identity.md`
+- [x] Dựng 5 profile Brave dùng-một-lần
+- [x] Đo lần 1 → khởi động lại → đo lần 2 (A)
+- [x] Ghép joint tuple (B)
+- [x] So audio với exact-revision stock CFT cùng máy (C — câu quyết định)
+- [x] So font với stock (C)
+- [x] So WebGL/WebGPU với stock (C)
+- [x] Kiểm nhất quán frame/worker/offscreen canvas
+- [x] Lập bảng ba cột Cloak | Brave | stock
+- [x] Viết `reports/brave-identity.md`
 
 ## Success Criteria
 
@@ -116,4 +127,5 @@ fingerprint thật của máy chủ dự án vào repo dưới dạng tra ngư�
 
 ## Next Steps
 
-→ [phase 05](phase-05-go-no-go-decision-record.md), bất kể kết quả.
+→ [phase 05](phase-05-go-no-go-decision-record.md). Brave trượt A/B/C; phase 05 vẫn chạy và phải
+giữ `G2-IDENTITY` nguyên trạng.
