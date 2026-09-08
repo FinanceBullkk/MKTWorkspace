@@ -60,7 +60,8 @@ device ownership, signed-ticket, engine, proxy isolation, or posting-scope chang
 - [x] Run targeted local tests, typecheck, lint, and independent review.
 - [x] Update docs; commit/push scoped source and verify the Web implementation deployment.
 - [x] Package build A and record exact environment/release blockers; acceptance remains OPEN.
-- [ ] Complete build B comparison, release identity reconciliation, and exact-installer acceptance.
+- [x] Complete build B comparison and release identity reconciliation (9 September addendum).
+- [ ] Complete exact-installer VM lifecycle and supported activation, then owner-run MSI acceptance.
 
 ## Execution boundaries
 
@@ -68,10 +69,11 @@ Main: desktop index + tray lifecycle. Companion worker: launcher helper, tests a
 resources only (not index). Web worker: MKTTool profile card/helper/tests only. Documentation and
 Git preparation: existing Browser README, five existing MKTTool docs, and this root plan only.
 Only one destructive-test process, validated loopback database ending _test. Prefer DB-free tests
-for this change. Free RAM later fell to about 0.5 GiB; C: remains about 13.3 GiB, below the
-existing VM reserves. Owner cannot free resources now: keep build B packaging and the guest
-stopped. Build A is retained in the separate owned build root; never close user apps. Keep source, local, VM,
-hosted, deployment and MSI acceptance evidence separate.
+for this change. The 8 September low-resource pause ended after reserves were remeasured and
+build B completed with the guest off. On 9 September the owner requested background work while
+using the host: foreground VM interaction remains paused. Build A is retained in the separate
+owned build root; never close user apps or run heavy builds while the VM runs. Keep source, local,
+VM, hosted, deployment and MSI acceptance evidence separate.
 
 ## Evidence
 
@@ -90,7 +92,8 @@ hosted, deployment and MSI acceptance evidence separate.
 | Web merge / implementation deployment | PASS | PR #70 merged to `8e80fcffe9f6488310c058743df70b1aa3bb95d5` after all five applicable checks passed. Railway `e68597cb-4679-4115-85cf-605baff7d6d9` SUCCESS for that exact commit; GitHub deployment `6331220213` success at 15:37:40Z. Health at 15:38:22Z: HTTP 200, ready, database/release metadata/R2 OK, Relay 16. Post-merge CI `34245676858` SUCCESS with the same full-test/coverage counts; Relay executable post-merge is policy-skipped, retaining separate PR PASS evidence. |
 | Final Web documentation sync | DEPLOYED | Two existing docs updated at `2a794a705e76f5a03a0ae47a99829b10253933a3`, pushed to master and feature branch; secret scan `34246339716` SUCCESS. Railway `7d41a501-178d-49d0-9306-c191e4cc941b` and GitHub deployment `6331339946` SUCCESS for that exact docs-only SHA. Health 15:42:55Z: HTTP 200, ready, database/release metadata/R2 OK, Relay 16. Behavioral CI remains the separate `8e80fcff` result. |
 | New Browser package A | PASS / NOT ACCEPTED | Frozen quality 7/7 commands and installer packaging PASS. Retained installer SHA `25e8fc156c0769245623dfc7b082cd9f88886b3516fbca24ea9509114928e8a3`; normalized 129-file payload and clean-source provenance recorded. [Exact checkpoint](reports/browser-candidate-checkpoint.md). Old frozen installer unchanged. |
-| Build B and clean VM | BLOCKED / OPEN | Fresh dependency install B PASS. Packaging B, payload comparison, VM startup/repair/uninstall and physical MSI acceptance not run because of resource reserves; owner cannot free them now. No upload, promotion or binary delivery. |
+| Build B and release identity | PASS | 129 normalized files, zero differences; raw EXEs differ. Browser 0.3.13, candidate `20260909-browser-0.3.13-relay-16-single-entry-5ff43b2`; signed sequence 17 from 0 only. [Current acceptance](reports/release-acceptance-20260909.md). |
+| Clean VM and lifecycle | PASS / BLOCKED / OPEN | Exact A: clean install 9/9, repair 13/13, uninstall 15/15, absent-Relay startup and cold-login services PASS; all receipt bindings verified. Bounded tray close PASS. Missing CFT pin blocks profile activation; tray reopen/Quit and independent-Relay retention remain OPEN. Prior 2-vCPU environment stall preserved; successful 1-vCPU evidence is separate. Guest off after cleanup; no upload or promotion. |
 | MSI acceptance | OPEN | No physical-PC test of this startup change. |
 
 ## Integration dependencies and rollback

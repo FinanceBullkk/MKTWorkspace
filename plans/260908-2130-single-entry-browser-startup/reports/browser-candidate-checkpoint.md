@@ -1,5 +1,21 @@
 # Browser Candidate Checkpoint
 
+## 9 September Addendum
+
+Build B packaging and normalized comparison are complete: 129 files, zero differences, same
+payload digest as A. Raw outer EXEs differ. Exact A is retained unchanged at
+`D:/mkt-single-entry-20260908/candidate/installer.exe`.
+Release identity: `20260909-browser-0.3.13-relay-16-single-entry-5ff43b2`; embedded Browser 0.3.13,
+Relay v16 and CFT 152.0.7977.64. Signed sequence 17 authorizes a fresh transition from 0 only.
+
+Exact clean VM install passes 9/9, separate fresh 1-vCPU repair 13/13 and uninstall 15/15 pass,
+and bounded close-to-tray, absent-Relay startup and cold-login service startup passed. Supported
+CFT activation is blocked by an absent verified pin; tray reopen/Quit, active-profile/proxy use,
+independent Relay retention and manual MSI results remain pending. The guest is shut down after
+verified cleanup. The owner requested background work while using the host. No upload or promotion.
+Use the [current acceptance report](release-acceptance-20260909.md) and [MSI checklist](msi-acceptance-checklist.md).
+The original checkpoint below records the earlier resource pause; do not rerun build B or rebuild A.
+
 ## Summary
 
 Build A is a retained, unsigned technical candidate, not an accepted release. Build B
