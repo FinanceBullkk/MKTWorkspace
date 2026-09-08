@@ -20,6 +20,14 @@ MKTTool postmerge `relay-executable` was policy-SKIPPED; exact PR executable ver
 No separate manual deploy, vendor licence activation/purchase, production account test, or installer
 publication occurred. No secrets or raw proxy/network observations were added to Git.
 
+Final documentation delivery: MKTTool docs commit `402d520c`, integration commit `00b47b98`, and
+docs-only PR #69 merged as `64fdb9f3cbbdfc1553210c247489751d39885d5c`. Secret scans `34173267249`
+and `34173375831` PASS; technical CI intentionally not scheduled by the docs-only path policy.
+Automatic Railway deployment `b808255c-70d3-407c-91d4-b0df95d64ccb` reached SUCCESS at
+`2026-09-08T00:28:36Z` (GitHub deployment `6318287792`). Six workspace reports were committed and
+pushed as `a423e30107d991369ee9659733bd331a9d82d7cc`. All three working branches had remote parity
+0/0; only the unrelated root quota report remained untracked, unchanged. VM state verified poweroff.
+
 ## Source and local verification
 
 - Startup worker reuses a short-lived PowerShell process, not its table. Each request performs fresh
