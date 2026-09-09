@@ -136,10 +136,58 @@ idempotent, `exit 0` chỉ chạy khi không có throw.
 3. **Cài Node 22** để tái lập được gate của Browser trên host này.
 4. P2/P3 ở mục 5: không chặn phát hành, gom vào lần sửa sau.
 
+## Resolution — 9 September 2026, 22:18
+
+Mục 1 và 2 của "Việc nên làm" đã đóng. Mục 3 và 4 vẫn mở, chờ quyết định.
+
+**Nguồn candidate không còn chỉ nằm trên ổ D:.** Đã push, không merge:
+
+| Repo | Nhánh trên origin | HEAD |
+|---|---|---|
+| MKTBrowser | `codex/compatibility-activation-ready` | `26bc2d8` |
+| MKTTool | `codex/single-entry-browser-startup` | `bfd51ac` |
+| MKTTool | `codex/compatibility-activation-ready` | `bb378ae` |
+
+**Advisory production đã đóng.** `b614ba2` được cherry-pick lên nhánh
+`security/next-sharp-advisory-patch` tách từ `origin/master`, giữ đúng 4 file (package.json,
+package-lock.json, roadmap, changelog). Không mang theo release-candidate metadata, nên hold
+nghiệm thu MSI không bị ảnh hưởng. Docs được viết lại cho đúng phạm vi bản vá thay vì lấy
+nguyên khối docs của nhánh candidate.
+
+Gate local trên nhánh vá, sau `npm ci` theo lockfile mới:
+
+| Gate | Kết quả |
+|---|---|
+| `audit:production` | PASS — trước đó FAIL |
+| `typecheck` / `lint` | PASS |
+| `test` | 2141/2141, 231 file, 0 skip |
+| `build` | PASS |
+| `ci:secret-scan` | PASS, 777 file |
+
+PR [#71](https://github.com/Techieslab-app/MKTTool/pull/71): check, contracts,
+dependency-audit, relay-executable (Windows 2x), secret-scan đều PASS; deploy-verification
+skip theo policy PR-only. Merge thành `f394457acf1a` lúc 15:13:02Z.
+
+Post-merge CI `34368774606` trên `f394457a`: **success** — check, contracts,
+dependency-audit và deploy-verification PASS; relay-executable skipped đúng thiết kế
+(job chỉ chạy ở PR để tránh trả tiền hai lần cho cùng một cây).
+
+GitHub deployment `6353025995` gắn đúng `sha=f394457a`, state **success** lúc 15:15:11Z.
+Health lúc 15:15:55Z: HTTP 200, `ok:true`, `status:ready`, database/releaseMetadata/r2 đều ok,
+`relayVersion 16` (không đổi — bản vá không đụng Relay). Routing sau nâng cấp không đổi:
+`/` → 307, `/_next/image` → 400, không regression.
+
+Giới hạn cần nói rõ: production không phát ra số phiên bản Next/sharp, nên chuỗi bằng chứng
+là **lockfile trên `f394457` → GitHub deployment gắn đúng SHA đó → state success**, giống
+chuẩn các lần deploy trước trong kế hoạch. Không phải quan sát trực tiếp version đang chạy.
+
+Chưa làm: cài Node 22 (thay đổi cấp máy) và ba điểm P2/P3 ở mục 5 (sửa là phải freeze
+candidate mới).
+
 ## Unresolved
 
-- Deploy `b614ba2` lên production có cần chờ nghiệm thu MSI xong không, hay tách riêng như một
-  bản vá bảo mật độc lập? Hai việc không phụ thuộc nhau về mặt kỹ thuật.
+- ~~Deploy `b614ba2` — đã tách riêng và deploy độc lập, xem Resolution.~~ Còn lại:
+  các nhánh candidate đã push nhưng chưa có PR — có mở PR ngay hay giữ tới khi MSI xong?
 - Cài Node 22 song song (nvm-windows) hay đổi hẳn default? Đổi default sẽ khiến project khác
   trên máy phải rebuild native module.
 - `findActivatedWindowsEngine` có nên verify SHA-256 của `chrome.exe` theo tuple đã ký không?
