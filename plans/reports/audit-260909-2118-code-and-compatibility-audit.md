@@ -181,14 +181,59 @@ Giới hạn cần nói rõ: production không phát ra số phiên bản Next/s
 là **lockfile trên `f394457` → GitHub deployment gắn đúng SHA đó → state success**, giống
 chuẩn các lần deploy trước trong kế hoạch. Không phải quan sát trực tiếp version đang chạy.
 
-Chưa làm: cài Node 22 (thay đổi cấp máy) và ba điểm P2/P3 ở mục 5 (sửa là phải freeze
-candidate mới).
+Chưa làm: ba điểm P2/P3 ở mục 5 (sửa là phải freeze candidate mới).
+
+## Resolution — Node toolchain, 22:35
+
+Mục 3 đóng. Gốc rễ không phải "máy thiếu Node 22" mà là **repo khai báo sai**: `engines.node`
+ghi `">=20.0.0"` trong khi `verify-node-version.cjs` hard-fail nếu major khác 22, và không có
+`.nvmrc` / `.node-version` / `volta` nào. Máy cài Node 20 hoặc 24 đều hợp lệ theo `engines` rồi
+vỡ ở native module.
+
+Pin chặt là đúng, không nới: dự án có hai ABI cùng lúc — test chạy Node 22, app đóng gói chạy
+Electron 42, `@electron/rebuild` đổi qua lại lúc packaging. Nới `engines` ra sẽ tạo gói hỏng âm
+thầm thay vì báo lỗi.
+
+Nhánh `chore/pin-node-toolchain` (Browser, tách từ `origin/main`, commit `285abf3`, đã push,
+**chưa merge** — không đụng candidate 0.3.17):
+
+| Lớp | Thay đổi |
+|---|---|
+| 1 | `.nvmrc` = 22, `engines.node` → `22.x`, `volta` pin |
+| 2 | Volta 2.0.2 cài trên máy; default giữ `node@24.21.0` |
+| 3 | Thông báo lỗi phiên bản in cả hai nửa cách sửa, kèm 3 test mới |
+| 4 | Workflow đọc `node-version-file: .nvmrc` thay vì lặp `22` ở ba chỗ |
+
+**Bẫy phát hiện khi kiểm chứng: pin `node` một mình là chưa đủ.** Sau `volta pin node@22`,
+`node -v` trả 22.23.2 nhưng `corepack yarn verify:node` vẫn báo `Current runtime: 24.14.1`.
+`corepack.cmd` nằm trong `C:\Program Files\nodejs` và khởi chạy chính Node đó, bỏ qua shim của
+Volta — nên mọi script do yarn chạy vẫn dùng major mặc định của máy. Sửa bằng
+`volta pin yarn@4.5.0`; sau đó gọi `yarn` trực tiếp thì shim giải quyết cả Yarn lẫn Node đã pin,
+và `verify:node` exit 0. README ghi lại cả cái bẫy này.
+
+Đo được sau khi áp:
+
+| Vị trí | node |
+|---|---|
+| Ngoài repo | v24.21.0 |
+| MKTTool | v24.21.0 (npm 11.19.0) |
+| MKTBrowser | **v22.23.2**, yarn 4.5.0 |
+
+Chứng minh 12 test fail thuần do phiên bản: chạy lại **chính source candidate đông cứng, chính
+`node_modules` đó**, chỉ đổi Node qua `volta run --node 22`. Suite `managed-profile-create` từ
+0/3 lên **3/3**. Toàn bộ `test:installer`: **exit 0, 459 test, 458 pass, 0 fail, 0
+`ERR_DLOPEN_FAILED`** — so với Node 24 là 145 pass / 12 fail và đứt chuỗi giữa chừng.
+
+Gate trên chính nhánh toolchain: `verify:node` PASS, contract test 3/3, `test:w02` PASS,
+typecheck PASS, lint PASS.
+
+Giới hạn: pin chỉ có hiệu lực trên nhánh chứa nó. Cho tới khi merge, các nhánh candidate vẫn
+cần `volta run --node 22 -- ...` như cách đã dùng ở trên.
 
 ## Unresolved
 
 - ~~Deploy `b614ba2` — đã tách riêng và deploy độc lập, xem Resolution.~~ Còn lại:
   các nhánh candidate đã push nhưng chưa có PR — có mở PR ngay hay giữ tới khi MSI xong?
-- Cài Node 22 song song (nvm-windows) hay đổi hẳn default? Đổi default sẽ khiến project khác
-  trên máy phải rebuild native module.
+- ~~Cài Node 22 — đã xong bằng Volta, default máy giữ Node 24. Xem Resolution.~~
 - `findActivatedWindowsEngine` có nên verify SHA-256 của `chrome.exe` theo tuple đã ký không?
   Sửa thì cần một candidate mới.
