@@ -49,24 +49,30 @@ Boundaries that remain, because they protect the owner rather than gate the owne
   stale: if one produces no output within a few minutes, stop it and continue inline rather than
   blocking on it.
 
-## CI/CD Execution — GitHub Actions is the gate
+## Release Gate - Local Validation and Clean VM
 
-GitHub Actions is the authoritative CI gate for this workspace. Every workflow runs on
-GitHub-hosted runners; no job targets a self-hosted runner. The local disposable VirtualBox VM
-stays useful, but as a pre-check, not as the gate.
+On 8 September 2026 the owner selected a release path independent of GitHub Actions quotas.
+GitHub hosts source; local checks and a restored disposable VM are the authoritative technical
+release gate. Actions remains optional manual diagnostics, not a required publication dependency.
+This replaces the previous hosted-only policy prospectively; historical failed/skipped runs stay
+failed/skipped. See plans/260908-0740-local-vm-product-release/plan.md for current implementation.
 
-- Run the closest local checks first — targeted tests, typecheck, lint, build — and use the
-  disposable VM for installer, first-run, uninstall, and registry/profile behaviour. A failure
-  caught locally is free; the same failure caught on a hosted runner is not.
-- A local or VM pass is evidence, never a substitute for the GitHub result. Promotion, release, and
-  deploy decisions cite the GitHub run.
-- Both repositories are private, so Actions minutes are billed and Windows jobs bill at the 2x rate.
-  That is a reason to batch coherent fixes instead of pushing after every speculative edit — not a
-  reason to ask permission. Codex triggers, reruns, and cancels runs on its own judgment under the
-  standing authorization above.
-- Do not rerun a failed job until its failure is understood or it is a proven transient fault.
-  Cancel superseded runs when safe.
-- `ubuntu-latest` and `windows-latest` give every job a fresh VM that is discarded afterwards, so a
-  hosted job is a real clean-machine result. A pass on the developer host is not.
-- Report local results, VM results, GitHub Actions results, skipped gates, and remaining blockers
-  separately. Never present one as another, and never read a skipped required check as a pass.
+- Commit reviewed implementation before freezing source. Record both repository commits/trees,
+  dependency locks, exact Node/Yarn/npm identities and the fixed command logs with SHA-256.
+- Run local quality, security, database contracts and packaged Relay checks through the committed
+  local runners. A required failure, missing result or unexplained skip blocks promotion.
+  A runner's successful command receipt is not a product-readiness or clean-VM verdict.
+- Build twice from isolated clean inputs and compare normalized delivered payloads. Keep the
+  raw hashes and retain one exact installer; never rebuild it between acceptance and publication.
+- Restore the clean Defender-enabled VM snapshot. Test the exact installer through normal first
+  run, signed CFT activation, packaged Relay lifecycle, proxy failure/recovery, repair, uninstall
+  and cleanup. Bind receipts to the installer/Browser/Relay/engine/control-contract hashes.
+- Sign candidate metadata after building. Authenticated candidate-only testing precedes operator
+  promotion; public/operator availability remains gated by explicit exact-tuple approval. Preserve
+  immutable storage, full GET/hash read-back, anti-downgrade, revocation and rollback controls.
+- A VM on this host is not independent physical hardware. Missing browser-page network,
+  unfamiliar-operator, second-PC and elapsed seven-day canary evidence stays OPEN. Do not
+  call local tests, a Chrome fixture, or a policy change proof of full product readiness.
+- Do not launch heavy builds while the VM runs; measure RAM first and never close user apps.
+- Keep local, VM, optional Actions, deploy and human acceptance results separate. GitHub source
+  integration may still trigger Railway deployment independently of Actions; verify exact deployed SHA.
