@@ -7,9 +7,18 @@ effort: large
 branch: codex/profile-manager-scope
 tags: [browser, windows, profile-manager, release]
 created: 2026-09-08
+blockedBy: [260908-0740-local-vm-product-release]
 ---
 
 # Profile-manager ready-to-use closeout
+
+## Follow-on decision - 8 September 2026
+
+Owner selected local build/validation plus a clean disposable VM as replacement release gate.
+The [local VM release plan](../260908-0740-local-vm-product-release/plan.md) owns that implementation
+and the supported CFT activation blocker. Hosted-only requirements below describe the prior
+closeout; they are superseded prospectively after replacement checks exist. Historical failures,
+technical evidence and human/second-PC/canary requirements remain unchanged.
 
 ## Authority and outcome
 

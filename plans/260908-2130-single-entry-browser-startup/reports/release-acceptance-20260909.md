@@ -2,14 +2,29 @@
 
 ## Current Verdict
 
-Publication HOLD. The retained installer is frozen and its normalized payload reproduced by build B.
-Clean install (9/9), repair (13/13), uninstall (15/15), absent-Relay startup and cold-login service
-startup passed within their recorded VM environments. Normal profile activation remains blocked
-by the absent verified CFT pin.
-Tray reopen/Quit and physical MSI acceptance remain OPEN. The owner will perform MSI checks manually.
-At 02:00 local time the owner requested background work while using the host, so foreground UI testing paused.
+RELEASED for controlled internal Windows x64 use. Exact candidate
+`20260909-browser-0.3.17-relay-17-browser-ip-observer-cft` passed independent normalized A/B build
+comparison, signed sequence-21 activation, clean VM lifecycle, and owner-operated physical MSI
+acceptance. The retained EXE is 146,047,736 bytes with SHA-256
+`6d07fd4ef529b3505a8de385c7d0d3214258e8a020abbd00de51e8f9810a4ca8`; it was not rebuilt after
+acceptance.
 
-## Frozen Candidate
+The installer was created under its immutable R2 candidate key with conditional write semantics.
+Publisher full GET/hash read-back passed. Production source commit
+`d161dd523e9fe3b62b08eb09bb7731c155ae926c` is live in Railway deployment
+`54091ee1-f46e-4b8d-8bdb-d6d111ba5cd7`; health reports ready with database, release metadata, and R2
+OK. The production release probe reports `available=true`, `metadataComplete=true`, Browser `0.3.17`,
+Relay `17`, CFT `152.0.7977.64`, and no missing metadata. An authenticated ADMIN download returned
+HTTP 200, all 146,047,736 bytes, and the accepted SHA-256.
+
+Physical MSI checks passed install, Windows restart and Relay startup, supported activation,
+disposable proxy-profile launch, active-profile tray close, tray reopen, shortcut reuse, explicit
+Quit, repair, uninstall, independent Relay retention, and reinstall with profile/device/sequence
+preservation. Repair initially required stopping the running independent Relay process before retry.
+Unfamiliar-operator, another independent physical PC, and seven-day canary evidence remain OPEN.
+No identity-isolation or real-account-safety claim is approved.
+
+## Historical Frozen Candidate - Rejected A
 
 - Candidate: `20260909-browser-0.3.13-relay-16-single-entry-5ff43b2`.
 - Actual embedded Browser version: `0.3.13`; Relay remains v16. No binary relabeling or rebuild of A.
@@ -48,8 +63,8 @@ Evidence root: `D:/mkt-single-entry-20260908/candidate/`.
 | Uninstall | PASS 15/15 on 1 vCPU | `vm-gate-cpu1/uninstall-bound-evidence.json`; wrapper exit 0, exact raw/receipt hashes verified; owned Browser/Relay payload, shortcuts, registry, firewall and listeners removed; data retained |
 | Final cleanup | PASS | `vm-cpu1-cleanup.json`; zero product processes/listeners/firewall rules, no remaining gate tasks, profile database preserved, Defender enabled. Guest shut down normally |
 | Evidence integrity | PASS | `vm-evidence-verification.json`; rechecked clean/repair/uninstall matrices, receipt/raw/bundle hashes, every bundled input and exact source/artifact bindings |
-| MSI | OPEN | Owner will use the [checklist](msi-acceptance-checklist.md) after VM qualification |
-| Publication / deployment | HOLD | No artifact uploaded, operator tuple promoted, or metadata source deployed |
+| MSI | PASS | Physical MSI receipt binds the exact installer and passes install/restart/activation/profile/tray/Quit/repair/uninstall/reinstall lifecycle |
+| Publication / deployment | PASS | Immutable R2 create and full byte read-back; PRs #73/#74 merged; Railway `54091ee1-f46e-4b8d-8bdb-d6d111ba5cd7` SUCCESS; production metadata and authenticated full download PASS |
 
 ## VM Environment
 
@@ -110,7 +125,7 @@ run. Candidate artifacts are still local and the authenticated test distribution
 bound to sequence 17. The prior fixture/sequence is not evidence for this installer. This source
 trace is diagnosis only; normal signed activation and proxy failure/recovery stay OPEN.
 
-## Metadata Source Checkpoint
+## Historical Metadata Source Checkpoint
 
 MKTTool commit `48e70fd` freezes the reviewed candidate constant, immutable storage key, exact
 Relay/CFT publisher assertion and current documentation. Inline review found no scoped defects.
@@ -119,13 +134,43 @@ simulated I/O, scoped secret scan (seven source/doc files) and staged diff check
 local source commit; no push, deployment, artifact upload or operator promotion occurred. Browser
 source and the original historical MKTTool build input remain exactly as recorded in Frozen Candidate.
 
+## Ready-To-Use Continuation - 9 September
+
+The owner authorized VM mouse use. On the installed repaired snapshot, the Browser manager was
+closed with X, opened through the actual **Open MKT Browser** tray menu, closed again, then exited
+through **Quit MKT Browser**. The reopened manager was visibly observed. Before Quit, the process
+inventory showed one Browser parent (7644) with its Electron children and Relay 7624. After Quit,
+no Browser process remained; the same Relay 7624 still owned 127.0.0.1:47821 and returned its fresh,
+unconfigured HTTP 400 health response. Defender antivirus and real-time protection were enabled.
+Evidence: `tray-reopen-before-quit.json` and `tray-after-quit.json` in the candidate root.
+Tray reopen and explicit Quit PASS for **no active profile**; active-profile continuity remains OPEN.
+
+A fresh isolated database/auth fixture and TLS CA were prepared for exact signed sequence 17.
+The unchanged quality-verified frozen Web runtime binding passed; helper tests passed 34/34.
+Synthetic ADMIN/session creation and real server session validation passed. The isolated database
+uses port 55420; no production database, host trust store or host DNS was changed. Sustained clock
+preflight passed three samples over 122 seconds, receipt SHA-256
+`676ba55535e65ee5feb84ab1a8540929f73aed4d86ecc58db464f939eabcfab1`.
+Guest-only CA trust and hosts mapping then reached the local HTTPS login endpoint with status 200.
+This is authenticated test infrastructure, not production OAuth or operator acceptance.
+
+Before signed activation dispatch, SSH stopped at banner exchange on both 2222 and a temporary
+loopback diagnostic 2223 forward. VBox logged an AHCI port reset at elapsed 00:11:11, followed by
+heartbeat loss. The guest clock display stopped advancing. The state and log were preserved in
+snapshot `20e02678-e865-4482-bf6c-bf368458d0fd` and `activation-stall-vbox.log`; no enrollment or
+signed transition was dispatched. The earlier bounded environment PASS does not establish sustained
+stability. The repaired snapshot was restored for a separate, prospective trial enabling SATA host
+I/O cache, previously disabled. CPU/RAM remain 1 vCPU/4 GiB. This experiment is not a proven fix.
+
 ## Next Actions
 
-1. Restore the retained installed snapshot and resume tray reopen/explicit Quit when host interaction is available.
-2. Complete supported signed CFT activation and real profile/proxy lifecycle; the current first-run error blocks usable profile acceptance.
-3. Verify retained independent Relay ownership/Startup behavior on the exact artifact.
-4. Then transfer exact A for manual MSI checks and collect outcomes before publication.
+1. Run an unfamiliar-operator walkthrough without developer coaching.
+2. Observe the exact tuple on another independent physical Windows PC.
+3. Record seven actual canary days and stop-condition outcomes.
+
+These are follow-up adoption/canary evidence. They do not reopen the completed exact-installer
+publication gate or authorize an identity-isolation claim.
 
 ## Unresolved Questions
 
-No new product decision needed. Foreground VM access and the manual MSI results remain owner inputs.
+None for the completed controlled internal release.
