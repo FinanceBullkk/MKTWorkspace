@@ -1,0 +1,146 @@
+# Code & Compatibility Audit — 9 September 2026, 21:18
+
+Independent re-run of quality gates on this host. Not a substitute for VM/MSI acceptance.
+All numbers below are measured in this session, not copied from prior checkpoints.
+
+## Verdict
+
+Code chạy ổn. Tương thích **coherent nhưng mong manh ở hai điểm**: host thiếu Node 22, và
+production Web đang chạy dependency có advisory critical chưa vá.
+
+| Gate | Result | Detail |
+|---|---|---|
+| Browser typecheck | PASS | 6 tsconfig projects, exit 0 |
+| Browser lint | PASS | workspace-quality contract + eslint + 55 file JS syntax |
+| Browser tests | 145 pass / 12 fail | 12 fail = **1 nguyên nhân môi trường**, không phải lỗi code |
+| Browser prod audit | PASS | "No audit suggestions" |
+| MKTTool typecheck | PASS | exit 0 |
+| MKTTool lint | PASS | exit 0 |
+| MKTTool tests | **2153/2153 PASS** | 233 file, 0 skip, 106.85s |
+| MKTTool prod audit | **FAIL** | next (critical), sharp (high) |
+| Cross-repo tuple | PASS | Browser ≡ MKTTool candidate, field-by-field |
+| Installer integrity | PASS | 3 bản sao đều khớp hash |
+
+## 1. Node 22 vắng mặt — chặn tái kiểm chứng candidate
+
+`scripts/verify-node-version.cjs` yêu cầu **đúng major 22**. Host chỉ có **v24.14.1**;
+không tìm thấy nvm/fnm/volta/portable node nào khác.
+
+Thông báo: "MKT Browser builds require Node.js 22. Current runtime: 24.14.1." → exit 1
+
+Hệ quả đo được: `better_sqlite3.node` build cho NODE_MODULE_VERSION **127** (Node 22),
+Node 24 đòi **137** → `ERR_DLOPEN_FAILED`. Đúng 12 test fail, tất cả cùng lỗi này:
+
+| Suite | Pass / Fail | Nguyên nhân |
+|---|---|---|
+| script contract batch | 75 / 0 | — |
+| cdp-driver `test:safe` | 5 / 0 | — |
+| desktop `test:w02` | 10 / 0 | — |
+| desktop `test:packaging` | 45 / 0 | 1 skip |
+| settings-store | 8 / 0 | — |
+| desktop `test:mkb01` | 1 / 3 | ABI |
+| desktop `test:mkb02` | 0 / 3 | ABI |
+| desktop `test:mkb03` | 1 / 3 | ABI |
+| profile-manager legacy-multizen | 1 / 3 | ABI |
+
+Không test nào fail vì logic sản phẩm. Nhưng **không thể tái build / tái kiểm chứng
+candidate 0.3.17 trên máy này** cho tới khi có Node 22. Rủi ro tái lập, không phải lỗi
+chất lượng.
+
+## 2. Production Web đang chạy dependency có advisory critical
+
+`node scripts/ci/dependency-audit.cjs` → FAIL:
+"2 high or critical advisory in production dependencies: next (critical), sharp (high)."
+
+| Package | Lock trên `origin/master` (đang deploy) | Dải bị ảnh hưởng | Advisory |
+|---|---|---|---|
+| next | **16.3.0** | 16.0.0 – 16.3.2 | Unauth RCE (windows-hosted); Unauth RCE trong Image Optimization API khi dùng AVIF |
+| sharp | **0.35.3** | < 0.35.4 | libheif GHSA-g89c-p67h-r497, GHSA-2jg2-4ch7-h545 |
+
+Lưu ý `package.json` ghi `^16.2.12` nhưng lockfile resolve **16.3.0** — vẫn trong dải dính.
+
+Bề mặt tấn công thực tế:
+
+- `src/proxy.ts:89` middleware matcher **loại trừ `_next/image` khỏi auth**.
+- Production: `/` → 307 (redirect login) nhưng `/_next/image` → **400**, tức route sống và
+  **không qua xác thực**.
+- `sharp` có mặt ⇒ image optimization đang hoạt động.
+- Vector "windows-hosted servers" nhiều khả năng không áp dụng (Railway chạy Linux); vector
+  AVIF Image Optimization thì **có khả năng áp dụng**. Chưa thử khai thác, chỉ xác minh định tuyến.
+
+**Bản vá đã tồn tại nhưng chưa deploy.** Commit `b614ba2` (next `^16.3.3`, sharp lock 0.35.4)
+nằm trên nhánh local `codex/compatibility-activation-ready`, **không phải tổ tiên của
+`origin/master`**. Kế hoạch mô tả đúng ("no source push or deployment yet") — nhưng rủi ro
+trên dịch vụ đang chạy vẫn còn nguyên.
+
+## 3. Toàn bộ source candidate 0.3.17 chưa push
+
+| Repo | Nhánh | Commit chưa push |
+|---|---|---|
+| MKTBrowser | `codex/compatibility-activation-ready` | `2e53e67`, `cea4611`, `6f4b771`, `a5a6732`, `26bc2d8` |
+| MKTTool | `codex/single-entry-browser-startup` | `48e70fd`, `bfd51ac` |
+| MKTTool | `codex/compatibility-activation-ready` | `b614ba2`, `3e5ecd9`, `bb378ae` |
+
+`origin` phía Browser chỉ có `5ff43b2` = **0.3.13**. Nghĩa là bytes đã qua nghiệm thu VM
+(0.3.17) chỉ tồn tại ở worktree local `D:/mkt-activation-fix-20260909/source/MKTBrowser` và
+các build root trên D:. Mất ổ D: = mất nguồn của candidate. Lineage sạch (`bfd51ac` là tổ
+tiên của `bb378ae`), push được ngay.
+
+## 4. Tương thích — phần khớp tốt
+
+Tuple hai repo khớp từng trường. MKTTool `WINDOWS_INSTALLER_CANDIDATE` (bb378ae) ≡ Browser
+`relay-release.json` + `windows-engine-release.json`:
+
+| Trường | Giá trị | Nguồn đối chiếu |
+|---|---|---|
+| id | `20260909-browser-0.3.17-relay-17-browser-ip-observer-cft` | — |
+| browser | `0.3.17` | `apps/desktop/package.json` |
+| relay | v17 / `d8bf25dc…` / 34.289.393 | `relay-release.json` |
+| engine | cft `152.0.7977.64` / `b0db25de…` / 202.713.690 | `windows-engine-release.json` |
+
+- Engine CFT `152.0.7977.64` trên Google storage: **HTTP 200**, còn sống.
+- Relay download v16 và v17: **cả hai 401** (auth-gated) — nhất quán, không phải regression của v17.
+- Electron 42.8.1 / electron-builder ^26.15.3 / vite ^6.
+- Installer: cả 3 bản (`installer.exe`, `msi-handoff/MKTBrowser-0.3.17-Relay17.exe`,
+  `vm-gate/installer.exe`) đều **146.047.736 bytes**, SHA-256
+  `6d07fd4ef529b3505a8de385c7d0d3214258e8a020abbd00de51e8f9810a4ca8` — khớp checklist MSI.
+
+## 5. Review code các fix 0.3.14 → 0.3.17
+
+Diff nhỏ, tập trung: 18 file, +415 / −51. Chất lượng tốt, fail-closed nhất quán. Ba quan sát:
+
+**P2 — `activated-windows-engine-cache.ts`**: Browser chấp nhận runtime đã activate dựa trên
+`.mkt-runtime.json` khớp version + `chrome.exe` tồn tại và size > 0. **Không verify hash**
+binary, trong khi phần còn lại của hệ thống kỷ luật hash rất chặt. Cùng trust boundary với
+trước (thư mục user-local, do Relay ghi) nên không phải lỗ hổng mới — nhưng lệch chuẩn.
+
+**P3 — `relay-failure-notifier.ts`**: `if (this.dialogPending) return;` bỏ hẳn thông báo mới
+khi đang có dialog mở, kể cả khi nội dung **khác** — không hạ cấp xuống notification. Nếu
+`showMessageBox` không bao giờ settle, `dialogPending` kẹt `true` và mọi cảnh báo Relay về
+sau bị nuốt im lặng. Dedupe theo trạng thái thay vì theo nội dung.
+
+**P3 — `compatibility-smoke-runner.ts`**: `navigation.url !== PROXY_CHECK_URL` so sánh chuỗi
+tuyệt đối với `https://api.ipify.org/?format=json`. Nếu Chromium chuẩn hóa URL (bỏ `/`, đổi
+thứ tự query) sẽ fail giả. VM đã pass nên hiện không xảy ra, nhưng giòn.
+
+Phần còn lại chắc: `ensure(ignoreCache)` để Retry bypass cache activate đúng ý đồ; probe IP
+validate bằng `isIP()` và không rò nội dung provider vào thông báo lỗi; PowerShell
+`stopExactOwnedWindowsProcesses` so khớp full path, giữ process trùng tên của bên khác,
+idempotent, `exit 0` chỉ chạy khi không có throw.
+
+## Việc nên làm, theo thứ tự
+
+1. **Push toàn bộ commit candidate** (Browser 5, MKTTool 5). Rẻ, xóa rủi ro mất nguồn.
+2. **Deploy `b614ba2`** để đóng advisory critical trên production. Gộp cùng lần push ở bước 1
+   để chỉ tốn một chu kỳ CI.
+3. **Cài Node 22** để tái lập được gate của Browser trên host này.
+4. P2/P3 ở mục 5: không chặn phát hành, gom vào lần sửa sau.
+
+## Unresolved
+
+- Deploy `b614ba2` lên production có cần chờ nghiệm thu MSI xong không, hay tách riêng như một
+  bản vá bảo mật độc lập? Hai việc không phụ thuộc nhau về mặt kỹ thuật.
+- Cài Node 22 song song (nvm-windows) hay đổi hẳn default? Đổi default sẽ khiến project khác
+  trên máy phải rebuild native module.
+- `findActivatedWindowsEngine` có nên verify SHA-256 của `chrome.exe` theo tuple đã ký không?
+  Sửa thì cần một candidate mới.
