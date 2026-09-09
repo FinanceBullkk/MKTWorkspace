@@ -23,8 +23,16 @@ production Web đang chạy dependency có advisory critical chưa vá.
 
 ## 1. Node 22 vắng mặt — chặn tái kiểm chứng candidate
 
-`scripts/verify-node-version.cjs` yêu cầu **đúng major 22**. Host chỉ có **v24.14.1**;
-không tìm thấy nvm/fnm/volta/portable node nào khác.
+`scripts/verify-node-version.cjs` yêu cầu **đúng major 22**. Node trên `PATH` là **v24.14.1**.
+
+> **Đính chính (22:40).** Câu gốc ở đây viết "không tìm thấy portable node nào khác" — sai.
+> `E:\tools\node-v22.23.1` vẫn tồn tại và chạy được. Lượt tìm chỉ quét `C:\Users\anhha`,
+> `Program Files\nodejs` và các thư mục nvm/nvs/volta, không quét ổ E. Nên kết luận "không thể
+> tái kiểm chứng candidate trên máy này" là quá mạnh: làm được, bằng cách prepend PATH thủ công.
+>
+> Điều này **củng cố** chứ không phủ nhận phát hiện chính: bản Node 22 duy nhất trên máy nằm
+> ngoài mọi khai báo của repo và ngoài mọi công cụ tiêu chuẩn, chỉ được ghi lại như tri thức
+> truyền miệng. Một người mới — hoặc chính lượt audit này — không có cách nào tìm ra nó.
 
 Thông báo: "MKT Browser builds require Node.js 22. Current runtime: 24.14.1." → exit 1
 
