@@ -115,6 +115,58 @@ production now looks only for the 0.3.18 key, which does not exist in R2 yet. Th
 0.3.17 installer is therefore no longer downloadable. This is the documented fail-closed
 behaviour, accepted by the owner on 2026-09-11 rather than reverted.
 
+## Signed compatibility manifest
+
+`D:\mkt-release-evidence\candidate-0.3.18\manifest.signed.json`
+
+```
+sequence 22, channel pilot, 3415 bytes
+sha256   f8e10e71d5a5a3b7a9dc327a2e2d93bc8bb54daad10186b321861707ab831af4
+signedAt 2026-09-11T03:09:21.302Z
+key      6e5d47d894206e69e6464748333eb76c99b18da1f1b42ddafb2e3f265a7b786e
+```
+
+`transition` is `fromSequences [0]`, `retainedSequence null` — fresh activation from 0 only, no
+migration from an existing nonzero sequence. This follows the documented precedent for sequence 21
+and is forced by the validator: `retainedSequence` must equal the client's current sequence exactly,
+so one manifest cannot serve both fresh installs and machines already on 21. Anyone running 0.3.17
+must reinstall rather than transition.
+
+## Publication
+
+Published 2026-09-11T03:23:52Z to bucket `mkttool-relay-release`, key
+`MKTBrowser-20260911-browser-0.3.18-relay-17-quality-review-repairs-cft.exe`.
+
+The publisher's own full byte read-back verified 146049873 bytes, sha256 `e3e50666…be0fc`.
+Verified again afterwards by an independent read-only HEAD + full GET: same size, same digest,
+and metadata carrying `browser-version 0.3.18`, `candidate-id` as above, `browser-source-sha
+666e9c5f…`, `browser-source-tree b825ce22…`, `payload-manifest-sha256 7b95134d…`,
+`payload-file-count 129`, `bundled-relay-version 17`.
+
+The accepted 0.3.17 object was untouched: it remains present at its own immutable key,
+146047736 bytes, sha256 `6d07fd4e…a4ca8`. The quarantined mutable key `MKTBrowser-win-x64.exe`
+still holds the old 0.3.12 build and was not written.
+
+Two failed publish attempts preceded this, both refused before any bucket write:
+
+1. `--file` pointed at the retained installer under its candidate-key name. The publisher requires
+   the on-disk filename to be exactly `MKTBrowser-win-x64.exe`; the remote key is derived from the
+   candidate id separately. Fixed by staging a byte-identical copy under the required name.
+2. `--release-manifest` was given the signed compatibility manifest. That flag wants a different
+   document — the frozen release manifest carrying `status`, `mktBrowser`, `buildEvidence`,
+   `relay.archiveSha256` and `engine` fields. Authored as
+   `candidate-0.3.18/frozen-release-manifest.json` from the 0.3.17 template.
+
+Both refusals were fail-closed guards working correctly, not defects.
+
+## Operator promotion still gated
+
+The application reader reports `available: true` but `metadataComplete: false`, with
+`metadataMissing: ["missing-approved-release-tuple"]`. Operator availability needs the deployment
+to carry `MKT_WINDOWS_INSTALLER_APPROVED_TUPLE_JSON` naming this exact tuple. That binding is the
+operator-promotion gate and, per policy, follows authenticated candidate-only testing — it has not
+been set. The VM run does not need it: it tests the retained exact installer directly.
+
 ## OPEN — not done, not waived
 
 - Clean-VM acceptance on a restored Defender-enabled snapshot: first run, signed CFT activation,
