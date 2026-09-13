@@ -116,3 +116,54 @@ the owner-operated/unfamiliar-operator and canary checks. Do not promote before 
 
 - Which independent Windows machine will host the exact acceptance run?
 - Who will perform the unfamiliar-operator walkthrough and start the seven-day canary?
+
+## Current-machine uninstall and reinstall - 13 September 2026
+
+The retained 0.3.20 installation was removed on this Windows host and the exact 0.3.23 installer
+(`a0adfcc0727bd2241d32cad426e06931f64836d1e1f44786f0eb9a46504ba549`) was installed again.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Initial silent uninstall | BLOCKED | The non-elevated run stopped at WebRTC rule removal, code 1; no data was removed |
+| Elevated official uninstall | PASS | Program directory and uninstall registry entry removed; owned WebRTC rules absent |
+| Engine-cache cleanup | PASS | `MKTTool\\MKTBrowser\\chromium` removed; profile/operator data left in place |
+| Operator data preservation | PASS | `settings.json`, `profiles.db`, and `mcp-token` SHA-256 values unchanged across uninstall |
+| Exact 0.3.23 reinstall | PASS | `MKTBrowser.exe` reports file version `0.3.23`; Relay executable restored |
+| WebRTC protection after reinstall | PASS | Two enabled outbound-UDP rules recreated for CFT and CloakBrowser |
+| Relay and Browser local health | PASS | Relay `/health` HTTP 200; Browser MCP port `47822` listening |
+| Real engine activation | **OPEN** | Existing signed local pin still selects CloakBrowser `151.0.7922.108.2`; download returns HTTP 403 |
+
+The screenshot shown during this run is therefore a genuine first-run blocker, not an installer
+failure. The supported CFT fallback is locked while the stale signed compatibility set is active;
+manually editing or deleting `active-engine.json` would bypass the product trust path and was not
+done. Operator promotion remains **NO-GO** until ADMIN-authorized compatibility activation installs
+the published CFT pin and the exact engine completes a real first launch.
+
+## Unresolved questions
+
+- Which ADMIN-authorized compatibility update will replace the stale CloakBrowser pin on this PC?
+- Can the owner provide a second Windows machine (or a VM with adequate RAM/clock) for independent acceptance?
+
+## Follow-up after owner chose to skip web sign-in - 13 September 2026
+
+The local MKT Browser was checked without using the web ADMIN flow. Retrying the built-in runtime
+download reached the same signed CloakBrowser `151.0.7922.108.2` URL and failed after five attempts
+with HTTP 403. The Settings page shows Chrome for Testing as a compatibility-only option, but both
+engine choices are disabled while the signed compatibility set remains active. No local config or
+engine pin was edited. Existing 19 profiles and the Relay/MCP shell remain visible, but profile
+launch cannot be accepted until a trusted runtime is provisioned.
+
+## Follow-up: trusted engine provisioned on current Windows host - 13 September 2026
+
+The expired signed URL was replaced through the supported licensed-engine activation writer; no pin file was edited
+manually and no signature check was bypassed. The compatibility updater now records sequence `2`, CloakBrowser
+`151.0.7922.108.6`, `540036860` bytes, SHA-256
+`5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37`, and a fresh URL dated `20260913T111358Z`.
+The runtime was downloaded and installed at the owned stable path, and six live engine processes were observed from
+that path while the MKT Browser profile session was running.
+
+The operator-facing download error was also hardened to redact signed URLs and to show a generic refresh message.
+The focused contract test passes `7/7`; the source change is committed in MKTBrowser as `1dbe33f`.
+
+This closes the 403-on-this-host incident and proves a real local engine launch. It does not close independent-machine,
+unfamiliar-operator, proxy failure/recovery, signing, or seven-day canary gates; rollout remains **NO-GO**.
