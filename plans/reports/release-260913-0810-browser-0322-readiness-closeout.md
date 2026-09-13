@@ -32,6 +32,8 @@ The namespace fix is committed in MKTTool `9472a77` and deployed to Railway depl
 the authenticated manifest route returns sequence 22 / Browser 0.3.22 / Relay 17, and a signed
 artifact authorization returned HTTP 200 with the exact installer length (146,056,615 bytes).
 The unscoped sequence-21 manifest remains readable directly from R2 for rollback.
+The operator-approved tuple remains Browser 0.3.17 / Relay 17 / sequence 21; 0.3.22 is published
+to the authenticated compatibility channel but intentionally not promoted.
 
 ## Decisions
 
