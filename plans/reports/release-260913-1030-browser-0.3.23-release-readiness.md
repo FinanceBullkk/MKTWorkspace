@@ -14,7 +14,7 @@ acceptance remain open, so the operator tuple was not changed.
 | Gate | Result | Evidence |
 |---|---|---|
 | Source tuple | PASS | Browser `b0b5c8f57b3add2c45bf0b6dbbde7ad9d4a2aa65`; MKTTool `1fefe2cbc8babb5df52ff5971c941a1c144eefd9`; Relay 17 |
-| Frozen-source seven-command quality | PASS | Exact candidate commits; receipt `quality-frozen-b0b5c8f-1fefe2c-r2/quality-receipt.json`, SHA-256 `d98053974e7266527f5db87fe68e81100d3c3d308c203fc4f985e9904eb6f53c` |
+| Frozen-source seven-command quality | PASS (scope-limited) | 7/7 commands exit 0; installer suite `82 pass, 1 skip` (machine-integration); receipt `quality-frozen-b0b5c8f-1fefe2c-r2/quality-receipt.json`, SHA-256 `d98053974e7266527f5db87fe68e81100d3c3d308c203fc4f985e9904eb6f53c` |
 | Build A/B equivalence | PASS | 129 normalized files; `app.asar` byte-identical, 51,770,195 bytes |
 | Exact installer | PASS | 146,056,721 bytes; SHA-256 `a0adfcc0727bd2241d32cad426e06931f64836d1e1f44786f0eb9a46504ba549` |
 | CFT archive | PASS | 202,713,690 bytes; SHA-256 `b0db25dea445822429d8ebd36d53344cadcd63127308759456964029bbe18004` |
