@@ -20,10 +20,11 @@ was not changed.
 | CFT archive | PASS | 202,713,690 bytes; SHA-256 `b0db25dea445822429d8ebd36d53344cadcd63127308759456964029bbe18004` |
 | Sequence 23 publication | PASS | Immutable R2 objects, full read-back; transition from sequence 22 |
 | Sequence 24 publication | PASS | Immutable R2 objects, full read-back; direct transition from operator sequence 21 |
+| Sequence 25 publication | PASS | Immutable R2 objects, full read-back; fresh-install transition from sequence 0 |
 | Live sequence 23 routes | PASS | All five artifacts HTTP 200, exact size/SHA-256; `candidate-0.3.23/live-route-readback.json` |
 | Live sequence 24 route | PASS | Manifest HTTP 200; installer HTTP 200, exact size/SHA-256 |
 | Relay network token | PASS | `/api/relay/download/v17` full GET, 34,289,393 bytes, SHA-256 `d8bf25dcb446d779bd5461419ea7562044e280ac1d16592a71a52f156f6359cf` |
-| Railway | PASS | Deployment online; `RELAY_COMPATIBILITY_SEQUENCE=24` |
+| Railway | PASS | Deployment online; active sequence 25; mapping `0 -> 25`, `21 -> 24`, `22 -> 23`; live manifest HTTP 200 |
 
 The sequence-24 publisher was re-run after the R2 `HEAD` fix. All seven existing immutable objects
 were accepted and full GET/hash verification passed; no object was overwritten.
@@ -32,8 +33,8 @@ were accepted and full GET/hash verification passed; no object was overwritten.
 
 - Exact installer on clean VM has not passed signed CFT activation, first-run engine behavior,
   packaged Relay lifecycle, or proxy failure/recovery. Prior cache test used a synthetic fixture.
-- Sequence 24 is scoped to active sequence 21. Fresh sequence-0 installations require a separately
-  selected transition manifest; this path is not yet exercised.
+- Sequence 25 now covers fresh sequence-0 selection. The live route is verified, but exact installer
+  activation remains unexercised.
 - The publisher now tolerates R2 `HEAD` responses that report zero content length, relying on the
   required full GET/hash verification; regression test passes (14/14).
 - Current disposable VM has a measured UTC clock-drift failure; host free RAM was about 1 GiB,
