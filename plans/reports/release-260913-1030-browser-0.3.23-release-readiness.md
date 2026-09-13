@@ -26,6 +26,11 @@ was not changed.
 | Relay network token | PASS | `/api/relay/download/v17` full GET, 34,289,393 bytes, SHA-256 `d8bf25dcb446d779bd5461419ea7562044e280ac1d16592a71a52f156f6359cf` |
 | Railway | PASS | Deployment online; active sequence 25; mapping `0 -> 25`, `21 -> 24`, `22 -> 23`; live manifest HTTP 200 |
 
+Post-publication verification: Railway deployment `a4bbb73a-12c7-4a25-9c85-24bb4e505f83` is
+`SUCCESS` on MKTTool commit `1fefe2c`; `/api/healthz` is HTTP 200 and the authenticated manifest
+route returns sequence 25 with transition `0 -> 25`. The current host has about 2.6 GiB free RAM and
+no `VBoxManage` executable, so no clean-VM run was started.
+
 The sequence-24 publisher was re-run after the R2 `HEAD` fix. All seven existing immutable objects
 were accepted and full GET/hash verification passed; no object was overwritten.
 
