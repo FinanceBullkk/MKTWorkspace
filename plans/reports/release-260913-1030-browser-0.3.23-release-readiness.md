@@ -32,6 +32,8 @@ were accepted and full GET/hash verification passed; no object was overwritten.
 
 - Exact installer on clean VM has not passed signed CFT activation, first-run engine behavior,
   packaged Relay lifecycle, or proxy failure/recovery. Prior cache test used a synthetic fixture.
+- Sequence 24 is scoped to active sequence 21. Fresh sequence-0 installations require a separately
+  selected transition manifest; this path is not yet exercised.
 - The publisher now tolerates R2 `HEAD` responses that report zero content length, relying on the
   required full GET/hash verification; regression test passes (14/14).
 - Current disposable VM has a measured UTC clock-drift failure; host free RAM was about 1 GiB,
