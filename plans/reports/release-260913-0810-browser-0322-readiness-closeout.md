@@ -18,6 +18,10 @@ Date: 2026-09-13
 - A direct headless CFT smoke did not complete: the executable emitted a Windows sandbox access
   error and the wrapper held the session until it was stopped. This is OPEN evidence, not a
   first-run PASS.
+- A fresh direct smoke on 2026-09-13 using the pinned CFT executable then reached DevTools in
+  3.7 seconds and reported `Chrome/152.0.7977.64` on loopback. This closes only the standalone
+  CFT process-start check; it does not prove Browser installer provisioning, proxy recovery or
+  browser-page egress.
 
 ## Publication result
 
@@ -50,9 +54,8 @@ to the authenticated compatibility channel but intentionally not promoted.
 
 - Complete real CFT first-run, proxy failure/recovery, unfamiliar-operator, second-PC and seven-day
   canary evidence. Same-host VM evidence does not close independent-hardware gates.
-- The direct CFT smoke on this host still hangs with a Windows sandbox access error; the exact VM
-  preflight also has a reproducible clock-drift failure. Use a stable second test machine or resolve
-  the VM environment before attempting signed activation again.
+- The exact VM preflight still has a reproducible clock-drift failure. Use a stable second test
+  machine or resolve the VM environment before attempting signed activation again.
 - Authenticode signing, SmartScreen/UAC acceptance and machine-integration remain open. Signed
   compatibility metadata does not sign the Windows installer itself.
 - Rotate any production credentials exposed by the earlier human-readable Railway variable listing;
