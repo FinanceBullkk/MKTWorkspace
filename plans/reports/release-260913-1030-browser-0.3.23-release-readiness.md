@@ -86,8 +86,11 @@ report or the documentation commits.
   activation remains unexercised.
 - The publisher now tolerates R2 `HEAD` responses that report zero content length, relying on the
   required full GET/hash verification; regression test passes (14/14).
-- Current disposable VM has a measured UTC clock-drift failure; host free RAM was about 1.4 GiB,
-  below the safe reserve for a 4 GiB guest. No clock, ticket, Defender, or source gate was weakened.
+- Current disposable VM has a measured UTC clock-drift failure; host free RAM has measured
+  0.76-3.29 GiB during this continuation, below the safe reserve for a 4 GiB guest. No VM was
+  started under that pressure; no clock, ticket, Defender, or source gate was weakened.
+- Both registered self-hosted Windows runners (`mkt-ci-windows`, `mkttool-ci-windows`) are offline;
+  hosted CI is not a substitute for exact installer acceptance or an independent operator machine.
 - Machine-integration gate remains skipped for the fourth consecutive release.
 - Unfamiliar-operator, second physical Windows PC, and seven-day canary remain unobserved.
 - Installer remains unsigned; SmartScreen/UAC acceptance is not closed.
