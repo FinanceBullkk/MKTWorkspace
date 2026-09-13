@@ -21,15 +21,17 @@ Date: 2026-09-13
 
 ## Publication result
 
-The production compatibility manifest is sequence 21 for Browser 0.3.17. A signed sequence-22
-manifest for Browser 0.3.22 was prepared and validated locally against the exact installer,
-`app.asar`, Relay v17 archive, control contract and CFT archive. Publication was correctly refused
-before any write because the immutable R2 object `MKTTool-Compatibility-v17-installer.artifact`
-already exists with different bytes. The same v17 namespace therefore cannot publish a new Browser
-payload while Relay remains v17.
+The signed sequence-22 manifest was validated locally and read back from the immutable R2 object
+`MKTTool-Relay-v17-s22.compatibility.json` byte-for-byte (3,406 bytes,
+SHA-256 `3d120c4fd6b5fd67fc4eaebfb1677fb6df219626e909700ddd482f9c21363e78`). The five sequence-22
+artifact objects and revocations object were also preflighted and uploaded without overwriting the
+older sequence-21 keys.
 
-No compatibility object, installer pointer, or operator tuple was overwritten. Browser 0.3.22
-remains unpublished and unpromoted.
+The namespace fix is committed in MKTTool `9472a77` and deployed to Railway deployment
+`b3afd304-ce71-49b4-b4f2-54e55f6142b8`, with `RELAY_COMPATIBILITY_SEQUENCE=22`. Live checks passed:
+the authenticated manifest route returns sequence 22 / Browser 0.3.22 / Relay 17, and a signed
+artifact authorization returned HTTP 200 with the exact installer length (146,056,615 bytes).
+The unscoped sequence-21 manifest remains readable directly from R2 for rollback.
 
 ## Decisions
 
@@ -44,16 +46,19 @@ remains unpublished and unpromoted.
 
 ## Remaining release blockers
 
-- Resolve the immutable artifact namespace conflict: either release Relay 18 with a new v18
-  namespace, or implement and review candidate/sequence-scoped artifact URLs and storage keys.
-- Complete signed compatibility publication and exact-tuple operator promotion after that change.
 - Complete real CFT first-run, proxy failure/recovery, unfamiliar-operator, second-PC and seven-day
   canary evidence. Same-host VM evidence does not close independent-hardware gates.
+- The direct CFT smoke on this host still hangs with a Windows sandbox access error; the exact VM
+  preflight also has a reproducible clock-drift failure. Use a stable second test machine or resolve
+  the VM environment before attempting signed activation again.
+- Authenticode signing, SmartScreen/UAC acceptance and machine-integration remain open. Signed
+  compatibility metadata does not sign the Windows installer itself.
 - Rotate any production credentials exposed by the earlier human-readable Railway variable listing;
   do not use that command again. The Relay download token itself has already been rotated.
 
-## Unresolved questions
+## Resolved product decisions
 
-- Keep Relay v17 and change artifact namespace, or cut Relay 18 to preserve the current immutable
-  route contract?
-- Should a product uninstall offer an explicit "keep engine for faster reinstall" option?
+- Keep Relay v17 and use sequence-scoped compatibility artifact keys. A Relay 18 cut is not needed
+  for this candidate.
+- Upgrade preserves the engine cache; uninstall removes it and preserves operator data. An explicit
+  keep-engine uninstall option is deferred until a separate product decision.
