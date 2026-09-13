@@ -5,9 +5,9 @@ Date: 2026-09-13
 ## Summary
 
 Candidate `20260913-browser-0.3.23-relay-17-relay-payload-hash-fix-cft` is the cleanest Browser
-candidate so far, but rollout remains **NO-GO**. Packaging, immutable publication, and live route
-read-back pass. Exact engine activation and clean-VM acceptance remain open, so the operator tuple
-was not changed.
+candidate so far, but rollout remains **NO-GO**. Packaging, immutable publication, live route
+read-back, and exact installer lifecycle checks pass. Exact engine activation and full clean-VM
+acceptance remain open, so the operator tuple was not changed.
 
 ## Verified
 
@@ -29,8 +29,9 @@ was not changed.
 
 Post-publication verification: Railway deployment `a4bbb73a-12c7-4a25-9c85-24bb4e505f83` is
 `SUCCESS` on MKTTool commit `1fefe2c`; `/api/healthz` is HTTP 200 and the authenticated manifest
-route returns sequence 25 with transition `0 -> 25`. The current host has about 2.6 GiB free RAM and
-no `VBoxManage` executable, so no clean-VM run was started.
+route returns sequence 25 with transition `0 -> 25`. The earlier claim that VBoxManage was absent
+was incorrect: the executable exists at `C:\Program Files\Oracle\VirtualBox\VBoxManage.exe`.
+The later installer-only runs below supersede the earlier no-VM-run checkpoint.
 
 The sequence-24 publisher was re-run after the R2 `HEAD` fix. All seven existing immutable objects
 were accepted and full GET/hash verification passed; no object was overwritten.
@@ -40,7 +41,41 @@ The first 0.3.23 VM bundle used a Windows PowerShell 5.1 process-wrapper defect 
 process handle before `WaitForExit`; the corrected bundle hash is
 `d9b88489494523045fd0eb85c1f7ed41808d7c551888f890c30a29b769a0627d`. Clean, repair, and uninstall
 were then rerun with the corrected wrapper. These receipts are local-only evidence and do not attest
-the candidate or change publication/promotion state.
+the candidate or change publication/promotion state. The bundle declares MKTTool `1fefe2c` (the
+deployed selection fix), whereas the build checkpoint records `cc29725`. Treat that field as declared
+test context, not proof that the installer was rebuilt from `1fefe2c`.
+
+Evidence root: `local-test-artifacts/local-release-20260913/vm-gate/` (ignored, retained locally).
+Each bound receipt has `releaseReady: false`; local raw hashes match its `rawEvidence.sha256`.
+
+| Gate | Completed UTC | Bound receipt SHA-256 |
+|---|---|---|
+| Clean, 9/9 | 05:01:41Z | `0d2d3a4e5e08ff66aa117c24ea3b4d088fdee99002bb8d87a7354dd4dc376cbd` |
+| Repair, 13/13 | 05:20:14Z | `89de8c9f5b740b1cbda2c74599ecfe100963dc8b9873089a2f6160383d484155` |
+| Uninstall, 15/15 | 04:55:27Z | `a57bbc3441edd5af4ebea7d0db3272f7ef2711ee5f9341162eb2acf3ed1c3a3c` |
+
+Earlier clean/repair wrapper failures remain historical failures; a later PASS does not rewrite
+them. A repair retry carrying copied output files was rejected by the no-overwrite guard, not a
+new repair result. The final fresh repair run above completed with exit 0. No real engine was
+provisioned by these installer-only scripts. ACPI shutdown did not finish within the observed
+window; the disposable VM was powered off at 05:26:54Z after collecting receipts. No host user
+application was closed; the repaired guest is retained powered off, not a final fixture-cleanup PASS.
+
+## Download Token And Security Follow-Up
+
+At 05:28Z, a fresh 32-byte random release-download token replaced the production value and Windows
+User-scope `MKTTOOL_RELEASE_TOKEN`. Railway deployment `bb84926c-d26f-494d-9e66-98f6a5c8701c`
+completed successfully on `302e43e4b2da9023a892b63847c73734bcced39a`. An old inherited process
+environment still returned HTTP 401; explicitly refreshing from User scope returned HTTP 200,
+34,289,393 bytes and exact Relay v17 SHA-256. Existing build shells must refresh their environment.
+Health read-back at 05:34:52Z returned ready with database, release metadata and R2 OK.
+
+The earlier diagnostic agent reported that a human-readable Railway variable listing printed
+production secrets into tool output. Rotating the release-download token closes only that token's
+exposure. Other exposed credentials have not been inventoried, rotated or revoked; this security
+follow-up remains OPEN. Do not blindly replace vault/signing keys: preserve encrypted data and
+enrolled-device trust with a coordinated recovery/rotation procedure. No secret values are in this
+report or the documentation commits.
 
 ## Open / Blocking
 
@@ -56,6 +91,7 @@ the candidate or change publication/promotion state.
 - Machine-integration gate remains skipped for the fourth consecutive release.
 - Unfamiliar-operator, second physical Windows PC, and seven-day canary remain unobserved.
 - Installer remains unsigned; SmartScreen/UAC acceptance is not closed.
+- Other credentials exposed by the earlier diagnostic output remain a security closeout blocker.
 - Operator promotion remains **NO-GO**. The approved operator tuple is still Browser `0.3.17` /
   Relay `17` / sequence `21`.
 
