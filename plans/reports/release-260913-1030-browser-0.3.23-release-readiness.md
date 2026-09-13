@@ -64,8 +64,8 @@ application was closed; the repaired guest is retained powered off, not a final 
 ## Download Token And Security Follow-Up
 
 At 05:28Z, a fresh 32-byte random release-download token replaced the production value and Windows
-User-scope `MKTTOOL_RELEASE_TOKEN`. Railway deployment `bb84926c-d26f-494d-9e66-98f6a5c8701c`
-completed successfully on `302e43e4b2da9023a892b63847c73734bcced39a`. An old inherited process
+User-scope `MKTTOOL_RELEASE_TOKEN`. Railway deployment `20102b61-5db3-468b-935b-5143c1dbae43`
+completed successfully on `8a41e263f6f2439883d2f3052bb21c7f0df3509f`. An old inherited process
 environment still returned HTTP 401; explicitly refreshing from User scope returned HTTP 200,
 34,289,393 bytes and exact Relay v17 SHA-256. Existing build shells must refresh their environment.
 Health read-back at 05:34:52Z returned ready with database, release metadata and R2 OK.
