@@ -25,6 +25,7 @@ was not changed.
 | Live sequence 24 route | PASS | Manifest HTTP 200; installer HTTP 200, exact size/SHA-256 |
 | Relay network token | PASS | `/api/relay/download/v17` full GET, 34,289,393 bytes, SHA-256 `d8bf25dcb446d779bd5461419ea7562044e280ac1d16592a71a52f156f6359cf` |
 | Railway | PASS | Deployment online; active sequence 25; mapping `0 -> 25`, `21 -> 24`, `22 -> 23`; live manifest HTTP 200 |
+| Exact clean-VM installer lifecycle | PASS (scope-limited) | Restored snapshot `326357d7-35b1-4c91-92ca-856fb0f35e9b`; clean `9/9`, repair `13/13`, uninstall `15/15`; bound receipts `childExitCode=0` |
 
 Post-publication verification: Railway deployment `a4bbb73a-12c7-4a25-9c85-24bb4e505f83` is
 `SUCCESS` on MKTTool commit `1fefe2c`; `/api/healthz` is HTTP 200 and the authenticated manifest
@@ -34,10 +35,18 @@ no `VBoxManage` executable, so no clean-VM run was started.
 The sequence-24 publisher was re-run after the R2 `HEAD` fix. All seven existing immutable objects
 were accepted and full GET/hash verification passed; no object was overwritten.
 
+The first 0.3.23 VM bundle used a Windows PowerShell 5.1 process-wrapper defect that recorded
+`childExitCode: null` even when the child matrix passed. The wrapper was corrected by retaining the
+process handle before `WaitForExit`; the corrected bundle hash is
+`d9b88489494523045fd0eb85c1f7ed41808d7c551888f890c30a29b769a0627d`. Clean, repair, and uninstall
+were then rerun with the corrected wrapper. These receipts are local-only evidence and do not attest
+the candidate or change publication/promotion state.
+
 ## Open / Blocking
 
 - Exact installer on clean VM has not passed signed CFT activation, first-run engine behavior,
-  packaged Relay lifecycle, or proxy failure/recovery. Prior cache test used a synthetic fixture.
+  packaged Relay lifecycle, or proxy failure/recovery. Lifecycle install/repair/uninstall now pass;
+  prior cache test remains a synthetic fixture.
 - Sequence 25 now covers fresh sequence-0 selection. The live route is verified, but exact installer
   activation remains unexercised.
 - The publisher now tolerates R2 `HEAD` responses that report zero content length, relying on the
