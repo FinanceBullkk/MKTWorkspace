@@ -13,8 +13,8 @@ acceptance remain open, so the operator tuple was not changed.
 
 | Gate | Result | Evidence |
 |---|---|---|
-| Source tuple | PASS | Browser `b0b5c8f`; MKTTool `cc29725`; Relay 17 |
-| Frozen-source seven-command quality | **OPEN** | No retained 0.3.23 quality receipt; targeted contract tests pass |
+| Source tuple | PASS | Browser `b0b5c8f57b3add2c45bf0b6dbbde7ad9d4a2aa65`; MKTTool `1fefe2cbc8babb5df52ff5971c941a1c144eefd9`; Relay 17 |
+| Frozen-source seven-command quality | PASS | Exact candidate commits; receipt `quality-frozen-b0b5c8f-1fefe2c-r2/quality-receipt.json`, SHA-256 `d98053974e7266527f5db87fe68e81100d3c3d308c203fc4f985e9904eb6f53c` |
 | Build A/B equivalence | PASS | 129 normalized files; `app.asar` byte-identical, 51,770,195 bytes |
 | Exact installer | PASS | 146,056,721 bytes; SHA-256 `a0adfcc0727bd2241d32cad426e06931f64836d1e1f44786f0eb9a46504ba549` |
 | CFT archive | PASS | 202,713,690 bytes; SHA-256 `b0db25dea445822429d8ebd36d53344cadcd63127308759456964029bbe18004` |
@@ -41,9 +41,9 @@ The first 0.3.23 VM bundle used a Windows PowerShell 5.1 process-wrapper defect 
 process handle before `WaitForExit`; the corrected bundle hash is
 `d9b88489494523045fd0eb85c1f7ed41808d7c551888f890c30a29b769a0627d`. Clean, repair, and uninstall
 were then rerun with the corrected wrapper. These receipts are local-only evidence and do not attest
-the candidate or change publication/promotion state. The bundle declares MKTTool `1fefe2c` (the
-deployed selection fix), whereas the build checkpoint records `cc29725`. Treat that field as declared
-test context, not proof that the installer was rebuilt from `1fefe2c`.
+the candidate or change publication/promotion state. The retained candidate descriptor and the exact
+frozen-source quality receipt both bind Browser `b0b5c8f` and MKTTool `1fefe2c`; later Browser
+`50a4c6c` and MKTTool `8a41e26` changes are documentation-only.
 
 Evidence root: `local-test-artifacts/local-release-20260913/vm-gate/` (ignored, retained locally).
 Each bound receipt has `releaseReady: false`; local raw hashes match its `rawEvidence.sha256`.
@@ -86,7 +86,7 @@ report or the documentation commits.
   activation remains unexercised.
 - The publisher now tolerates R2 `HEAD` responses that report zero content length, relying on the
   required full GET/hash verification; regression test passes (14/14).
-- Current disposable VM has a measured UTC clock-drift failure; host free RAM was about 1 GiB,
+- Current disposable VM has a measured UTC clock-drift failure; host free RAM was about 1.4 GiB,
   below the safe reserve for a 4 GiB guest. No clock, ticket, Defender, or source gate was weakened.
 - Machine-integration gate remains skipped for the fourth consecutive release.
 - Unfamiliar-operator, second physical Windows PC, and seven-day canary remain unobserved.
