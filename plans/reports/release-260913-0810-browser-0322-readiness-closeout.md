@@ -7,6 +7,9 @@ Date: 2026-09-13
 - Rotated the Relay download token and synchronized Railway production with the Windows User
   scope. After redeploy, authenticated `HEAD /api/relay/download/v17` returned HTTP 200 and
   34,289,393 bytes.
+- A full authenticated GET was read back to `D:\mkt-release-evidence\relay-v17-network-readback-260913.zip`;
+  it measured 34,289,393 bytes and matched Relay v17 SHA-256
+  `d8bf25dcb446d779bd5461419ea7562044e280ac1d16592a71a52f156f6359cf`.
 - Ran `fetch-pinned-relay.cjs` without `MKTTOOL_RELAY_ARCHIVE`; Relay v17 was fetched over HTTPS
   and passed the checked-in size and SHA-256 pin.
 - The CFT archive is present at the pinned 202,713,690 bytes and SHA-256
