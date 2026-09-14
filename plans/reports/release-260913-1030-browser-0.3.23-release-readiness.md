@@ -531,3 +531,92 @@ Browser `0.3.17` / Relay `17` / sequence `21`.
 - Add a delete-profile tool to the adapter so the gate cleans up after itself, or keep manual removal?
 - Re-run this gate on the second physical machine when it exists, to convert a host-acceptance
   receipt into independent-machine evidence?
+
+## Two more gates closed, and a cleanup defect the first one exposed - 14 September 2026
+
+### Machine-integration gate: PASS, no longer skipped
+
+Skipped for four consecutive releases because it is guarded by
+`MKT_BROWSER_RUN_WINDOWS_MACHINE_INTEGRATION=1`, not because it could not run. Run on this host via
+`yarn workspace @mktbrowser/desktop test:packaging:windows-machine`:
+
+```
+✔ standard-user conflict inspection and owned shortcut repair stay non-destructive
+✔ rejects firewall rules owned by another Windows user without mutation
+✔ explicit machine integration gate inspects live Windows process, listener, and startup state
+✔ owned Relay cleanup stops only its exact executable and preserves local state
+pass 4  fail 0  skipped 0
+```
+
+Confirmed twice, the second time after the cleanup fix below.
+
+### The defect it exposed
+
+The first attempt failed its live-machine precondition: *"A different MKTTool Relay installation is
+running."* The culprit was the proxied-launch gate's own run an hour earlier. The app starts a Relay
+companion, and installed-root cleanup stopped only the browser it spawned, orphaning the companion
+at `%LOCALAPPDATA%\MKTTool-Relay\MKTTool-Relay.exe`. Left alone it silently blocks the next gate.
+
+Fixed by recording the companion PIDs that predate the run and stopping only those that appear
+during it - ownership by identity, never by name, so an operator's own companion is untouched.
+
+Verified end-to-end by `scripts/verify-relay-companion-cleanup.ts`, which starts the installed
+browser the way the gate does and runs the same cleanup, **without creating a profile**, so it is
+repeatable:
+
+```
+Relay companions before: none
+Relay companion started by this run: 12388
+Stopped: 12388. Remaining: none
+PASS: cleanup stopped exactly the companion this run caused.
+```
+
+MKTTool `61496a4`; guest bundle rebuilt to SHA-256
+`9e359eb10a53ccde29953629166689329aba1b2b7aeb070fe30d890dafd53850`. The passing proxied-launch run
+recorded earlier predates this fix; its own leftover companion was stopped by hand. The full gate
+has not been re-run end to end since, because each run adds a profile it cannot delete - the cleanup
+path itself is what was verified instead.
+
+### Security closeout, step 1 of 6: done
+
+The rotation order in the credential-exposure inventory opens with "preserve a current production
+backup and record a rollback owner". Both halves now exist:
+
+| Step | Result |
+|---|---|
+| Administrator copy pulled from production | `data/backups/mkttool-prod-20260914-103246.sql`, 87 KB, 184 rows across 16 tables |
+| Restore verified into a disposable target | `mismatches: []`, `cleanup: PASS`, exit 0 - column-level hashed comparison, source against restored copy |
+
+Receipt: `local-test-artifacts/local-release-20260914/proxy-gate/restore-verify-receipt.json`. The
+dump carries encrypted credentials readable only with the current `VAULT_KEY_SERVER` **and**
+`VAULT_KEY_OPERATOR`; it must not be stored beside `.env`.
+
+Steps 2-6 need provider consoles - Cloudflare, Railway/Postgres, Google Cloud, Meta - which this
+machine holds API keys for but no console access to. They stay with the owner.
+
+### Not done, and why
+
+| Item | Why |
+|---|---|
+| Deleting the gate's leftover profile | The product deletes profiles through a typed confirmation and a two-phase pending marker. `better-sqlite3` will not load outside Electron here, and hand-editing a production SQLite file to route around a deliberate confirmation is not an improvement. One dialog in MKT Browser removes it |
+| Rotating the remaining exposed credentials | Needs provider consoles |
+| Independent second machine, unfamiliar operator, seven-day canary, installer signing | Need hardware, a person, elapsed time, and a certificate |
+
+### Gate status after this session
+
+| Gate | Before today | Now |
+|---|---|---|
+| Packaged Relay lifecycle | open | **PASS** (exact shipped archive) |
+| Proxy failure/recovery | open | **PASS** (host-acceptance, real engine, real containment) |
+| Machine-integration | skipped x4 | **PASS** |
+| Production backup + restore rollback point | open | **PASS** |
+| Independent machine / unfamiliar operator / canary / signing / credential rotation | open | open |
+
+Operator promotion remains **NO-GO** on the last row only. Approved tuple unchanged: Browser
+`0.3.17` / Relay `17` / sequence `21`.
+
+### Unresolved questions
+
+- Who runs the provider-side rotations, and in which maintenance window?
+- Should `test:packaging:windows-machine` join the standard local release gate now that it passes,
+  so it stops being skipped by default?
