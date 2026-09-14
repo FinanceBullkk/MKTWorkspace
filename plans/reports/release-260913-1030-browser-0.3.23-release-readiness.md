@@ -664,3 +664,99 @@ local failure in this tree as a product defect.
 
 - Run a full eight-step quality pass against a frozen-source sibling to produce the first receipt
   with no skipped gate, or wait until the next candidate is cut?
+
+## End-to-end pass, and two gates that had no definition - 14 September 2026
+
+### First complete eight-step quality run: all green, nothing skipped
+
+Run under the pinned Node 22 with the pinned Yarn 4.5.0, after repairing the incomplete dev install:
+
+```
+verify:node               exit=0    0s
+audit:production          exit=0    2s     No audit suggestions
+test:installer            exit=0   59s
+test:machine-integration  exit=0    9s     4 pass, 0 skipped
+test:critical-coverage    exit=0   12s     91.57% statements
+typecheck                 exit=0   13s
+lint                      exit=0   24s
+build                     exit=0  141s
+```
+
+This is the first quality pass in this report with **no skipped gate in it**.
+
+Alongside it, MKTTool's full suite: **236 files, 2213 tests, all passing**, plus `lint` clean. The
+previously failing `package-windows-quality-gates.test.cjs` now passes `5/5` - it was failing on a
+missing `@electron/rebuild`, an install gap, not a defect.
+
+### No hidden skips remain
+
+Every remaining `skip` in either repository is a `process.platform !== "win32"` guard, which does not
+skip on this host. MKTTool even enforces this with a meta-test that rejects `skipIf` used for
+anything other than a genuine platform guard. The one opt-in skip, machine-integration, is now a
+required release step.
+
+### The seven-day canary had never been defined
+
+It has been cited as a blocking gate for weeks, and a search of both repositories found no
+definition anywhere: no pass criteria, no recording method, no statement of what it measures. A gate
+nobody can finish is not a gate. Now it exists:
+
+- `docs/seven-day-canary.md` - what it measures (drift that only appears over time: an engine
+  swapped underneath, a containment rule lost to a Windows update, processes leaking per launch, a
+  disk filling), the conditions, and the pass rule.
+- `scripts/canary-daily-check.cjs` - read-only daily measurement writing one JSON line: installed
+  version, engine and version, containment rule verified against the exact binary path, live process
+  counts, profile count, free RAM and disk. `--summary` reads the log back.
+- `scripts/canary-daily-check.test.cjs` - 3 tests, and the checker is now covered by `test:installer`
+  (20 tests, 0 skipped).
+
+Pass rule, deliberately strict: **seven distinct calendar days, every one clean**. Seven checks in
+one day is one day of evidence. One finding anywhere fails the window and it restarts, because what
+is being proven is continuity - accepting a broken-then-resumed chain would make the gate decoration.
+
+**Day 1 recorded on this host**: clean, Browser `0.3.23`, engine `cloakbrowser 151.0.7922.108.6`.
+Six more days of real daily use to go. The log is gitignored; it goes to `plans/reports/` at handover.
+
+### The unfamiliar-operator gate had no procedure either
+
+`docs/unfamiliar-operator-acceptance.md` is now the script to hand someone who has never used the
+product: hash the installer, install, first run, create a profile, attach the proxy, launch, compare
+the exit IP against an ordinary browser on the same machine, close, quit, uninstall. Each step is
+recorded PASS / FAIL / **STUCK**, where STUCK means the product failed to explain itself - which is
+the finding, not the tester's fault. One FAIL or STUCK fails the gate; there is no partial credit.
+
+It deliberately records the operator's honest reaction to the unsigned-installer SmartScreen warning
+rather than coaching them past it.
+
+### Installer signing is externally blocked, confirmed
+
+No code-signing certificate exists on this machine: nothing in `CurrentUser\My` or `LocalMachine\My`
+with a Code Signing EKU, no `.pfx`/`.p12` anywhere under the workspace or the product data, and no
+`CSC_*` signing variables. Signing needs a certificate the owner must obtain.
+
+### What remains, and who can do it
+
+| Gate | Needs |
+|---|---|
+| Independent second machine | Hardware |
+| Unfamiliar-operator walkthrough | A person - the procedure is written |
+| Seven-day canary | Six more days - day 1 is recorded and clean |
+| Installer signing | A certificate |
+| Remaining credential rotation | Provider consoles (Cloudflare, Railway, Google, Meta) |
+
+Nothing on that list is blocked on engineering work any more. Every item that could be closed by
+code, configuration or measurement has been closed.
+
+### Not done deliberately: cutting 0.3.24
+
+Today's fixes are in source and not in any candidate. Cutting one now would consume an immutable
+publication sequence for a candidate that still cannot be promoted, since all five remaining gates
+are external. The quality chain is green and the gates are cheaper to run, so the candidate can be
+cut whenever the owner is ready - it is not a prerequisite for anything currently outstanding.
+
+### Unresolved questions
+
+- Start the canary on the machine that will be the independent second PC instead, so one seven-day
+  window serves both gates?
+- The gate profile from the proxied-launch run is still in the installed root; removing it mid-canary
+  changes the profile count the log records. Remove it now and restart day 1, or leave it and note it?
