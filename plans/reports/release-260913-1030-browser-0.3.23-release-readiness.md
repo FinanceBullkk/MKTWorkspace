@@ -1326,7 +1326,12 @@ problem than one that can retarget where a person types their credentials. The c
 argument, so nothing in the page can steer it.
 
 `operator-owned-licence-key-contract.test.ts` pins the empty shipped default, the literal URL, the
-unsteerable channel, and the copy. Local `89/89` on the licence suite, typecheck `0`, eslint clean.
+unsteerable channel, and the copy. Local `89/89` on the licence suite, and the full local quality
+runner re-run on the changed tree under the pinned toolchain (Node `22.23.2`, Yarn `4.5.0`):
+`verify:node`, `audit:production`, `test:installer`, `test:machine-integration`,
+`test:critical-coverage`, `typecheck`, `lint`, `build` — all eight exit `0`, receipt `completed`,
+sources unchanged across the run. The receipt still reads `acceptance: OPEN` and
+`releaseReady: false`, which is what it is designed to say: commands passing is not a release.
 It joins the required CI gate beside the one-seat contract - and both now run locally too, closing
 a smaller gap found on the way: the one-seat contract had been running only in optional CI, on a
 repo whose authoritative gate is local.
