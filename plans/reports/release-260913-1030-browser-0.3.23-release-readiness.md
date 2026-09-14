@@ -310,3 +310,77 @@ run produced no verdict and is not evidence of anything.
   active. If the gate must run on CFT in the VM, is it still testing what the team will run?
 - Fix the two operator messages (empty seat pool, and containment failure reported as a dead proxy)
   before or after the independent-machine acceptance?
+
+## The proxied-launch gate is structurally unreachable as designed - 14 September 2026
+
+Extending disposable WebRTC provisioning to the cached engine exposed a larger problem: the gate
+cannot pass on any machine where MKT Browser is installed, which is every machine where it could
+run. Verified on this host:
+
+```
+'MKT Browser WebRTC UDP Block (Chrome for Testing)' -> count=1
+    ...\MKTTool\MKTBrowser\chromium\cft\runtime\chrome.exe
+'MKT Browser WebRTC UDP Block (CloakBrowser)'       -> count=1
+    ...\MKTTool\MKTBrowser\chromium\cloakbrowser\runtime\chrome.exe
+```
+
+The installer creates one rule per engine, naming the installed binary. Two independent checks then
+close the door on a disposable root:
+
+1. `assertDisposableVmFirewallHost` refuses to provision when a rule with that display name already
+   exists - it must never replace an installer rule. After install, one always exists.
+2. Even without that guard, the desktop requires **exactly one** rule with the engine's display
+   name. Adding a second for the staged copy would fail its `rule-count` check.
+
+So a gate that stages the engine into a temp root can never satisfy containment, and containment is
+mandatory for any proxied launch. This explains why `--disposable-vm-firewall` appears in the source
+and in no bundle anywhere: the path has never been executed.
+
+### Proposed fix - run the gate against the installed root inside a disposable guest
+
+Disposable-root isolation exists to protect a machine that holds real operator data. A restored
+clean guest holds none, so the isolation buys nothing there and costs the only configuration in
+which containment can be satisfied. On a clean guest the gate should drive the installed product at
+its own root, where the installer's own rule legitimately covers the engine being launched - which
+is also the path an operator actually runs.
+
+This needs a guest-only mode (no `--user-data-dir` override, no engine copy, no settings rewrite,
+its own cleanup), hard-gated to a positively identified VirtualBox guest so it can never touch a
+real operator machine. Not written: it manipulates a real product root and cannot be exercised until
+the VM can run, and shipping unexercised code on that path is worse than shipping none.
+
+### VM run blocked on memory
+
+Host free RAM measured 4.10 GiB. The stable guest `mkt-phase5-nvme-20260908`
+(`nvme-stable-clean-20260908`, a clone of `326357d7` with sleep disabled and timesync fixed) is
+configured for 4 GiB, and `mkt-phase5-clean` for 6 GiB. Starting either leaves no headroom, and the
+snapshot list already records what that produces - `single-entry-activation-stall-20260909`,
+`r2-clean-bootstrap-stall-20260908`. No VM was started. No user application was closed.
+
+### Ready for the guest when it can run
+
+`local-test-artifacts/local-release-20260914/proxy-gate/proxy-gate-smoke.cjs` - the gate bundled to
+a single 135,964-byte CommonJS file (Prisma left external; the guest runs `--proxy-file`). Validated
+on this host: it reaches the same containment refusal as the repo script, so the bundle is sound.
+
+### Fixed and verified this session
+
+| Change | Verification |
+|---|---|
+| Relay no longer asserts a wrong cause on `ENGINE_UNAVAILABLE` / `PROXY_REJECTED` | relay suite `763/763`; the new wording was observed in a real failing run |
+| Gate declares the engine its cached runtime holds | `80/80` scripts suite; engine reported `cloakbrowser ... status: ready` |
+| Gate carries the licence key into disposable settings the way a real install does | seat acquired; launch advanced past `ENGINE_UNAVAILABLE` |
+| WebRTC provisioning generalised from CFT-only to per-engine | new tests for the CloakBrowser rule identity and cross-engine refusal |
+| Probe and launch failures carry their detail instead of discarding it | this is what made every step above diagnosable |
+
+`npm run typecheck` exits 0 across all of them.
+
+### Unresolved questions
+
+- Approve the guest-only installed-root mode for the proxied-launch gate, or keep the gate
+  unreachable and accept proxy failure/recovery as permanently unverified?
+- Which guest: the 4 GiB `mkt-phase5-nvme` (timesync fixed) or the 6 GiB `mkt-phase5-clean`
+  (Defender-verified snapshot `326357d7`)? The first fits this host's memory; the second carries the
+  Defender evidence.
+- The guest snapshot has no Node and no engine. Ship this host's provisioned CloakBrowser cache
+  (516 MB) into the guest, or resolve guest-side engine activation first?
