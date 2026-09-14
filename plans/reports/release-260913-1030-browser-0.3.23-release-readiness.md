@@ -803,3 +803,92 @@ lines that prove nothing, which is stated in `docs/seven-day-canary.md`.
 
 MKTWorkspace, MKTBrowser and MKTTool are all clean and level with origin. The two untracked
 screenshots under `plans/reports/` predate this session and were left alone.
+
+## Four more gaps closed, including two the machine was hiding - 14 September 2026
+
+### The leftover profile is gone, through the product's own path
+
+Earlier this session it was reported as needing a manual dialog, on the grounds that
+`better-sqlite3` would not load outside Electron. That was true of a broken dev install, not of the
+repository: after `yarn install` under the pinned Node 22 it loads in both workspaces that own it.
+
+`apps/desktop/scripts/remove-gate-profile.ts` drives `deleteBrowserProfile` - the same function the
+app's own dialog calls. Same typed confirmation, same refusal while the profile is running, same
+two-phase `deletePermanently`. No SQLite file was hand-edited. It refuses unless the product is fully
+closed, and it only matches names of the form `P0 proxy smoke <timestamp>`; a preview mode prints
+what it would remove before `--apply` does anything.
+
+```
+Sản phẩm đang có 20 profile; 1 do gate tạo.
+  08e627fc-82c1-4b56-bb1d-9ca4c8fe3354  P0 proxy smoke 1789354743517
+Đã xoá 08e627fc-82c1-4b56-bb1d-9ca4c8fe3354.
+Còn lại 19 profile. Không profile nào khác bị đụng.
+```
+
+19 was the count before the gate ran. Nothing else was touched.
+
+### A product defect the deletion exposed
+
+Deleting through the real path left a `.deleting` directory behind in `profilesRoot`. Reading
+`permanent-profile-deletion.ts`: the quarantine root is created on every deletion and never removed.
+Empty and harmless to the product - but it sits inside the folder that holds profiles, so every
+directory listing of that folder reports one profile more than the product has. This session's own
+canary read 21 because of it.
+
+Fixed: the quarantine root is removed once the deletion completes, best-effort, so a concurrent
+deletion holding it cannot fail a deletion that already succeeded. Test added
+(`leaves no quarantine directory behind inside the profile root`, including that the directory is
+still reusable for a second deletion). Profile deletion suite `5/5`. The stale one on this host was
+removed by hand, empty.
+
+### And an orphan the count had been hiding since 25 August
+
+With `.deleting` explained, one discrepancy remained: 20 directories, 19 registered profiles.
+
+`apps/desktop/scripts/audit-profile-directories.ts` names it:
+
+```
+Sản phẩm biết 19 profile; trên đĩa có 20 thư mục.
+  MỒ CÔI   6e964c46-fc73-4351-b5b9-859543612c69
+```
+
+Created 25 August 2026, predating everything in this session. It holds browsing data - cookies,
+sessions - for a profile the product no longer knows about. **Not deleted**: that is the owner's
+data, and the cause is unknown. The audit is read-only and says so.
+
+The classification rule lives in `src/main/profile-directory-audit.ts` as a pure function, tested
+`3/3` and now part of `test:mkb03`, so it runs in the gate. It reports the opposite failure too - a
+registered profile whose data is gone, which would break on open.
+
+### Installer signing was blocked twice over
+
+The gate was recorded as blocked on "no certificate". True, but incomplete: `electron-builder.yml`
+pins `signAndEditExecutable: false`, so **buying a certificate would have changed nothing** - the
+build would keep producing an unsigned installer and SmartScreen would keep warning.
+
+The pin exists for a real reason, documented in the config: electron-builder's bundled winCodeSign
+archive wants Windows symlink privileges even when no certificate is configured, which breaks an
+ordinary non-admin build. So the flag now follows the credentials instead of being a constant.
+`windowsSigningArgs` returns the enabling argument only when `WIN_CSC_LINK` or `CSC_LINK` is set,
+and an empty or whitespace value counts as unset. Tested `6/6` in the packaging gate.
+
+Unsigned remains the default, exactly as before. What changed is that the day a certificate arrives,
+the same command signs - no config edit under time pressure.
+
+### Status
+
+| Gate | State |
+|---|---|
+| Leftover gate profile | **Done** - removed through the product's own deletion path |
+| Quarantine directory leak | **Fixed** and covered by a test |
+| Orphan profile directory | **Found and reported**; deliberately not deleted |
+| Installer signing wiring | **Ready** - needs only the certificate |
+| Independent second machine | Hardware |
+| Unfamiliar-operator walkthrough | A person; procedure written |
+| Seven-day canary | Day 1 clean, recorded daily by a scheduled task |
+| Remaining credential rotation | Provider consoles |
+
+### Unresolved questions
+
+- The orphan directory `6e964c46-...` - keep it, archive it, or delete it? Its contents are unknown
+  to the product and it has been there since 25 August.
