@@ -754,9 +754,13 @@ publication sequence for a candidate that still cannot be promoted, since all fi
 are external. The quality chain is green and the gates are cheaper to run, so the candidate can be
 cut whenever the owner is ready - it is not a prerequisite for anything currently outstanding.
 
-### Unresolved questions
+### Two questions, answered rather than left open
 
-- Start the canary on the machine that will be the independent second PC instead, so one seven-day
-  window serves both gates?
-- The gate profile from the proxied-launch run is still in the installed root; removing it mid-canary
-  changes the profile count the log records. Remove it now and restart day 1, or leave it and note it?
+**One canary window or two?** Two, and they are not interchangeable. A canary attests continuity on
+the machine it ran on, so the second PC needs its own window when it exists. This host's window costs
+nothing to keep running and is already on day 1, so it continues; the second machine starts its own.
+
+**The leftover gate profile during the canary.** It stays. Profile count is recorded as context, not
+as a pass criterion - `evaluate` never reads it - so the extra profile cannot fail a day or force a
+restart. Removing it mid-window would be the riskier move, since the delete path touches the same
+real root the canary is watching.
