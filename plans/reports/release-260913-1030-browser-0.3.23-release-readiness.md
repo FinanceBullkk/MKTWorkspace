@@ -764,3 +764,42 @@ nothing to keep running and is already on day 1, so it continues; the second mac
 as a pass criterion - `evaluate` never reads it - so the extra profile cannot fail a day or force a
 restart. Removing it mid-window would be the riskier move, since the delete path touches the same
 real root the canary is watching.
+
+## Canary running unattended, and one number corrected - 14 September 2026
+
+### A field that would have lied in every log line
+
+The canary recorded a `profiles` count taken from directories on disk. On this host that reads 21,
+while the product itself reported 19 before the gate run that added one. Whether the extra directory
+is an orphan or simply a kind the adapter does not list, a log field named `profiles` that the
+product contradicts is worse than no field. Renamed to `profileDirectories` with the discrepancy
+written into the code, and it remains context for reading drift - never a pass criterion.
+
+Only one profile was created today, at 09:59:04, which is the proxied-launch gate's. The next newest
+predates it by two days. The gate added exactly one, as reported.
+
+Day 1 was re-recorded after the rename so every line in the window has the same shape. Still day 1,
+still clean, no evidence lost.
+
+### Six remaining days no longer depend on remembering
+
+Registered a daily Windows task on this host:
+
+```
+TaskName          State
+MKT-canary-daily  Ready      daily 09:00, runs scripts/canary-daily-check.cjs
+```
+
+The script is read-only - it starts nothing, stops nothing, installs nothing. Remove it whenever:
+
+```powershell
+Unregister-ScheduledTask -TaskName MKT-canary-daily -Confirm:$false
+```
+
+The task records; it does not substitute for use. A machine left idle still produces seven clean
+lines that prove nothing, which is stated in `docs/seven-day-canary.md`.
+
+### Repository state
+
+MKTWorkspace, MKTBrowser and MKTTool are all clean and level with origin. The two untracked
+screenshots under `plans/reports/` predate this session and were left alone.
