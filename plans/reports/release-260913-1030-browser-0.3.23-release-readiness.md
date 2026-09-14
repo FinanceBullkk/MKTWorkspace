@@ -384,3 +384,76 @@ on this host: it reaches the same containment refusal as the repo script, so the
   Defender evidence.
 - The guest snapshot has no Node and no engine. Ship this host's provisioned CloakBrowser cache
   (516 MB) into the guest, or resolve guest-side engine activation first?
+
+## Decisions taken and the gate built - 14 September 2026
+
+The owner delegated the three open decisions. Taken:
+
+1. **Build the guest-only installed-root mode.** Without it the proxied-launch gate is permanently
+   unverifiable, and permanent non-verification of the one path that protects an operator's real IP
+   is not an acceptable resting state.
+2. **Guest: `mkt-phase5-nvme-20260908` at `nvme-stable-clean-20260908`** (4 GiB, sleep disabled,
+   timesync `step1s`). The Defender evidence carried by `326357d7` attests malware posture, which is
+   not what this gate measures; measured clock drift is what breaks it, and this guest fixes that.
+   It is also the only guest that could fit this host's memory.
+3. **Ship this host's provisioned CloakBrowser cache into the guest.** Guest-side engine activation
+   is a separate open blocker, and the cached runtime is the real signed binary. This tests the
+   engine an operator runs rather than the compatibility engine.
+
+### What was built and verified
+
+`--installed-root`: drives the installed product at its own data root - no `--user-data-dir`, no
+`LOCALAPPDATA`/`APPDATA` redirection, no engine copy, no settings rewrite. The installer's own
+containment rule then legitimately covers the engine being launched.
+
+Three guards, each exercised against this real (non-guest) machine:
+
+| Guard | Observed |
+|---|---|
+| Throwaway-guest identity, checked before anything is consumed | `The installed-root gate runs only on a positively identified throwaway VirtualBox guest; it creates a profile in the real product root and cannot remove it.` |
+| Option exclusivity with staged-engine flags | `--installed-root ... takes no --cft-runtime, --engine-cache or --disposable-vm-firewall.` |
+| The guest runner refuses the same way | `This gate creates a profile in the real product root and cannot delete it. Disposable VirtualBox guest only.` |
+
+The guard runs before the single-use proxy handoff is read and before any network probe, so a
+machine that must be turned away loses nothing. Cleanup in this mode closes only the browser the run
+started; it never sweeps processes by the installed root and never calls `removeDisposableRoot` on
+it. The ephemeral Relay home moved to its own temp directory so it cannot land in the product root.
+The gate states plainly that it adds a profile it cannot delete and that the guest must be discarded.
+
+`npm run typecheck` exits 0; scripts suite `85/85`; relay suite `763/763`.
+
+### Ready to run
+
+`local-test-artifacts/local-release-20260914/proxy-gate/`
+
+| File | Purpose |
+|---|---|
+| `proxy-gate-smoke.cjs` | The gate bundled for the guest, SHA-256 `c15948bffa61ddd4d8b2e206a56a1976d11c23d01f741a03878d605f382bfec7` |
+| `run-proxy-gate.ps1` | Guest runner: guest identity, bundle hash, installed browser, exactly one provisioned engine, and the containment rule naming that exact binary - all checked before the run; writes `proxy-gate-receipt.json` with `releaseReady: false` |
+
+Guest preconditions: MKT Browser 0.3.23 installed from the exact retained installer, this host's
+CloakBrowser cache placed at the installed engine path, Node present, one live proxy line, and the
+licence key passed as a parameter rather than left in the guest.
+
+### Blocked on host memory, not on any decision
+
+Free RAM measured 3.88 GiB against a 4 GiB guest plus hypervisor overhead. The largest consumers are
+the owner's own applications, which an agent must not close. No VM was started. Lowering the guest
+below 4 GiB was considered and rejected: a Windows 11 guest running the installer, the Electron app
+and a Chromium engine under that ceiling pages heavily, which is the documented cause of
+`single-entry-activation-stall-20260909` and `r2-clean-bootstrap-stall-20260908`.
+
+Roughly 2 GiB of headroom unblocks a single command inside the guest.
+
+### Status
+
+Operator promotion remains **NO-GO**. Approved tuple unchanged: Browser `0.3.17` / Relay `17` /
+sequence `21`. The source fixes in this session land in the next candidate; the frozen 0.3.23
+artifacts and their published hashes are untouched.
+
+### Unresolved questions
+
+- Free ~2 GiB on this host and run the gate, or wait for the second physical machine that also
+  closes the independent-machine gate?
+- The gate leaves an undeletable profile in the guest. Worth adding a delete-profile tool to the
+  adapter so the gate can clean up after itself, or is discarding the snapshot enough?
