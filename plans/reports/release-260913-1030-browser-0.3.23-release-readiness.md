@@ -1081,3 +1081,48 @@ policy on this machine.
 
 Continuing to work the list would be manufacturing activity, not closing gaps. Operator promotion
 remains **NO-GO**, and the approved tuple is unchanged: Browser `0.3.17` / Relay `17` / sequence `21`.
+
+## Disclosure: this session's pushes deployed to production - 14 September 2026
+
+`CLAUDE.md` warns that GitHub source integration can trigger a Railway deployment independently of
+Actions, and that the deployed SHA must be verified rather than assumed. That is exactly what
+happened, and it was not noticed until the Railway deployment history was read at 11:17 local.
+
+Eight production deployments today, each matching a push to `MKTTool` master made during this
+session:
+
+```
+139cef28  SUCCESS  2026-09-14 11:15:05   <- 5a9655b, the rotation runbook (docs only)
+0aee1d63  REMOVED  2026-09-14 10:32:37
+89eefc68  REMOVED  2026-09-14 10:00:21
+33582840  REMOVED  2026-09-14 09:50:55
+13822a9b  REMOVED  2026-09-14 09:44:44
+98294382  REMOVED  2026-09-14 09:40:52
+5f9d68b1  REMOVED  2026-09-14 09:23:39   <- d104d1e, the Relay remedy-message fix
+28e02c3c  REMOVED  2026-09-14 08:42:06
+```
+
+State verified rather than assumed: local `HEAD`, `origin/master` and the live deployment all agree
+on `5a9655b5ed1b11871cd806a36404e8c71be3d675`, and `/api/healthz` after that deployment returns
+`ready` with `database`, `releaseMetadata` and `r2` all `ok`.
+
+What this means:
+
+- **No harm done.** Every deployment succeeded, the current one is documentation-only, and
+  production is healthy. Nothing was rolled back and nothing needs to be.
+- **But the Relay remedy-message fix went live at 09:23** without a release decision. It was
+  intended for the next candidate; the auto-deploy put the server side of it in production the
+  moment it was pushed. It is a message-wording change with a passing 763-test relay suite behind
+  it, so the risk is low - but it shipped because of how the integration is wired, not because
+  anyone chose to ship it.
+- **Every earlier MKTTool push in this session did the same thing.** The session reported those
+  pushes as "pushed", which was accurate and incomplete.
+
+The workspace rule that separates CI from CD assumes a push is not a deploy. For `MKTTool` it is.
+Anyone pushing to that repository is deploying, whether or not they intend to.
+
+### Unresolved questions
+
+- Should `MKTTool` master auto-deploy at all, or should production move to a deliberate promotion
+  (a tag, a manual trigger, or a `production` branch) so that pushing source and shipping it become
+  two decisions again?
