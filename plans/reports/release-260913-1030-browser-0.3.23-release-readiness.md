@@ -457,3 +457,77 @@ artifacts and their published hashes are untouched.
   closes the independent-machine gate?
 - The gate leaves an undeletable profile in the guest. Worth adding a delete-profile tool to the
   adapter so the gate can clean up after itself, or is discarding the snapshot enough?
+
+## Proxied-launch gate PASSED on this host - 14 September 2026
+
+Run on the owner's explicit instruction, against the installed 0.3.23 root on this machine with a
+live Webshare proxy. **Exit code 0.**
+
+```
+Independent proxy probe passed and produced a distinct expected exit IP.
+Driving the installed MKT Browser root; nothing is staged around it.
+Installed root holds 19 profile(s) before this run; the gate adds one it cannot delete.
+Signed launch-profile and close passed on the same disposable profile.
+Signed reopen-profile and close passed on the same disposable profile.
+Closed-port proxy launch was rejected and the profile remained stopped.
+Signed proxy-recovery and close passed on the same disposable profile.
+MKB-00 real-proxy create/reopen/rejection/recovery passed
+```
+
+Every step went through a freshly signed single-use ticket handled by the real Relay code. The
+rejection step is a correlated `PROXY_REJECTED` at `apply-or-verify-proxy` matched to that launch's
+own `jti`, not a generic failure, and the profile stayed stopped. Engine: CloakBrowser
+`151.0.7922.108.6` at the installed path, under the installer's own WebRTC containment rule - the
+engine an operator runs, not the compatibility engine.
+
+### What this does and does not close
+
+| | |
+|---|---|
+| Closes | Proxy failure/recovery on the exact installed 0.3.23, real engine, real containment |
+| Does not close | Independent second machine. This is the build host, so the receipt is host-acceptance |
+| Does not close | Unfamiliar-operator walkthrough, seven-day canary, installer signing, machine-integration |
+
+### The failure that preceded it
+
+The first attempt died with "The disposable MKT Browser process exited before MCP became ready".
+Cause: installed-root mode inherited the parent environment wholesale, including
+`ELECTRON_RUN_AS_NODE` exported by the calling shell, which turns the packaged app into a bare Node
+process that exits at once. Fixed by scrubbing the same variables the disposable path already
+scrubbed while keeping the machine's real `LOCALAPPDATA`/`APPDATA`, which the engine path depends
+on. The passing run above used that fix.
+
+Wording-only changes were made after the passing run - the gate previously called a retained profile
+"disposable" and told an operator on a real machine to "discard this guest". Console text only; no
+behaviour difference. Both are in MKTTool `2c8c9a7`, and the guest bundle was rebuilt to SHA-256
+`18e6aa3b471f900201f72e3880f741130baff1de6dcb7dad8eea4c8145e9299f`.
+
+### Left behind on this machine, needs owner action
+
+The gate created one profile and the adapter has no delete, so it remains:
+
+```
+%LOCALAPPDATA%\MKTTool\MKTBrowser\data\profiles\08e627fc-82c1-4b56-bb1d-9ca4c8fe3354
+```
+
+named `P0 proxy smoke <timestamp>`, created 2026-09-14 09:59:04 local. Remove it in MKT Browser's
+own Delete Profile dialog. The 19 pre-existing profiles were not touched; the gate only added.
+
+### Guards, exercised on this real machine
+
+`--installed-root` alone still refuses on any machine that is not a positively identified throwaway
+VirtualBox guest. Reaching the real root needs `--accept-real-machine` as well, which announces what
+will remain and refuses to start while MKT Browser is already running - a second launch would hand
+over to the running instance, leaving the gate talking to a process it did not configure.
+
+### Status
+
+Operator promotion remains **NO-GO** - on the independent-machine, unfamiliar-operator, canary,
+signing and machine-integration gates, no longer on proxy failure/recovery. Approved tuple unchanged:
+Browser `0.3.17` / Relay `17` / sequence `21`.
+
+### Unresolved questions
+
+- Add a delete-profile tool to the adapter so the gate cleans up after itself, or keep manual removal?
+- Re-run this gate on the second physical machine when it exists, to convert a host-acceptance
+  receipt into independent-machine evidence?
