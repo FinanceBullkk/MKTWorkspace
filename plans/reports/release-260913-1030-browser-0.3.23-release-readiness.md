@@ -1126,3 +1126,54 @@ Anyone pushing to that repository is deploying, whether or not they intend to.
 - Should `MKTTool` master auto-deploy at all, or should production move to a deliberate promotion
   (a tag, a manual trigger, or a `production` branch) so that pushing source and shipping it become
   two decisions again?
+
+## The auto-deploy examined, and a blind spot it led to - 14 September 2026
+
+### What the eight deployments actually shipped
+
+The disclosure above said "no harm done" and left it at that. Checked properly instead:
+
+| Question | Answer |
+|---|---|
+| Does the Next.js server import `relay/`? | **No** - a search of `src/` and `app/` returns nothing |
+| Which directories did the eight deployed commits touch? | `scripts/` (six of them), `relay/` (one), `docs/` (one). **None touched `src/` or `app/`** |
+
+So those eight production deployments shipped **no behavioural change at all**. They rebuilt and
+redeployed identical server behaviour. The Relay remedy-message fix reaches an operator only through
+a future Relay build and publication, not through this deploy. That is a verified answer, not a
+reassurance - and it was luck about file scope, not a control.
+
+### The control that was missing
+
+The warning that a push here deploys production lived in one clause at the end of the workspace
+`AGENTS.md`, far from where pushes happen. `MKTTool/AGENTS.md` said nothing. It now opens with it:
+what the coupling is, the eight deployments that came of not internalising it, and the three
+verification commands to run after any push - `git rev-parse HEAD` against `origin/master`,
+`railway deployment list`, and `/api/healthz`.
+
+This session's next push was verified that way rather than assumed.
+
+### A blind spot in the secret-scan gate, found on the way
+
+Scanning `AGENTS.md` after editing it revealed the gate had never covered it. The roots are
+`plans docs src relay scripts .github` - all directories - so every file at the repository root was
+out of scope: `README.md`, `AGENTS.md`, `package.json`, `.env.example`. A credential pasted into any
+of them would have passed the gate silently.
+
+Fixed by scanning **tracked** repository-root files as well. Tracked is the right boundary: what can
+be committed is what can leak, and `.env` is untracked so it stays out without an exclusion list
+anyone has to remember to maintain.
+
+That immediately produced one finding, which turned out to be a false positive worth fixing rather
+than suppressing: `.env.example` documents its format in Vietnamese as
+`postgresql://user:mật_khẩu@host:...`. The placeholder detector understood `<angle brackets>` and
+`${{ github style }}` but not the words this repository actually writes. A gate that cannot read its
+own examples cries wolf, and a gate that cries wolf is one people learn to ignore - so it now
+recognises placeholder passwords by word, in both languages.
+
+Three tests added: a real credential in a tracked root file **fails** the gate without printing the
+secret; an untracked `.env` at the root does **not** fail it; the Vietnamese placeholder reads as a
+placeholder. Suite `8/8`, lint and typecheck `0`, and the gate now scans 816 files rather than 797.
+
+The test fixtures are assembled from string fragments so this test file never itself contains a
+credential-shaped URL - the convention the existing tests already used.
