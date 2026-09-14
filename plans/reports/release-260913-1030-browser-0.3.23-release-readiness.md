@@ -241,3 +241,72 @@ machine-integration, and the outstanding credential-exposure closeout.
 - Which proxy label should replace `MKB-00 TEST` as the dedicated gate proxy?
 - Should `PRODUCTION_DATABASE_URL` be corrected in `.env` (and any deployed copy) to
   `uselibpqcompat=true&sslmode=require`, or pinned to `verify-full` with the provider CA installed?
+
+## Proxy gate on this host - why it cannot close here - 14 September 2026
+
+The owner supplied ten live Webshare proxies, which removed the vault-credential blocker. All ten
+answered a TCP connect and returned a distinct exit IP through `curl`, and the gate's own
+independent probe passed. The gate then advanced through three previously hidden layers and stopped
+at a fourth that is structural, not a defect.
+
+| Layer reached | Outcome | What it actually was |
+|---|---|---|
+| Proxy reachability | PASS | 10/10 Webshare proxies alive, distinct exit IPs. Confirms the production vault proxies, not the network, are the earlier failure |
+| Engine selection | FIXED in harness | The `--engine-cache` path copied the cache but never declared which engine it held, so the app defaulted to `cft` and hunted a runtime the root did not have |
+| Licensed engine seat | FIXED in harness | The child environment strips `CLOAKBROWSER_*` by design, so the disposable root had an empty seat pool. A real install carries the key in settings; the harness now does the same |
+| WebRTC containment | BLOCKED - by design | `assertWindowsWebRtcFirewallProtection` requires a firewall rule whose program path is exactly the engine binary about to launch |
+
+### The blocking mechanism, verified
+
+A proxied launch is fail-closed on WebRTC containment. `ChromiumBrowserDriver` refuses unless a
+Windows firewall rule named `MKT Browser WebRTC UDP Block (CloakBrowser)` names the exact binary.
+This host has exactly one such rule and it names the installed engine:
+
+```
+C:\Users\anhha\AppData\Local\MKTTool\MKTBrowser\chromium\cloakbrowser\runtime\chrome.exe
+enabled=True direction=out action=block protocol=17(UDP) profiles=all
+```
+
+The gate deliberately runs against a disposable root, so the engine it launches is a copy under a
+temp directory. That copy's path matches no rule, the check fails, and the product answers
+`PROXY_REJECTED`. That refusal is correct: launching a proxied profile without UDP containment would
+leak the operator's real IP through WebRTC.
+
+The harness can provision a rule for its own staged runtime - `provisionDisposableCftFirewall` -
+but that function refuses to run outside a positively identified VirtualBox guest, and only for a
+pinned CFT runtime. Creating a host firewall rule for a temp binary was not attempted.
+
+**Therefore the proxy failure/recovery gate cannot be closed on this build host.** It needs the
+disposable VM (pinned CFT plus `--disposable-vm-firewall`), or a deliberate design change.
+
+### Product findings worth acting on regardless of the gate
+
+1. With no CloakBrowser licence key configured, a proxied launch is refused as `ENGINE_UNAVAILABLE`
+   and the operator is told to "wait for the engine to finish". Nothing is loading; the pool is
+   empty. The same response simultaneously reported `engine.status: "ready"`. An operator in that
+   state waits on nothing.
+2. `PROXY_REJECTED` reaches the operator as "check whether the account proxy is alive" even when the
+   proxy is verified alive and the real cause is missing WebRTC containment. The remedy sends the
+   operator to the wrong place.
+
+Both are message-layer defects, not launch-path defects. Neither is fixed in this continuation.
+
+### Harness changes
+
+`scripts/smoke-test-mkt-browser-correct-proxy.ts` and `scripts/mkt-browser-cft-smoke-runtime.ts`:
+declare the engine the copied cache holds; carry the licence key into the disposable settings the
+way a real install does; surface the probe-failure detail and the launch diagnostic instead of
+discarding them. `npm run typecheck` exits 0; focused contract suite `38/38`.
+
+One change was made and reverted: capturing the engine's stdout to a file. A packaged Electron GUI
+app writes nothing there, and holding the handle across `spawn` hung the run for 30 minutes. That
+run produced no verdict and is not evidence of anything.
+
+### Unresolved questions
+
+- Close the proxy gate inside the VM with pinned CFT, or extend disposable firewall provisioning to
+  a controlled host path?
+- The CFT engine is compatibility-only and currently disabled while the signed CloakBrowser set is
+  active. If the gate must run on CFT in the VM, is it still testing what the team will run?
+- Fix the two operator messages (empty seat pool, and containment failure reported as a dead proxy)
+  before or after the independent-machine acceptance?
