@@ -1177,3 +1177,38 @@ placeholder. Suite `8/8`, lint and typecheck `0`, and the gate now scans 816 fil
 
 The test fixtures are assembled from string fragments so this test file never itself contains a
 credential-shaped URL - the convention the existing tests already used.
+
+## The leak path reviewed, and the last in-reach item closed - 14 September 2026
+
+### Where a gap would actually hurt
+
+The gate list is not the only place a gap can hide. For a product whose entire purpose is that an
+account never egresses from the operator's own IP, the code path worth reading is the leak path. It
+was reviewed rather than assumed.
+
+| Question | Finding |
+|---|---|
+| Can a proxied profile launch bypass the containment check? | No. Both `launch_profile` and `launch_managed_profile` converge on `browserDriver.launch()`, and the WebRTC firewall assertion sits there. One chokepoint |
+| Does the bridge fall back to direct if the upstream dies? | No, and it is tested both ways - `H31` for SOCKS and `H31/http` for HTTP CONNECT |
+| Does the bridge resolve DNS locally, leaking the destination? | No - `H32` asserts the hostname goes upstream, and `H32` again asserts an unresolvable name still reaches the upstream |
+| Is the bridge reachable off-machine? | No - `H33` asserts loopback only |
+| Does anything reach the destination when upstream auth fails? | No - `H34`, both protocols |
+| Can a crafted hostname inject into the upstream CONNECT? | No - `H40` covers CR/LF and the separator allowlist |
+| What if the containment rule disappears mid-session? | The check is at launch, so a running session would not notice. This is now caught daily by the canary, which verifies the rule against the exact engine binary |
+
+No gap found. The area is defended by adversarial tests, not just happy-path ones, and the one
+residual - a rule removed after launch - is the specific thing the canary added today watches for.
+
+### Deleting the orphan is now one guarded command
+
+The remaining manual item was "decide, then delete the right folder in Explorer" - where the risk is
+picking the wrong one. `audit-profile-directories.ts --remove-engine-scaffold` removes **only**
+directories classified `engine-scaffold`. A directory holding `Default` is never a candidate, and
+neither is one whose shape could not be read: not knowing is not the same as nothing being there.
+It refuses to run while the product is open, and it names every directory it skipped and why.
+
+`removableOrphans` is a pure function with its own test asserting that browsing data and unknown
+shapes are excluded. Tests `6/6`, `test:installer` `20/20`, typecheck `0`.
+
+The command was written, not run: deleting under `%LOCALAPPDATA%` is refused by this environment's
+policy. One command for the owner, with the guard doing the remembering.
