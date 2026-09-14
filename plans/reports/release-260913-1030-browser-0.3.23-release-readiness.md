@@ -1341,3 +1341,35 @@ repo whose authoritative gate is local.
 `0.3.23` moves; the approved tuple is untouched at Browser `0.3.17` / Relay `17` / sequence `21`,
 and operator promotion stays **NO-GO**. The five irreducible items are unchanged, except that the
 unfamiliar-operator one is now measuring the right thing.
+
+## The notice an operator gets without asking - 14 September 2026
+
+The owner chose to add the first-screen reminder rather than wait for the acceptance gate to prove
+it was needed. Settings had been the only place that explained the key, and it only speaks to
+someone who already went looking; an operator who never opens it runs the keyless 146 build
+indefinitely, never told a key exists or that it is theirs.
+
+A line under the top bar now says so while no key is set, carrying the registration button and a
+way into Settings. Three deliberate properties, all pinned by the contract test so a later refactor
+cannot quietly drop them:
+
+| Property | Why |
+|---|---|
+| Not a modal, blocks nothing | The keyless build genuinely works; blocking would be a lie |
+| Not dismissible | It ends when a key exists, not when someone clicks it away - a hide button turns it into something clicked past on exactly the first run, when it most needs reading |
+| Settings re-read per section change | Saving a key clears the line on the way out, so it never nags someone who has already acted |
+
+The acceptance script's question changed with it: it used to ask whether the product says anything,
+which it did not. It now asks whether the line is enough to act on - a question about wording, which
+is the part that actually decides whether a new operator gets stuck.
+
+### Gate
+
+Full local quality runner on commit `31b2780`, pinned toolchain: all eight steps exit `0`, receipt
+`completed`, `before == after`. Two earlier attempts are worth recording for what they teach. The
+first re-run failed preflight - the runner demands clean committed sources in both repositories and
+the tree was mid-edit - and its `exit 0` came from the pipeline's `tail`, not the runner: a reminder
+that a zero from a pipe is not a verdict. The 13:45 green belongs to `36602c0` and proves nothing
+about this code, so it was not reused.
+
+Unchanged: approved tuple `0.3.17` / Relay `17` / sequence `21`, operator promotion **NO-GO**.
