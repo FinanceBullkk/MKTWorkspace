@@ -1254,3 +1254,37 @@ Five items remain, each verified irreducible by attempt rather than assumed: a l
 powered off, a person who has never used the product, six calendar days, a certificate that must be
 bought, and four provider consoles. Operator promotion remains **NO-GO**; the approved tuple is
 unchanged at Browser `0.3.17` / Relay `17` / sequence `21`.
+
+## Third review clean, and a hole in this session's own work - 14 September 2026
+
+### Anti-downgrade
+
+The third security-critical path, reviewed after the leak path and seat handling. **No gap.** The
+compatibility manifest is checked in four layers before anything is accepted: below the installer
+floor sequence, at or below the highest sequence ever accepted (replay or downgrade), not newer than
+the active set, and a transition that does not declare the current sequence as a valid origin. On
+top of that, signing time, issue time, manifest expiry and delegation window are all validated, and
+`relay/src/update-state.ts` refuses to proceed - demanding ADMIN repair - when anti-downgrade state
+is missing while identity data exists.
+
+Tested: `rejects a replayed sequence`, `rejects a network-driven downgrade`,
+`confirms missing-state repair and blocks an implicit downgrade`.
+
+Three security-critical paths reviewed today, three clean.
+
+### The canary could have failed silently - fixed
+
+Turning the review on this session's own work found one. The canary runs from a scheduled task with
+nobody watching. A finding printed to stdout and an exit code of 1 reach no one: Task Scheduler's
+"Last Run Result" column is the only trace, and nobody opens it daily. A canary that fails silently
+is not a canary - it is six days of false confidence.
+
+A finding now writes `CANARY-FAILED.txt` beside the log, naming the timestamp, every finding, and
+what to do (fix the cause, restart from day one). A clean day removes it, so the file's existence is
+itself the signal. Deleting a marker that is not there does not throw.
+
+Verified in both directions on this machine: a clean run removed a planted stale marker and exited
+0; a run against an empty engine root wrote the marker and exited 1. Tests `4/4`, `test:installer`
+`20/20`.
+
+The canary remains day 1 of 7, clean.
