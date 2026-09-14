@@ -620,3 +620,47 @@ Operator promotion remains **NO-GO** on the last row only. Approved tuple unchan
 - Who runs the provider-side rotations, and in which maintenance window?
 - Should `test:packaging:windows-machine` join the standard local release gate now that it passes,
   so it stops being skipped by default?
+
+## Live machine integration is now a required release step - 14 September 2026
+
+The gate was not broken; it was optional, and optional is how it went four releases without running.
+But the reason it was optional is sound and recorded in the 16 August audit: live-machine inspection
+cannot be hermetic, so it must not sit inside a suite that CI and developers run constantly.
+
+Both constraints are satisfiable at once, so neither was traded away:
+
+- `test:packaging` keeps its opt-in guard and stays hermetic.
+- The release quality run gets its own required step. `QUALITY_STEPS` goes from seven to eight:
+
+```
+verify:node, audit:production, test:installer, test:machine-integration,
+test:critical-coverage, typecheck, lint, build
+```
+
+`test:machine-integration` delegates to the existing, contract-pinned
+`test:packaging:windows-machine`. Verified by running that script verbatim as the package file
+defines it: `tests 4, pass 4, fail 0, skipped 0`. Its own contract suites pass `24/24`.
+
+This step fails while MKT Browser, the Relay or MultiZen are running. That is the intended
+behaviour - a machine that is not quiet cannot be inspected - and the failure names exactly which
+process to close. Release runs are deliberate, so the cost lands in the right place.
+
+Consequence for receipts: the quality receipt now carries eight results, not seven. Earlier receipts
+in this report describing "frozen-source seven-command quality" remain accurate for what they
+recorded; the next candidate's receipt will have one more required row and no skip.
+
+MKTBrowser `d3a868d`.
+
+### Environment gap noticed while verifying
+
+The MKTBrowser working tree on this host has an incomplete dev install: Yarn 4 reports no
+node_modules state file, `@electron/rebuild` is unresolvable, and `eslint` cannot load. So
+`package-windows-quality-gates.test.cjs` and `npm run lint` fail here for reasons that predate this
+change and are unrelated to it - the release gate runs against a freshly installed frozen-source
+sibling, which is why its earlier `7/7` receipt was clean. Worth an install before anyone reads a
+local failure in this tree as a product defect.
+
+### Unresolved questions
+
+- Run a full eight-step quality pass against a frozen-source sibling to produce the first receipt
+  with no skipped gate, or wait until the next candidate is cut?
