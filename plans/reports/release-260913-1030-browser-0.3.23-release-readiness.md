@@ -974,3 +974,57 @@ directly:
 The secret scans matter beyond routine: this session wrote a large amount of report text while
 handling live credentials, a licence key, proxy passwords and a production database URL. 1,790 files
 across all three repositories were scanned and none carries a credential pattern.
+
+## Both release gates green, end to end - 14 September 2026
+
+### MKTBrowser, eight steps, on the committed tree
+
+```
+verify:node                  exit=0    0s
+audit:production             exit=0    2s
+test:installer               exit=0   56s
+test:machine-integration     exit=0    8s
+test:critical-coverage       exit=0   12s
+typecheck                    exit=0   11s
+lint                         exit=0   18s
+build                        exit=0  105s
+```
+
+Nothing skipped. This is the run that counts: the working tree was clean and every change of the
+session was committed before it started.
+
+### MKTTool, all four stages
+
+| Stage | Result |
+|---|---|
+| quality | lint, typecheck, 2213 tests, 15 gate tests - **PASS** |
+| contracts | restore and rate-limit contracts against disposable PostgreSQL on Node 22 - **PASS** |
+| relay | rebuilt the Relay from source, then verified the built `.exe` through the full ticket, sealing, restart, forced-termination and retirement cycle - **PASS** |
+| security | secret scan (1,790 files across three repositories) and production dependency audit - **PASS** |
+
+The relay stage matters more than a rerun: earlier in this session only the already-shipped archive
+was verified. This rebuilt it from source and put the fresh executable through the same cryptographic
+cycle. The contracts stage had never run in this session and needed Node 22 plus a disposable test
+database, both of which exist on this host.
+
+### Engineering state
+
+Every gate that code, configuration or measurement can close is closed. What remains needs a person,
+a switch, a certificate, a console, or six more days:
+
+| Remaining | What it actually needs now |
+|---|---|
+| Independent second machine | `admin-laptop` powered on; procedure in `docs/second-machine-acceptance.md` |
+| Unfamiliar-operator walkthrough | Someone who has not used the product; script in `docs/unfamiliar-operator-acceptance.md` |
+| Seven-day canary | Six more days; day 1 clean, a scheduled task records the rest |
+| Installer signing | A certificate; the build signs itself once `WIN_CSC_LINK`/`CSC_LINK` is set |
+| Credential rotation | Cloudflare, Railway, Google and Meta consoles; backup and verified restore already in place |
+| Orphan directory `6e964c46-...` | A decision; no browsing data in it, 18 MB, untouched since 25 August |
+
+Operator promotion remains **NO-GO** on that list alone. The approved tuple is unchanged: Browser
+`0.3.17` / Relay `17` / sequence `21`.
+
+### Unresolved questions
+
+- None for engineering. Every open item above is waiting on a person, a machine being switched on, a
+  purchase, a console login, or elapsed time.
