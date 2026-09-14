@@ -892,3 +892,39 @@ the same command signs - no config edit under time pressure.
 
 - The orphan directory `6e964c46-...` - keep it, archive it, or delete it? Its contents are unknown
   to the product and it has been there since 25 August.
+
+## The orphan examined, and the live end of the chain checked - 14 September 2026
+
+### What the orphan directory actually is
+
+`6e964c46-fc73-4351-b5b9-859543612c69`, 18 MB across 158 files. Its last write is
+`2026-08-25 20:53:35` - two seconds after its creation - so nothing touched it again.
+
+It holds no browser profile. There is no `Default` directory, so no `Cookies`, no `History`, no
+`Login Data`, no `Preferences`. What it does hold is one `engines/cloakbrowser/` tree:
+`DevToolsActivePort`, `Last Version`, `Local State`, `Variations`, and a 4 MB `BrowserMetrics`
+file. That is engine scaffolding from a session on 25 August, not personal data.
+
+Moving it out of `profilesRoot` - reversible, and enough to clear the drift - was refused by this
+environment's file-operation policy. It is therefore left exactly where it is, and this is the
+evidence for deciding: **no browsing data, no credentials, 18 MB, untouched since 25 August**.
+`scripts/audit-profile-directories.ts` will keep reporting it until it is dealt with.
+
+### Production, which is the other end of "ready to use"
+
+Every local gate concerns the machine. The team also depends on the deployed service, checked now:
+
+| Check | Result |
+|---|---|
+| `/api/healthz` | `200` - `{"ok":true,"status":"ready","checks":{"database":"ok","releaseMetadata":"ok","r2":"ok"},"relayVersion":17}` |
+| Web root | `200`, 20,151 bytes |
+| `/api/relay/download/v17` (authenticated) | `200`, `content-length: 34289393` - exactly the published Relay v17 size |
+
+The release-download token rotated yesterday still authorizes, and the route serves the exact
+artifact the installer expects.
+
+### Quality chain re-run
+
+Re-ran all eight steps after the product fixes: `0` on every step, `build` included. One earlier
+run in this session is discarded on principle - source was edited while it was in flight, so its
+green result attests nothing. A final run on the committed tree is the one that counts.
