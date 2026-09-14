@@ -952,8 +952,11 @@ mode, run machine-integration, audit profile directories, open that machine's ow
 - if the person running it has never used the product - fold in the unfamiliar-operator script so one
 install closes two gates.
 
-It also carries the licence-seat warning: one seat, so the build host must have the app fully closed
-while the second machine launches an engine, and a seat refusal looks exactly like a crash.
+It also carries the licence-seat warning, which is a property of **this test environment**, not of
+the product: both machines in the gate share the one development key, and that key's free plan
+allows one browser at a time. So the build host must have the app fully closed while the second
+machine launches an engine, and a seat refusal looks exactly like a crash. A real operator registers
+their own key and never contends with the owner's.
 
 ## MKTTool's own release gate, exercised
 
@@ -1215,9 +1218,14 @@ policy. One command for the owner, with the guard doing the remembering.
 
 ## Second high-risk area reviewed: licence seats - 14 September 2026
 
-After the leak path, the other place a defect would cost the team real time is seat handling - one
-seat, and a refusal that looks exactly like a crash. Reviewed; **no gap found**, and the test names
-read like someone who has already been burned by each case:
+After the leak path, the other place a defect would cost the team real time is seat handling: an
+operator locked out of the key they own, by a refusal that looks exactly like a crash. Scope first,
+because the gate rows above invite the wrong reading - the product ships **no key at all**
+(`cloakBrowserLicenseKey` defaults to `""`), each operator registers their own with the vendor and
+pastes it into Settings, and it is stored per machine. The one-seat limit is whatever that
+operator's own plan allows; it is not a product-wide cap, and the contention seen throughout this
+candidate was two gate machines sharing the single development key. Reviewed; **no gap found**, and
+the test names read like someone who has already been burned by each case:
 
 | Failure mode | Covered by |
 |---|---|
