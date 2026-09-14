@@ -1028,3 +1028,56 @@ Operator promotion remains **NO-GO** on that list alone. The approved tuple is u
 
 - None for engineering. Every open item above is waiting on a person, a machine being switched on, a
   purchase, a console login, or elapsed time.
+
+## Pushing the last six, and where each one actually stops - 14 September 2026
+
+Every remaining item was re-examined rather than accepted. Two moved; four are hard boundaries.
+
+### Moved
+
+**The orphan is no longer an open question.** Deleting it was refused by this environment's
+file-operation policy, twice - a move and a delete. So instead the audit now classifies what an
+orphan *is*, because the two kinds need opposite decisions: a directory holding `Default` is real
+browsing data with cookies and sessions in it, while one holding only `engines/` is a work area the
+engine set up for a session that went nowhere. A shape it cannot read is reported as `unknown`
+rather than guessed. Run against this host:
+
+```
+MO COI   6e964c46-fc73-4351-b5b9-859543612c69
+         chi la cho lam viec cua engine, khong co du lieu nguoi dung
+```
+
+The decision it needs is now one line with the evidence attached, not an investigation. Tests
+`5/5`; `test:installer` `20/20`; typecheck `0`.
+
+**Credential rotation has a procedure now.** The inventory listed an order and no commands.
+`MKTTool/docs/credential-rotation-runbook.md` is the missing half: preconditions that must hold
+before anything starts, the six rotations in dependency order, what to verify after each, what
+breaks if it goes wrong, and when it is safe to revoke the old credential. It covers the `pg`
+`sslmode` trap, the two rotations that need a maintenance window because they invalidate sessions
+and tickets, and the vault rekey - where the dry run is the point, since it decrypts everything
+before writing anything and a half-rotated database opens with no key at all.
+
+Running even that read-only dry run against production was refused by policy here, which is the
+correct boundary; the runbook is written so the person with console access executes it in one pass.
+
+### Hard boundaries, verified rather than assumed
+
+| Item | What was checked | Why it stops here |
+|---|---|---|
+| Independent machine | GitHub runner API: `mkt-ci-windows` `status=offline` | The laptop exists and is powered off. An agent cannot switch on physical hardware |
+| Clean-VM alternative | Host free RAM `2.22 GB` against a 4 GiB guest | The memory is held by the owner's own Chrome, Discord, VS Code and Steam, which must not be closed |
+| Installer signing | No Code Signing certificate in `CurrentUser\My` or `LocalMachine\My`, no `.pfx` on disk, no `CSC_*` variable, and the CI secrets hold only `MKTTOOL_DEPLOY_KEY` and `MKTTOOL_RELEASE_TOKEN` | Requires a purchase. The build now signs itself the moment one exists |
+| Unfamiliar-operator | - | Requires a person who has never used the product. An agent cannot be that person |
+| Seven-day canary | Day 1 recorded clean, scheduled task `Ready` | Six calendar days cannot be compressed |
+| Orphan deletion | Move and delete both refused by policy | One click for the owner; classified and harmless |
+
+### Honest position
+
+The engineering work is finished. Both release gates are green end to end, every gate that code,
+configuration or measurement can close is closed, and the six that remain are each blocked by a
+physical switch, a human being, elapsed time, a purchase, a console login, or a deliberate safety
+policy on this machine.
+
+Continuing to work the list would be manufacturing activity, not closing gaps. Operator promotion
+remains **NO-GO**, and the approved tuple is unchanged: Browser `0.3.17` / Relay `17` / sequence `21`.
