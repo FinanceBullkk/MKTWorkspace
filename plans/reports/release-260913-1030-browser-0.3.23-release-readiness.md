@@ -1212,3 +1212,45 @@ shapes are excluded. Tests `6/6`, `test:installer` `20/20`, typecheck `0`.
 
 The command was written, not run: deleting under `%LOCALAPPDATA%` is refused by this environment's
 policy. One command for the owner, with the guard doing the remembering.
+
+## Second high-risk area reviewed: licence seats - 14 September 2026
+
+After the leak path, the other place a defect would cost the team real time is seat handling - one
+seat, and a refusal that looks exactly like a crash. Reviewed; **no gap found**, and the test names
+read like someone who has already been burned by each case:
+
+| Failure mode | Covered by |
+|---|---|
+| Browser dies without handing the seat back | `marks a lease released only after the recovery transport confirms release` |
+| The machine reboots before any sweep can run | `a reboot settles the lease no sweep can reach, and the wait ends on the vendor's clock` |
+| The durable write fails mid-release | `a durable write that fails leaves the lease pending rather than freeing the key` |
+| The process table cannot be read | `a sweep that could not look leaves the lease exactly as it found it` |
+| A rest period expired while the machine was off | `a lease whose rest ran out before this start is retired, not rested again` |
+| Two profiles recovering at once, one unconfirmed | `keeps concurrent profile recovery isolated when one release is unconfirmed` |
+
+The design is fail-closed in the right direction: uncertainty never frees a key, because freeing a
+seat you do not own is what creates a vendor-side conflict the operator cannot debug.
+
+One detail closes today's loop. `license-seat-wait-message.test.ts` already asserted
+`no configured key is a setup problem, not a capacity problem` - the desktop has always said the
+right thing for an empty pool. The defect was entirely the Relay discarding that sentence and
+substituting a generic "wait for the engine" remedy, which is what was fixed this morning. Desktop
+correct and tested; Relay no longer overwrites it, also tested.
+
+### What the two reviews mean
+
+The two areas where a defect would actually hurt - an account egressing from the operator's own IP,
+and an operator locked out of a seat they own - are both defended by adversarial tests rather than
+happy-path ones. Neither review produced a finding. A clean review is a result, not an absence of
+one, and it is worth more than another gate row.
+
+### Closing state
+
+Engineering work on this candidate is complete. Both release gates green end to end, both high-risk
+paths reviewed clean, every gate closable by code, configuration or measurement closed, and the
+roadmap and changelog now say what is actually true.
+
+Five items remain, each verified irreducible by attempt rather than assumed: a laptop that is
+powered off, a person who has never used the product, six calendar days, a certificate that must be
+bought, and four provider consoles. Operator promotion remains **NO-GO**; the approved tuple is
+unchanged at Browser `0.3.17` / Relay `17` / sequence `21`.
