@@ -167,3 +167,77 @@ The focused contract test passes `7/7`; the source change is committed in MKTBro
 
 This closes the 403-on-this-host incident and proves a real local engine launch. It does not close independent-machine,
 unfamiliar-operator, proxy failure/recovery, signing, or seven-day canary gates; rollout remains **NO-GO**.
+
+## Host acceptance continuation - 14 September 2026
+
+Owner directed this build host to serve as the test machine. This host is not independent physical
+hardware, so nothing below closes the second-PC gate; these are host-acceptance receipts only.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Packaged Relay lifecycle (exact shipped archive) | PASS | `resources\relay\MKTTool-Relay.zip` from the installed 0.3.23; archive SHA-256 `d8bf25dcb446d779bd5461419ea7562044e280ac1d16592a71a52f156f6359cf` (matches the published Relay v17 hash); extracted EXE SHA-256 `827fc9330e5845b13d41827e3c1528439e85ff38bb6ea2ca3b72355b15ccc31e`; Node `v24.21.0` |
+| Proxy failure/recovery on exact installer | BLOCKED - not run | Every unassigned production proxy rejects proxy authentication before the browser stage |
+
+### Packaged Relay lifecycle
+
+`npm run relay:verify` was run against the archive the exact installer placed on this host, not a
+rebuilt one. All checks passed: unconfigured start, web-origin-restricted configuration, rejection
+of a foreign origin, server-signed bootstrap, operator-key handoff the web app cannot read,
+credential sealing round-trip, TOTP normalisation and all-or-nothing failure, forged-ticket
+rejection, single-use ticket enforcement persisted to `spent-tickets.json`, survival of restart and
+of forced termination, corrupt-journal fail-closed, expired-ticket rejection, secret-ticket path
+separation, and the three-step retirement/recovery/finalisation close. One temporary extraction
+directory could not be removed by the harness; it is disposable.
+
+Note: the harness ran on Node 24, not the Node 22 used for MKTBrowser native builds. The subject is
+a prebuilt SEA executable, so the harness Node version does not enter the artifact.
+
+### Proxy gate blocker: production proxy inventory fails authentication
+
+The gate never reached the browser. Five unassigned proxies were tried - `okne`,
+`proxy-82-25-225-70-5718`, `proxy-82-25-225-8-5656`, `proxy-82-26-234-168-6316`,
+`proxy-82-29-239-125-5273`. Each one:
+
+- decrypted correctly from the production vault (so this is not a vault-key fault);
+- answered a raw TCP connect on its endpoint (so the host is reachable and the port is open);
+- rejected the independent exit-IP probe with **proxy authentication rejected**.
+
+This is an inventory/credential condition, not an MKT Browser defect. It is also a team-impacting
+condition in its own right: with the current stored credentials, no profile can launch through a
+vault proxy from this host.
+
+The designated test proxy label `MKB-00 TEST` no longer exists in either the production or the
+local database, so the documented invocation cannot be run as written.
+
+### Environment findings
+
+- `PRODUCTION_DATABASE_URL` carries `sslmode=require`. Current `pg` / `pg-connection-string` treat
+  `require` as `verify-full`, so Prisma now fails the production connection with
+  `self-signed certificate in certificate chain`. Worked around for this session by exporting the
+  same URL with `uselibpqcompat=true` appended; `.env` was not modified and no secret was printed.
+  Any local tool that reaches production over this URL is broken until the string is corrected.
+- The stale MKT Browser session from 13 September (started 18:14, six CloakBrowser engine
+  processes) was still holding the engine seat. The owner closed it; no user application was closed
+  by an agent.
+
+### Tooling change
+
+`scripts/smoke-test-mkt-browser-correct-proxy.ts` reported only `(unreachable)` and swallowed the
+probe detail, which cannot distinguish a dead proxy from a rejected credential. Both probe failures
+now carry their detail through the existing redaction path. `npm run typecheck` exits 0 and the
+focused contract suite passes `38/38`.
+
+### Status after this continuation
+
+Operator promotion remains **NO-GO**. The approved operator tuple is still Browser `0.3.17` /
+Relay `17` / sequence `21`. Still open: proxy failure/recovery, signed CFT activation, installer
+signing, independent second PC, unfamiliar-operator walkthrough, seven-day canary,
+machine-integration, and the outstanding credential-exposure closeout.
+
+### Unresolved questions
+
+- Were the proxy provider credentials rotated, or does the provider require IP allow-listing that
+  this host is not on?
+- Which proxy label should replace `MKB-00 TEST` as the dedicated gate proxy?
+- Should `PRODUCTION_DATABASE_URL` be corrected in `.env` (and any deployed copy) to
+  `uselibpqcompat=true&sslmode=require`, or pinned to `verify-full` with the provider CA installed?
