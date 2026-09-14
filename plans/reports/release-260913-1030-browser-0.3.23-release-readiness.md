@@ -1296,3 +1296,43 @@ Verified in both directions on this machine: a clean run removed a planted stale
 `20/20`.
 
 The canary remains day 1 of 7, clean.
+
+## Reopened by a question: whose licence key is it - 14 September 2026
+
+The owner asked whether each operator registers their own CloakBrowser key rather than using the
+owner's. They do, and the code always agreed: `cloakBrowserLicenseKey` ships as `""`, Settings is
+where an operator pastes their own, and it is stored per machine. Nothing bundles a key.
+
+The docs did not agree. Three places had absorbed this session's test environment as if it were the
+product:
+
+| Where | Read as | Actually |
+|---|---|---|
+| `unfamiliar-operator-acceptance.md` | Task-giver hands the tester a key | The tester registering their own **is** part of what the gate measures |
+| `second-machine-acceptance.md` | "CloakBrowser chỉ có một ghế" | Two gate machines share one development key |
+| `huong-dan-van-hanh-cho-team.md` | A hard kill locks "người khác lẫn chính mình" | It locks whoever holds that key |
+
+This mattered more than a wording fix. The unfamiliar-operator gate is still open, and had it run
+against the old script the tester would have been handed a key - hiding the exact step most likely
+to produce a STUCK, and putting two machines on one free plan where the refusal reads as a crash.
+
+### The code change it exposed
+
+Settings named `cloakbrowser.dev/free` in prose but never said whose key it is, and the URL was
+text to retype. It is now a statement of ownership plus a button, and the empty-pool seat message
+shares the same constant. The destination is a literal in the main process, not derived from the
+env-overridable download base: an environment variable that can retarget a download is a smaller
+problem than one that can retarget where a person types their credentials. The channel carries no
+argument, so nothing in the page can steer it.
+
+`operator-owned-licence-key-contract.test.ts` pins the empty shipped default, the literal URL, the
+unsteerable channel, and the copy. Local `89/89` on the licence suite, typecheck `0`, eslint clean.
+It joins the required CI gate beside the one-seat contract - and both now run locally too, closing
+a smaller gap found on the way: the one-seat contract had been running only in optional CI, on a
+repo whose authoritative gate is local.
+
+### Effect on the candidate
+
+`0.3.23` moves; the approved tuple is untouched at Browser `0.3.17` / Relay `17` / sequence `21`,
+and operator promotion stays **NO-GO**. The five irreducible items are unchanged, except that the
+unfamiliar-operator one is now measuring the right thing.
