@@ -928,3 +928,49 @@ artifact the installer expects.
 Re-ran all eight steps after the product fixes: `0` on every step, `build` included. One earlier
 run in this session is discarded on principle - source was edited while it was in flight, so its
 green result attests nothing. A final run on the committed tree is the one that counts.
+
+## The second machine was never missing - 14 September 2026
+
+This report, and this session until now, described the independent-machine gate as blocked on
+hardware. That is wrong, and `docs/second-laptop-runner.md` has said so since 8 September: the owner
+already selected a second physical Windows laptop, `admin-laptop`, and registered it as the
+self-hosted runner `mkt-ci-windows`.
+
+Queried today:
+
+```
+mkt-ci-windows   status=offline  labels=self-hosted,Windows,X64,mktbrowser,admin-laptop
+mkt-ci-linux     status=offline
+mkttool-ci-windows / mkttool-ci-linux   status=offline
+```
+
+The machine exists and is powered off. The gate needs it switched on, not bought. Everything else
+for that run was built during this session, so `docs/second-machine-acceptance.md` now ties it into
+one pass: verify the installer hash, install, confirm the installer's own WebRTC rules name that
+machine's engine paths, stage the engine cache, run the proxied-launch gate in `--installed-root`
+mode, run machine-integration, audit profile directories, open that machine's own canary window, and
+- if the person running it has never used the product - fold in the unfamiliar-operator script so one
+install closes two gates.
+
+It also carries the licence-seat warning: one seat, so the build host must have the app fully closed
+while the second machine launches an engine, and a seat refusal looks exactly like a crash.
+
+## MKTTool's own release gate, exercised
+
+MKTBrowser's eight-step chain is not the whole product. MKTTool has a four-stage local validation of
+its own (`quality`, `contracts`, `relay`, `security`) that this session had not run. Stages executed
+directly:
+
+| Stage / step | Result |
+|---|---|
+| security - secret scan (`plans`, `docs`, `src`, `relay`, `scripts`, `.github`) | **PASS**, 797 files, no credential patterns |
+| security - secret scan of the workspace reports (`../plans`, `../docs`) | **PASS**, 434 files |
+| security - secret scan of MKTBrowser (`docs`, `scripts`, `apps`, `packages`) | **PASS**, 559 files |
+| security - production dependency audit | **PASS**, no high or critical advisories |
+| quality - local validation gate tests | **PASS**, 15 tests |
+| quality - full test suite | **PASS**, 236 files, 2213 tests |
+| quality - lint, typecheck | **PASS** |
+
+The secret scans matter beyond routine: this session wrote a large amount of report text while
+handling live credentials, a licence key, proxy passwords and a production database URL. 1,790 files
+across all three repositories were scanned and none carries a credential pattern.
