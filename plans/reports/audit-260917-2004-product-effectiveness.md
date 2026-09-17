@@ -192,10 +192,22 @@ Hai hệ quả của nhánh chưa lọc:
   Đã kiểm ngược: guard này **có** bắt đúng bản HEAD trước khi sửa.
 - typecheck sạch, eslint sạch, `vitest run src/lib/relay` 23 file / 167 test pass.
 
-**Còn mở, cùng loại, chưa đụng:** `antidetect-profile-card.tsx` (luồng **tạo** profile) cũng hiện
-nguyên văn câu của Relay qua `describeSlowRelayFailure()`, và `relay/src/create-profile.ts:73` cũng
-ghép bằng `${describe(error)}`. Cần một bảng mã riêng cho luồng tạo — không gộp được vào bảng của
-luồng mở, nên tách ra thành việc riêng.
+**Luồng tạo profile — đã xử lý nốt 17/09 (commit `0d586fe`):** `antidetect-profile-card.tsx` cũng
+hiện nguyên văn câu Relay, và `relay/src/create-profile.ts:73` cũng ghép bằng `${describe(error)}`.
+Không dùng lại được bảng của luồng mở vì luồng tạo có **hai ngoại lệ có chủ ý**:
+
+- `INVALID_INPUT` phải chuyển tiếp — MKT Browser liệt kê đúng các giá trị vân tay hợp lệ ngay trong
+  câu đó; viết lại là vứt mất thứ duy nhất giúp sửa được lỗi.
+- Chặng `browser-health` **không có mã** và câu của nó do chính Relay viết cho người đọc ("đóng bớt
+  một profile đang mở rồi thử lại"). Chỉ đọc mã thì mất câu này.
+
+Mọi trường hợp còn lại của chặng `create-profile` thì tra bảng hoặc về câu chung.
+`relayFailureCode()` / `relayFailureStage()` tách ra module riêng vì hai luồng đặt mã ở hai chỗ khác
+nhau (mở: thân phản hồi; tạo: trong `diagnostic`).
+
+**Gate đã chạy cho cả hai commit:** typecheck sạch · eslint sạch · **toàn bộ test suite 237 file /
+2226 test pass** (có cả test chạm Postgres). Guard biên giới đã kiểm ngược: bắt đúng cả hai file bản
+HEAD trước khi sửa. Chưa chạm VM, Actions, hay deploy.
 
 ### Kết luận phần này
 
