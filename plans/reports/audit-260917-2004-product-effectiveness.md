@@ -21,7 +21,7 @@ hoá) vẫn HOLD/NO-GO. Roster team còn OPEN → số người dùng thật ngo
 | Giao cho team | Web console (vault/proxy/relay/setup) — PASS |
 | Browser | 0.3.23 **NO-GO**, phân phối installer **HOLD**; 0.3.17 là bằng chứng lịch sử |
 | Người dùng thật | Allowlist **OPEN**, roster chưa chốt → 0 operator ngoài owner |
-| Canary 7 ngày | đang ngày **4/7** (14→17/09, 0 finding, 20 profile dir) — đúng tiến độ |
+| Canary 7 ngày | ~~4/7~~ → **1/7** (đính chính 18/09: 4 ngày có dòng ghi sạch, nhưng chỉ 14/09 có vòng mở-đóng profile thật; 15-17/09 máy chỉ được bật lên) |
 
 ## Rò rỉ hiệu quả (xếp theo mức tốn kém)
 
@@ -100,7 +100,7 @@ tại đang bảo vệ khỏi những rủi ro của việc phát hành ra ngư�
 | Immutable sequence channel, anti-downgrade, revocation | Bắt buộc | Đã xây xong — **đóng băng, đừng mở rộng thêm** |
 | Two-build byte-identical | Chống supply-chain | Đã xây xong — giữ, không đầu tư thêm |
 | Máy vật lý thứ hai | Bắt buộc | **Vẫn bắt buộc** — mọi bằng chứng hiện nay chỉ chứng minh "máy build này sẵn sàng" |
-| Canary 7 ngày | Bắt buộc | **Vẫn giữ** — đang chạy, ngày 4/7, miễn phí |
+| Canary 7 ngày | Bắt buộc | **Vẫn giữ** — miễn phí, nhưng thực đo là 1/7 (xem đính chính 18/09) |
 | Xoay credential | Bắt buộc | **Vẫn bắt buộc** — secret production đã lộ ra tool output, độc lập với release |
 
 6 phiên bản trong 5 ngày (0.3.18→0.3.23), không bản nào promote, cho 5-6 người dùng. Đó là chi phí
@@ -214,3 +214,24 @@ HEAD trước khi sửa. Chưa chạm VM, Actions, hay deploy.
 Key free **làm tăng** hiệu quả nội bộ: chi phí 0, mô hình BYO đúng (build không ship key, key nằm
 trên máy người dùng). Đổi lại, trần quy mô bị đóng đinh ở 5-6 phiên đồng thời và uptime phụ thuộc
 vendor. Cả hai đều chấp nhận được cho 5-6 người — **miễn là owner chốt rằng sản phẩm dừng ở đó.**
+
+---
+
+## Đính chính 18/09 — canary không phải 4/7 mà là 1/7
+
+Câu "canary 4/7, đúng tiến độ" ở bản trên **sai**, và tôi đếm nhầm theo kiểu dễ nhầm nhất: đếm số
+dòng trong nhật ký vòng đời thay vì đếm vòng mở-đóng profile.
+
+| Ngày | Nhật ký vòng đời ghi gì | Tính? |
+|---|---|---|
+| 14/09 | `BOOTSTRAP-DONE` ×3, `SHUTDOWN-COMPLETE` ×3 | **Có** |
+| 15/09 | `ORPHAN-SWEEP-NONE` ×1 | Không |
+| 16/09 | `ORPHAN-SWEEP-NONE` ×2 | Không |
+| 17/09 | `ORPHAN-SWEEP-NONE` ×3 | Không |
+
+`ORPHAN-SWEEP-NONE` là lượt quét mồ côi chạy **mỗi lần bật app**, không phải một lần dùng máy.
+Ba ngày đó máy được bật lên rồi thôi.
+
+Canary giờ tự đo điều kiện này (commit `5ae5919` bên MKTBrowser): mỗi dòng mang
+`profileActivity` đếm mở/đóng trong 24 giờ trước, và `--summary` báo thẳng
+`1/7 used day(s)` kèm danh sách ngày ngồi không. Muốn đủ bảy ngày thì phải dùng máy thật mỗi ngày.
