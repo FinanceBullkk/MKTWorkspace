@@ -89,3 +89,74 @@ Hệ quả: thêm một mã ở Browser thì MKTTool âm thầm rơi vào nhánh
 - Reddit/Facebook/queue/health: giữ, xoá, hay bật lại? Chưa trả lời từ 17/09, và nó quyết định 18%
   diện tích bảo trì.
 - Có nên đặt hạn mức dòng cho file ở MKTBrowser (lint rule) không, hay để quy ước tự điều tiết?
+
+---
+
+## Đã xử lý — 18/09/2026
+
+Tự làm, tự kiểm. Mọi commit còn nằm ở máy, **chưa push** (xem cuối mục).
+
+### Điểm 3 — contract trôi giữa hai repo: **ĐÓNG**
+
+`MKTTool/src/lib/antidetect/desktop-contract-mirror.test.ts` + `desktop-contract-snapshot.json`
+(commit `a15923b`, `2e5adc6`).
+
+Thiết kế hai chặng quanh một bản chụp, vì repo này **không có test nào bị bỏ qua** và CI của nó
+không checkout MKTBrowser:
+
+| Chặng | Chạy ở đâu | Bắt được |
+|---|---|---|
+| Hằng số MKTTool ↔ bản chụp | mọi máy, kể cả CI | sửa `mkt-browser-contract.ts` lệch giao kèo |
+| Bản chụp ↔ nguồn MKTBrowser | máy có đủ hai repo | Browser đổi contract mà chưa ai chép sang |
+
+Kiểm bằng đột biến, cả bốn đều bắt đúng chỗ: thêm mã lỗi bên Browser, nâng `CONTRACT_VERSION`,
+bỏ một capability MKTTool đang đòi, và **bỏ một mã khỏi danh sách của MKTTool** (ca duy nhất CI bắt
+được, và nó bắt được thật). Lượt `UPDATE_DESKTOP_CONTRACT_SNAPSHOT=1` kết thúc bằng **đỏ** kèm câu
+"chạy lại đi" — một lượt làm mới không có tư cách tự phán mình đã khớp.
+
+### Điểm 1 — file khổng lồ: **2/5 xong, 3/5 dừng có lý do**
+
+| File | Trước | Sau | |
+|---|---|---|---|
+| `ChromiumBrowserDriver.ts` | 2.980 | **1.514** | tách 8 module (`afa816e`) |
+| `profile-manager/fingerprint.ts` | 1.636 | **543** | tách 2 bảng dữ liệu (`536863e`) |
+| `mcp-server/server.ts` | 1.423 | — | **dừng** |
+| `apps/desktop/main/index.ts` | 1.217 | — | **dừng** |
+| `ChromiumBootstrap.ts` | 1.056 | — | **dừng** |
+
+8 module tách từ driver: `browser-process-tracking`, `chromium-fingerprint-args`,
+`browser-shutdown-sequence`, `browser-window-watcher`, `webrtc-spoof-script`,
+`chromium-version-detection`, `chromium-managed-preferences`, `chromium-profile-data-dir`.
+Lớn nhất 380 dòng.
+
+**Không viết lại một dòng logic nào**, và điều đó được chứng minh chứ không phải hứa: script so
+từng dòng của mỗi khoảng đã cắt với bản HEAD, chỉ chấp nhận khác biệt ở từ khoá `export` và khối
+import. Hai thay đổi có chủ ý, đã ghi trong commit: `isPidAlive` chuyển sang module tracking (cả
+driver lẫn shutdown đều gọi), và doc comment của `ensureSessionRestore` quay về đúng hàm của nó —
+trong driver nó đã trôi 323 dòng và nằm trên `detectChromiumVersion`.
+
+Hai test hình dạng mã nguồn trong `runtime-contract.test.ts` được **chỉnh lại để đọc module mới**,
+không phải xoá: cùng những điều kiện đó, đọc ở chỗ chúng đang nằm.
+
+**Vì sao dừng ở 3 file còn lại.** Chúng cần đổi *thiết kế*, không phải chuyển văn bản:
+`server.ts` là dispatch của contract 4, `ChromiumBootstrap.ts` là một class 793 dòng, và
+`index.ts` là **đường khởi động** — đúng chỗ đã làm hỏng các candidate 0.3.13–0.3.16. Sửa sai ở đó
+tốn một lượt nghiệm thu VM sạch, đổi lại chỉ là dễ đọc hơn. Đó là quyết định của chủ dự án, không
+phải của một lượt refactor.
+
+### Điểm 2 — 18% scope đã rút: **KHÔNG đụng, có chủ ý**
+
+Xoá 12.190 dòng code đang chạy và đang có test là việc không hoàn tác được và là quyết định sản
+phẩm, không phải việc dọn code. Hai lựa chọn, cần một câu trả lời: giữ nguyên và chấp nhận giá
+(147 giây mỗi lượt test, mọi refactor phải giữ xanh), hoặc xoá cả code lẫn test trong một lượt.
+
+### Cổng đã chạy
+
+| Repo | Kết quả |
+|---|---|
+| MKTTool | typecheck sạch · eslint sạch · **238 file / 2.233 test pass** |
+| MKTBrowser (Node 22) | typecheck sạch · `yarn lint` sạch · **`yarn test:installer` EXIT=0, 547 test pass, 0 fail** |
+
+Chưa chạm: VM sạch, GitHub Actions, deploy. Commit đang nằm ở máy — MKTTool 4, MKTBrowser 3,
+workspace 3 — **chưa push**, vì push sẽ tốn một lượt Actions ở cả hai repo và có thể kéo theo
+Railway deploy từ GitHub source integration.
