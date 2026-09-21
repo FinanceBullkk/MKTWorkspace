@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-21T04:29:29.073Z",
+  "evidenceType": "sanitized-local-engine-pin-observation",
+  "source": "%LOCALAPPDATA%/MKTTool/compatibility-updater/active-engine.json",
+  "cacheSource": "%LOCALAPPDATA%/MKTTool/MKTBrowser/chromium/cloakbrowser/current.json",
+  "engine": {
+    "schemaVersion": 1,
+    "sequence": 2,
+    "engineKind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "url": "https://db7e0873c7f3409d5541b1c3b738967d.r2.cloudflarestorage.com/cloakbrowser/chromium-v151.0.7922.108.6/cloakbrowser-windows-x64.zip",
+    "archive": "cloakbrowser-windows-x64.zip",
+    "sha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "sizeBytes": 540036860
+  },
+  "cacheMetadataMatches": true,
+  "runtimeVersionMatches": true,
+  "runtimeExecutablePresent": true,
+  "signatureRevalidated": false,
+  "archiveDownloadedOrRehashed": false,
+  "engineExecuted": false,
+  "acceptance": "NOT-RUN",
+  "note": "Local pin and cache metadata agree; this check does not revalidate signatures or establish acceptance. The URL has no credentials, query, or fragment and is provenance only; it is not a usable signed download grant. No production pin or release manifest was modified."
+}

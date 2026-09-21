@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "scope": "Final local source validation for licence-seat fixes",
+  "date": "2026-09-21",
+  "timezone": "Asia/Saigon",
+  "toolchain": {
+    "node": "22.23.2",
+    "yarn": "4.5.0",
+    "npm": "10.9.8",
+    "vitest": "4.1.11",
+    "nodePath": "C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe",
+    "yarnPath": "C:\\Users\\anhha\\AppData\\Local\\node\\corepack\\v1\\yarn\\4.5.0\\yarn.js",
+    "npmPath": "C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node_modules\\npm\\bin\\npm-cli.js"
+  },
+  "execution": {
+    "sequential": true,
+    "initialFreeRamGiB": 2.22,
+    "laterFreeRamGiB": 2.66,
+    "totalRamGiB": 15.92,
+    "noSourceEdits": true,
+    "noVendorOrEngineCalls": true,
+    "noDatabaseSetup": true,
+    "noBuildCommands": true
+  },
+  "diffAnalysis": {
+    "changedFileCount": 43,
+    "MKTBrowser": {
+      "headAtValidation": "5ae5919ca728276c9e9350aee977a32ec7236e3a",
+      "changedFiles": [
+        "apps/desktop/package.json",
+        "apps/desktop/src/main/ChromiumBootstrap.ts",
+        "apps/desktop/src/main/ChromiumBrowserDriver.ts",
+        "apps/desktop/src/main/browser-driver-shutdown.test.ts",
+        "apps/desktop/src/main/cloakbrowser-pro-channel.ts",
+        "apps/desktop/src/main/license-driver-lifecycle-contract.test.ts",
+        "apps/desktop/src/main/license-key-pool.test.ts",
+        "apps/desktop/src/main/license-key-pool.ts",
+        "apps/desktop/src/main/license-lease-recorder.ts",
+        "apps/desktop/src/main/license-seat-exit-verdict.test.ts",
+        "apps/desktop/src/main/license-seat-exit-verdict.ts",
+        "apps/desktop/src/main/license-seat-wait-message.test.ts",
+        "apps/desktop/src/main/license-seat-wait-message.ts",
+        "apps/desktop/src/main/one-seat-license-ui-contract.test.ts",
+        "apps/desktop/src/main/startup-license-lease-reconciliation.ts",
+        "apps/desktop/src/main/startup-orphan-sweep.test.ts",
+        "apps/desktop/src/main/startup-orphan-sweep.ts",
+        "docs/fingerprint-acceptance-gate.md",
+        "package.json",
+        "packages/mcp-server/src/runtime-license-capacity.test.ts",
+        "packages/mcp-server/src/runtime-license-capacity.ts",
+        "packages/types/src/index.ts",
+        "scripts/fingerprint-engine-cache-fixture.cjs",
+        "scripts/fingerprint-measurement-mcp.cjs",
+        "scripts/measure-mkb01e-packaged-fingerprint.cjs",
+        "apps/desktop/src/main/engine-archive-checksum.ts",
+        "apps/desktop/src/main/engine-download-checksum.test.ts",
+        "apps/desktop/src/main/license-driver-cooldown.test.ts",
+        "scripts/fingerprint-engine-pin.cjs",
+        "scripts/fingerprint-engine-pin.test.cjs"
+      ],
+      "selection": "Full installer suite: package/config changes (strategy D) and shared types (strategy E)."
+    },
+    "MKTTool": {
+      "headAtValidation": "eb587f26053cd95d0f1daf0ae33c4d3e8a0206ac",
+      "changedFiles": [
+        "docs/development-roadmap.md",
+        "docs/project-changelog.md",
+        "src/lib/antidetect/mkt-browser-adapter.test.ts",
+        "src/lib/antidetect/mkt-browser-adapter.ts",
+        "src/lib/antidetect/mkt-browser-contract.test.ts",
+        "src/lib/antidetect/mkt-browser-contract.ts",
+        "src/lib/relay/current-device-browser-health.test.ts",
+        "src/lib/relay/current-device-browser-health.ts",
+        "src/lib/relay/profile-launch-readiness.test.ts",
+        "src/lib/relay/profile-launch-readiness.ts",
+        "src/lib/relay/profile-setup-readiness.test.ts",
+        "src/lib/relay/profile-setup-readiness.ts",
+        "src/lib/relay/relay-endpoints.ts"
+      ],
+      "selection": "Five co-located tests (strategy A), contract/UI/Relay consumers and machine-clock policy guards (strategy C). Explicit pure-unit scope; PostgreSQL globalSetup excluded.",
+      "selectedTestFileCount": 13,
+      "availableTestFileCount": 238
+    },
+    "noDedicatedEndToEndTests": [
+      "MKTBrowser/scripts/fingerprint-measurement-mcp.cjs",
+      "MKTBrowser/scripts/measure-mkb01e-packaged-fingerprint.cjs"
+    ],
+    "mappingLimit": "Pin helper regression tests cover harness drift policy; actual licensed-engine measurement and vendor capacity are not validated by these tests."
+  },
+  "checks": [
+    {
+      "check": "browser-test-installer",
+      "command": "& 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe' 'C:\\Users\\anhha\\AppData\\Local\\node\\corepack\\v1\\yarn\\4.5.0\\yarn.js' test:installer",
+      "repository": "MKTBrowser",
+      "startedAt": "2026-09-21T11:47:22.3113881+07:00",
+      "finishedAt": "2026-09-21T11:48:24.5804930+07:00",
+      "exitCode": 0,
+      "durationSeconds": 62.261,
+      "log": "browser-tests.log",
+      "logSha256": "54ABA38D7A563C0C883192BB6E238CC43A20652F7E67AC3036538AD24ECB9520",
+      "summaryGroups": 17,
+      "tests": 623,
+      "passed": 622,
+      "failed": 0,
+      "skipped": 1
+    },
+    {
+      "check": "browser-typecheck",
+      "command": "& 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe' 'C:\\Users\\anhha\\AppData\\Local\\node\\corepack\\v1\\yarn\\4.5.0\\yarn.js' typecheck",
+      "repository": "MKTBrowser",
+      "startedAt": "2026-09-21T11:49:08.6566261+07:00",
+      "finishedAt": "2026-09-21T11:49:19.0859240+07:00",
+      "exitCode": 0,
+      "durationSeconds": 10.423,
+      "log": "browser-typecheck.log",
+      "logSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "check": "browser-lint",
+      "command": "& 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe' 'C:\\Users\\anhha\\AppData\\Local\\node\\corepack\\v1\\yarn\\4.5.0\\yarn.js' lint",
+      "repository": "MKTBrowser",
+      "startedAt": "2026-09-21T11:50:10.2555291+07:00",
+      "finishedAt": "2026-09-21T11:50:29.6311305+07:00",
+      "exitCode": 0,
+      "durationSeconds": 19.37,
+      "log": "browser-lint.log",
+      "logSha256": "69AEB3249694EF274F0BDCA2C0B817913E201121C92688A1D4F4F816A25C3906"
+    },
+    {
+      "check": "tool-lint",
+      "command": "& 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe' 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node_modules\\npm\\bin\\npm-cli.js' run lint",
+      "repository": "MKTTool",
+      "startedAt": "2026-09-21T11:51:49.5734659+07:00",
+      "finishedAt": "2026-09-21T11:52:11.8434372+07:00",
+      "exitCode": 0,
+      "durationSeconds": 22.264,
+      "log": "tool-lint.log",
+      "logSha256": "3EF1367A8EE2095370DB4988ED108ECB8A4D84D451BC6349EF54EBC4113F7124"
+    },
+    {
+      "check": "tool-focused-tests",
+      "command": "& 'C:\\Users\\anhha\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.2\\node.exe' --input-type=module -e \"import { startVitest } from 'vitest/node'; const run = await startVitest('test', ['src/lib/relay/current-device-browser-health.test.ts','src/lib/relay/profile-launch-readiness.test.ts','src/lib/relay/profile-setup-readiness.test.ts','src/lib/antidetect/mkt-browser-adapter.test.ts','src/lib/antidetect/mkt-browser-contract.test.ts','src/lib/antidetect/desktop-contract-mirror.test.ts','src/components/mktbrowser-ui/profile-launch-ui.test.ts','src/components/vault/profile-setup-status.test.ts','src/lib/format/machine-clock-ban.test.ts','relay/src/relay-antidetect.test.ts','relay/src/launch-profile.test.ts','relay/src/handle-profiles.test.ts','relay/src/handle-ticket.test.ts'], { watch: false, globalSetup: [] }); await run?.close();\"",
+      "repository": "MKTTool",
+      "startedAt": "2026-09-21T11:53:26.9316047+07:00",
+      "finishedAt": "2026-09-21T11:53:30.8943600+07:00",
+      "exitCode": 0,
+      "durationSeconds": 3.957,
+      "runnerDurationSeconds": 3.34,
+      "testFileCount": 13,
+      "tests": 170,
+      "passed": 170,
+      "failed": 0,
+      "skipped": 0,
+      "log": "tool-focused-tests.log",
+      "logSha256": "4712B25F2D43F4D9E3B886F34641F22053EA7456A82390932AFF0229D2E29D7B",
+      "selectedTestFiles": [
+        "src/lib/relay/current-device-browser-health.test.ts",
+        "src/lib/relay/profile-launch-readiness.test.ts",
+        "src/lib/relay/profile-setup-readiness.test.ts",
+        "src/lib/antidetect/mkt-browser-adapter.test.ts",
+        "src/lib/antidetect/mkt-browser-contract.test.ts",
+        "src/lib/antidetect/desktop-contract-mirror.test.ts",
+        "src/components/mktbrowser-ui/profile-launch-ui.test.ts",
+        "src/components/vault/profile-setup-status.test.ts",
+        "src/lib/format/machine-clock-ban.test.ts",
+        "relay/src/relay-antidetect.test.ts",
+        "relay/src/launch-profile.test.ts",
+        "relay/src/handle-profiles.test.ts",
+        "relay/src/handle-ticket.test.ts"
+      ]
+    }
+  ],
+  "testSummary": {
+    "executions": 793,
+    "passed": 792,
+    "failed": 0,
+    "skipped": 1,
+    "cancelled": 0,
+    "note": "Browser sums 17 Node run summaries; repeated tests within the package pipeline count as executions."
+  },
+  "skip": {
+    "test": "explicit machine integration gate inspects live Windows process, listener, and startup state",
+    "source": "MKTBrowser/apps/desktop/scripts/windows-installer-ownership-fixtures.test.cjs:216",
+    "condition": "process.platform !== 'win32' || process.env.MKT_BROWSER_RUN_WINDOWS_MACHINE_INTEGRATION !== '1'",
+    "observedReason": "Windows host, MKT_BROWSER_RUN_WINDOWS_MACHINE_INTEGRATION unset; explicitly outside assigned scope.",
+    "verdict": "OPEN"
+  },
+  "coverage": {
+    "lines": null,
+    "branches": null,
+    "functions": null,
+    "verdict": "OPEN",
+    "reason": "No instrumented coverage run in this bounded final-validation pipeline."
+  },
+  "build": {
+    "verdict": "OPEN",
+    "reason": "No build requested or executed in this validation pass; earlier build log is not reused as final evidence."
+  },
+  "warnings": [
+    "Two Node ExperimentalWarning messages for --experimental-transform-types; test exits remain zero."
+  ],
+  "performance": {
+    "totalCommandWallSeconds": 118.275,
+    "browserTestsOverFiveSeconds": 2,
+    "slowTests": [
+      {
+        "name": "isolated PowerShell orchestration waits, starts once, rejects conflicts and refuses recreated direct login",
+        "seconds": 8.961475
+      },
+      {
+        "name": "a missing app executable rejects through cleanup without an unhandled child error",
+        "seconds": 5.0514073
+      }
+    ]
+  },
+  "flakiness": {
+    "verdict": "NOT_MEASURED",
+    "reason": "Single final pass per command; no retries required and no dedicated repetition campaign."
+  },
+  "excludedGates": [
+    "MKTTool full database/integration suite",
+    "MKTTool typecheck in this final pass",
+    "Coverage instrumentation",
+    "Production builds",
+    "Live Windows machine-integration",
+    "Clean VM",
+    "Packaged installer",
+    "Real vendor/engine capacity",
+    "Second PC",
+    "Human acceptance",
+    "Elapsed canary",
+    "Identity acceptance"
+  ],
+  "notes": [
+    "The prior parent-owned real-engine attempt is not rerun or reinterpreted by this validation.",
+    "No staging, commit, revert, app opening, or source edits performed."
+  ],
+  "unresolvedQuestions": []
+}

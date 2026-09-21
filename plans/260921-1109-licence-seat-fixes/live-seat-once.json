@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "status": "FAIL",
+  "scope": "Source Electron lifecycle with existing packaged dependencies, disposable profile, no installer or identity acceptance",
+  "quietSince": "2026-09-21T04:12:04.951Z",
+  "notBefore": "2026-09-21T04:37:04.951Z",
+  "launchAttempts": 1,
+  "engine": {
+    "schemaVersion": 1,
+    "sequence": 2,
+    "engineKind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "url": "https://db7e0873c7f3409d5541b1c3b738967d.r2.cloudflarestorage.com/cloakbrowser/chromium-v151.0.7922.108.6/cloakbrowser-windows-x64.zip",
+    "archive": "cloakbrowser-windows-x64.zip",
+    "sha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "sizeBytes": 540036860
+  },
+  "bundleSha256": "0238f7be15515f0670f848b641fe6b400057a2e2b40c51eb78a2b3db9ef75670",
+  "freeMemoryGiB": 2.01,
+  "before": {
+    "appVersion": "0.3.23",
+    "contractVersion": 4,
+    "engine": {
+      "kind": "cloakbrowser",
+      "version": "151.0.7922.108.6",
+      "status": "ready"
+    },
+    "licenseCapacity": {
+      "total": 1,
+      "free": 1,
+      "active": 0,
+      "pendingRecovery": 0,
+      "cooling": 0
+    }
+  },
+  "attemptedAt": "2026-09-21T04:43:20.005Z",
+  "error": "The single engine launch exited with licence seat refusal code 76 after more than 31 quiet minutes; no retry was made.",
+  "afterFailure": {
+    "appVersion": "0.3.23",
+    "contractVersion": 4,
+    "engine": {
+      "kind": "cloakbrowser",
+      "version": "151.0.7922.108.6",
+      "status": "ready"
+    },
+    "licenseCapacity": {
+      "total": 1,
+      "free": 0,
+      "active": 0,
+      "pendingRecovery": 0,
+      "cooling": 1,
+      "retryAt": "2026-09-21T05:13:23.817Z"
+    }
+  },
+  "lifecycle": [
+    {
+      "timestamp": "2026-09-21T04:43:20.179Z",
+      "reason": "ORPHAN-SWEEP-NONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.2Z",
+      "reason": "BOOTSTRAP-START"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.201Z",
+      "reason": "BOOTSTRAP-TARGET-START"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.201Z",
+      "reason": "BOOTSTRAP-PROBE-START"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.233Z",
+      "reason": "BOOTSTRAP-PROBE-DONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.233Z",
+      "reason": "BOOTSTRAP-TARGET-DONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.236Z",
+      "reason": "BOOTSTRAP-TARGET-START"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.237Z",
+      "reason": "BOOTSTRAP-PROBE-START"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.238Z",
+      "reason": "BOOTSTRAP-PROBE-DONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.239Z",
+      "reason": "BOOTSTRAP-TARGET-DONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.24Z",
+      "reason": "BOOTSTRAP-DONE"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.714Z",
+      "reason": "CHILD-EXIT",
+      "exitCode": 76
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.715Z",
+      "reason": "Browser.close"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.817Z",
+      "reason": "SHUTDOWN-COMPLETE",
+      "shutdownMethod": "Browser.close"
+    },
+    {
+      "timestamp": "2026-09-21T04:43:23.817Z",
+      "reason": "LICENCE-KEY-REFUSED"
+    }
+  ],
+  "finishedAt": "2026-09-21T04:43:23.831Z",
+  "cleanupError": "EBUSY: resource busy or locked, unlink 'C:\\Users\\anhha\\AppData\\Local\\Temp\\mkt-seat-once-P1rOG3\\DIPS'",
+  "checks": {
+    "identityAcceptance": "BLOCKED",
+    "cleanCloseAcceptance": "OPEN",
+    "quietMinutes": 31.25,
+    "refusalCapacityReported": true,
+    "vendorSeatAvailable": false,
+    "engineAttempts": 1,
+    "remainingDiagnosticProcesses": 0,
+    "automaticEngineRetries": 0
+  }
+}
