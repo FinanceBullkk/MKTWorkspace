@@ -34,11 +34,11 @@ Web. HTTP 400 alone does not identify malformed input or licence capacity.
 
 ## Architecture
 
-Current route policy maps every `ok:false` response to HTTP 400. Retain this compatibility for this
+The retained route policy maps every `ok:false` response to HTTP 400. Retain this compatibility for this
 fix unless evidence demands otherwise; do not migrate status codes across all Relay endpoints.
 Add an allowlisted top-level read-failure `stage` alongside the existing optional `code`; do not
-misuse operation diagnostics, which require an operation identifier. Forward the already typed
-`AntidetectRuntimeNotReadyError.code`, which the handler currently discards. Provide safe codes
+misuse operation diagnostics, which require an operation identifier. Preserve the typed
+`AntidetectRuntimeNotReadyError.code`, which the original handler discarded. Provide safe codes
 for not configured, list failure and options failure using existing vocabulary where possible.
 
 The UI runs health and profiles concurrently. A ready health result cannot erase a profile-read
@@ -57,9 +57,9 @@ the most specific current verified reason with conservative action gating, never
    retaining independent list/options execution if useful. Do not echo arbitrary adapter errors.
    Test the direct HTTP response, client parser, and rendered guidance with error strings that
    contain proxy-like values, tokens, URLs, and local paths; none may escape the fixed contract.
-4. If compatibility never activated the engine and the measured guard is `ENGINE_NOT_READY`,
+4. If compatibility never activated the engine and the measured guard confirms it is not ready,
    the dependency is Phase 3 activation; complete it before retest. Do not remove the readiness
-   check to force 200. Do not label a CFT fixture `NO_CAPACITY` without actual evidence.
+   check to force 200. Do not label a CFT fixture as a capacity refusal without actual evidence.
 5. Repair only the proven source defect or fixture condition. For token/handshake/contract failures,
    preserve same-device authorization and matching versions. For genuine capacity refusal retain
    the seat policy; this task does not change licence admission or profile concurrency.
@@ -88,6 +88,22 @@ the most specific current verified reason with conservative action gating, never
 - [ ] Known failures retain meaningful safe code/stage through server and Web mapping.
 - [ ] Valid empty/nonempty inventory succeeds; all required guards remain enforced.
 - [ ] No raw exceptions, repeated diagnostics, automatic profile creation or launch retries.
+
+## Source And Observation Checkpoint - 25 September 2026
+
+Committed source preserves safe code/stage propagation, valid inventory shapes and conservative
+profile-operation gating. Earlier focused no-DB 211/211 and Relay 514/514 results remain historical
+source evidence. Current clean source freeze is MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e`
+and MKTBrowser `67e8f16b35a3b8427cf5d5d98aebdc413eee2447`, including the delivered-script
+normalization repair. Tool quality passes 2,457 tests with zero skips, and the security, contracts
+and Relay gates pass. Final Browser validation passes 8/8 with covered machine skips; post-quality
+source binding and cleanup pass. Immutable evidence is recorded in the
+[current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md).
+
+The historical 400 body cannot be recovered from later observations; its cause remains unknown.
+That limitation is recorded and does not require a speculative repair or an impossible recovery
+before continuation. Phase acceptance remains OPEN for new `0.3.27` candidate post-activation
+inventory and controlled failure/recovery observations with safe code/stage captured.
 
 ## Risk Assessment
 

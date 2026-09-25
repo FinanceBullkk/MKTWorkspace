@@ -7,7 +7,7 @@ status: in-progress
 priority: P1
 branch: codex/profile-manager-readiness-evidence
 tags: []
-blockedBy: []
+blockedBy: [260924-0114-relay-cold-start-tls-profiles]
 blocks:
   - 260908-0644-ready-to-use-closeout
 created: '2026-09-08T00:45:50.779Z'
@@ -44,10 +44,40 @@ close supported activation, VM, page-network, human, independent-hardware or ela
 
 ## Dependencies
 
+The remaining practical acceptance/delivery work is blocked by the
+[Relay cold health, pilot TLS and profiles repair plan](../260924-0114-relay-cold-start-tls-profiles/plan.md).
+The 23 September terminal report records these failures on the 0.3.24 / Relay 18 candidate;
+historical completed gates remain unchanged. A replacement payload needs new exact-candidate evidence.
+
 Blocks the remaining engine-activation and release tasks of the earlier closeout. Prior installer,
 startup and settings tests are historical evidence, rerun only when the tested artifact changes.
 Two clean isolated builds compare normalized payloads; exact chosen installer is never rebuilt
 between VM verification and publication. Same-host VM is not independent physical hardware.
+
+## Current Candidate Checkpoint - 25 September 2026
+
+The repair plan now freezes clean committed MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e`
+and MKTBrowser `67e8f16b35a3b8427cf5d5d98aebdc413eee2447` source. Browser `0.3.27` / Relay `20`
+pins the deterministic `c66a3935...5526b` archive (35,123,164 bytes; unchanged executable).
+The prior unpublished `e749be84...7439ff` ZIP depended on mixed script line endings; its immutable
+exact-artifact receipt remains BLOCKED. Final source normalizes the three delivered scripts to
+CRLF with BOM preserved and binds the helper as a release input. The four earlier source-review
+blockers are resolved. Previous `38b5ed0` local-gate PASS receipts are superseded for acceptance;
+Tool r2 quality/security/contracts/Relay, exact production-origin Relay smoke/TLS and source binding
+now pass locally. Browser `67e8f16` serializes packaging test files after a preserved r2 watchdog
+FAIL under PowerShell contention, without relaxing assertions or deadlines. Its official eight-stage
+rerun passes 8/8; both opt-in machine-skip occurrences are covered by the dedicated 4/4 gate.
+Final source binding, post-quality read-back and owned-environment cleanup pass. The technical
+Browser directory package has `includeRelay=false` and is not an accepted installer. The final
+verified local ledger is PASS; evidence is indexed by the
+[current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md).
+
+The abandoned `0.3.26` candidate passed eight Browser quality stages and a two-build comparison
+of 129 normalized files, then failed retained Relay terminal handoff. Its `9cc71eba...26d69`
+archive is forbidden and its receipts remain historical. Neither that comparison nor older
+completed local-gate phases accepts `0.3.27`. No new Browser installer packaging, VM execution,
+push, deployment or publication is part of this source-backlog checkpoint. The exact replacement
+installer, cold-page/profile/public-TLS, human, second-PC and canary gates remain OPEN.
 
 ## Success Criteria
 
@@ -68,4 +98,5 @@ Do not disable automatic workflows until equivalent runnable local checks exist.
 Initial review 7/10 identified three high-risk gaps. Phase details now require exact CFT contract
 replacement, full publisher preflight before any PUT, and commit/freeze/sign/test/promotion order.
 Existing ADMIN repair path handles first provisioning; no new Browser trust implementation.
-Live HEAD: v16 manifest and five compatibility object keys absent; delegation expires August 2027.
+Historical initial review: v16 manifest and five compatibility object keys were absent; delegation
+expiry was recorded as August 2027. This is not a refreshed live-storage observation.

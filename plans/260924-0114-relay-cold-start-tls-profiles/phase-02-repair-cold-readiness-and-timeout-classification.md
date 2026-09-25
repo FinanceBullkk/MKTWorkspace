@@ -101,6 +101,34 @@ implementation; do not convert a 5-second check into a shorter false failure.
 | Complete health failure/setup/retirement | Existing authoritative block preserved |
 | Legacy Relay/Browser and mixed measured versions | Conservative compatibility state; never false Ready |
 
+## Historical Source-only Checkpoint - 24 September 2026
+
+PASS (committed source): focused no-DB tests 211/211, Relay tests 514/514, typecheck/lint,
+local validation 15/15, and post-simplify tests 98/98 cover the bounded timeout/pending and
+fail-closed readiness changes. OPEN: no replacement candidate has completed the delivered-page
+cold matrix, so neither the 2,500 ms handler budget nor the below-4,000 ms cold GET requirement is
+accepted. Source freeze is MKTTool `b9dda844a6ab1cc4f355799486bdda40782af5b5` and MKTBrowser
+`a56d8b6e22c1cc1e65419d72557bca7c7d869db5`; it is not cold-page acceptance. Browser
+`7df85768f1e9ec6e23da39c9d87aed09acdc098d` subsequently repairs cached Relay handoff receipt
+creation with focused 25/25 PASS evidence; its full source-freeze refresh remains in progress.
+
+## Source Repair Checkpoint - 25 September 2026
+
+The delayed protected-state startup finding is resolved in committed source. Relay now uses a
+bootstrap parent that binds loopback before the protected child performs its state work and exposes
+fail-closed pending readiness. Process-start regressions accompany `b86928d`; terminal update
+handoff is repaired in `b2e0707`. This supersedes the earlier open source-review blocker, without
+turning process/source tests into a delivered cold-page acceptance result.
+
+The clean source freeze is MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e` and MKTBrowser
+`67e8f16b35a3b8427cf5d5d98aebdc413eee2447`, including deterministic delivered-script bytes.
+Tool r2 quality, security, contracts and Relay validation pass; exact Relay smoke and direct-child
+strict TLS/handoff pass separately. Final Browser validation passes 8/8 with all machine skips
+adjudicated; source binding and owned-environment cleanup pass. Exact receipts belong to the
+[current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md).
+Browser `0.3.27` / Relay `20` still needs the exact installed cold-page matrix; neither the
+2,500 ms handler budget nor every cold GET below 4,000 ms is accepted yet.
+
 ## Success Criteria
 
 - [ ] Health handler budget is enforced with a documented cold-path time breakdown.

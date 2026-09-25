@@ -5,8 +5,8 @@ status: in-progress
 acceptance: OPEN
 releaseVerdict: NO-GO
 blockedBy:
-  - exact packaged SEA TLS evidence
-  - replacement candidate identity, pins, and two-build equivalence
+  - host resource preflight before Browser packaging or VM execution
+  - replacement 0.3.27 two-build equivalence and exact packaged acceptance
   - clean-VM lifecycle and cold-page acceptance
   - public TLS, human, second-PC, and canary observations
 priority: P1
@@ -34,6 +34,60 @@ every missing or skipped required observation remains OPEN/BLOCKED, never a rele
 Focused regressions -> committed source freeze -> isolated local gates and two builds -> signed
 candidate metadata -> authenticated clean-VM acceptance -> separate exact-tuple promotion decision.
 Use existing release runners and receipts; no parallel release framework is needed.
+
+## Current Checkpoint - 25 September 2026
+
+Source freeze is PASS for clean committed source only: MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e`
+(tree `fd4b7a04d90b0aecb240bd846004de8a61335f01`) and MKTBrowser
+`67e8f16b35a3b8427cf5d5d98aebdc413eee2447` (tree `8820784941a838f5ca26387fde2608e396460e7e`).
+The final Tool commit normalizes all three delivered Windows scripts to CRLF while preserving all other bytes, including the PowerShell BOM; Browser source binding includes that helper. The earlier
+`js-yaml` 4.3.2 development advisory fix remains included. Focused Tool 25/25 and Browser 23/23,
+lint and diff checks pass. Final Tool r2 quality 10/10 (2,457 tests, zero skips; coverage thresholds
+met), security 2/2, contracts 3/3 and Relay 5/5 pass. Exact production-origin Relay rebuild,
+packaged smoke, direct-child strict TLS/handoff 3/3 and final source binding pass. The official
+Browser eight-stage gate at `67e8f16` passes 8/8. Its installer suite passes 719 tests with one
+explicit machine-test skip; the dedicated machine gate passes 4/4. Both occurrences of that opt-in
+skip, including the build's repeat, are covered with zero unexplained skips. Post-quality source
+binding and owned-environment cleanup pass. The [current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md)
+owns the immutable receipts; `r2/verified-ledger.json` is PASS (SHA-256
+`7d29ad9bbd124ac073085b8e66c1821342959c844675365570682c9bb13466b7`).
+
+The selected replacement is Browser `0.3.27` / Relay `20`, candidate
+`20260925-browser-0.3.27-relay-20-cold-start-tls-profiles-cft`, with Relay archive
+`c66a39353252ffa7b6ad9b936f5aad02634c729560f3b49793f4cbfe5b55526b`.
+The new archive is 35,123,164 bytes; the executable hash is unchanged. The prior unpublished
+`e749be84...7439ff` pin depended on mixed script line endings and failed the exact-artifact rebuild
+gate. Its immutable receipt remains BLOCKED. Earlier `38b5ed0` quality 10/10, security 2/2,
+contracts 3/3 and Relay 5/5 PASS receipts are historical after this source change; they cannot
+replace r2 validation. The ledger records the entry-level diagnosis and exact receipt paths.
+The earlier `0.3.26` candidate really passed eight local quality stages and a two-build
+comparison of 129 normalized payload files. Its Relay archive
+`9cc71eba405c8ea5ff9f288491ea0b827c7403b3c43541d1fa18c48a87126d69` then failed terminal
+update handoff and is forbidden as a packaging input. Those receipts remain historical.
+
+The four source-review findings are resolved in committed source: bounded bootstrap-parent
+readiness, Relay version-floor alignment, per-invocation packaging receipts and empty known-folder
+cleanup. The later terminal handoff repair is also committed. The first Browser r2 gate failed its
+concurrent-wrapper 15-second watchdog under cross-file PowerShell contention; its FAIL receipt is
+preserved. Browser `67e8f16` serializes packaging test files without changing assertions, watchdogs
+or the two concurrent wrappers inside that test. The serial packaging diagnostic passes 109 tests
+with one explicit machine-test deferral; the later official full rerun now closes the local Browser
+gate. The technical directory package uses `includeRelay=false`; it is not a Browser installer or
+an accepted candidate. No `0.3.27` installer build, VM run, push, deployment, publication or promotion
+is part of this checkpoint. Exact replacement installer, cold-page/profile, public-TLS, human,
+second-PC and canary acceptance remain OPEN; the overall release verdict remains NO-GO.
+
+## Historical Source Review Findings - Resolved In Source
+
+These findings were blockers on 24 September. Their committed repairs are included in the current
+freeze; artifact/VM validation remains separate and does not alter rejected historical bytes.
+
+| Finding | Committed resolution |
+|---|---|
+| Relay v20 action floor versus v19 candidate pins | Tool `b86928d` enforces the action floor; current `0.3.27` pins carry the repaired v20 archive and reject the failed hash. |
+| Protected-state reads delayed loopback listening | Tool `b86928d` adds bootstrap-parent pending readiness and process-start regressions; `b2e0707` completes terminal update handoff. |
+| Packaging invocations shared one receipt path | Browser `2ee0e71` gives tokenized invocations separate handoff receipts with concurrent-wrapper regressions. |
+| Cleanup tested empty Windows known-folder paths | Browser `2ee0e71` rejects null/whitespace paths before filesystem checks and adds regression coverage. |
 
 ## Related Code Files And Runners
 
@@ -65,8 +119,9 @@ Use existing release runners and receipts; no parallel release framework is need
    trees/commits; no amend, broad staging or rewriting historical failure evidence is necessary.
    Do not push MKTTool `master` during this source-freeze step: it deploys Railway. Push only after
    the new candidate has the required local/VM result and record the exact deployed SHA separately.
-6. Allocate a new Browser/Relay/sequence candidate identity as payload changes require. Pin the
-   replacement Relay checksum and coordinate manifest/control-contract/version metadata. Build
+6. Use the committed `0.3.27` / Relay `20` candidate identity and pins after final artifact provenance
+   passes; allocate a different identity if the payload changes. Coordinate final signed sequence
+   metadata without reusing the historical unpublished sequence-26 manifest. Build
    twice from independent clean inputs; compare normalized delivered payloads. Retain raw hashes
    and choose one exact installer for acceptance. Never overwrite 0.3.24/18 evidence or rebuild
    the chosen installer between acceptance and publication.
@@ -126,7 +181,7 @@ These commands cover existing tests only; include every new regression and the f
 
 ## Success Criteria
 
-- [ ] Relevant local tests/typecheck/lint/build/security/contracts pass on final frozen source.
+- [x] Relevant local tests/typecheck/lint/build/security/contracts pass on final frozen source.
 - [ ] New exact candidate passes the three product gates with immutable receipts and hashes.
 - [ ] Required VM lifecycle/cleanup evidence recorded; unresolved environment/human gates explicit.
 - [ ] Final report lists changed files, cause per issue, commands/results, commits and exact artifacts.

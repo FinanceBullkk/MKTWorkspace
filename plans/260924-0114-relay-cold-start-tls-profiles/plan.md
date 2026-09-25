@@ -5,6 +5,10 @@ description: >-
   and actionable profile errors.
 status: in-progress
 sourceValidation: PASS
+sourceFreeze: PASS
+sourceFreezeScope: committed-source-only
+fullTestSuite: PASS
+localContracts: PASS
 acceptance: OPEN
 releaseVerdict: NO-GO
 priority: P1
@@ -21,7 +25,7 @@ blocks:
   - 260908-0740-local-vm-product-release
   - 260921-1331-cloak-fast-profile-switch
 created: '2026-09-23T18:17:38.729Z'
-updated: '2026-09-24'
+updated: '2026-09-25'
 createdBy: 'ck:plan'
 source: skill
 ---
@@ -30,10 +34,10 @@ source: skill
 
 ## Overview
 
-Implementation is in progress. Source-only repairs and local source validation are frozen, but
-exact-runtime, replacement-candidate, and clean-VM acceptance remain open. Scope: the three
-failures recorded on 23 September for Browser 0.3.24 / Relay 18. Work in `E:/MKTWorkspace`, with
-separate Git roots for MKTTool and MKTBrowser.
+Implementation is committed and final frozen-source local validation passes. The four follow-up
+source-review findings are resolved. Exact replacement-installer and clean-VM acceptance remain
+open; local validation does not complete any of the five acceptance phases. Scope: the three failures recorded on 23 September for Browser 0.3.24 / Relay 18.
+Work in `E:/MKTWorkspace`, with separate Git roots for MKTTool and MKTBrowser.
 
 Read [Claude handoff](./claude-handoff.md), then [verified analysis](./reports/source-analysis.md).
 The latter distinguishes observed failures, confirmed code behavior, and unresolved causes.
@@ -62,18 +66,68 @@ inventory, creation, or launch; the Relay action boundary is authoritative.
 | 4 | [Resolve profiles rejection and error contract](./phase-04-resolve-profiles-rejection-and-error-contract.md) | In Progress |
 | 5 | [Validate replacement candidate and hand off](./phase-05-validate-replacement-candidate-and-hand-off.md) | In Progress |
 
-## Execution checkpoint - 24 September 2026
+## Current Checkpoint - 25 September 2026
+
+Source freeze is PASS for clean committed source only: MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e`
+(tree `fd4b7a04d90b0aecb240bd846004de8a61335f01`) and MKTBrowser
+`67e8f16b35a3b8427cf5d5d98aebdc413eee2447` (tree `8820784941a838f5ca26387fde2608e396460e7e`).
+The final Tool commit normalizes all three delivered Windows scripts to CRLF while preserving all other bytes, including the PowerShell BOM; Browser source binding includes that helper. The earlier
+`js-yaml` 4.3.2 development advisory fix remains included. Focused Tool 25/25 and Browser 23/23,
+lint and diff checks pass. Final Tool r2 quality 10/10 (2,457 tests, zero skips; coverage thresholds
+met), security 2/2, contracts 3/3 and Relay 5/5 pass. Exact production-origin Relay rebuild,
+packaged smoke, direct-child strict TLS/handoff 3/3 and final source binding pass. The official
+Browser eight-stage gate at `67e8f16` passes 8/8. Its installer suite passes 719 tests with one
+explicit machine-test skip; the dedicated machine gate passes 4/4. Both occurrences of that opt-in
+skip, including the build's repeat, are covered with zero unexplained skips. Post-quality source
+binding and owned-environment cleanup pass. The [current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md)
+owns the immutable receipts; `r2/verified-ledger.json` is PASS (SHA-256
+`7d29ad9bbd124ac073085b8e66c1821342959c844675365570682c9bb13466b7`).
+
+The selected replacement is Browser `0.3.27` / Relay `20`, candidate
+`20260925-browser-0.3.27-relay-20-cold-start-tls-profiles-cft`, with Relay archive
+`c66a39353252ffa7b6ad9b936f5aad02634c729560f3b49793f4cbfe5b55526b`.
+The new archive is 35,123,164 bytes; the executable hash is unchanged. The prior unpublished
+`e749be84...7439ff` pin depended on mixed script line endings and failed the exact-artifact rebuild
+gate. Its immutable receipt remains BLOCKED. Earlier `38b5ed0` quality 10/10, security 2/2,
+contracts 3/3 and Relay 5/5 PASS receipts are historical after this source change; they cannot
+replace r2 validation. The ledger records the entry-level diagnosis and exact receipt paths.
+The earlier `0.3.26` candidate really passed eight local quality stages and a two-build
+comparison of 129 normalized payload files. Its Relay archive
+`9cc71eba405c8ea5ff9f288491ea0b827c7403b3c43541d1fa18c48a87126d69` then failed terminal
+update handoff and is forbidden as a packaging input. Those receipts remain historical.
+
+The four source-review findings are resolved in committed source: bounded bootstrap-parent
+readiness, Relay version-floor alignment, per-invocation packaging receipts and empty known-folder
+cleanup. The later terminal handoff repair is also committed. The first Browser r2 gate failed its
+concurrent-wrapper 15-second watchdog under cross-file PowerShell contention; its FAIL receipt is
+preserved. Browser `67e8f16` serializes packaging test files without changing assertions, watchdogs
+or the two concurrent wrappers inside that test. The serial packaging diagnostic passes 109 tests
+with one explicit machine-test deferral; the later official full rerun now closes the local Browser
+gate. The technical directory package uses `includeRelay=false`; it is not a Browser installer or
+an accepted candidate. No `0.3.27` installer build, VM run, push, deployment, publication or promotion
+is part of this checkpoint. Exact replacement installer, cold-page/profile, public-TLS, human,
+second-PC and canary acceptance remain OPEN; the overall release verdict remains NO-GO.
+
+## Historical Execution Checkpoint - 24 September 2026
+
+The following rows retain the results and limits of that earlier inspection; they are not the
+current source or candidate allocation status.
 
 | Evidence domain | Verdict | Boundaries |
 |---|---|---|
-| Source repair and freeze | PASS (source-only) | MKTTool `014c77d`; MKTBrowser `6d13e8d`; focused tests and isolated quality/Relay/security gates passed. |
-| MKTTool contracts runner | BLOCKED | Requires PostgreSQL 16; host has PostgreSQL 17 and Docker is unavailable. No production database was used. |
+| Source repairs and focused validation | PASS (committed source, focused scope) | MKTTool `b9dda844a6ab1cc4f355799486bdda40782af5b5`: focused no-DB 211/211, Relay 514/514, typecheck/lint, TLS 12/12, local validation 15/15, post-simplify 98/98. MKTBrowser `7df85768f1e9ec6e23da39c9d87aed09acdc098d`: cache-hit Relay handoff repair; focused Node 22.23.2 tests 25/25. The 712/713 installer result is parent-checkpoint evidence, not a refreshed full-suite result for this commit. |
+| Source freeze | IN PROGRESS (Browser refresh) | Clean MKTTool HEAD `b9dda844a6ab1cc4f355799486bdda40782af5b5` (tree `80ca729c84f71e0766821390b7992e4ad6b5a52d`) and MKTBrowser HEAD `7df85768f1e9ec6e23da39c9d87aed09acdc098d` (tree `467175a2f038d69ca571251ac3ac809ebc0028a0`). The new Browser head has focused PASS evidence but still needs the final suite refresh. No push. |
+| MKTTool full test suite | BLOCKED | `npm test` reached 2,048 passing tests, but 342 database tests lack required test-schema tables; this is not a PASS. |
+| MKTTool contracts runner | PASS (local contract scope) | Fresh detached `b9dda844a6ab1cc4f355799486bdda40782af5b5` checkout: Node `22.23.2`, PostgreSQL `16.12`, and official runner passed dependencies, empty-database preflight, and restore/rate-limit contracts (3/3). Receipt: `D:\MKTWorkspace-local-validation\260924-b9dda-pg16-contracts-pg16-r1\receipt.json`, SHA-256 `c097a49e41636e3ff24f7980fab190cacd601552b55dbb705239cdf19757fc12`. |
+| Current local SEA TLS and handoff | PASS (local source diagnostic only) | Fixture-bound Relay v20 archive `cb2cf850d391c5bbc07730d4c67be284944ad760374c2f7237d10609eee3cc1c` / executable `9b1e252255f28f2c6befb4a203bfb51104487ec70b399e13e2fdb403238a48b6`: direct-child trusted/missing-intermediate/wrong-hostname flow 3/3, disposable TLS matrix 12/12, and packaged Relay smoke passed. A Global per-user-SID mutex serializes CurrentUser certificate fixture cleanup across Windows sessions. The source repair is committed locally as MKTTool `b2e0707219c080045d9406518ee3ad65358cada1`; the locally built archive remains diagnostic only, not a replacement candidate, normal-parent scoped-trust, or public-TLS result. |
+| Retained Relay v20 exact TLS diagnostic | FAIL (retained bytes only) | The hash-verified v20 archive/executable reaches staging with the direct test child and scoped CA, but the old `onPrepared` path never completes the helper-lock handoff or exits (`null !== 0`). Normal parent launch continues to scrub the scoped CA by design. The expected failure leaves zero fixture/retained-case directories, tagged certificates, or Relay processes. This does not prove public TLS or a replacement candidate. |
+| Heavy Browser build and replacement-candidate execution | BLOCKED (host preflight) | 24 September measurement found 1,520 MiB available RAM. `VBoxManage.exe` was unavailable on `PATH`, but explicit `C:\Program Files\Oracle\VirtualBox\VBoxManage.exe list runningvms` succeeded with empty output: no VM was running at inspection. No heavy Browser build, two-build comparison, candidate installer, VM run, public TLS, deployment, publication, or promotion was started. |
 | Replacement candidate and product acceptance | OPEN / NO-GO | Exact SEA TLS, public TLS, new tuple/pins, two-build equivalence, clean-VM cold/page/profile lifecycle, human, second-PC, and canary evidence are not observed. |
 | Identity boundary | FAIL | `G2-IDENTITY=FAIL` unchanged; no identity-isolation or real-account-safety claim is authorized. |
 
-No MKTTool `master` push, deployment, publication, or candidate promotion occurred. All phase
-success-criteria checkboxes remain open: source tests do not substitute for the required exact
-artifact, VM, or human acceptance evidence.
+Historical failed and blocked receipts remain unchanged. Later source repairs and candidate work
+are recorded in the current checkpoint above; a historical host measurement is not a current
+preflight or an acceptance verdict. Recheck host resources before Browser packaging or VM work.
 
 ## Dependencies
 
@@ -106,5 +160,5 @@ licence/fingerprint research or the accepted 0.3.17 tuple.
 
 1. Which spans account for the cold 5,064.978 ms, including install inspection and secure-store reads?
 2. Which TLS cause code/chain failed in the exact SEA process, and is public TLS affected?
-3. Which `/profiles` rejection branch produced the historical 400? A new reproduction cannot
-   retroactively prove the missing original body unless independently correlated.
+3. What safe code/stage does the replacement candidate report for a reproduced `/profiles` refusal?
+   The original missing-body cause remains unknown and is not a new recoverability gate.

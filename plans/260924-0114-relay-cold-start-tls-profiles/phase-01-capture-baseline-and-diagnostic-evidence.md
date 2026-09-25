@@ -38,6 +38,24 @@ Capture and classification are separate. Write a sanitized observation even when
 state, JSON parsing, TLS, or status assertions fail; write the verdict afterward. Hash receipts
 and include candidate/source identity plus a generated non-secret correlation ID.
 
+## Evidence Checkpoint - 25 September 2026
+
+Historical candidate bytes and receipt hashes remain preserved. Local exact-SEA diagnostics now
+exist: the retained v20 failed terminal handoff, while the separate repaired fixture passed its
+strict TLS/handoff cases. See Phase 3 for the immutable identities and scope. The original
+`/profiles` response body was not retained; its exact cause cannot be reconstructed from a later
+reproduction. This records the baseline limitation, not a new gate requiring impossible recovery.
+
+The replacement `0.3.27` / Relay `20` pins and source repairs are committed. Exact rebuild exposed
+a script line-ending mismatch in the earlier unpublished ZIP; its BLOCKED receipt and entry hashes
+remain preserved. Final source normalizes delivered scripts and selects archive `c66a3935...5526b`.
+Clean source freeze, final Tool r2 gates and exact Relay smoke/TLS/provenance pass locally.
+The final Browser gate passes 8/8; explicit machine skips are covered by the dedicated 4/4 gate.
+Post-quality source binding and owned-environment cleanup also pass, as recorded in the
+[current checkpoint ledger](../reports/checkpoint-260925-1335-candidate-backlog.md).
+New candidate observations must capture safe code/stage and cold timing. This phase remains
+in progress while those practical observations are missing.
+
 ## Implementation Steps
 
 1. Read both README/AGENTS files; record HEAD, tree, dirty paths, lock hashes and toolchain IDs.
@@ -74,7 +92,7 @@ and include candidate/source identity plus a generated non-secret correlation ID
 - [ ] No new profile create/launch or old compatibility ticket replay occurred during diagnosis.
 - [ ] Cold handler delay is separated from process boot and browser permission behavior.
 - [ ] TLS trust hypothesis has exact-runtime evidence or is explicitly OPEN.
-- [ ] `/profiles` code/stage is captured, or the precise capture/reproduction limitation is documented.
+- [x] `/profiles` baseline capture limitation is documented; original cause remains unknown.
 
 ## Risk Assessment
 
