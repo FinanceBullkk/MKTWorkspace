@@ -37,6 +37,15 @@ Use existing release runners and receipts; no parallel release framework is need
 
 ## Current Checkpoint - 25 September 2026
 
+Execution update, 28 September 2026: two isolated 0.3.27 builds now pass normalized comparison
+(129 files, digest `1c8a94d1...1889`), and Build A is retained as the exact unsigned installer
+`e690602e...9ca`. Signed candidate manifests 32-43 validate; fresh-state sequence 32 is published
+candidate-only with full remote GET/hash read-back, but Railway target variables and operator
+promotion remain unchanged. The 26-file VM bundle is ready. Clean-VM execution is currently
+`BLOCKED` before restore/start because host preflight measured only 1.753 GiB available physical
+memory and 3.155 GiB commit headroom versus the established 6 GiB thresholds. No user application
+was closed. See [the 28 September checkpoint](../reports/checkpoint-260928-0327-candidate-vm-memory-block.md).
+
 Source freeze is PASS for clean committed source only: MKTTool `a32c293fc9a25c3d17873a31e9a5a62d711e2f3e`
 (tree `fd4b7a04d90b0aecb240bd846004de8a61335f01`) and MKTBrowser
 `67e8f16b35a3b8427cf5d5d98aebdc413eee2447` (tree `8820784941a838f5ca26387fde2608e396460e7e`).
