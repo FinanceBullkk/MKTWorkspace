@@ -1,0 +1,299 @@
+TAP version 13
+# (node:14260) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Browser.close persists cooling and prevents any engine attempt before the deadline
+ok 1 - Browser.close persists cooling and prevents any engine attempt before the deadline
+  ---
+  duration_ms: 76.937
+  type: 'test'
+  ...
+# Subtest: refusal never rotates to another free key and survives restart with a longer wait
+ok 2 - refusal never rotates to another free key and survives restart with a longer wait
+  ---
+  duration_ms: 8.8866
+  type: 'test'
+  ...
+# Subtest: pre-spawn failure releases only its unstarted reservation immediately
+ok 3 - pre-spawn failure releases only its unstarted reservation immediately
+  ---
+  duration_ms: 6.2914
+  type: 'test'
+  ...
+# Subtest: a transient refusal-write failure cannot downgrade the cooldown during cleanup
+ok 4 - a transient refusal-write failure cannot downgrade the cooldown during cleanup
+  ---
+  duration_ms: 12.221
+  type: 'test'
+  ...
+# [mkt-browser] durable license release failed; cooling seat: Error: License lease journal terminal-refused failed.
+#     at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:61:13)
+#     at async LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:5)
+#     at async LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:46)
+#     at async ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1315:10)
+#     at async ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1254:9)
+#     at async ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:278:9)
+#     at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:237:14)
+#     at async waitForActual (node:assert:644:5)
+#     at async Function.rejects (node:assert:767:25)
+#     at async TestContext.<anonymous> (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-driver-cooldown.test.ts:154:5) {
+#   [cause]: Error: storage unavailable
+#       at LicenseLeaseJournal.f.journal.transition (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-driver-cooldown.test.ts:147:49)
+#       at <anonymous> (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:160:20)
+#       at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:56:13)
+#       at LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:16)
+#       at LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:57)
+#       at ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1315:43)
+#       at ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1254:20)
+#       at ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:278:20)
+#       at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:237:14)
+#       at async waitForActual (node:assert:644:5)
+# }
+# Subtest: repeated refusal-write failure keeps a conservative wait across two restarts
+ok 5 - repeated refusal-write failure keeps a conservative wait across two restarts
+  ---
+  duration_ms: 19.4374
+  type: 'test'
+  ...
+# (node:16688) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: hands each profile its own key and reports what is left
+ok 6 - hands each profile its own key and reports what is left
+  ---
+  duration_ms: 3.3861
+  type: 'test'
+  ...
+# Subtest: re-acquiring for the same profile returns the same key
+ok 7 - re-acquiring for the same profile returns the same key
+  ---
+  duration_ms: 0.2287
+  type: 'test'
+  ...
+# Subtest: returns null rather than overbooking when every key is taken
+ok 8 - returns null rather than overbooking when every key is taken
+  ---
+  duration_ms: 0.2886
+  type: 'test'
+  ...
+# Subtest: only independently proven release permits immediate reuse; ordinary close rests
+ok 9 - only independently proven release permits immediate reuse; ordinary close rests
+  ---
+  duration_ms: 4.8059
+  type: 'test'
+  ...
+# Subtest: a refused key rests, so the next launch tries a different one
+ok 10 - a refused key rests, so the next launch tries a different one
+  ---
+  duration_ms: 0.4301
+  type: 'test'
+  ...
+# Subtest: drops blanks and duplicates instead of advertising seats that do not exist
+ok 11 - drops blanks and duplicates instead of advertising seats that do not exist
+  ---
+  duration_ms: 0.2303
+  type: 'test'
+  ...
+# Subtest: never exposes a whole key
+ok 12 - never exposes a whole key
+  ---
+  duration_ms: 0.3262
+  type: 'test'
+  ...
+# Subtest: an empty pool is a valid state, not a crash
+ok 13 - an empty pool is a valid state, not a crash
+  ---
+  duration_ms: 0.1621
+  type: 'test'
+  ...
+# Subtest: releasing a profile that holds nothing changes nothing
+ok 14 - releasing a profile that holds nothing changes nothing
+  ---
+  duration_ms: 0.5528
+  type: 'test'
+  ...
+# Subtest: capacity never counts pending recovery or cooling keys as free
+ok 15 - capacity never counts pending recovery or cooling keys as free
+  ---
+  duration_ms: 4.9917
+  type: 'test'
+  ...
+# Subtest: close and refusal waits block acquisition until their exact manual retry deadlines
+ok 16 - close and refusal waits block acquisition until their exact manual retry deadlines
+  ---
+  duration_ms: 1.9508
+  type: 'test'
+  ...
+# Subtest: unreconciled startup leases never advertise free capacity even without a journal argument
+ok 17 - unreconciled startup leases never advertise free capacity even without a journal argument
+  ---
+  duration_ms: 0.327
+  type: 'test'
+  ...
+# Subtest: a future journal timestamp is normalized once for both acquisition and capacity
+ok 18 - a future journal timestamp is normalized once for both acquisition and capacity
+  ---
+  duration_ms: 0.5243
+  type: 'test'
+  ...
+# Subtest: capacity treats an unreconciled reservation as pending instead of free
+ok 19 - capacity treats an unreconciled reservation as pending instead of free
+  ---
+  duration_ms: 0.4659
+  type: 'test'
+  ...
+# Subtest: a lease left unreleased by an earlier run starts its key cooling, not idle
+ok 20 - a lease left unreleased by an earlier run starts its key cooling, not idle
+  ---
+  duration_ms: 0.2359
+  type: 'test'
+  ...
+# Subtest: cooling is counted from when the lease last moved, not from startup
+ok 21 - cooling is counted from when the lease last moved, not from startup
+  ---
+  duration_ms: 0.2243
+  type: 'test'
+  ...
+# Subtest: an old active record never expires by timestamp because the browser may have kept heartbeating
+ok 22 - an old active record never expires by timestamp because the browser may have kept heartbeating
+  ---
+  duration_ms: 0.8696
+  type: 'test'
+  ...
+# Subtest: a confirmed release and an unstarted reservation both leave the key idle
+ok 23 - a confirmed release and an unstarted reservation both leave the key idle
+  ---
+  duration_ms: 0.485
+  type: 'test'
+  ...
+# Subtest: nextFreeAtMs names the wait only when every key is resting
+ok 24 - nextFreeAtMs names the wait only when every key is resting
+  ---
+  duration_ms: 0.2713
+  type: 'test'
+  ...
+# Subtest: a reconciled lease rests from when its browser actually died
+ok 25 - a reconciled lease rests from when its browser actually died
+  ---
+  duration_ms: 0.4168
+  type: 'test'
+  ...
+# Subtest: a reconciled lease whose rest already ran out returns its key at once
+ok 26 - a reconciled lease whose rest already ran out returns its key at once
+  ---
+  duration_ms: 0.2355
+  type: 'test'
+  ...
+# (node:21400) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a clean close records the seat as given back
+ok 27 - a clean close records the seat as given back
+  ---
+  duration_ms: 43.1052
+  type: 'test'
+  ...
+# Subtest: a killed browser records the seat as still resting
+ok 28 - a killed browser records the seat as still resting
+  ---
+  duration_ms: 22.1096
+  type: 'test'
+  ...
+# Subtest: a launch that never spawned frees the key for other profiles
+ok 29 - a launch that never spawned frees the key for other profiles
+  ---
+  duration_ms: 13.6438
+  type: 'test'
+  ...
+# Subtest: a pre-spawn starting record can close cleanly without leaving recovery noise
+ok 30 - a pre-spawn starting record can close cleanly without leaving recovery noise
+  ---
+  duration_ms: 21.9037
+  type: 'test'
+  ...
+# Subtest: a refusal is recorded terminally so a restart keeps resting the key
+ok 31 - a refusal is recorded terminally so a restart keeps resting the key
+  ---
+  duration_ms: 9.5408
+  type: 'test'
+  ...
+# Subtest: retries a release that was already durably moved to ending
+ok 32 - retries a release that was already durably moved to ending
+  ---
+  duration_ms: 20.9342
+  type: 'test'
+  ...
+# Subtest: a journal failure is logged and fails the licensed launch closed
+ok 33 - a journal failure is logged and fails the licensed launch closed
+  ---
+  duration_ms: 1.1789
+  type: 'test'
+  ...
+# Subtest: released on a profile with no record does nothing
+ok 34 - released on a profile with no record does nothing
+  ---
+  duration_ms: 1.7
+  type: 'test'
+  ...
+# Subtest: a double close does not corrupt an already-final record
+ok 35 - a double close does not corrupt an already-final record
+  ---
+  duration_ms: 12.0641
+  type: 'test'
+  ...
+# (node:17580) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: confirms a startup lease only after Browser.close ended its exact orphan
+ok 36 - confirms a startup lease only after Browser.close ended its exact orphan
+  ---
+  duration_ms: 61.7481
+  type: 'test'
+  ...
+# Subtest: keeps a startup lease cooling when the orphan required a hard kill
+ok 37 - keeps a startup lease cooling when the orphan required a hard kill
+  ---
+  duration_ms: 24.0876
+  type: 'test'
+  ...
+# Subtest: a verdict about a profile this journal never leased is skipped
+ok 38 - a verdict about a profile this journal never leased is skipped
+  ---
+  duration_ms: 16.3334
+  type: 'test'
+  ...
+# Subtest: a durable write that fails leaves the lease pending rather than freeing the key
+ok 39 - a durable write that fails leaves the lease pending rather than freeing the key
+  ---
+  duration_ms: 14.799
+  type: 'test'
+  ...
+# Subtest: a reboot settles the lease no sweep can reach, and the wait ends on the vendor's clock
+ok 40 - a reboot settles the lease no sweep can reach, and the wait ends on the vendor's clock
+  ---
+  duration_ms: 26.4749
+  type: 'test'
+  ...
+# Subtest: a lease whose rest ran out before this start is retired, not rested again
+ok 41 - a lease whose rest ran out before this start is retired, not rested again
+  ---
+  duration_ms: 18.3737
+  type: 'test'
+  ...
+# Subtest: within one boot session a swept-clean process table rests the seat from now
+ok 42 - within one boot session a swept-clean process table rests the seat from now
+  ---
+  duration_ms: 12.4757
+  type: 'test'
+  ...
+# Subtest: a sweep that could not look leaves the lease exactly as it found it
+ok 43 - a sweep that could not look leaves the lease exactly as it found it
+  ---
+  duration_ms: 11.1707
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2971.767

@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "status": "failed",
+  "preparedAt": "2026-09-21T14:34:28.869Z",
+  "attemptBudget": 4,
+  "attemptsUsed": 1,
+  "stopOnFirstFailure": true,
+  "automaticRetry": false,
+  "minimumOpenMs": 5000,
+  "sequence": [
+    "P1",
+    "P2",
+    "P1",
+    "P2"
+  ],
+  "productPath": "packaged-mkt-browser-mcp",
+  "proxyGate": "OPEN-localhost-only",
+  "artifact": {
+    "browserHead": "06fe257c7ee615b156d776cfd10d415a933c23b2",
+    "sourceDirty": true,
+    "sourceStatusSha256": "513c4f3012c7d4e8afba9a7ac514e504177dcfeda9a8291e247a20ed8edc0e1d",
+    "executableVersion": "0.3.23",
+    "executableSha256": "3d9a8169385d9c2dac01f93dede1f321305cbdd15c772fe68d57c1a8a54374da",
+    "appAsarSha256": "a5c53256ef313f10b3b7c12917bea0ec42cc86ee0a790e3bd5ba274bec4cc7ac",
+    "yarnLockSha256": "8b5d03ff8333d3dd1464236d1ab10226655f915e38e499c93834406ee98a1d1a",
+    "packageManager": "yarn@4.5.0"
+  },
+  "engine": {
+    "pinSequence": 2,
+    "kind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "archiveSizeBytes": 540036860,
+    "runtimeSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v22.23.2",
+    "totalMemoryMb": 16307,
+    "freeMemoryMbBefore": 1213
+  },
+  "profiles": {
+    "P1": {
+      "seedConfigured": true
+    },
+    "P2": {
+      "seedConfigured": true
+    }
+  },
+  "capacityChecks": [
+    {
+      "stage": "initial",
+      "requestStartedAt": "2026-09-21T14:34:34.974Z",
+      "requestCompletedAt": "2026-09-21T14:34:37.506Z",
+      "observationCompletedAt": "2026-09-21T14:34:37.504Z",
+      "freshUntil": "2026-09-21T14:34:42.504Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "failed-launch-1-P1",
+      "requestStartedAt": "2026-09-21T14:34:47.775Z",
+      "requestCompletedAt": "2026-09-21T14:34:48.947Z",
+      "observationCompletedAt": "2026-09-21T14:34:48.946Z",
+      "freshUntil": "2026-09-21T14:34:53.946Z",
+      "local": {
+        "total": 1,
+        "free": 0,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 1
+      },
+      "vendor": {
+        "active": 1,
+        "limit": 1
+      },
+      "availability": "in-use",
+      "reason": "CAPACITY_OCCUPIED"
+    }
+  ],
+  "launches": [
+    {
+      "sequence": 1,
+      "profile": "P1",
+      "status": "failed",
+      "launchRequestedAt": "2026-09-21T14:34:37.512Z",
+      "launchResolvedAt": "2026-09-21T14:34:40.388Z",
+      "usableAt": "2026-09-21T14:34:43.269Z",
+      "usableMsFromPriorClose": 5757,
+      "openDurationMs": 5014,
+      "closeRequestedAt": "2026-09-21T14:34:45.402Z",
+      "closeCompletedAt": "2026-09-21T14:34:47.773Z",
+      "processExited": true,
+      "shutdown": {
+        "completed": true,
+        "shutdownMethod": "Browser.close",
+        "childExitObserved": true,
+        "childExitCode": 0,
+        "childExitSignalled": false
+      },
+      "runningCount": 1,
+      "storageBefore": null,
+      "storageAfter": "P1",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "868d8309fbd53499f603dad006c3c02a5d66ed1de923f21675c92caf4ed6e23a",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      },
+      "failure": {
+        "category": "CAPACITY_OR_LICENCE_REFUSAL"
+      }
+    }
+  ],
+  "cleanup": {
+    "completed": true,
+    "disposableRootRemoved": true,
+    "preservedForRecovery": false
+  },
+  "runtime": {
+    "appVersion": "0.3.23",
+    "contractVersion": 5,
+    "profileSchemaVersion": 3,
+    "engineKind": "cloakbrowser",
+    "engineVersion": "151.0.7922.108.6"
+  },
+  "failure": {
+    "stage": "launch-1-P1",
+    "category": "CAPACITY_OR_LICENCE_REFUSAL",
+    "appDiagnostic": {
+      "devToolsEndpointReady": true,
+      "primaryProcessMatchesSpawnedChild": true,
+      "cdpReady": true
+    }
+  },
+  "completedAt": "2026-09-21T14:34:48.953Z",
+  "lifecycle": {
+    "expectedCloses": 1,
+    "completedCloses": 1,
+    "browserClose": 1,
+    "signalEscalations": 0
+  }
+}

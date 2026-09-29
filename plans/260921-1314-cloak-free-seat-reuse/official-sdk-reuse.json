@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "scope": "Official SDK, exact installed CloakBrowser, disposable profiles",
+  "startedAt": "2026-09-21T06:23:29.755Z",
+  "engineAttempts": 2,
+  "countRequests": 7,
+  "capacity": [
+    {
+      "label": "before-P1",
+      "observedAt": "2026-09-21T06:23:30.766Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "active-P1",
+      "observedAt": "2026-09-21T06:23:36.302Z",
+      "httpStatus": 200,
+      "active": 1,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "closed-P1",
+      "observedAt": "2026-09-21T06:23:39.909Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "before-P2",
+      "observedAt": "2026-09-21T06:23:40.328Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "active-P2",
+      "observedAt": "2026-09-21T06:23:44.778Z",
+      "httpStatus": 200,
+      "active": 1,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "closed-P2",
+      "observedAt": "2026-09-21T06:23:46.260Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "final",
+      "observedAt": "2026-09-21T06:23:46.917Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    }
+  ],
+  "profiles": [
+    {
+      "label": "P1",
+      "seed": 2609211314,
+      "attemptedAt": "2026-09-21T06:23:31.770Z",
+      "readyAt": "2026-09-21T06:23:36.302Z",
+      "nativeUserAgentSha256": "40956f08f6c9af83802ecd226385c678a06f995e8a19f59cd575a9a4c6acc287",
+      "separateStorage": true,
+      "activeCapacity": {
+        "label": "active-P1",
+        "observedAt": "2026-09-21T06:23:36.302Z",
+        "httpStatus": 200,
+        "active": 1,
+        "limit": 1,
+        "state": "ok"
+      },
+      "closeRequestedAt": "2026-09-21T06:23:38.132Z",
+      "closedAt": "2026-09-21T06:23:39.585Z",
+      "remainingProcesses": [],
+      "vendorFreeObservedAt": "2026-09-21T06:23:39.909Z",
+      "vendorFreeDelayMs": 324
+    },
+    {
+      "label": "P2",
+      "seed": 2609211315,
+      "attemptedAt": "2026-09-21T06:23:41.317Z",
+      "handoffStartDelayMs": 1732,
+      "readyAt": "2026-09-21T06:23:44.778Z",
+      "nativeUserAgentSha256": "40956f08f6c9af83802ecd226385c678a06f995e8a19f59cd575a9a4c6acc287",
+      "separateStorage": true,
+      "activeCapacity": {
+        "label": "active-P2",
+        "observedAt": "2026-09-21T06:23:44.778Z",
+        "httpStatus": 200,
+        "active": 1,
+        "limit": 1,
+        "state": "ok"
+      },
+      "closeRequestedAt": "2026-09-21T06:23:45.484Z",
+      "closedAt": "2026-09-21T06:23:45.938Z",
+      "remainingProcesses": [],
+      "vendorFreeObservedAt": "2026-09-21T06:23:46.260Z",
+      "vendorFreeDelayMs": 322
+    }
+  ],
+  "fingerprintAcceptance": "NOT-RUN",
+  "proxyAcceptance": "NOT-RUN",
+  "engine": {
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "sdkVersion": "0.5.10",
+  "playwrightVersion": "1.62.0",
+  "freeRamGiB": 2.77,
+  "initialEngineProcesses": [],
+  "profileRoot": "E:\\MKTWorkspace\\local-test-artifacts\\cloak-free-seat-260921-1314\\profiles",
+  "finalEngineProcesses": [],
+  "finishedAt": "2026-09-21T06:23:47.241Z"
+}

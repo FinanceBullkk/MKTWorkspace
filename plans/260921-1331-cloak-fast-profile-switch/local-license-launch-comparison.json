@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "scope": "Loopback-only licence simulator; synthetic key; no vendor requests",
+  "preparedAt": "2026-09-21T12:13:19.485Z",
+  "launchBudget": 4,
+  "launchesUsed": 4,
+  "modes": [
+    {
+      "mode": "direct-current",
+      "startedAt": "2026-09-21T12:13:19.516Z",
+      "completedAt": "2026-09-21T12:13:21.498Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "c4bb156d0ebe037d"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "cleanupComplete": true,
+      "failure": {
+        "type": "Error",
+        "reason": "Cannot find module 'chrome-remote-interface'\nRequire stack:\n- E:\\MKTWorkspace\\plans\\260921-1331-cloak-fast-profile-switch\\diagnose-local-license-launch.cjs"
+      }
+    },
+    {
+      "mode": "direct-no-sandbox",
+      "startedAt": "2026-09-21T12:13:21.504Z",
+      "completedAt": "2026-09-21T12:13:23.007Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "1ab6d134aef15b05"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "cleanupComplete": true,
+      "failure": {
+        "type": "Error",
+        "reason": "Cannot find module 'chrome-remote-interface'\nRequire stack:\n- E:\\MKTWorkspace\\plans\\260921-1331-cloak-fast-profile-switch\\diagnose-local-license-launch.cjs"
+      }
+    },
+    {
+      "mode": "direct-relaunch-guards",
+      "startedAt": "2026-09-21T12:13:23.011Z",
+      "completedAt": "2026-09-21T12:13:24.464Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "590542bb403e9d9b"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "cleanupComplete": true,
+      "failure": {
+        "type": "Error",
+        "reason": "Cannot find module 'chrome-remote-interface'\nRequire stack:\n- E:\\MKTWorkspace\\plans\\260921-1331-cloak-fast-profile-switch\\diagnose-local-license-launch.cjs"
+      }
+    },
+    {
+      "mode": "official-sdk",
+      "startedAt": "2026-09-21T12:13:24.468Z",
+      "completedAt": "2026-09-21T12:13:26.319Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "859953eb9e2b0c53"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "cleanupComplete": true,
+      "failure": {
+        "type": "CloakBrowserLicenseError",
+        "reason": "CloakBrowser Pro: couldn't verify your license (license server unreachable or a connection problem)."
+      }
+    }
+  ],
+  "engine": {
+    "version": "151.0.7922.108.6",
+    "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "completedAt": "2026-09-21T12:13:26.322Z"
+}

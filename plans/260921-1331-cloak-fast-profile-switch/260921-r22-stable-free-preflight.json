@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "scope": "R22 stable-free count-only preflight",
+  "engineLaunches": 0,
+  "status": "passed",
+  "requiredConsecutiveReady": 3,
+  "samples": [
+    {
+      "sample": 1,
+      "requestedAt": "2026-09-21T17:27:16.199Z",
+      "completedAt": "2026-09-21T17:27:16.751Z",
+      "observedAt": "2026-09-21T17:27:16.201Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 1
+    },
+    {
+      "sample": 2,
+      "requestedAt": "2026-09-21T17:27:46.765Z",
+      "completedAt": "2026-09-21T17:27:47.159Z",
+      "observedAt": "2026-09-21T17:27:46.765Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 2
+    },
+    {
+      "sample": 3,
+      "requestedAt": "2026-09-21T17:28:17.164Z",
+      "completedAt": "2026-09-21T17:28:17.555Z",
+      "observedAt": "2026-09-21T17:28:17.164Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 3
+    }
+  ]
+}

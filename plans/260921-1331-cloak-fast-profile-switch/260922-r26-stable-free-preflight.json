@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "scope": "R26 stable-free count-only preflight",
+  "engineLaunches": 0,
+  "status": "passed",
+  "requiredConsecutiveReady": 3,
+  "samples": [
+    {
+      "sample": 1,
+      "requestedAt": "2026-09-21T18:04:10.356Z",
+      "completedAt": "2026-09-21T18:04:10.869Z",
+      "observedAt": "2026-09-21T18:04:10.357Z",
+      "active": 1,
+      "limit": 1,
+      "state": "ok",
+      "reason": "CAPACITY_OCCUPIED",
+      "consecutiveReady": 0
+    },
+    {
+      "sample": 2,
+      "requestedAt": "2026-09-21T18:04:40.882Z",
+      "completedAt": "2026-09-21T18:04:41.280Z",
+      "observedAt": "2026-09-21T18:04:40.882Z",
+      "active": 1,
+      "limit": 1,
+      "state": "ok",
+      "reason": "CAPACITY_OCCUPIED",
+      "consecutiveReady": 0
+    },
+    {
+      "sample": 3,
+      "requestedAt": "2026-09-21T18:05:11.287Z",
+      "completedAt": "2026-09-21T18:05:11.662Z",
+      "observedAt": "2026-09-21T18:05:11.287Z",
+      "active": 1,
+      "limit": 1,
+      "state": "ok",
+      "reason": "CAPACITY_OCCUPIED",
+      "consecutiveReady": 0
+    },
+    {
+      "sample": 4,
+      "requestedAt": "2026-09-21T18:05:41.673Z",
+      "completedAt": "2026-09-21T18:05:42.027Z",
+      "observedAt": "2026-09-21T18:05:41.673Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 1
+    },
+    {
+      "sample": 5,
+      "requestedAt": "2026-09-21T18:06:12.042Z",
+      "completedAt": "2026-09-21T18:06:12.428Z",
+      "observedAt": "2026-09-21T18:06:12.042Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 2
+    },
+    {
+      "sample": 6,
+      "requestedAt": "2026-09-21T18:06:42.430Z",
+      "completedAt": "2026-09-21T18:06:42.806Z",
+      "observedAt": "2026-09-21T18:06:42.430Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE",
+      "consecutiveReady": 3
+    }
+  ]
+}

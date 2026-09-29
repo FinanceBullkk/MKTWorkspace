@@ -1,0 +1,450 @@
+TAP version 13
+# (node:28104) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: classifies fresh available and occupied capacity from bounded integer responses
+ok 1 - classifies fresh available and occupied capacity from bounded integer responses
+  ---
+  duration_ms: 59.0831
+  type: 'test'
+  ...
+# Subtest: distinguishes denial, rate limiting, malformed responses, timeout, and unreachable network
+ok 2 - distinguishes denial, rate limiting, malformed responses, timeout, and unreachable network
+  ---
+  duration_ms: 5.6576
+  type: 'test'
+  ...
+# Subtest: treats response stream failures as network errors and only parsed success bodies as JSON
+ok 3 - treats response stream failures as network errors and only parsed success bodies as JSON
+  ---
+  duration_ms: 3.0419
+  type: 'test'
+  ...
+# Subtest: applies the request timeout while reading a response body
+ok 4 - applies the request timeout while reading a response body
+  ---
+  duration_ms: 13.5847
+  type: 'test'
+  ...
+# Subtest: coalesces duplicate checks and rejects an invalidated late observation
+ok 5 - coalesces duplicate checks and rejects an invalidated late observation
+  ---
+  duration_ms: 0.8944
+  type: 'test'
+  ...
+# Subtest: starts a new same-key request after invalidation and cannot publish the older result
+ok 6 - starts a new same-key request after invalidation and cannot publish the older result
+  ---
+  duration_ms: 1.1319
+  type: 'test'
+  ...
+# Subtest: a different key invalidates an older out-of-order observation
+ok 7 - a different key invalidates an older out-of-order observation
+  ---
+  duration_ms: 1.3535
+  type: 'test'
+  ...
+# Subtest: rejects an oversized response before parsing provider data
+ok 8 - rejects an oversized response before parsing provider data
+  ---
+  duration_ms: 0.7129
+  type: 'test'
+  ...
+# (node:25680) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: driver admission observes capacity, reserves durably, and makes one engine attempt
+ok 9 - driver admission observes capacity, reserves durably, and makes one engine attempt
+  ---
+  duration_ms: 14.5121
+  type: 'test'
+  ...
+# Subtest: reservation persistence failure prevents the engine attempt and releases memory capacity
+ok 10 - reservation persistence failure prevents the engine attempt and releases memory capacity
+  ---
+  duration_ms: 8.9993
+  type: 'test'
+  ...
+# Subtest: vendor refusal invalidates the observation and never retries the engine
+ok 11 - vendor refusal invalidates the observation and never retries the engine
+  ---
+  duration_ms: 69.2943
+  type: 'test'
+  ...
+# Subtest: close invalidates admission while capacity observation is pending
+ok 12 - close invalidates admission while capacity observation is pending
+  ---
+  duration_ms: 2.7707
+  type: 'test'
+  ...
+# Subtest: Browser.close persists cooling and prevents any engine attempt before the deadline
+ok 13 - Browser.close persists cooling and prevents any engine attempt before the deadline
+  ---
+  duration_ms: 17.6729
+  type: 'test'
+  ...
+# Subtest: refusal never rotates to another free key and survives restart with a longer wait
+ok 14 - refusal never rotates to another free key and survives restart with a longer wait
+  ---
+  duration_ms: 10.9709
+  type: 'test'
+  ...
+# Subtest: pre-spawn failure releases only its unstarted reservation immediately
+ok 15 - pre-spawn failure releases only its unstarted reservation immediately
+  ---
+  duration_ms: 6.8558
+  type: 'test'
+  ...
+# Subtest: a transient refusal-write failure cannot downgrade the cooldown during cleanup
+ok 16 - a transient refusal-write failure cannot downgrade the cooldown during cleanup
+  ---
+  duration_ms: 14.75
+  type: 'test'
+  ...
+# [mkt-browser] durable license release failed; cooling seat: Error: License lease journal terminal-refused failed.
+#     at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:61:13)
+#     at async LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:5)
+#     at async LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:46)
+#     at async ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1334:10)
+#     at async ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1273:9)
+#     at async attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:294:11)
+#     at async ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:329:12)
+#     at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:254:14)
+#     at async waitForActual (node:assert:644:5)
+#     at async Function.rejects (node:assert:767:25) {
+#   [cause]: Error: storage unavailable
+#       at LicenseLeaseJournal.f.journal.transition (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-driver-cooldown.test.ts:258:49)
+#       at <anonymous> (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:160:20)
+#       at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:56:13)
+#       at LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:16)
+#       at LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:57)
+#       at ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1334:43)
+#       at ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1273:20)
+#       at attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:294:22)
+#       at async ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:329:12)
+#       at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:254:14)
+# }
+# Subtest: repeated refusal-write failure keeps a conservative wait across two restarts
+ok 17 - repeated refusal-write failure keeps a conservative wait across two restarts
+  ---
+  duration_ms: 17.8963
+  type: 'test'
+  ...
+# (node:30776) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fast sequential reuse is enabled by default and has a conservative rollback switch
+ok 18 - fast sequential reuse is enabled by default and has a conservative rollback switch
+  ---
+  duration_ms: 1.4637
+  type: 'test'
+  ...
+# Subtest: only the enabled Windows Cloak lifecycle follows the proven attached-process path
+ok 19 - only the enabled Windows Cloak lifecycle follows the proven attached-process path
+  ---
+  duration_ms: 0.205
+  type: 'test'
+  ...
+# (node:9012) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fresh vendor availability retires a proven local cooling hold without claiming release
+ok 20 - fresh vendor availability retires a proven local cooling hold without claiming release
+  ---
+  duration_ms: 63.0828
+  type: 'test'
+  ...
+# Subtest: occupied vendor capacity blocks before an engine attempt
+ok 21 - occupied vendor capacity blocks before an engine attempt
+  ---
+  duration_ms: 3.1108
+  type: 'test'
+  ...
+# Subtest: duplicate admission is rejected immediately and never queued behind the first launch
+ok 22 - duplicate admission is rejected immediately and never queued behind the first launch
+  ---
+  duration_ms: 2.4461
+  type: 'test'
+  ...
+# Subtest: coalesces refresh end to end and never queues an admission behind it
+ok 23 - coalesces refresh end to end and never queues an admission behind it
+  ---
+  duration_ms: 3.4309
+  type: 'test'
+  ...
+# Subtest: local one-session policy still blocks a second launch when vendor limit is greater than one
+ok 24 - local one-session policy still blocks a second launch when vendor limit is greater than one
+  ---
+  duration_ms: 2.3751
+  type: 'test'
+  ...
+# Subtest: state invalidation during a capacity request prevents a later engine attempt
+ok 25 - state invalidation during a capacity request prevents a later engine attempt
+  ---
+  duration_ms: 2.1309
+  type: 'test'
+  ...
+# Subtest: rollback mode preserves local cooldown admission without calling the vendor observer
+ok 26 - rollback mode preserves local cooldown admission without calling the vendor observer
+  ---
+  duration_ms: 1.5652
+  type: 'test'
+  ...
+# (node:24420) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: keeps additional licence controls fail-closed until vendor entitlement is verified
+ok 27 - keeps additional licence controls fail-closed until vendor entitlement is verified
+  ---
+  duration_ms: 5.76
+  type: 'test'
+  ...
+# Subtest: keeps the primary-key replacement path separate from additional-seat entitlement
+ok 28 - keeps the primary-key replacement path separate from additional-seat entitlement
+  ---
+  duration_ms: 0.4672
+  type: 'test'
+  ...
+# Subtest: cooling guidance names a manual retry deadline and does not promise instant reuse
+ok 29 - cooling guidance names a manual retry deadline and does not promise instant reuse
+  ---
+  duration_ms: 2.8432
+  type: 'test'
+  ...
+# Subtest: uses truthful profile transition labels
+ok 30 - uses truthful profile transition labels
+  ---
+  duration_ms: 2.402
+  type: 'test'
+  ...
+# (node:27864) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: publishes a versioned runtime contract
+ok 31 - publishes a versioned runtime contract
+  ---
+  duration_ms: 3.8174
+  type: 'test'
+  ...
+# Subtest: keeps the local-install capability conditional at runtime
+ok 32 - keeps the local-install capability conditional at runtime
+  ---
+  duration_ms: 2.988
+  type: 'test'
+  ...
+# Subtest: publishes measured license capacity without exposing lease or key identities
+ok 33 - publishes measured license capacity without exposing lease or key identities
+  ---
+  duration_ms: 1.8486
+  type: 'test'
+  ...
+# Subtest: locks the canonical Windows app before opening shared licence state
+ok 34 - locks the canonical Windows app before opening shared licence state
+  ---
+  duration_ms: 0.6963
+  type: 'test'
+  ...
+# Subtest: keeps every failing layer separately addressable
+ok 35 - keeps every failing layer separately addressable
+  ---
+  duration_ms: 0.2506
+  type: 'test'
+  ...
+# Subtest: reports an engine version only when one is actually installed
+ok 36 - reports an engine version only when one is actually installed
+  ---
+  duration_ms: 0.3474
+  type: 'test'
+  ...
+# Subtest: exposes get_runtime_info and classifies failures by code, not by message
+ok 37 - exposes get_runtime_info and classifies failures by code, not by message
+  ---
+  duration_ms: 1.4016
+  type: 'test'
+  ...
+# Subtest: verifies proxy egress before starting the bridge or spawning the engine
+ok 38 - verifies proxy egress before starting the bridge or spawning the engine
+  ---
+  duration_ms: 0.7898
+  type: 'test'
+  ...
+# Subtest: reports the installed release, not the MCP contract constant
+ok 39 - reports the installed release, not the MCP contract constant
+  ---
+  duration_ms: 2.2301
+  type: 'test'
+  ...
+# Subtest: bounds a CDP readiness fetch that never settles
+ok 40 - bounds a CDP readiness fetch that never settles
+  ---
+  duration_ms: 34.7744
+  type: 'test'
+  ...
+# Subtest: bounds a CDP connect that never settles
+ok 41 - bounds a CDP connect that never settles
+  ---
+  duration_ms: 30.0652
+  type: 'test'
+  ...
+# Subtest: records each successful CDP readiness stage separately
+ok 42 - records each successful CDP readiness stage separately
+  ---
+  duration_ms: 0.9175
+  type: 'test'
+  ...
+# Subtest: lets Chromium assign the DevTools port instead of consuming fixed ports
+ok 43 - lets Chromium assign the DevTools port instead of consuming fixed ports
+  ---
+  duration_ms: 1.6394
+  type: 'test'
+  ...
+# Subtest: builds one hashed package and verifies that artifact in a fresh CI job
+ok 44 - builds one hashed package and verifies that artifact in a fresh CI job
+  ---
+  duration_ms: 1.0908
+  type: 'test'
+  ...
+# Subtest: prepares a pinned verifier engine on Windows jobs
+ok 45 - prepares a pinned verifier engine on Windows jobs
+  ---
+  duration_ms: 1.5912
+  type: 'test'
+  ...
+# Subtest: keeps optional hosted diagnostics manual and refuses skipped pipeline evidence
+ok 46 - keeps optional hosted diagnostics manual and refuses skipped pipeline evidence
+  ---
+  duration_ms: 1.9381
+  type: 'test'
+  ...
+# Subtest: builds the release candidate once, from a named commit, and never rebuilds it
+ok 47 - builds the release candidate once, from a named commit, and never rebuilds it
+  ---
+  duration_ms: 1.246
+  type: 'test'
+  ...
+# Subtest: disables the setup-node package-manager cache in every workflow that uses it
+ok 48 - disables the setup-node package-manager cache in every workflow that uses it
+  ---
+  duration_ms: 0.7537
+  type: 'test'
+  ...
+# Subtest: keeps browser ownership until failed launches and shutdown sweeps finish
+ok 49 - keeps browser ownership until failed launches and shutdown sweeps finish
+  ---
+  duration_ms: 1.1558
+  type: 'test'
+  ...
+# Subtest: serializes window watcher polls and requires process death for CDP-unreachable close
+ok 50 - serializes window watcher polls and requires process death for CDP-unreachable close
+  ---
+  duration_ms: 0.7818
+  type: 'test'
+  ...
+# Subtest: reports a licence refusal as a refusal, not as a crash
+ok 51 - reports a licence refusal as a refusal, not as a crash
+  ---
+  duration_ms: 1.0517
+  type: 'test'
+  ...
+# Subtest: uses attached ownership only for the enabled Windows Cloak lifecycle
+ok 52 - uses attached ownership only for the enabled Windows Cloak lifecycle
+  ---
+  duration_ms: 1.0224
+  type: 'test'
+  ...
+# Subtest: routes every GitHub Actions job through a GitHub-hosted runner
+ok 53 - routes every GitHub Actions job through a GitHub-hosted runner
+  ---
+  duration_ms: 1.1467
+  type: 'test'
+  ...
+# Subtest: does not send automatic fork events to jobs that carry repository secrets
+ok 54 - does not send automatic fork events to jobs that carry repository secrets
+  ---
+  duration_ms: 0.4305
+  type: 'test'
+  ...
+# node:internal/modules/esm/resolve:275
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\server.js' imported from E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\mcp-tool-authorization.test.ts
+#     at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:861:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:985:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:724:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:320:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///E:/MKTWorkspace/MKTBrowser/packages/mcp-server/src/server.js'
+# }
+# Node.js v22.23.2
+# Subtest: packages\\mcp-server\\src\\mcp-tool-authorization.test.ts
+not ok 7 - packages\\mcp-server\\src\\mcp-tool-authorization.test.ts
+  ---
+  duration_ms: 347.8966
+  type: 'test'
+  location: 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\mcp-tool-authorization.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/esm/resolve:275
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\runtime-license-capacity.js' imported from E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\runtime-license-capacity.test.ts
+#     at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:861:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:985:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:724:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:320:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///E:/MKTWorkspace/MKTBrowser/packages/mcp-server/src/runtime-license-capacity.js'
+# }
+# Node.js v22.23.2
+# Subtest: packages\\mcp-server\\src\\runtime-license-capacity.test.ts
+not ok 8 - packages\\mcp-server\\src\\runtime-license-capacity.test.ts
+  ---
+  duration_ms: 257.2392
+  type: 'test'
+  location: 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\runtime-license-capacity.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/esm/resolve:275
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\tool-exposure-policy.js' imported from E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\tool-exposure-policy.test.ts
+#     at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:861:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:985:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:747:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:724:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:320:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///E:/MKTWorkspace/MKTBrowser/packages/mcp-server/src/tool-exposure-policy.js'
+# }
+# Node.js v22.23.2
+# Subtest: packages\\mcp-server\\src\\tool-exposure-policy.test.ts
+not ok 9 - packages\\mcp-server\\src\\tool-exposure-policy.test.ts
+  ---
+  duration_ms: 246.5745
+  type: 'test'
+  location: 'E:\\MKTWorkspace\\MKTBrowser\\packages\\mcp-server\\src\\tool-exposure-policy.test.ts:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..57
+# tests 57
+# suites 0
+# pass 54
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3110.8492

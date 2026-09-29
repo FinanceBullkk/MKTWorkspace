@@ -1,0 +1,234 @@
+TAP version 13
+# Subtest: activity diagnostics drop arguments under unrecognised keys
+ok 1 - activity diagnostics drop arguments under unrecognised keys
+  ---
+  duration_ms: 3.018
+  type: 'test'
+  ...
+# Subtest: activity diagnostics never retain proxy endpoints, credentials, cookies, or page text
+ok 2 - activity diagnostics never retain proxy endpoints, credentials, cookies, or page text
+  ---
+  duration_ms: 2.3867
+  type: 'test'
+  ...
+# Subtest: MCP profile responses never expose proxy endpoints or credentials
+ok 3 - MCP profile responses never expose proxy endpoints or credentials
+  ---
+  duration_ms: 0.8258
+  type: 'test'
+  ...
+# Subtest: H26: a request with no Authorization header is rejected
+ok 4 - H26: a request with no Authorization header is rejected
+  ---
+  duration_ms: 110.7382
+  type: 'test'
+  ...
+# Subtest: H26: the correct token is accepted (differential control)
+ok 5 - H26: the correct token is accepted (differential control)
+  ---
+  duration_ms: 65.2953
+  type: 'test'
+  ...
+# Subtest: H26: near-miss tokens are all rejected
+ok 6 - H26: near-miss tokens are all rejected
+  ---
+  duration_ms: 122.917
+  type: 'test'
+  ...
+# Subtest: H26: the token is not accepted from a query parameter or a cookie
+ok 7 - H26: the token is not accepted from a query parameter or a cookie
+  ---
+  duration_ms: 55.1927
+  type: 'test'
+  ...
+# Subtest: H29: /healthz reveals nothing before authentication
+ok 8 - H29: /healthz reveals nothing before authentication
+  ---
+  duration_ms: 48.0406
+  type: 'test'
+  ...
+# Subtest: H30: the token never appears in a rejection body or headers
+ok 9 - H30: the token never appears in a rejection body or headers
+  ---
+  duration_ms: 35.7943
+  type: 'test'
+  ...
+# Subtest: H27: the Host allowlist rejects foreign hosts on the legacy /messages route
+ok 10 - H27: the Host allowlist rejects foreign hosts on the legacy /messages route
+  ---
+  duration_ms: 35.2016
+  type: 'test'
+  ...
+# [mkt-browser] WARNING: MCP HTTP transport starting WITHOUT an auth token — the local control port is UNAUTHENTICATED and any local process can drive it.
+# Subtest: H27: the Host allowlist is case-insensitive for the loopback names it accepts
+ok 11 - H27: the Host allowlist is case-insensitive for the loopback names it accepts
+  ---
+  duration_ms: 35.1131
+  type: 'test'
+  ...
+# [mkt-browser] WARNING: MCP HTTP transport starting WITHOUT an auth token — the local control port is UNAUTHENTICATED and any local process can drive it.
+# Subtest: H26 fail-open: with no token configured the port is open to any local caller
+ok 12 - H26 fail-open: with no token configured the port is open to any local caller
+  ---
+  duration_ms: 38.0233
+  type: 'test'
+  ...
+# Subtest: H26 fail-open: an empty-string token counts as no token
+ok 13 - H26 fail-open: an empty-string token counts as no token
+  ---
+  duration_ms: 33.5216
+  type: 'test'
+  ...
+# Subtest: H28: a second SSE client is rejected without replacing the active stream
+ok 14 - H28: a second SSE client is rejected without replacing the active stream
+  ---
+  duration_ms: 41.2344
+  type: 'test'
+  ...
+# Subtest: the managed direction says the profile belongs to MKTTool
+ok 15 - the managed direction says the profile belongs to MKTTool
+  ---
+  duration_ms: 1.5631
+  type: 'test'
+  ...
+# Subtest: the unmanaged direction says the profile is not managed, and names the tool that works
+ok 16 - the unmanaged direction says the profile is not managed, and names the tool that works
+  ---
+  duration_ms: 0.2568
+  type: 'test'
+  ...
+# Subtest: both keep the same code, because the same layer refused
+ok 17 - both keep the same code, because the same layer refused
+  ---
+  duration_ms: 0.2122
+  type: 'test'
+  ...
+# Subtest: persists and verifies the proxy before launching a closed profile
+ok 18 - persists and verifies the proxy before launching a closed profile
+  ---
+  duration_ms: 3.1922
+  type: 'test'
+  ...
+# Subtest: returns an already-running profile only when its active proxy matches
+ok 19 - returns an already-running profile only when its active proxy matches
+  ---
+  duration_ms: 0.2816
+  type: 'test'
+  ...
+# Subtest: rejects a running profile whose active proxy differs without changing storage
+ok 20 - rejects a running profile whose active proxy differs without changing storage
+  ---
+  duration_ms: 0.445
+  type: 'test'
+  ...
+# Subtest: fails closed when the persisted proxy cannot be read back
+ok 21 - fails closed when the persisted proxy cannot be read back
+  ---
+  duration_ms: 0.4728
+  type: 'test'
+  ...
+# Subtest: serializes concurrent launches so another proxy cannot replace the verified value
+ok 22 - serializes concurrent launches so another proxy cannot replace the verified value
+  ---
+  duration_ms: 0.5989
+  type: 'test'
+  ...
+# Subtest: the inventory under test is the full 25 tools, split into both groups
+ok 23 - the inventory under test is the full 25 tools, split into both groups
+  ---
+  duration_ms: 1.5209
+  type: 'test'
+  ...
+# Subtest: H21: tools/list hides exactly the tools the policy denies
+ok 24 - H21: tools/list hides exactly the tools the policy denies
+  ---
+  duration_ms: 128.2747
+  type: 'test'
+  ...
+# Subtest: H21: a denied tool called directly by name is refused and never reaches the driver
+ok 25 - H21: a denied tool called directly by name is refused and never reaches the driver
+  ---
+  duration_ms: 36.9728
+  type: 'test'
+  ...
+# Subtest: H21: the same tools are reachable under the full-local policy (differential)
+ok 26 - H21: the same tools are reachable under the full-local policy (differential)
+  ---
+  duration_ms: 45.6158
+  type: 'test'
+  ...
+# Subtest: H22: tool-name matching is exact, not case- or whitespace-tolerant
+ok 27 - H22: tool-name matching is exact, not case- or whitespace-tolerant
+  ---
+  duration_ms: 50.2199
+  type: 'test'
+  ...
+# Subtest: H23: an unclassified tool name defaults to deny
+ok 28 - H23: an unclassified tool name defaults to deny
+  ---
+  duration_ms: 34.0816
+  type: 'test'
+  ...
+# Subtest: H23: an unclassified tool is denied even under the most permissive policy
+ok 29 - H23: an unclassified tool is denied even under the most permissive policy
+  ---
+  duration_ms: 31.9309
+  type: 'test'
+  ...
+# Subtest: H24: raw cdp_send always enters the driver through safe mode
+ok 30 - H24: raw cdp_send always enters the driver through safe mode
+  ---
+  duration_ms: 53.2832
+  type: 'test'
+  ...
+# Subtest: H25: managed launch cannot remove its required proxy or replace the fingerprint
+ok 31 - H25: managed launch cannot remove its required proxy or replace the fingerprint
+  ---
+  duration_ms: 47.9408
+  type: 'test'
+  ...
+# Subtest: returns only a complete measured license capacity summary
+ok 32 - returns only a complete measured license capacity summary
+  ---
+  duration_ms: 2.6519
+  type: 'test'
+  ...
+# Subtest: includes measured capacity in the authenticated runtime report
+ok 33 - includes measured capacity in the authenticated runtime report
+  ---
+  duration_ms: 0.54
+  type: 'test'
+  ...
+# Subtest: preserves only a valid aggregate manual retry deadline
+ok 34 - preserves only a valid aggregate manual retry deadline
+  ---
+  duration_ms: 1.6324
+  type: 'test'
+  ...
+# Subtest: preserves only complete sanitized availability and vendor observation pairs
+ok 35 - preserves only complete sanitized availability and vendor observation pairs
+  ---
+  duration_ms: 0.8095
+  type: 'test'
+  ...
+# Subtest: profile-management token hides and rejects every page, cookie, and raw-CDP tool
+ok 36 - profile-management token hides and rejects every page, cookie, and raw-CDP tool
+  ---
+  duration_ms: 1.384
+  type: 'test'
+  ...
+# Subtest: initialize instructions describe the authenticated token capabilities
+ok 37 - initialize instructions describe the authenticated token capabilities
+  ---
+  duration_ms: 0.3029
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1701.8686

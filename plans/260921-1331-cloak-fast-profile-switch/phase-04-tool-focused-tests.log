@@ -1,0 +1,13 @@
+
+> mkttool@0.1.0 test
+> vitest run relay/src/handle-license-capacity-refresh.test.ts relay/src/relay-route-capability-enforcement.test.ts src/components/mktbrowser-ui/capacity-refresh-contract.test.ts src/lib/antidetect/mkt-browser-adapter.test.ts src/lib/antidetect/mkt-browser-contract.test.ts src/lib/relay/current-device-browser-health.test.ts src/app/api/healthz/route.test.ts src/lib/release/release-provenance.test.ts
+
+
+ RUN  v4.1.11 E:/MKTWorkspace/MKTTool
+
+
+ Test Files  8 passed (8)
+      Tests  139 passed (139)
+   Start at  18:10:04
+   Duration  4.84s (transform 396ms, setup 0ms, import 1.56s, tests 1.31s, environment 1ms)
+

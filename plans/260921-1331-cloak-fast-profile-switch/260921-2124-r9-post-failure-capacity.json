@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "scope": "count-only post-R9 observation",
+  "engineLaunches": 0,
+  "observedAt": "2026-09-21T14:23:46.135Z",
+  "httpStatus": 200,
+  "active": 1,
+  "limit": 1,
+  "state": "ok"
+}

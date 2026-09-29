@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "status": "failed",
+  "preparedAt": "2026-09-21T13:01:18.282Z",
+  "attemptBudget": 4,
+  "attemptsUsed": 2,
+  "stopOnFirstFailure": true,
+  "automaticRetry": false,
+  "sequence": [
+    "P1",
+    "P2",
+    "P1",
+    "P2"
+  ],
+  "productPath": "packaged-mkt-browser-mcp",
+  "proxyGate": "OPEN-localhost-only",
+  "artifact": {
+    "browserHead": "06fe257c7ee615b156d776cfd10d415a933c23b2",
+    "sourceDirty": true,
+    "sourceStatusSha256": "9570ef80d07bdbe3cf973ce5917c2fb2b54469db210394e718e1474ac6eb3c5c",
+    "executableVersion": "0.3.23",
+    "executableSha256": "eae948264df99c4e3be88b684d8121cdf14b3e76971f7c3a07ee4b5d9d330939",
+    "appAsarSha256": "03947ec980f045310a03fc6bb7e507d8d9b99628d75e60d7eddc9df543a37330",
+    "yarnLockSha256": "8b5d03ff8333d3dd1464236d1ab10226655f915e38e499c93834406ee98a1d1a",
+    "packageManager": "yarn@4.5.0"
+  },
+  "engine": {
+    "pinSequence": 2,
+    "kind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "archiveSizeBytes": 540036860,
+    "runtimeSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v22.23.2",
+    "totalMemoryMb": 16307,
+    "freeMemoryMbBefore": 4262
+  },
+  "profiles": {
+    "P1": {
+      "seedConfigured": true
+    },
+    "P2": {
+      "seedConfigured": true
+    }
+  },
+  "capacityChecks": [
+    {
+      "stage": "initial",
+      "requestStartedAt": "2026-09-21T13:01:19.648Z",
+      "requestCompletedAt": "2026-09-21T13:01:20.283Z",
+      "observationCompletedAt": "2026-09-21T13:01:20.281Z",
+      "freshUntil": "2026-09-21T13:01:25.281Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "after-P1-1",
+      "requestStartedAt": "2026-09-21T13:01:28.656Z",
+      "requestCompletedAt": "2026-09-21T13:01:29.488Z",
+      "observationCompletedAt": "2026-09-21T13:01:29.484Z",
+      "freshUntil": "2026-09-21T13:01:34.484Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "failed-launch-2-P2",
+      "requestStartedAt": "2026-09-21T13:01:36.973Z",
+      "requestCompletedAt": "2026-09-21T13:01:37.472Z",
+      "observationCompletedAt": "2026-09-21T13:01:37.471Z",
+      "freshUntil": "2026-09-21T13:01:42.471Z",
+      "local": {
+        "total": 1,
+        "free": 0,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 1
+      },
+      "vendor": {
+        "active": 1,
+        "limit": 1
+      },
+      "availability": "in-use",
+      "reason": "CAPACITY_OCCUPIED"
+    }
+  ],
+  "launches": [
+    {
+      "sequence": 1,
+      "profile": "P1",
+      "status": "passed",
+      "launchRequestedAt": "2026-09-21T13:01:20.290Z",
+      "launchResolvedAt": "2026-09-21T13:01:22.945Z",
+      "usableAt": "2026-09-21T13:01:27.839Z",
+      "usableMsFromPriorClose": 7549,
+      "closeRequestedAt": "2026-09-21T13:01:27.839Z",
+      "closeCompletedAt": "2026-09-21T13:01:28.655Z",
+      "processExited": true,
+      "runningCount": 1,
+      "storageBefore": null,
+      "storageAfter": "P1",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "868d8309fbd53499f603dad006c3c02a5d66ed1de923f21675c92caf4ed6e23a",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    },
+    {
+      "sequence": 2,
+      "profile": "P2",
+      "status": "failed",
+      "launchRequestedAt": "2026-09-21T13:01:29.494Z",
+      "launchResolvedAt": "2026-09-21T13:01:31.913Z",
+      "usableAt": "2026-09-21T13:01:34.732Z",
+      "usableMsFromPriorClose": 6077,
+      "closeRequestedAt": "2026-09-21T13:01:34.732Z",
+      "closeCompletedAt": "2026-09-21T13:01:36.973Z",
+      "processExited": true,
+      "runningCount": 1,
+      "storageBefore": null,
+      "storageAfter": "P2",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "10d36d5bf352377f81eeafe10f8fc3bf87b054c78580c7608308cd1263d67ebd",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    }
+  ],
+  "cleanup": {
+    "completed": true,
+    "disposableRootRemoved": true,
+    "preservedForRecovery": false
+  },
+  "runtime": {
+    "appVersion": "0.3.23",
+    "contractVersion": 5,
+    "profileSchemaVersion": 3,
+    "engineKind": "cloakbrowser",
+    "engineVersion": "151.0.7922.108.6"
+  },
+  "failure": {
+    "stage": "launch-2-P2",
+    "category": "CAPACITY_OR_LICENCE_REFUSAL",
+    "appDiagnostic": {
+      "devToolsEndpointReady": true,
+      "cdpReady": true
+    }
+  },
+  "completedAt": "2026-09-21T13:01:37.477Z"
+}

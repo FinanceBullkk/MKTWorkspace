@@ -1,8 +1,8 @@
 # Licence seat retry and engine integrity policy
 
-**Source checkpoint:** 21 September 2026. Implementation is complete under the
-[reviewed plan](../plans/260921-1109-licence-seat-fixes/plan.md) and
-[worklist](../plans/reports/worklist-260921-1105-licence-seat-fixes.md).
+**Source checkpoint:** 21 September 2026. The conservative baseline is recorded in the
+[licence-seat fixes](../plans/260921-1109-licence-seat-fixes/plan.md). The current source behavior is
+tracked by the [fast sequential switching plan](../plans/260921-1331-cloak-fast-profile-switch/plan.md).
 
 ## Local launch policy
 
@@ -10,16 +10,21 @@
 not that the vendor released its session. An independently proven vendor release may explicitly
 bypass the wait. An unstarted reservation remains immediately releasable because no engine ran.
 
-| Event | Local policy | Operator action |
+| Event | Current source policy | Operator action |
 |---|---|---|
-| Engine closes without independent release proof | Rest the key for 25 minutes | Wait until the displayed time, then request one launch |
-| Vendor refuses the session | Rest the key for 30 minutes | Stop; wait until the displayed time, then request one launch |
+| Reconciled local close; fresh vendor count reports capacity | Retire only the local cooling/refusal hold as `expired`, then permit one launch attempt | Request one launch; do not treat the count as a lease receipt |
+| Vendor count is occupied, denied, rate-limited, malformed, timed out, unreachable, or stale | Keep capacity unavailable | Use **Check availability** later; no launch is queued |
+| Engine closes without usable fresh observation | Keep the existing 25-minute conservative wait | Wait until the displayed time, then request one manual launch |
+| Vendor refuses the session | Invalidate capacity and keep the 30-minute conservative refusal wait | Stop; do not retry automatically |
 | Prior session needs recovery | Keep its capacity unavailable until reconciled; an interrupted start uses the longer 30-minute wait | Follow Browser recovery guidance |
 
 Wait state survives Browser restart. Restarting the app must not make a resting key free or
-shorten a refusal wait. Each operator request makes at most one engine attempt; there is no
-automatic key rotation or background retry after refusal. The measurement harness must not create
-a retry loop that bypasses this policy.
+shorten a refusal wait. A count of zero cannot identify which lease ended, so fast admission never
+rewrites a prior record as `confirmed-released`. Each operator request makes at most one engine
+attempt; there is no automatic key rotation, queued launch, or background retry after refusal.
+
+`MKT_BROWSER_FAST_LICENSE_REUSE=0` disables the count-assisted fast path and restores the fixed
+25/30-minute conservative behavior without changing engine bytes, profiles, or the durable journal.
 
 These durations are conservative local policy, not verified vendor TTLs. The 21 September audit
 observed delayed availability after clean close and repeated refusals. A failed launch resetting
@@ -28,19 +33,23 @@ not promise that the vendor will accept it.
 
 ## Capacity across Browser, Relay, and Web
 
-Browser derives aggregate counts from its local pool and persisted lease state. Runtime health
-passes those counts through Relay to Web; it must not include licence keys, key tails, profile
-identifiers, vendor responses, or signed download URLs in this capacity payload.
+Browser combines local pool/journal state with a bounded count-only vendor observation. The request
+and freshness windows are five seconds and are scoped to the current key generation. Late,
+out-of-order, or invalidated results cannot authorize launch. Runtime health passes only sanitized
+aggregate state through Relay to Web; it must not include licence keys, key tails, profile
+identifiers, response bodies, or signed download URLs.
 
 The optional `retryAt` field is an ISO timestamp for the earliest known local retry when capacity
 is exhausted. Omit it when a free slot exists or no deadline is known. It is neither a vendor
 release receipt nor a countdown that launches automatically. Missing timestamps keep older
 capacity payloads compatible; show truthful wait or recovery guidance without inventing a time.
 
-Web enforces valid CloakBrowser capacity even when `license-capacity-v1` is absent. Missing or
-invalid CloakBrowser capacity fails closed. Exhaustion blocks launch; a genuinely free slot allows
-launch even if another slot is cooling. CFT launch readiness is unaffected by licence capacity.
-Browser rechecks capacity when handling the request because a health snapshot can become stale.
+Web enforces valid CloakBrowser capacity even while `license-capacity-v1` remains unadvertised.
+Contract 5 adds sanitized `availability`, `reason`, observation timestamps, and optional vendor
+counts plus an explicit profile-lifecycle refresh tool. The Web-to-Relay refresh has a 10-second
+timeout, never launches an engine, and never queues a later launch. Missing, stale, or invalid
+capacity fails closed. CFT launch readiness is unaffected. Desktop admission always performs its
+own fresh check because a Web health snapshot is display evidence, not authorization.
 
 ## Download and measurement integrity
 
@@ -75,8 +84,10 @@ need verified multi-session entitlement or a long manually paced session, with t
 after any refusal. No purchase or research reopening is authorized by this document.
 
 Source checks, live smoke, exact installer acceptance, clean VM, second physical PC, human
-acceptance, and canary evidence remain separate. This checkpoint records no new installer,
-publication, push, deployment, or operator promotion.
+acceptance, and canary evidence remain separate. The fast-path source suites pass, but product-path
+P1 -> P2, packaged contention, coordinated Relay 18, native fingerprint A/B/C, proxy/DNS/WebRTC,
+human, second-PC, and canary evidence remain OPEN. `G2-IDENTITY=FAIL` is unchanged. This checkpoint
+records no new live launch, installer, publication, push, deployment, or operator promotion.
 
 ## Remaining evidence
 

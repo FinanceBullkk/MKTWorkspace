@@ -1,0 +1,4180 @@
+vite v6.4.2 building SSR bundle for production...
+transforming...
+✓ 91 modules transformed.
+rendering chunks...
+out/main/index.js  464.53 kB
+✓ built in 606ms
+vite v6.4.2 building SSR bundle for production...
+transforming...
+✓ 3 modules transformed.
+rendering chunks...
+out/preload/index.cjs  6.07 kB
+✓ built in 21ms
+vite v6.4.2 building for production...
+transforming...
+✓ 1631 modules transformed.
+rendering chunks...
+../../out/renderer/index.html                     1.33 kB
+../../out/renderer/assets/index-CQZMHmWr.css     44.60 kB
+../../out/renderer/assets/index-CAzS3j3q.js   1,546.50 kB
+✓ built in 3.52s
+[package-windows-directory] running lint before artifact creation.
+Workspace quality contract passed.
+Done in 10s 76ms
+Checked JavaScript syntax in 63 files.
+[package-windows-directory] running test:installer before artifact creation.
+TAP version 13
+# Canary log: 7 checks across 1 distinct day(s).
+# First: 2026-09-14  Last: 2026-09-14
+# Days the machine was actually used (opened and closed a profile): 1/7 - 2026-09-14
+# Seven-day canary NOT complete (1/7 used day(s), 0 finding(s)).
+# Canary log: 7 checks across 7 distinct day(s).
+# First: 2026-09-14  Last: 2026-09-20
+# Days the machine was actually used (opened and closed a profile): 7/7 - 2026-09-14, 2026-09-15, 2026-09-16, 2026-09-17, 2026-09-18, 2026-09-19, 2026-09-20
+# Seven-day canary PASSED. This attests continuity on this machine only.
+# Canary log: 7 checks across 7 distinct day(s).
+# First: 2026-09-14  Last: 2026-09-20
+#   FINDING 2026-09-17T09:00:00.000Z: WebRTC containment for cloakbrowser is not intact (count=0).
+# Days the machine was actually used (opened and closed a profile): 7/7 - 2026-09-14, 2026-09-15, 2026-09-16, 2026-09-17, 2026-09-18, 2026-09-19, 2026-09-20
+# Seven-day canary NOT complete (7/7 used day(s), 1 finding(s)).
+# Canary log: 7 checks across 7 distinct day(s).
+# First: 2026-09-14  Last: 2026-09-20
+# Days the machine was actually used (opened and closed a profile): 6/7 - 2026-09-14, 2026-09-15, 2026-09-17, 2026-09-18, 2026-09-19, 2026-09-20
+#   Idle, does not count: 2026-09-16
+# Seven-day canary NOT complete (6/7 used day(s), 0 finding(s)).
+# Subtest: a healthy machine produces no findings
+ok 1 - a healthy machine produces no findings
+  ---
+  duration_ms: 1.868
+  type: 'test'
+  ...
+# Subtest: names each way the machine can drift under the product
+ok 2 - names each way the machine can drift under the product
+  ---
+  duration_ms: 0.7008
+  type: 'test'
+  ...
+# Subtest: counts days the machine was used, not check runs, and never calls a broken run partial
+ok 3 - counts days the machine was used, not check runs, and never calls a broken run partial
+  ---
+  duration_ms: 43.9634
+  type: 'test'
+  ...
+# Subtest: measures a real open-and-close cycle, and refuses to read a startup sweep as usage
+ok 4 - measures a real open-and-close cycle, and refuses to read a startup sweep as usage
+  ---
+  duration_ms: 27.3065
+  type: 'test'
+  ...
+# Subtest: recomputes an older day from the lifecycle log instead of discarding it
+ok 5 - recomputes an older day from the lifecycle log instead of discarding it
+  ---
+  duration_ms: 10.3694
+  type: 'test'
+  ...
+# Subtest: a finding leaves a marker nobody can miss, and a clean day removes it
+ok 6 - a finding leaves a marker nobody can miss, and a clean day removes it
+  ---
+  duration_ms: 11.1126
+  type: 'test'
+  ...
+# Subtest: accepts only the five machine-readable statuses and exact result fields
+ok 7 - accepts only the five machine-readable statuses and exact result fields
+  ---
+  duration_ms: 4.5861
+  type: 'test'
+  ...
+# Subtest: writes summary and output evidence, and fails required non-PASS statuses
+ok 8 - writes summary and output evidence, and fails required non-PASS statuses
+  ---
+  duration_ms: 102.1723
+  type: 'test'
+  ...
+# Subtest: optional SKIPPED evidence is visible without satisfying a required check
+ok 9 - optional SKIPPED evidence is visible without satisfying a required check
+  ---
+  duration_ms: 91.9762
+  type: 'test'
+  ...
+# Subtest: protects the modules whose regression crosses an identity boundary
+ok 10 - protects the modules whose regression crosses an identity boundary
+  ---
+  duration_ms: 1.5233
+  type: 'test'
+  ...
+# Subtest: refuses a threshold below the absolute floor
+ok 11 - refuses a threshold below the absolute floor
+  ---
+  duration_ms: 0.8418
+  type: 'test'
+  ...
+# Subtest: fails when a protected module has been renamed out of the list
+ok 12 - fails when a protected module has been renamed out of the list
+  ---
+  duration_ms: 4.1133
+  type: 'test'
+  ...
+# Subtest: passes the thresholds to the runner instead of only reporting them
+ok 13 - passes the thresholds to the runner instead of only reporting them
+  ---
+  duration_ms: 0.41
+  type: 'test'
+  ...
+# Subtest: resolves every packaged dependency to a concrete version
+ok 14 - resolves every packaged dependency to a concrete version
+  ---
+  duration_ms: 7.2167
+  type: 'test'
+  ...
+# Subtest: binds the artifact to the tree that produced it, not only to the commit
+ok 15 - binds the artifact to the tree that produced it, not only to the commit
+  ---
+  duration_ms: 269.7367
+  type: 'test'
+  ...
+# Subtest: states that the release is unsigned instead of leaving a silence
+ok 16 - states that the release is unsigned instead of leaving a silence
+  ---
+  duration_ms: 129.0985
+  type: 'test'
+  ...
+# Subtest: dates the unsigned exception as this artifact's shelf life, not the decision's deadline
+ok 17 - dates the unsigned exception as this artifact's shelf life, not the decision's deadline
+  ---
+  duration_ms: 124.6068
+  type: 'test'
+  ...
+# Subtest: requires the artifact, the payload manifest, and an output path
+ok 18 - requires the artifact, the payload manifest, and an output path
+  ---
+  duration_ms: 0.7861
+  type: 'test'
+  ...
+# Subtest: a missing app executable rejects through cleanup without an unhandled child error
+ok 19 - a missing app executable rejects through cleanup without an unhandled child error
+  ---
+  duration_ms: 5054.8179
+  type: 'test'
+  ...
+# Subtest: historical .2 default is preserved and partial/invalid overrides are rejected
+ok 20 - historical .2 default is preserved and partial/invalid overrides are rejected
+  ---
+  duration_ms: 1.0978
+  type: 'test'
+  ...
+# Subtest: pin drift names both explicit overrides before touching the engine cache
+ok 21 - pin drift names both explicit overrides before touching the engine cache
+  ---
+  duration_ms: 13.4375
+  type: 'test'
+  ...
+# Subtest: an explicit matched pin returns only sanitized provenance with a limited verification claim
+ok 22 - an explicit matched pin returns only sanitized provenance with a limited verification claim
+  ---
+  duration_ms: 10.0412
+  type: 'test'
+  ...
+# Subtest: explicit pin and cache must agree before any measurement
+    # Subtest: wrong digest
+    ok 1 - wrong digest
+      ---
+      duration_ms: 9.3522
+      type: 'test'
+      ...
+    # Subtest: wrong version
+    ok 2 - wrong version
+      ---
+      duration_ms: 8.7548
+      type: 'test'
+      ...
+    # Subtest: wrong engine
+    ok 3 - wrong engine
+      ---
+      duration_ms: 12.5346
+      type: 'test'
+      ...
+    # Subtest: cache digest
+    ok 4 - cache digest
+      ---
+      duration_ms: 12.2006
+      type: 'test'
+      ...
+    # Subtest: cache version
+    ok 5 - cache version
+      ---
+      duration_ms: 14.5398
+      type: 'test'
+      ...
+    # Subtest: cache traversal
+    ok 6 - cache traversal
+      ---
+      duration_ms: 13.2393
+      type: 'test'
+      ...
+    # Subtest: runtime version
+    ok 7 - runtime version
+      ---
+      duration_ms: 13.7102
+      type: 'test'
+      ...
+    # Subtest: missing binary
+    ok 8 - missing binary
+      ---
+      duration_ms: 9.6365
+      type: 'test'
+      ...
+    1..8
+ok 23 - explicit pin and cache must agree before any measurement
+  ---
+  duration_ms: 96.1606
+  type: 'test'
+  ...
+# Subtest: missing, malformed and invalid authorities fail without exposing their contents
+    # Subtest: ["pin"]
+    ok 1 - ["pin"]
+      ---
+      duration_ms: 14.4416
+      type: 'test'
+      ...
+    # Subtest: ["pin"]
+    ok 2 - ["pin"]
+      ---
+      duration_ms: 12.2678
+      type: 'test'
+      ...
+    # Subtest: ["pin"]
+    ok 3 - ["pin"]
+      ---
+      duration_ms: 14.4513
+      type: 'test'
+      ...
+    # Subtest: ["pinText"]
+    ok 4 - ["pinText"]
+      ---
+      duration_ms: 12.7068
+      type: 'test'
+      ...
+    1..4
+ok 24 - missing, malformed and invalid authorities fail without exposing their contents
+  ---
+  duration_ms: 63.8211
+  type: 'test'
+  ...
+# Subtest: CLI detects drift before credential checks, packaged launch or stock Chrome launch
+ok 25 - CLI detects drift before credential checks, packaged launch or stock Chrome launch
+  ---
+  duration_ms: 76.7283
+  type: 'test'
+  ...
+# Subtest: measurement makes one launch attempt by default and labels opt-in retries as experimental
+ok 26 - measurement makes one launch attempt by default and labels opt-in retries as experimental
+  ---
+  duration_ms: 0.5772
+  type: 'test'
+  ...
+# Subtest: computes the stable subset from data and keeps full tuple separate
+ok 27 - computes the stable subset from data and keeps full tuple separate
+  ---
+  duration_ms: 3.3728
+  type: 'test'
+  ...
+# Subtest: finds invariant vendor marks inside a surface whose other components vary
+ok 28 - finds invariant vendor marks inside a surface whose other components vary
+  ---
+  duration_ms: 4.8352
+  type: 'test'
+  ...
+# Subtest: blocks cohort verdicts when a declared document surface is unavailable
+ok 29 - blocks cohort verdicts when a declared document surface is unavailable
+  ---
+  duration_ms: 1.3499
+  type: 'test'
+  ...
+# Subtest: checks restart equality while comparing only shared cross-context readings
+ok 30 - checks restart equality while comparing only shared cross-context readings
+  ---
+  duration_ms: 6.9804
+  type: 'test'
+  ...
+# Subtest: requires complete equality for array readings across contexts
+ok 31 - requires complete equality for array readings across contexts
+  ---
+  duration_ms: 6.9017
+  type: 'test'
+  ...
+# Subtest: produces separate A, B, and C verdicts
+ok 32 - produces separate A, B, and C verdicts
+  ---
+  duration_ms: 5.5572
+  type: 'test'
+  ...
+# Subtest: emits syntactically valid probe assets
+ok 33 - emits syntactically valid probe assets
+  ---
+  duration_ms: 1.4353
+  type: 'test'
+  ...
+# Subtest: selects one valid fixed profile configuration from the stock cohort
+ok 34 - selects one valid fixed profile configuration from the stock cohort
+  ---
+  duration_ms: 0.7372
+  type: 'test'
+  ...
+# Subtest: copies only Stable .2 runtime payload entries, never embedded profile data
+ok 35 - copies only Stable .2 runtime payload entries, never embedded profile data
+  ---
+  duration_ms: 74.1945
+  type: 'test'
+  ...
+# Subtest: keeps raw fingerprint evidence inside the temporary directory
+ok 36 - keeps raw fingerprint evidence inside the temporary directory
+  ---
+  duration_ms: 1.9679
+  type: 'test'
+  ...
+# Subtest: cleans a refused disposable app when no local seat recovery remains
+ok 37 - cleans a refused disposable app when no local seat recovery remains
+  ---
+  duration_ms: 0.4584
+  type: 'test'
+  ...
+# Subtest: command list is fixed, ordered, bounded and immutable
+ok 38 - command list is fixed, ordered, bounded and immutable
+  ---
+  duration_ms: 2.3301
+  type: 'test'
+  ...
+# Subtest: CLI accepts only unique absolute paths, never commands or a caller PASS
+ok 39 - CLI accepts only unique absolute paths, never commands or a caller PASS
+  ---
+  duration_ms: 0.6324
+  type: 'test'
+  ...
+# Subtest: output is new and outside both source roots
+ok 40 - output is new and outside both source roots
+  ---
+  duration_ms: 10.5757
+  type: 'test'
+  ...
+# Subtest: source receipt rejects dirty trees, untracked input, changed commits and locks
+ok 41 - source receipt rejects dirty trees, untracked input, changed commits and locks
+  ---
+  duration_ms: 752.2566
+  type: 'test'
+  ...
+# Subtest: logs actual success and nonzero exits without interpreting output as PASS
+ok 42 - logs actual success and nonzero exits without interpreting output as PASS
+  ---
+  duration_ms: 93.6591
+  type: 'test'
+  ...
+# Subtest: timeout and missing executable fail closed
+ok 43 - timeout and missing executable fail closed
+  ---
+  duration_ms: 68.01
+  type: 'test'
+  ...
+# Subtest: receipt contract rejects missing, reordered, failed, promoted or tampered evidence
+ok 44 - receipt contract rejects missing, reordered, failed, promoted or tampered evidence
+  ---
+  duration_ms: 24.3623
+  type: 'test'
+  ...
+# Subtest: environment binds the recorded sibling instead of inherited checkout roots
+ok 45 - environment binds the recorded sibling instead of inherited checkout roots
+  ---
+  duration_ms: 0.9525
+  type: 'test'
+  ...
+# Subtest: environment only inherits OS paths, never credentials or GitHub controls
+ok 46 - environment only inherits OS paths, never credentials or GitHub controls
+  ---
+  duration_ms: 1
+  type: 'test'
+  ...
+# Subtest: environment excludes inherited injection flags and toolchain rejects a wrong pin
+ok 47 - environment excludes inherited injection flags and toolchain rejects a wrong pin
+  ---
+  duration_ms: 6.6326
+  type: 'test'
+  ...
+# Subtest: treats two builds that differ only in build time as identical
+ok 48 - treats two builds that differ only in build time as identical
+  ---
+  duration_ms: 12.1552
+  type: 'test'
+  ...
+# Subtest: still reports a difference when the code itself changed
+ok 49 - still reports a difference when the code itself changed
+  ---
+  duration_ms: 0.2558
+  type: 'test'
+  ...
+# Subtest: leaves a file that is not a PE image alone
+ok 50 - leaves a file that is not a PE image alone
+  ---
+  duration_ms: 0.4893
+  type: 'test'
+  ...
+# Subtest: hashes a directory into a stable manifest that ignores walk order
+ok 51 - hashes a directory into a stable manifest that ignores walk order
+  ---
+  duration_ms: 28.9268
+  type: 'test'
+  ...
+# Subtest: names what differs between two builds instead of only failing
+ok 52 - names what differs between two builds instead of only failing
+  ---
+  duration_ms: 31.1225
+  type: 'test'
+  ...
+# Subtest: reports no difference when the same tree is compared with itself
+ok 53 - reports no difference when the same tree is compared with itself
+  ---
+  duration_ms: 2.6796
+  type: 'test'
+  ...
+# Subtest: rejects an invocation that names neither a directory nor two manifests
+ok 54 - rejects an invocation that names neither a directory nor two manifests
+  ---
+  duration_ms: 0.8001
+  type: 'test'
+  ...
+# Subtest: accepts the immutable Relay v17 tuple and guarded engine source
+ok 55 - accepts the immutable Relay v17 tuple and guarded engine source
+  ---
+  duration_ms: 5.0347
+  type: 'test'
+  ...
+# Subtest: rejects stale, future and altered Relay candidate fields
+ok 56 - rejects stale, future and altered Relay candidate fields
+  ---
+  duration_ms: 43.2514
+  type: 'test'
+  ...
+# Subtest: requires every measured CFT tuple field, not merely a compatible engine kind
+ok 57 - requires every measured CFT tuple field, not merely a compatible engine kind
+  ---
+  duration_ms: 0.8605
+  type: 'test'
+  ...
+# Subtest: rejects a known-bad Relay hash and quarantined installer version
+ok 58 - rejects a known-bad Relay hash and quarantined installer version
+  ---
+  duration_ms: 20.7886
+  type: 'test'
+  ...
+# Subtest: rejects unpinned and system-Chrome overrides in a packaged payload
+ok 59 - rejects unpinned and system-Chrome overrides in a packaged payload
+  ---
+  duration_ms: 25.7753
+  type: 'test'
+  ...
+# Subtest: release-candidate workflow compares and records both normalized payload builds
+ok 60 - release-candidate workflow compares and records both normalized payload builds
+  ---
+  duration_ms: 2.2753
+  type: 'test'
+  ...
+# Subtest: parses bounded repeat and evidence output options
+ok 61 - parses bounded repeat and evidence output options
+  ---
+  duration_ms: 2.2286
+  type: 'test'
+  ...
+# Subtest: rejects invalid or unknown verifier options
+ok 62 - rejects invalid or unknown verifier options
+  ---
+  duration_ms: 0.8352
+  type: 'test'
+  ...
+# Subtest: bounds an HTTP request even when the transport never settles
+ok 63 - bounds an HTTP request even when the transport never settles
+  ---
+  duration_ms: 33.02
+  type: 'test'
+  ...
+# Subtest: keeps a successful response readable after the request deadline is cleared
+ok 64 - keeps a successful response readable after the request deadline is cleared
+  ---
+  duration_ms: 1.9648
+  type: 'test'
+  ...
+# Subtest: redacts paths, network identities, profile ids, and secret-like diagnostics
+ok 65 - redacts paths, network identities, profile ids, and secret-like diagnostics
+  ---
+  duration_ms: 5.9287
+  type: 'test'
+  ...
+# Subtest: records the engine without an expectation, and fails the streak when one drifts
+ok 66 - records the engine without an expectation, and fails the streak when one drifts
+  ---
+  duration_ms: 0.5599
+  type: 'test'
+  ...
+# Subtest: reads the declared engine expectation from the environment
+ok 67 - reads the declared engine expectation from the environment
+  ---
+  duration_ms: 0.3843
+  type: 'test'
+  ...
+# Subtest: keeps the Windows candidate version and pinned Relay coherent
+ok 68 - keeps the Windows candidate version and pinned Relay coherent
+  ---
+  duration_ms: 5.9114
+  type: 'test'
+  ...
+# Subtest: engine coherence is field-bound even when the candidate ID still contains cft
+ok 69 - engine coherence is field-bound even when the candidate ID still contains cft
+  ---
+  duration_ms: 2.1038
+  type: 'test'
+  ...
+# Subtest: honours an explicit MKTTOOL_ROOT and rejects a missing checkout
+ok 70 - honours an explicit MKTTOOL_ROOT and rejects a missing checkout
+  ---
+  duration_ms: 8.3525
+  type: 'test'
+  ...
+# Subtest: packaging derives the control contract version from the package metadata
+ok 71 - packaging derives the control contract version from the package metadata
+  ---
+  duration_ms: 0.4874
+  type: 'test'
+  ...
+# Subtest: attestation workflow requires and forwards the immutable candidate ID
+ok 72 - attestation workflow requires and forwards the immutable candidate ID
+  ---
+  duration_ms: 0.4827
+  type: 'test'
+  ...
+# Subtest: rejects a source workspace without lint
+ok 73 - rejects a source workspace without lint
+  ---
+  duration_ms: 24.4048
+  type: 'test'
+  ...
+# Subtest: rejects a workspace whose tests cannot be run
+ok 74 - rejects a workspace whose tests cannot be run
+  ---
+  duration_ms: 12.8305
+  type: 'test'
+  ...
+# Subtest: accepts explicit lint and test commands
+ok 75 - accepts explicit lint and test commands
+  ---
+  duration_ms: 14.8896
+  type: 'test'
+  ...
+1..75
+# tests 87
+# suites 0
+# pass 87
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5449.6072
+TAP version 13
+# Subtest: H24: safe mode refuses an untracked CDP domain enable before sending it
+ok 1 - H24: safe mode refuses an untracked CDP domain enable before sending it
+  ---
+  duration_ms: 1.7431
+  type: 'test'
+  ...
+# Subtest: safe mode pairs an approved domain enable with its disable
+ok 2 - safe mode pairs an approved domain enable with its disable
+  ---
+  duration_ms: 0.2967
+  type: 'test'
+  ...
+# Subtest: safe mode refuses a CloakBrowser-sensitive enable before sending it
+ok 3 - safe mode refuses a CloakBrowser-sensitive enable before sending it
+  ---
+  duration_ms: 0.1639
+  type: 'test'
+  ...
+# Subtest: connect retries with a fresh client when Page.enable fails
+ok 4 - connect retries with a fresh client when Page.enable fails
+  ---
+  duration_ms: 0.4739
+  type: 'test'
+  ...
+# Subtest: close invalidates and disposes a connection that completes late
+ok 5 - close invalidates and disposes a connection that completes late
+  ---
+  duration_ms: 0.3527
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 375.8525
+TAP version 13
+# Subtest: accepts the required Node.js major
+ok 1 - accepts the required Node.js major
+  ---
+  duration_ms: 1.4542
+  type: 'test'
+  ...
+# Subtest: rejects other Node.js majors with an actionable error
+ok 2 - rejects other Node.js majors with an actionable error
+  ---
+  duration_ms: 0.4129
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77.3589
+TAP version 13
+# Subtest: defines the owned MKT Browser MCP contract
+ok 1 - defines the owned MKT Browser MCP contract
+  ---
+  duration_ms: 0.7924
+  type: 'test'
+  ...
+# Subtest: supports one explicit MCP port override and rejects invalid values
+ok 2 - supports one explicit MCP port override and rejects invalid values
+  ---
+  duration_ms: 0.494
+  type: 'test'
+  ...
+# Subtest: uses MKT Browser-owned workspace, preload, and MCP identities
+ok 3 - uses MKT Browser-owned workspace, preload, and MCP identities
+  ---
+  duration_ms: 2.0521
+  type: 'test'
+  ...
+# Subtest: contains no retired first-party compatibility markers
+ok 4 - contains no retired first-party compatibility markers
+  ---
+  duration_ms: 33.7087
+  type: 'test'
+  ...
+# Subtest: defines stable MKT Browser product identifiers
+ok 5 - defines stable MKT Browser product identifiers
+  ---
+  duration_ms: 0.7576
+  type: 'test'
+  ...
+# Subtest: keeps desktop packaging metadata aligned with the product identity
+ok 6 - keeps desktop packaging metadata aligned with the product identity
+  ---
+  duration_ms: 3.7201
+  type: 'test'
+  ...
+# Subtest: uses the fixed Windows LocalAppData product root
+ok 7 - uses the fixed Windows LocalAppData product root
+  ---
+  duration_ms: 0.2593
+  type: 'test'
+  ...
+# Subtest: fails closed when Windows LocalAppData is unavailable
+ok 8 - fails closed when Windows LocalAppData is unavailable
+  ---
+  duration_ms: 0.4161
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 148.8756
+TAP version 13
+# Subtest: copies legacy profiles without changing the MultiZen source tree
+ok 1 - copies legacy profiles without changing the MultiZen source tree
+  ---
+  duration_ms: 98.0927
+  type: 'test'
+  ...
+# Subtest: refuses to overwrite an existing MKT Browser data directory
+ok 2 - refuses to overwrite an existing MKT Browser data directory
+  ---
+  duration_ms: 26.3758
+  type: 'test'
+  ...
+# Subtest: reports an unreadable legacy database without throwing
+ok 3 - reports an unreadable legacy database without throwing
+  ---
+  duration_ms: 8.172
+  type: 'test'
+  ...
+# Subtest: refuses an import when a database profile directory is missing
+ok 4 - refuses an import when a database profile directory is missing
+  ---
+  duration_ms: 47.4002
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 297.2058
+TAP version 13
+# Subtest: bootstrap reuses a signed Relay activation without downloading its authenticated URL
+ok 1 - bootstrap reuses a signed Relay activation without downloading its authenticated URL
+  ---
+  duration_ms: 105.737
+  type: 'test'
+  ...
+# Subtest: recognizes the Relay-installed pinned runtime without a Browser download index
+ok 2 - recognizes the Relay-installed pinned runtime without a Browser download index
+  ---
+  duration_ms: 51.323
+  type: 'test'
+  ...
+# Subtest: requires the signed version even if the directory contains an executable
+ok 3 - requires the signed version even if the directory contains an executable
+  ---
+  duration_ms: 30.4463
+  type: 'test'
+  ...
+# Subtest: rejects missing or malformed runtime metadata and missing executable
+ok 4 - rejects missing or malformed runtime metadata and missing executable
+  ---
+  duration_ms: 36.8154
+  type: 'test'
+  ...
+# Subtest: normalizes Windows engine installs to a stable runtime path
+ok 5 - normalizes Windows engine installs to a stable runtime path
+  ---
+  duration_ms: 2.5189
+  type: 'test'
+  ...
+# Subtest: packaged engine bootstrap consumes only a compatibility-set pin
+ok 6 - packaged engine bootstrap consumes only a compatibility-set pin
+  ---
+  duration_ms: 1.3253
+  type: 'test'
+  ...
+# Subtest: packaged verification isolates disposable engine state from the installed compatibility set
+ok 7 - packaged verification isolates disposable engine state from the installed compatibility set
+  ---
+  duration_ms: 1.1973
+  type: 'test'
+  ...
+# Subtest: locks engine selection while a signed compatibility set is active
+ok 8 - locks engine selection while a signed compatibility set is active
+  ---
+  duration_ms: 1.7831
+  type: 'test'
+  ...
+# Subtest: switches a failed CloakBrowser bootstrap to CFT through the settings boundary
+ok 9 - switches a failed CloakBrowser bootstrap to CFT through the settings boundary
+  ---
+  duration_ms: 1.1874
+  type: 'test'
+  ...
+# Subtest: renders unknown download totals as an indeterminate connecting state
+ok 10 - renders unknown download totals as an indeterminate connecting state
+  ---
+  duration_ms: 0.3888
+  type: 'test'
+  ...
+# Subtest: redacts signed download URLs from operator-facing bootstrap errors
+ok 11 - redacts signed download URLs from operator-facing bootstrap errors
+  ---
+  duration_ms: 0.6712
+  type: 'test'
+  ...
+# Subtest: keeps the Windows executable path stable across runtime versions
+ok 12 - keeps the Windows executable path stable across runtime versions
+  ---
+  duration_ms: 1.2548
+  type: 'test'
+  ...
+# Subtest: compares stable runtime paths with Windows casing semantics
+ok 13 - compares stable runtime paths with Windows casing semantics
+  ---
+  duration_ms: 0.2171
+  type: 'test'
+  ...
+# Subtest: Pro checksums fail closed before exchanging the licence key for an archive URL
+    # Subtest: HTTP 503
+    ok 1 - HTTP 503
+      ---
+      duration_ms: 59.2463
+      type: 'test'
+      ...
+    # Subtest: network
+    ok 2 - network
+      ---
+      duration_ms: 0.8515
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 3 - malformed
+      ---
+      duration_ms: 21.5424
+      type: 'test'
+      ...
+    # Subtest: missing digest
+    ok 4 - missing digest
+      ---
+      duration_ms: 1.9547
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 5 - empty
+      ---
+      duration_ms: 1.922
+      type: 'test'
+      ...
+    # Subtest: duplicate
+    ok 6 - duplicate
+      ---
+      duration_ms: 1.4302
+      type: 'test'
+      ...
+    # Subtest: trailing data
+    ok 7 - trailing data
+      ---
+      duration_ms: 0.939
+      type: 'test'
+      ...
+    # Subtest: wrong version
+    ok 8 - wrong version
+      ---
+      duration_ms: 0.9137
+      type: 'test'
+      ...
+    # Subtest: body transfer
+    ok 9 - body transfer
+      ---
+      duration_ms: 1.5792
+      type: 'test'
+      ...
+    1..9
+ok 14 - Pro checksums fail closed before exchanging the licence key for an archive URL
+  ---
+  duration_ms: 93.7097
+  type: 'test'
+  ...
+# Subtest: Pro accepts one valid archive checksum and never forwards auth to the redirected URL
+ok 15 - Pro accepts one valid archive checksum and never forwards auth to the redirected URL
+  ---
+  duration_ms: 2.444
+  type: 'test'
+  ...
+# Subtest: bootstrap refuses absent or invalid digests before download or extraction
+    # Subtest: cloakbrowser: absent
+    ok 1 - cloakbrowser: absent
+      ---
+      duration_ms: 22.2204
+      type: 'test'
+      ...
+    # Subtest: cloakbrowser: 
+    ok 2 - cloakbrowser: 
+      ---
+      duration_ms: 1.9312
+      type: 'test'
+      ...
+    # Subtest: cloakbrowser: not-a-sha256
+    ok 3 - cloakbrowser: not-a-sha256
+      ---
+      duration_ms: 2.4236
+      type: 'test'
+      ...
+    # Subtest: cft: absent
+    ok 4 - cft: absent
+      ---
+      duration_ms: 2.2395
+      type: 'test'
+      ...
+    # Subtest: cft: 
+    ok 5 - cft: 
+      ---
+      duration_ms: 2.0177
+      type: 'test'
+      ...
+    # Subtest: cft: not-a-sha256
+    ok 6 - cft: not-a-sha256
+      ---
+      duration_ms: 2.027
+      type: 'test'
+      ...
+    1..6
+ok 16 - bootstrap refuses absent or invalid digests before download or extraction
+  ---
+  duration_ms: 75.2927
+  type: 'test'
+  ...
+# Subtest: bootstrap rejects mismatched archive bytes without extraction
+ok 17 - bootstrap rejects mismatched archive bytes without extraction
+  ---
+  duration_ms: 28.6838
+  type: 'test'
+  ...
+# Subtest: keyless CloakBrowser also refuses absent sums instead of selecting an older release
+ok 18 - keyless CloakBrowser also refuses absent sums instead of selecting an older release
+  ---
+  duration_ms: 1.5516
+  type: 'test'
+  ...
+# Subtest: unpinned CFT retains its explicitly limited development checksum behavior
+ok 19 - unpinned CFT retains its explicitly limited development checksum behavior
+  ---
+  duration_ms: 1.2063
+  type: 'test'
+  ...
+# Subtest: publishes a versioned runtime contract
+ok 20 - publishes a versioned runtime contract
+  ---
+  duration_ms: 2.3399
+  type: 'test'
+  ...
+# Subtest: keeps the local-install capability conditional at runtime
+ok 21 - keeps the local-install capability conditional at runtime
+  ---
+  duration_ms: 4.8675
+  type: 'test'
+  ...
+# Subtest: publishes measured license capacity without exposing lease or key identities
+ok 22 - publishes measured license capacity without exposing lease or key identities
+  ---
+  duration_ms: 1.3748
+  type: 'test'
+  ...
+# Subtest: locks the canonical Windows app before opening shared licence state
+ok 23 - locks the canonical Windows app before opening shared licence state
+  ---
+  duration_ms: 0.8037
+  type: 'test'
+  ...
+# Subtest: keeps every failing layer separately addressable
+ok 24 - keeps every failing layer separately addressable
+  ---
+  duration_ms: 0.2679
+  type: 'test'
+  ...
+# Subtest: reports an engine version only when one is actually installed
+ok 25 - reports an engine version only when one is actually installed
+  ---
+  duration_ms: 0.3304
+  type: 'test'
+  ...
+# Subtest: exposes get_runtime_info and classifies failures by code, not by message
+ok 26 - exposes get_runtime_info and classifies failures by code, not by message
+  ---
+  duration_ms: 1.446
+  type: 'test'
+  ...
+# Subtest: verifies proxy egress before starting the bridge or spawning the engine
+ok 27 - verifies proxy egress before starting the bridge or spawning the engine
+  ---
+  duration_ms: 0.7674
+  type: 'test'
+  ...
+# Subtest: reports the installed release, not the MCP contract constant
+ok 28 - reports the installed release, not the MCP contract constant
+  ---
+  duration_ms: 1.9125
+  type: 'test'
+  ...
+# Subtest: bounds a CDP readiness fetch that never settles
+ok 29 - bounds a CDP readiness fetch that never settles
+  ---
+  duration_ms: 40.839
+  type: 'test'
+  ...
+# Subtest: bounds a CDP connect that never settles
+ok 30 - bounds a CDP connect that never settles
+  ---
+  duration_ms: 40.7656
+  type: 'test'
+  ...
+# Subtest: records each successful CDP readiness stage separately
+ok 31 - records each successful CDP readiness stage separately
+  ---
+  duration_ms: 2.7456
+  type: 'test'
+  ...
+# Subtest: lets Chromium assign the DevTools port instead of consuming fixed ports
+ok 32 - lets Chromium assign the DevTools port instead of consuming fixed ports
+  ---
+  duration_ms: 1.6006
+  type: 'test'
+  ...
+# Subtest: builds one hashed package and verifies that artifact in a fresh CI job
+ok 33 - builds one hashed package and verifies that artifact in a fresh CI job
+  ---
+  duration_ms: 0.4593
+  type: 'test'
+  ...
+# Subtest: prepares a pinned verifier engine on Windows jobs
+ok 34 - prepares a pinned verifier engine on Windows jobs
+  ---
+  duration_ms: 0.8785
+  type: 'test'
+  ...
+# Subtest: keeps optional hosted diagnostics manual and refuses skipped pipeline evidence
+ok 35 - keeps optional hosted diagnostics manual and refuses skipped pipeline evidence
+  ---
+  duration_ms: 0.7657
+  type: 'test'
+  ...
+# Subtest: builds the release candidate once, from a named commit, and never rebuilds it
+ok 36 - builds the release candidate once, from a named commit, and never rebuilds it
+  ---
+  duration_ms: 0.578
+  type: 'test'
+  ...
+# Subtest: disables the setup-node package-manager cache in every workflow that uses it
+ok 37 - disables the setup-node package-manager cache in every workflow that uses it
+  ---
+  duration_ms: 0.9056
+  type: 'test'
+  ...
+# Subtest: keeps browser ownership until failed launches and shutdown sweeps finish
+ok 38 - keeps browser ownership until failed launches and shutdown sweeps finish
+  ---
+  duration_ms: 1.0562
+  type: 'test'
+  ...
+# Subtest: serializes window watcher polls and requires process death for CDP-unreachable close
+ok 39 - serializes window watcher polls and requires process death for CDP-unreachable close
+  ---
+  duration_ms: 0.9768
+  type: 'test'
+  ...
+# Subtest: reports a licence refusal as a refusal, not as a crash
+ok 40 - reports a licence refusal as a refusal, not as a crash
+  ---
+  duration_ms: 1.0646
+  type: 'test'
+  ...
+# Subtest: uses attached ownership only for the enabled Windows Cloak lifecycle
+ok 41 - uses attached ownership only for the enabled Windows Cloak lifecycle
+  ---
+  duration_ms: 1.853
+  type: 'test'
+  ...
+# Subtest: routes every GitHub Actions job through a GitHub-hosted runner
+ok 42 - routes every GitHub Actions job through a GitHub-hosted runner
+  ---
+  duration_ms: 1.6037
+  type: 'test'
+  ...
+# Subtest: does not send automatic fork events to jobs that carry repository secrets
+ok 43 - does not send automatic fork events to jobs that carry repository secrets
+  ---
+  duration_ms: 0.4265
+  type: 'test'
+  ...
+# Subtest: H32: the bridge passes the hostname upstream instead of resolving it locally
+ok 44 - H32: the bridge passes the hostname upstream instead of resolving it locally
+  ---
+  duration_ms: 36.701
+  type: 'test'
+  ...
+# Subtest: H32: a hostname that cannot resolve locally still reaches the upstream
+ok 45 - H32: a hostname that cannot resolve locally still reaches the upstream
+  ---
+  duration_ms: 11.5194
+  type: 'test'
+  ...
+# Subtest: H33: the bridge listens on loopback only
+ok 46 - H33: the bridge listens on loopback only
+  ---
+  duration_ms: 2039.5434
+  type: 'test'
+  ...
+# [mkt-browser] socks5 bridge: Socks5 Authentication failed
+# Subtest: H34: nothing reaches the destination when upstream authentication fails
+ok 47 - H34: nothing reaches the destination when upstream authentication fails
+  ---
+  duration_ms: 7.0312
+  type: 'test'
+  ...
+# [mkt-browser] socks5 bridge: connect ECONNREFUSED 127.0.0.1:58319
+# Subtest: H31: when the upstream dies the bridge fails closed, it does not fall back to direct
+ok 48 - H31: when the upstream dies the bridge fails closed, it does not fall back to direct
+  ---
+  duration_ms: 8.376
+  type: 'test'
+  ...
+# Subtest: H32/http: the CONNECT request carries the hostname, not a locally resolved address
+ok 49 - H32/http: the CONNECT request carries the hostname, not a locally resolved address
+  ---
+  duration_ms: 47.5634
+  type: 'test'
+  ...
+# Subtest: H34/http: Proxy-Authorization is sent only when credentials are configured
+ok 50 - H34/http: Proxy-Authorization is sent only when credentials are configured
+  ---
+  duration_ms: 25.4709
+  type: 'test'
+  ...
+# [mkt-browser] socks5 bridge: upstream HTTP CONNECT failed: HTTP/1.1 407 Proxy Authentication Required
+# Subtest: H34/http: a rejected CONNECT reaches no destination
+ok 51 - H34/http: a rejected CONNECT reaches no destination
+  ---
+  duration_ms: 12.3175
+  type: 'test'
+  ...
+# [mkt-browser] socks5 bridge: connect ECONNREFUSED 127.0.0.1:58279
+# Subtest: H31/http: the bridge fails closed when the HTTP upstream dies
+ok 52 - H31/http: the bridge fails closed when the HTTP upstream dies
+  ---
+  duration_ms: 10.9025
+  type: 'test'
+  ...
+# Subtest: H40: CR/LF in the target host cannot inject into the upstream CONNECT request
+ok 53 - H40: CR/LF in the target host cannot inject into the upstream CONNECT request
+  ---
+  duration_ms: 3.6917
+  type: 'test'
+  ...
+# Subtest: H40: the host allowlist rejects separator characters without breaking real hostnames
+ok 54 - H40: the host allowlist rejects separator characters without breaking real hostnames
+  ---
+  duration_ms: 24.0993
+  type: 'test'
+  ...
+# Subtest: accepts a verified outbound UDP block for the exact runtime
+ok 55 - accepts a verified outbound UDP block for the exact runtime
+  ---
+  duration_ms: 1.627
+  type: 'test'
+  ...
+# Subtest: fails closed before launch when the protection cannot be verified
+ok 56 - fails closed before launch when the protection cannot be verified
+  ---
+  duration_ms: 0.8792
+  type: 'test'
+  ...
+# Subtest: does not apply the Windows firewall boundary on other platforms
+ok 57 - does not apply the Windows firewall boundary on other platforms
+  ---
+  duration_ms: 0.1959
+  type: 'test'
+  ...
+# Subtest: refuses a binary that is not chrome.exe, without probing the firewall
+ok 58 - refuses a binary that is not chrome.exe, without probing the firewall
+  ---
+  duration_ms: 1.34
+  type: 'test'
+  ...
+# Subtest: refuses a chrome.exe outside the expected engine runtime path
+ok 59 - refuses a chrome.exe outside the expected engine runtime path
+  ---
+  duration_ms: 0.7098
+  type: 'test'
+  ...
+1..59
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2413.9786
+TAP version 13
+# Subtest: uses a supported Electron line consistently
+ok 1 - uses a supported Electron line consistently
+  ---
+  duration_ms: 1.37
+  type: 'test'
+  ...
+# Subtest: sandboxes the renderer
+ok 2 - sandboxes the renderer
+  ---
+  duration_ms: 0.2951
+  type: 'test'
+  ...
+# Subtest: background startup changes visibility without changing renderer security
+ok 3 - background startup changes visibility without changing renderer security
+  ---
+  duration_ms: 0.7397
+  type: 'test'
+  ...
+# Subtest: refuses renderer-initiated navigation and window opening
+ok 4 - refuses renderer-initiated navigation and window opening
+  ---
+  duration_ms: 0.2033
+  type: 'test'
+  ...
+# Subtest: applies a restrictive CSP
+ok 5 - applies a restrictive CSP
+  ---
+  duration_ms: 0.2384
+  type: 'test'
+  ...
+# Subtest: constructs exactly one BrowserWindow, through the audited options builder
+ok 6 - constructs exactly one BrowserWindow, through the audited options builder
+  ---
+  duration_ms: 0.7694
+  type: 'test'
+  ...
+# Subtest: keeps preload and main IPC channels inside the classified inventory
+ok 7 - keeps preload and main IPC channels inside the classified inventory
+  ---
+  duration_ms: 0.6996
+  type: 'test'
+  ...
+# Subtest: classifies every exposed MCP definition and dispatch case
+ok 8 - classifies every exposed MCP definition and dispatch case
+  ---
+  duration_ms: 0.5613
+  type: 'test'
+  ...
+# Subtest: binds the discovered Relay token to profile management only
+ok 9 - binds the discovered Relay token to profile management only
+  ---
+  duration_ms: 0.7151
+  type: 'test'
+  ...
+# Subtest: packaged verification exercises the profile lifecycle
+ok 10 - packaged verification exercises the profile lifecycle
+  ---
+  duration_ms: 1.075
+  type: 'test'
+  ...
+# Subtest: fingerprint measurement reports cleanup failures
+ok 11 - fingerprint measurement reports cleanup failures
+  ---
+  duration_ms: 0.2791
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 121.36
+TAP version 13
+# Subtest: migrates existing profile databases to managed-create schema v2
+ok 1 - migrates existing profile databases to managed-create schema v2
+  ---
+  duration_ms: 49.0201
+  type: 'test'
+  ...
+# Subtest: locks managed proxy, fingerprint, and deletion while preserving metadata edits
+ok 2 - locks managed proxy, fingerprint, and deletion while preserving metadata edits
+  ---
+  duration_ms: 33.1998
+  type: 'test'
+  ...
+# Subtest: reconciles exact managed-create retries without creating duplicate profiles
+ok 3 - reconciles exact managed-create retries without creating duplicate profiles
+  ---
+  duration_ms: 34.0532
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 453.0164
+TAP version 13
+# Subtest: H24: safe mode refuses an untracked CDP domain enable before sending it
+ok 1 - H24: safe mode refuses an untracked CDP domain enable before sending it
+  ---
+  duration_ms: 8.2002
+  type: 'test'
+  ...
+# Subtest: safe mode pairs an approved domain enable with its disable
+ok 2 - safe mode pairs an approved domain enable with its disable
+  ---
+  duration_ms: 0.974
+  type: 'test'
+  ...
+# Subtest: safe mode refuses a CloakBrowser-sensitive enable before sending it
+ok 3 - safe mode refuses a CloakBrowser-sensitive enable before sending it
+  ---
+  duration_ms: 0.4696
+  type: 'test'
+  ...
+# Subtest: connect retries with a fresh client when Page.enable fails
+ok 4 - connect retries with a fresh client when Page.enable fails
+  ---
+  duration_ms: 1.6743
+  type: 'test'
+  ...
+# Subtest: close invalidates and disposes a connection that completes late
+ok 5 - close invalidates and disposes a connection that completes late
+  ---
+  duration_ms: 2.8138
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 288.7319
+TAP version 13
+# Subtest: activity diagnostics drop arguments under unrecognised keys
+ok 1 - activity diagnostics drop arguments under unrecognised keys
+  ---
+  duration_ms: 3.0069
+  type: 'test'
+  ...
+# Subtest: activity diagnostics never retain proxy endpoints, credentials, cookies, or page text
+ok 2 - activity diagnostics never retain proxy endpoints, credentials, cookies, or page text
+  ---
+  duration_ms: 1.7797
+  type: 'test'
+  ...
+# Subtest: MCP profile responses never expose proxy endpoints or credentials
+ok 3 - MCP profile responses never expose proxy endpoints or credentials
+  ---
+  duration_ms: 1.29
+  type: 'test'
+  ...
+# Subtest: H26: a request with no Authorization header is rejected
+ok 4 - H26: a request with no Authorization header is rejected
+  ---
+  duration_ms: 104.3653
+  type: 'test'
+  ...
+# Subtest: H26: the correct token is accepted (differential control)
+ok 5 - H26: the correct token is accepted (differential control)
+  ---
+  duration_ms: 50.376
+  type: 'test'
+  ...
+# Subtest: H26: near-miss tokens are all rejected
+ok 6 - H26: near-miss tokens are all rejected
+  ---
+  duration_ms: 120.9205
+  type: 'test'
+  ...
+# Subtest: H26: the token is not accepted from a query parameter or a cookie
+ok 7 - H26: the token is not accepted from a query parameter or a cookie
+  ---
+  duration_ms: 63.238
+  type: 'test'
+  ...
+# Subtest: H29: /healthz reveals nothing before authentication
+ok 8 - H29: /healthz reveals nothing before authentication
+  ---
+  duration_ms: 48.8494
+  type: 'test'
+  ...
+# Subtest: H30: the token never appears in a rejection body or headers
+ok 9 - H30: the token never appears in a rejection body or headers
+  ---
+  duration_ms: 34.0371
+  type: 'test'
+  ...
+# Subtest: H27: the Host allowlist rejects foreign hosts on the legacy /messages route
+ok 10 - H27: the Host allowlist rejects foreign hosts on the legacy /messages route
+  ---
+  duration_ms: 37.6947
+  type: 'test'
+  ...
+# [mkt-browser] WARNING: MCP HTTP transport starting WITHOUT an auth token — the local control port is UNAUTHENTICATED and any local process can drive it.
+# Subtest: H27: the Host allowlist is case-insensitive for the loopback names it accepts
+ok 11 - H27: the Host allowlist is case-insensitive for the loopback names it accepts
+  ---
+  duration_ms: 32.8881
+  type: 'test'
+  ...
+# [mkt-browser] WARNING: MCP HTTP transport starting WITHOUT an auth token — the local control port is UNAUTHENTICATED and any local process can drive it.
+# Subtest: H26 fail-open: with no token configured the port is open to any local caller
+ok 12 - H26 fail-open: with no token configured the port is open to any local caller
+  ---
+  duration_ms: 34.4599
+  type: 'test'
+  ...
+# Subtest: H26 fail-open: an empty-string token counts as no token
+ok 13 - H26 fail-open: an empty-string token counts as no token
+  ---
+  duration_ms: 39.6657
+  type: 'test'
+  ...
+# Subtest: H28: a second SSE client is rejected without replacing the active stream
+ok 14 - H28: a second SSE client is rejected without replacing the active stream
+  ---
+  duration_ms: 39.1827
+  type: 'test'
+  ...
+# Subtest: the managed direction says the profile belongs to MKTTool
+ok 15 - the managed direction says the profile belongs to MKTTool
+  ---
+  duration_ms: 1.6747
+  type: 'test'
+  ...
+# Subtest: the unmanaged direction says the profile is not managed, and names the tool that works
+ok 16 - the unmanaged direction says the profile is not managed, and names the tool that works
+  ---
+  duration_ms: 0.2383
+  type: 'test'
+  ...
+# Subtest: both keep the same code, because the same layer refused
+ok 17 - both keep the same code, because the same layer refused
+  ---
+  duration_ms: 0.1675
+  type: 'test'
+  ...
+# Subtest: persists and verifies the proxy before launching a closed profile
+ok 18 - persists and verifies the proxy before launching a closed profile
+  ---
+  duration_ms: 2.2362
+  type: 'test'
+  ...
+# Subtest: returns an already-running profile only when its active proxy matches
+ok 19 - returns an already-running profile only when its active proxy matches
+  ---
+  duration_ms: 0.2448
+  type: 'test'
+  ...
+# Subtest: rejects a running profile whose active proxy differs without changing storage
+ok 20 - rejects a running profile whose active proxy differs without changing storage
+  ---
+  duration_ms: 0.4282
+  type: 'test'
+  ...
+# Subtest: fails closed when the persisted proxy cannot be read back
+ok 21 - fails closed when the persisted proxy cannot be read back
+  ---
+  duration_ms: 0.3875
+  type: 'test'
+  ...
+# Subtest: serializes concurrent launches so another proxy cannot replace the verified value
+ok 22 - serializes concurrent launches so another proxy cannot replace the verified value
+  ---
+  duration_ms: 0.553
+  type: 'test'
+  ...
+# Subtest: the inventory under test is the full 25 tools, split into both groups
+ok 23 - the inventory under test is the full 25 tools, split into both groups
+  ---
+  duration_ms: 2.8339
+  type: 'test'
+  ...
+# Subtest: H21: tools/list hides exactly the tools the policy denies
+ok 24 - H21: tools/list hides exactly the tools the policy denies
+  ---
+  duration_ms: 66.3419
+  type: 'test'
+  ...
+# Subtest: H21: a denied tool called directly by name is refused and never reaches the driver
+ok 25 - H21: a denied tool called directly by name is refused and never reaches the driver
+  ---
+  duration_ms: 48.9191
+  type: 'test'
+  ...
+# Subtest: H21: the same tools are reachable under the full-local policy (differential)
+ok 26 - H21: the same tools are reachable under the full-local policy (differential)
+  ---
+  duration_ms: 45.1173
+  type: 'test'
+  ...
+# Subtest: H22: tool-name matching is exact, not case- or whitespace-tolerant
+ok 27 - H22: tool-name matching is exact, not case- or whitespace-tolerant
+  ---
+  duration_ms: 40.6412
+  type: 'test'
+  ...
+# Subtest: H23: an unclassified tool name defaults to deny
+ok 28 - H23: an unclassified tool name defaults to deny
+  ---
+  duration_ms: 34.2935
+  type: 'test'
+  ...
+# Subtest: H23: an unclassified tool is denied even under the most permissive policy
+ok 29 - H23: an unclassified tool is denied even under the most permissive policy
+  ---
+  duration_ms: 33.5803
+  type: 'test'
+  ...
+# Subtest: H24: raw cdp_send always enters the driver through safe mode
+ok 30 - H24: raw cdp_send always enters the driver through safe mode
+  ---
+  duration_ms: 45.6452
+  type: 'test'
+  ...
+# Subtest: H25: managed launch cannot remove its required proxy or replace the fingerprint
+ok 31 - H25: managed launch cannot remove its required proxy or replace the fingerprint
+  ---
+  duration_ms: 43.9062
+  type: 'test'
+  ...
+# Subtest: returns only a complete measured license capacity summary
+ok 32 - returns only a complete measured license capacity summary
+  ---
+  duration_ms: 2.2491
+  type: 'test'
+  ...
+# Subtest: includes measured capacity in the authenticated runtime report
+ok 33 - includes measured capacity in the authenticated runtime report
+  ---
+  duration_ms: 0.504
+  type: 'test'
+  ...
+# Subtest: preserves only a valid aggregate manual retry deadline
+ok 34 - preserves only a valid aggregate manual retry deadline
+  ---
+  duration_ms: 1.5957
+  type: 'test'
+  ...
+# Subtest: preserves only complete sanitized availability and vendor observation pairs
+ok 35 - preserves only complete sanitized availability and vendor observation pairs
+  ---
+  duration_ms: 0.9335
+  type: 'test'
+  ...
+# Subtest: profile-management token hides and rejects every page, cookie, and raw-CDP tool
+ok 36 - profile-management token hides and rejects every page, cookie, and raw-CDP tool
+  ---
+  duration_ms: 0.9
+  type: 'test'
+  ...
+# Subtest: initialize instructions describe the authenticated token capabilities
+ok 37 - initialize instructions describe the authenticated token capabilities
+  ---
+  duration_ms: 0.2444
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1466.5661
+TAP version 13
+# Subtest: matches quoted and unquoted Chromium user-data-dir arguments exactly
+ok 1 - matches quoted and unquoted Chromium user-data-dir arguments exactly
+  ---
+  duration_ms: 1.6335
+  type: 'test'
+  ...
+# Subtest: selects the browser process instead of a short-lived launcher or helper
+ok 2 - selects the browser process instead of a short-lived launcher or helper
+  ---
+  duration_ms: 0.3348
+  type: 'test'
+  ...
+# Subtest: reads the DevTools port an orphaned browser was started with
+ok 3 - reads the DevTools port an orphaned browser was started with
+  ---
+  duration_ms: 0.4677
+  type: 'test'
+  ...
+# Subtest: parses only exact IPv4 loopback listeners from native netstat output
+ok 4 - parses only exact IPv4 loopback listeners from native netstat output
+  ---
+  duration_ms: 2.0441
+  type: 'test'
+  ...
+# Subtest: accepts only a drive-qualified local Windows system root
+ok 5 - accepts only a drive-qualified local Windows system root
+  ---
+  duration_ms: 0.371
+  type: 'test'
+  ...
+# Subtest: attributes a real Windows loopback listener to the owning process
+ok 6 - attributes a real Windows loopback listener to the owning process
+  ---
+  duration_ms: 160.8222
+  type: 'test'
+  ...
+# Subtest: finds a real Windows process by its exact user-data directory
+ok 7 - finds a real Windows process by its exact user-data directory
+  ---
+  duration_ms: 794.6926
+  type: 'test'
+  ...
+# Subtest: matches profiles beneath the app root without reaching past it
+ok 8 - matches profiles beneath the app root without reaching past it
+  ---
+  duration_ms: 0.2906
+  type: 'test'
+  ...
+# Subtest: a profile with no proxy still gets the DNS switches
+ok 9 - a profile with no proxy still gets the DNS switches
+  ---
+  duration_ms: 1.2991
+  type: 'test'
+  ...
+# Subtest: proxy state changes nothing about the set
+ok 10 - proxy state changes nothing about the set
+  ---
+  duration_ms: 0.8861
+  type: 'test'
+  ...
+# Subtest: the telemetry switches travel with the DNS ones
+ok 11 - the telemetry switches travel with the DNS ones
+  ---
+  duration_ms: 0.1911
+  type: 'test'
+  ...
+# Subtest: the feature list carries every DNS bypass Chromium exposes as a feature
+ok 12 - the feature list carries every DNS bypass Chromium exposes as a feature
+  ---
+  duration_ms: 0.2728
+  type: 'test'
+  ...
+# Subtest: the driver emits exactly one --disable-features flag
+ok 13 - the driver emits exactly one --disable-features flag
+  ---
+  duration_ms: 0.2556
+  type: 'test'
+  ...
+# Subtest: the switches are applied on one unconditional path
+ok 14 - the switches are applied on one unconditional path
+  ---
+  duration_ms: 0.164
+  type: 'test'
+  ...
+# Subtest: parses only the bounded Chromium DevToolsActivePort schema
+ok 15 - parses only the bounded Chromium DevToolsActivePort schema
+  ---
+  duration_ms: 2.566
+  type: 'test'
+  ...
+# Subtest: removes the crash-era record before launch and tolerates an already-clean profile
+ok 16 - removes the crash-era record before launch and tolerates an already-clean profile
+  ---
+  duration_ms: 32.8625
+  type: 'test'
+  ...
+# Subtest: authenticates a reappeared record by process and listener ownership, not file time
+ok 17 - authenticates a reappeared record by process and listener ownership, not file time
+  ---
+  duration_ms: 1.7677
+  type: 'test'
+  ...
+# Subtest: never attaches when the listener belongs to a foreign process
+ok 18 - never attaches when the listener belongs to a foreign process
+  ---
+  duration_ms: 1.4554
+  type: 'test'
+  ...
+# Subtest: rejects a listener owner whose process identity changes between OS snapshots
+ok 19 - rejects a listener owner whose process identity changes between OS snapshots
+  ---
+  duration_ms: 1.0594
+  type: 'test'
+  ...
+# Subtest: rejects a listener that changes owners during authentication
+ok 20 - rejects a listener that changes owners during authentication
+  ---
+  duration_ms: 0.8301
+  type: 'test'
+  ...
+# Subtest: rejects a duplicate owner set that could mask a new PID
+ok 21 - rejects a duplicate owner set that could mask a new PID
+  ---
+  duration_ms: 3.6552
+  type: 'test'
+  ...
+# Subtest: follows a Windows launcher handoff to the owned primary process
+ok 22 - follows a Windows launcher handoff to the owned primary process
+  ---
+  duration_ms: 1.9322
+  type: 'test'
+  ...
+# Subtest: fails closed when listener ownership cannot be inspected
+ok 23 - fails closed when listener ownership cannot be inspected
+  ---
+  duration_ms: 3.338
+  type: 'test'
+  ...
+# Subtest: does not return success after an ownership query exceeds the budget
+ok 24 - does not return success after an ownership query exceeds the budget
+  ---
+  duration_ms: 1.02
+  type: 'test'
+  ...
+# Subtest: reports process stage when the identity refresh exceeds the budget
+ok 25 - reports process stage when the identity refresh exceeds the budget
+  ---
+  duration_ms: 1.4771
+  type: 'test'
+  ...
+# Subtest: reports ownership stage when the final listener snapshot exceeds the budget
+ok 26 - reports ownership stage when the final listener snapshot exceeds the budget
+  ---
+  duration_ms: 0.7875
+  type: 'test'
+  ...
+# Subtest: times out at the active-port stage with bounded diagnostics
+ok 27 - times out at the active-port stage with bounded diagnostics
+  ---
+  duration_ms: 0.4397
+  type: 'test'
+  ...
+# Subtest: H38: a valid CRX3 signature and requested Web Store ID are both required
+ok 28 - H38: a valid CRX3 signature and requested Web Store ID are both required
+  ---
+  duration_ms: 292.0263
+  type: 'test'
+  ...
+# Subtest: H38: tampered CRX3 and CRX2 signatures are rejected
+ok 29 - H38: tampered CRX3 and CRX2 signatures are rejected
+  ---
+  duration_ms: 162.2146
+  type: 'test'
+  ...
+# Subtest: H38: a valid CRX2 publisher signature remains supported
+ok 30 - H38: a valid CRX2 publisher signature remains supported
+  ---
+  duration_ms: 106.3898
+  type: 'test'
+  ...
+# Subtest: H38: ZIP entries cannot traverse outside the staging directory
+ok 31 - H38: ZIP entries cannot traverse outside the staging directory
+  ---
+  duration_ms: 62.2372
+  type: 'test'
+  ...
+# Subtest: H38: a correctly signed CRX still cannot publish a symlink entry
+ok 32 - H38: a correctly signed CRX still cannot publish a symlink entry
+  ---
+  duration_ms: 51.5763
+  type: 'test'
+  ...
+# Subtest: H38: a manifest version cannot escape the shared extension store
+ok 33 - H38: a manifest version cannot escape the shared extension store
+  ---
+  duration_ms: 22.218
+  type: 'test'
+  ...
+# Subtest: H38: persisted extension references cannot resolve outside their owned roots
+ok 34 - H38: persisted extension references cannot resolve outside their owned roots
+  ---
+  duration_ms: 0.5544
+  type: 'test'
+  ...
+# Subtest: H39: the executable preload API reaches every classified invoke and event channel
+ok 35 - H39: the executable preload API reaches every classified invoke and event channel
+  ---
+  duration_ms: 4.2853
+  type: 'test'
+  ...
+# Subtest: H39: main-process registration fails closed on missing, duplicate, or foreign channels
+ok 36 - H39: main-process registration fails closed on missing, duplicate, or foreign channels
+  ---
+  duration_ms: 1.3931
+  type: 'test'
+  ...
+# Subtest: catches a refusal that lands after the launch has otherwise finished
+ok 37 - catches a refusal that lands after the launch has otherwise finished
+  ---
+  duration_ms: 105.0336
+  type: 'test'
+  ...
+# Subtest: returns as soon as the child exits rather than sleeping out the window
+ok 38 - returns as soon as the child exits rather than sleeping out the window
+  ---
+  duration_ms: 51.2382
+  type: 'test'
+  ...
+# Subtest: waits the full window when the engine keeps running
+ok 39 - waits the full window when the engine keeps running
+  ---
+  duration_ms: 160.1831
+  type: 'test'
+  ...
+# Subtest: costs nothing when the verdict is already in or the window has already passed
+ok 40 - costs nothing when the verdict is already in or the window has already passed
+  ---
+  duration_ms: 0.3921
+  type: 'test'
+  ...
+# Subtest: tags a seat refusal so the rotation loop can reach the next key
+ok 41 - tags a seat refusal so the rotation loop can reach the next key
+  ---
+  duration_ms: 0.5263
+  type: 'test'
+  ...
+# Subtest: does not tag failures that would repeat on every key
+ok 42 - does not tag failures that would repeat on every key
+  ---
+  duration_ms: 0.213
+  type: 'test'
+  ...
+# Subtest: the default window is wider than the verdicts actually measured
+ok 43 - the default window is wider than the verdicts actually measured
+  ---
+  duration_ms: 0.1723
+  type: 'test'
+  ...
+# Subtest: records exit-76 refusal before cleanup can classify an exited child as released
+ok 44 - records exit-76 refusal before cleanup can classify an exited child as released
+  ---
+  duration_ms: 1.5118
+  type: 'test'
+  ...
+# Subtest: protects the durable reservation with failed-launch cleanup
+ok 45 - protects the durable reservation with failed-launch cleanup
+  ---
+  duration_ms: 0.1914
+  type: 'test'
+  ...
+# Subtest: releases a durable reservation when launch fails before a process is tracked
+ok 46 - releases a durable reservation when launch fails before a process is tracked
+  ---
+  duration_ms: 0.4913
+  type: 'test'
+  ...
+# Subtest: makes active state durable before publishing a running Browser
+ok 47 - makes active state durable before publishing a running Browser
+  ---
+  duration_ms: 0.3006
+  type: 'test'
+  ...
+# Subtest: makes starting state durable before spawning a licensed Browser
+ok 48 - makes starting state durable before spawning a licensed Browser
+  ---
+  duration_ms: 0.2963
+  type: 'test'
+  ...
+# Subtest: persists release before changing in-memory capacity
+ok 49 - persists release before changing in-memory capacity
+  ---
+  duration_ms: 0.4799
+  type: 'test'
+  ...
+# Subtest: classifies an observed child exit before releasing its seat
+ok 50 - classifies an observed child exit before releasing its seat
+  ---
+  duration_ms: 0.3036
+  type: 'test'
+  ...
+# Subtest: keeps an unreachable or ambiguously exited Browser seat resting
+ok 51 - keeps an unreachable or ambiguously exited Browser seat resting
+  ---
+  duration_ms: 0.3652
+  type: 'test'
+  ...
+# Subtest: a vendor refusal cannot automatically spawn another engine
+ok 52 - a vendor refusal cannot automatically spawn another engine
+  ---
+  duration_ms: 0.556
+  type: 'test'
+  ...
+# Subtest: hands each profile its own key and reports what is left
+ok 53 - hands each profile its own key and reports what is left
+  ---
+  duration_ms: 2.779
+  type: 'test'
+  ...
+# Subtest: re-acquiring for the same profile returns the same key
+ok 54 - re-acquiring for the same profile returns the same key
+  ---
+  duration_ms: 0.4858
+  type: 'test'
+  ...
+# Subtest: returns null rather than overbooking when every key is taken
+ok 55 - returns null rather than overbooking when every key is taken
+  ---
+  duration_ms: 0.2849
+  type: 'test'
+  ...
+# Subtest: only independently proven release permits immediate reuse; ordinary close rests
+ok 56 - only independently proven release permits immediate reuse; ordinary close rests
+  ---
+  duration_ms: 1.6684
+  type: 'test'
+  ...
+# Subtest: a refused key rests, so the next launch tries a different one
+ok 57 - a refused key rests, so the next launch tries a different one
+  ---
+  duration_ms: 0.3381
+  type: 'test'
+  ...
+# Subtest: drops blanks and duplicates instead of advertising seats that do not exist
+ok 58 - drops blanks and duplicates instead of advertising seats that do not exist
+  ---
+  duration_ms: 0.208
+  type: 'test'
+  ...
+# Subtest: never exposes a whole key
+ok 59 - never exposes a whole key
+  ---
+  duration_ms: 0.2617
+  type: 'test'
+  ...
+# Subtest: an empty pool is a valid state, not a crash
+ok 60 - an empty pool is a valid state, not a crash
+  ---
+  duration_ms: 0.1949
+  type: 'test'
+  ...
+# Subtest: releasing a profile that holds nothing changes nothing
+ok 61 - releasing a profile that holds nothing changes nothing
+  ---
+  duration_ms: 0.4718
+  type: 'test'
+  ...
+# Subtest: capacity never counts pending recovery or cooling keys as free
+ok 62 - capacity never counts pending recovery or cooling keys as free
+  ---
+  duration_ms: 2.348
+  type: 'test'
+  ...
+# Subtest: close and refusal waits block acquisition until their exact manual retry deadlines
+ok 63 - close and refusal waits block acquisition until their exact manual retry deadlines
+  ---
+  duration_ms: 0.9584
+  type: 'test'
+  ...
+# Subtest: unreconciled startup leases never advertise free capacity even without a journal argument
+ok 64 - unreconciled startup leases never advertise free capacity even without a journal argument
+  ---
+  duration_ms: 0.2952
+  type: 'test'
+  ...
+# Subtest: a future journal timestamp is normalized once for both acquisition and capacity
+ok 65 - a future journal timestamp is normalized once for both acquisition and capacity
+  ---
+  duration_ms: 0.3726
+  type: 'test'
+  ...
+# Subtest: capacity treats an unreconciled reservation as pending instead of free
+ok 66 - capacity treats an unreconciled reservation as pending instead of free
+  ---
+  duration_ms: 0.2005
+  type: 'test'
+  ...
+# Subtest: a lease left unreleased by an earlier run starts its key cooling, not idle
+ok 67 - a lease left unreleased by an earlier run starts its key cooling, not idle
+  ---
+  duration_ms: 0.2299
+  type: 'test'
+  ...
+# Subtest: cooling is counted from when the lease last moved, not from startup
+ok 68 - cooling is counted from when the lease last moved, not from startup
+  ---
+  duration_ms: 0.3828
+  type: 'test'
+  ...
+# Subtest: an old active record never expires by timestamp because the browser may have kept heartbeating
+ok 69 - an old active record never expires by timestamp because the browser may have kept heartbeating
+  ---
+  duration_ms: 0.2315
+  type: 'test'
+  ...
+# Subtest: a confirmed release and an unstarted reservation both leave the key idle
+ok 70 - a confirmed release and an unstarted reservation both leave the key idle
+  ---
+  duration_ms: 0.2165
+  type: 'test'
+  ...
+# Subtest: nextFreeAtMs names the wait only when every key is resting
+ok 71 - nextFreeAtMs names the wait only when every key is resting
+  ---
+  duration_ms: 0.2602
+  type: 'test'
+  ...
+# Subtest: a reconciled lease rests from when its browser actually died
+ok 72 - a reconciled lease rests from when its browser actually died
+  ---
+  duration_ms: 0.4514
+  type: 'test'
+  ...
+# Subtest: a reconciled lease whose rest already ran out returns its key at once
+ok 73 - a reconciled lease whose rest already ran out returns its key at once
+  ---
+  duration_ms: 0.2495
+  type: 'test'
+  ...
+# Subtest: persists a reserved lease without persisting the full key
+ok 74 - persists a reserved lease without persisting the full key
+  ---
+  duration_ms: 33.5675
+  type: 'test'
+  ...
+# Subtest: does not persist a short development key as its own tail
+ok 75 - does not persist a short development key as its own tail
+  ---
+  duration_ms: 30.8732
+  type: 'test'
+  ...
+# Subtest: rejects reserving one profile with a different license key
+ok 76 - rejects reserving one profile with a different license key
+  ---
+  duration_ms: 31.5654
+  type: 'test'
+  ...
+# Subtest: rejects reserving one license key for two profiles
+ok 77 - rejects reserving one license key for two profiles
+  ---
+  duration_ms: 16.3653
+  type: 'test'
+  ...
+# Subtest: allows only explicit lease lifecycle transitions
+ok 78 - allows only explicit lease lifecycle transitions
+  ---
+  duration_ms: 78.4704
+  type: 'test'
+  ...
+# Subtest: recovers the last committed record when the current journal is malformed
+ok 79 - recovers the last committed record when the current journal is malformed
+  ---
+  duration_ms: 79.4258
+  type: 'test'
+  ...
+# Subtest: rejects duplicate profile records instead of silently cross-wiring them
+ok 80 - rejects duplicate profile records instead of silently cross-wiring them
+  ---
+  duration_ms: 40.4752
+  type: 'test'
+  ...
+# Subtest: rejects incomplete records instead of accepting ambiguous recovery state
+ok 81 - rejects incomplete records instead of accepting ambiguous recovery state
+  ---
+  duration_ms: 38.3869
+  type: 'test'
+  ...
+# Subtest: keeps in-memory state unchanged when a durable journal write fails
+ok 82 - keeps in-memory state unchanged when a durable journal write fails
+  ---
+  duration_ms: 5.8093
+  type: 'test'
+  ...
+# Subtest: accepts only stable redacted error codes in persisted recovery state
+ok 83 - accepts only stable redacted error codes in persisted recovery state
+  ---
+  duration_ms: 15.1977
+  type: 'test'
+  ...
+# Subtest: serializes concurrent reservations without losing a durable record
+ok 84 - serializes concurrent reservations without losing a durable record
+  ---
+  duration_ms: 58.7701
+  type: 'test'
+  ...
+# Subtest: starts a fresh lifecycle after a cooling lease has expired in the allocator
+ok 85 - starts a fresh lifecycle after a cooling lease has expired in the allocator
+  ---
+  duration_ms: 25.7885
+  type: 'test'
+  ...
+# Subtest: retires an expired refused owner before assigning its key to another profile
+ok 86 - retires an expired refused owner before assigning its key to another profile
+  ---
+  duration_ms: 24.1622
+  type: 'test'
+  ...
+# Subtest: a clean close records the seat as given back
+ok 87 - a clean close records the seat as given back
+  ---
+  duration_ms: 82.0634
+  type: 'test'
+  ...
+# Subtest: a killed browser records the seat as still resting
+ok 88 - a killed browser records the seat as still resting
+  ---
+  duration_ms: 56.3485
+  type: 'test'
+  ...
+# Subtest: a launch that never spawned frees the key for other profiles
+ok 89 - a launch that never spawned frees the key for other profiles
+  ---
+  duration_ms: 61.1014
+  type: 'test'
+  ...
+# Subtest: a pre-spawn starting record can close cleanly without leaving recovery noise
+ok 90 - a pre-spawn starting record can close cleanly without leaving recovery noise
+  ---
+  duration_ms: 57.3233
+  type: 'test'
+  ...
+# Subtest: a refusal is recorded terminally so a restart keeps resting the key
+ok 91 - a refusal is recorded terminally so a restart keeps resting the key
+  ---
+  duration_ms: 38.1867
+  type: 'test'
+  ...
+# Subtest: retries a release that was already durably moved to ending
+ok 92 - retries a release that was already durably moved to ending
+  ---
+  duration_ms: 51.2932
+  type: 'test'
+  ...
+# Subtest: a journal failure is logged and fails the licensed launch closed
+ok 93 - a journal failure is logged and fails the licensed launch closed
+  ---
+  duration_ms: 1.2913
+  type: 'test'
+  ...
+# Subtest: released on a profile with no record does nothing
+ok 94 - released on a profile with no record does nothing
+  ---
+  duration_ms: 3.7769
+  type: 'test'
+  ...
+# Subtest: a double close does not corrupt an already-final record
+ok 95 - a double close does not corrupt an already-final record
+  ---
+  duration_ms: 61.6173
+  type: 'test'
+  ...
+# Subtest: marks a lease released only after the recovery transport confirms release
+ok 96 - marks a lease released only after the recovery transport confirms release
+  ---
+  duration_ms: 47.7068
+  type: 'test'
+  ...
+# Subtest: keeps a missing-profile lease pending without resolving a key or calling release
+ok 97 - keeps a missing-profile lease pending without resolving a key or calling release
+  ---
+  duration_ms: 33.2158
+  type: 'test'
+  ...
+# Subtest: releases an unstarted reservation locally without calling vendor recovery
+ok 98 - releases an unstarted reservation locally without calling vendor recovery
+  ---
+  duration_ms: 20.4446
+  type: 'test'
+  ...
+# Subtest: keeps concurrent profile recovery isolated when one release is unconfirmed
+ok 99 - keeps concurrent profile recovery isolated when one release is unconfirmed
+  ---
+  duration_ms: 117.9015
+  type: 'test'
+  ...
+# Subtest: never infers vendor release from process exit, including normal code zero
+ok 100 - never infers vendor release from process exit, including normal code zero
+  ---
+  duration_ms: 2.2937
+  type: 'test'
+  ...
+# Subtest: names the profile to close when every seat is genuinely in use
+ok 101 - names the profile to close when every seat is genuinely in use
+  ---
+  duration_ms: 3.3876
+  type: 'test'
+  ...
+# Subtest: a resting seat is never reported as something the operator can close
+ok 102 - a resting seat is never reported as something the operator can close
+  ---
+  duration_ms: 44.02
+  type: 'test'
+  ...
+# Subtest: rounds a sub-minute wait rather than showing a dead countdown
+ok 103 - rounds a sub-minute wait rather than showing a dead countdown
+  ---
+  duration_ms: 0.3935
+  type: 'test'
+  ...
+# Subtest: a mixed pool names active profiles without promising closing them shortens the wait
+ok 104 - a mixed pool names active profiles without promising closing them shortens the wait
+  ---
+  duration_ms: 2.0141
+  type: 'test'
+  ...
+# Subtest: no configured key is a setup problem, not a capacity problem
+ok 105 - no configured key is a setup problem, not a capacity problem
+  ---
+  duration_ms: 0.36
+  type: 'test'
+  ...
+# Subtest: never leaks a licence key
+ok 106 - never leaks a licence key
+  ---
+  duration_ms: 0.4128
+  type: 'test'
+  ...
+# Subtest: advertises the completed MKB-02 managed-mode capabilities
+ok 107 - advertises the completed MKB-02 managed-mode capabilities
+  ---
+  duration_ms: 1.279
+  type: 'test'
+  ...
+# Subtest: keeps managed launch atomic and aware of the active proxy
+ok 108 - keeps managed launch atomic and aware of the active proxy
+  ---
+  duration_ms: 0.8881
+  type: 'test'
+  ...
+# Subtest: locks ordinary managed-profile controls and carries operation diagnostics
+ok 109 - locks ordinary managed-profile controls and carries operation diagnostics
+  ---
+  duration_ms: 2.4659
+  type: 'test'
+  ...
+# Subtest: keeps managed create paired, deterministic, and conflict-safe
+ok 110 - keeps managed create paired, deterministic, and conflict-safe
+  ---
+  duration_ms: 0.7645
+  type: 'test'
+  ...
+# Subtest: keeps additional licence controls fail-closed until vendor entitlement is verified
+ok 111 - keeps additional licence controls fail-closed until vendor entitlement is verified
+  ---
+  duration_ms: 3.6211
+  type: 'test'
+  ...
+# Subtest: keeps the primary-key replacement path separate from additional-seat entitlement
+ok 112 - keeps the primary-key replacement path separate from additional-seat entitlement
+  ---
+  duration_ms: 0.5284
+  type: 'test'
+  ...
+# Subtest: cooling guidance names a manual retry deadline and does not promise instant reuse
+ok 113 - cooling guidance names a manual retry deadline and does not promise instant reuse
+  ---
+  duration_ms: 7.269
+  type: 'test'
+  ...
+# Subtest: uses truthful profile transition labels
+ok 114 - uses truthful profile transition labels
+  ---
+  duration_ms: 1.4299
+  type: 'test'
+  ...
+# Subtest: ships no licence key: the stored default is empty
+ok 115 - ships no licence key: the stored default is empty
+  ---
+  duration_ms: 1.6843
+  type: 'test'
+  ...
+# Subtest: the registration URL is a constant, not an environment-steerable one
+ok 116 - the registration URL is a constant, not an environment-steerable one
+  ---
+  duration_ms: 0.8623
+  type: 'test'
+  ...
+# Subtest: the renderer cannot choose where the signup link goes
+ok 117 - the renderer cannot choose where the signup link goes
+  ---
+  duration_ms: 1.109
+  type: 'test'
+  ...
+# Subtest: Settings tells the operator the key is theirs to register
+ok 118 - Settings tells the operator the key is theirs to register
+  ---
+  duration_ms: 0.5318
+  type: 'test'
+  ...
+# Subtest: an install with no key says so without being asked
+ok 119 - an install with no key says so without being asked
+  ---
+  duration_ms: 0.8984
+  type: 'test'
+  ...
+# Subtest: H36: a failed proxy egress probe blocks a proxied launch
+ok 120 - H36: a failed proxy egress probe blocks a proxied launch
+  ---
+  duration_ms: 2.7319
+  type: 'test'
+  ...
+# Subtest: H36: an empty or malformed proxy egress IP blocks a proxied launch
+ok 121 - H36: an empty or malformed proxy egress IP blocks a proxied launch
+  ---
+  duration_ms: 11.3167
+  type: 'test'
+  ...
+# Subtest: H36: the launch preflight maps probe failure to PROXY_REJECTED
+ok 122 - H36: the launch preflight maps probe failure to PROXY_REJECTED
+  ---
+  duration_ms: 1.009
+  type: 'test'
+  ...
+# Subtest: H36: a successful proxy geo probe supplies the egress identity
+ok 123 - H36: a successful proxy geo probe supplies the egress identity
+  ---
+  duration_ms: 1.0784
+  type: 'test'
+  ...
+# Subtest: extracts a valid ZIP only after the full archive passes preflight
+ok 124 - extracts a valid ZIP only after the full archive passes preflight
+  ---
+  duration_ms: 79.697
+  type: 'test'
+  ...
+# Subtest: rejects traversal, absolute, drive-qualified, mixed-separator, and NUL paths
+ok 125 - rejects traversal, absolute, drive-qualified, mixed-separator, and NUL paths
+  ---
+  duration_ms: 69.8323
+  type: 'test'
+  ...
+# Subtest: rejects case-folded duplicates and file-directory collisions
+ok 126 - rejects case-folded duplicates and file-directory collisions
+  ---
+  duration_ms: 58.936
+  type: 'test'
+  ...
+# Subtest: rejects Windows device names, including console aliases and superscript ports
+ok 127 - rejects Windows device names, including console aliases and superscript ports
+  ---
+  duration_ms: 56.0705
+  type: 'test'
+  ...
+# Subtest: rejects symlink entries before writing
+ok 128 - rejects symlink entries before writing
+  ---
+  duration_ms: 10.6891
+  type: 'test'
+  ...
+# Subtest: rejects archive bombs by metadata before extraction
+ok 129 - rejects archive bombs by metadata before extraction
+  ---
+  duration_ms: 24.4114
+  type: 'test'
+  ...
+# Subtest: rejects truncated archives without leaving staging
+ok 130 - rejects truncated archives without leaving staging
+  ---
+  duration_ms: 15.0577
+  type: 'test'
+  ...
+# Subtest: verifies CRC and removes output written before a later corrupt entry
+ok 131 - verifies CRC and removes output written before a later corrupt entry
+  ---
+  duration_ms: 24.5423
+  type: 'test'
+  ...
+# Subtest: confirms a startup lease only after Browser.close ended its exact orphan
+ok 132 - confirms a startup lease only after Browser.close ended its exact orphan
+  ---
+  duration_ms: 35.1931
+  type: 'test'
+  ...
+# Subtest: keeps a startup lease cooling when the orphan required a hard kill
+ok 133 - keeps a startup lease cooling when the orphan required a hard kill
+  ---
+  duration_ms: 19.3538
+  type: 'test'
+  ...
+# Subtest: a verdict about a profile this journal never leased is skipped
+ok 134 - a verdict about a profile this journal never leased is skipped
+  ---
+  duration_ms: 16.555
+  type: 'test'
+  ...
+# Subtest: a durable write that fails leaves the lease pending rather than freeing the key
+ok 135 - a durable write that fails leaves the lease pending rather than freeing the key
+  ---
+  duration_ms: 11.5181
+  type: 'test'
+  ...
+# Subtest: a reboot settles the lease no sweep can reach, and the wait ends on the vendor's clock
+ok 136 - a reboot settles the lease no sweep can reach, and the wait ends on the vendor's clock
+  ---
+  duration_ms: 22.502
+  type: 'test'
+  ...
+# Subtest: a lease whose rest ran out before this start is retired, not rested again
+ok 137 - a lease whose rest ran out before this start is retired, not rested again
+  ---
+  duration_ms: 26.479
+  type: 'test'
+  ...
+# Subtest: within one boot session a swept-clean process table rests the seat from now
+ok 138 - within one boot session a swept-clean process table rests the seat from now
+  ---
+  duration_ms: 18.8373
+  type: 'test'
+  ...
+# Subtest: a sweep that could not look leaves the lease exactly as it found it
+ok 139 - a sweep that could not look leaves the lease exactly as it found it
+  ---
+  duration_ms: 11.2463
+  type: 'test'
+  ...
+# Subtest: closes an orphan through its own DevTools port without claiming vendor release
+ok 140 - closes an orphan through its own DevTools port without claiming vendor release
+  ---
+  duration_ms: 4.3908
+  type: 'test'
+  ...
+# Subtest: kills only when the polite close is impossible, and says which it was
+ok 141 - kills only when the polite close is impossible, and says which it was
+  ---
+  duration_ms: 21.2664
+  type: 'test'
+  ...
+# Subtest: bounds a polite close request that never settles before opening the launch barrier
+ok 142 - bounds a polite close request that never settles before opening the launch barrier
+  ---
+  duration_ms: 21.8313
+  type: 'test'
+  ...
+# Subtest: does nothing at all when the process table could not be read
+ok 143 - does nothing at all when the process table could not be read
+  ---
+  duration_ms: 0.3316
+  type: 'test'
+  ...
+# Subtest: leaves renderers and helpers to die with their parent
+ok 144 - leaves renderers and helpers to die with their parent
+  ---
+  duration_ms: 0.602
+  type: 'test'
+  ...
+# Subtest: recovers an OS-assigned port for an orphan whose command line contains port zero
+ok 145 - recovers an OS-assigned port for an orphan whose command line contains port zero
+  ---
+  duration_ms: 0.4871
+  type: 'test'
+  ...
+# Subtest: never touches a PID the app already owns
+ok 146 - never touches a PID the app already owns
+  ---
+  duration_ms: 0.3665
+  type: 'test'
+  ...
+# Subtest: reports an empty sweep without pretending it failed
+ok 147 - reports an empty sweep without pretending it failed
+  ---
+  duration_ms: 0.2281
+  type: 'test'
+  ...
+# Subtest: does not create licence recovery evidence for a non-CloakBrowser layout
+ok 148 - does not create licence recovery evidence for a non-CloakBrowser layout
+  ---
+  duration_ms: 0.6708
+  type: 'test'
+  ...
+# Subtest: reuses one shell while issuing distinct fresh serialized process snapshots
+ok 149 - reuses one shell while issuing distinct fresh serialized process snapshots
+  ---
+  duration_ms: 102.4141
+  type: 'test'
+  ...
+# Subtest: handles fragmented UTF-8 frames and an explicitly empty successful query
+ok 150 - handles fragmented UTF-8 frames and an explicitly empty successful query
+  ---
+  duration_ms: 87.6699
+  type: 'test'
+  ...
+# Subtest: rejects malformed output, retires the shell and permits a fresh query
+ok 151 - rejects malformed output, retires the shell and permits a fresh query
+  ---
+  duration_ms: 120.9595
+  type: 'test'
+  ...
+# Subtest: rejects error output, retires the shell and permits a fresh query
+ok 152 - rejects error output, retires the shell and permits a fresh query
+  ---
+  duration_ms: 109.8997
+  type: 'test'
+  ...
+# Subtest: rejects non-array output, retires the shell and permits a fresh query
+ok 153 - rejects non-array output, retires the shell and permits a fresh query
+  ---
+  duration_ms: 102.8237
+  type: 'test'
+  ...
+# Subtest: rejects extra-frame output, retires the shell and permits a fresh query
+ok 154 - rejects extra-frame output, retires the shell and permits a fresh query
+  ---
+  duration_ms: 102.0795
+  type: 'test'
+  ...
+# Subtest: rejects output exceeding the bound instead of accepting an incomplete table
+ok 155 - rejects output exceeding the bound instead of accepting an incomplete table
+  ---
+  duration_ms: 55.8112
+  type: 'test'
+  ...
+# Subtest: retires a timed-out shell so its late snapshot cannot satisfy the next request
+ok 156 - retires a timed-out shell so its late snapshot cannot satisfy the next request
+  ---
+  duration_ms: 154.7313
+  type: 'test'
+  ...
+# Subtest: queued requests expire independently without invalidating the active query
+ok 157 - queued requests expire independently without invalidating the active query
+  ---
+  duration_ms: 310.9883
+  type: 'test'
+  ...
+# Subtest: fails closed on child exit and spawn failure
+ok 158 - fails closed on child exit and spawn failure
+  ---
+  duration_ms: 133.9721
+  type: 'test'
+  ...
+# Subtest: retires after idle and rejects all outstanding requests on disposal
+ok 159 - retires after idle and rejects all outstanding requests on disposal
+  ---
+  duration_ms: 140.0241
+  type: 'test'
+  ...
+# Subtest: H37: removing an existing proxy requires confirmation
+ok 160 - H37: removing an existing proxy requires confirmation
+  ---
+  duration_ms: 1.327
+  type: 'test'
+  ...
+# Subtest: H37: enabling a proxy or editing a direct profile does not require removal confirmation
+ok 161 - H37: enabling a proxy or editing a direct profile does not require removal confirmation
+  ---
+  duration_ms: 0.2229
+  type: 'test'
+  ...
+1..161
+# tests 161
+# suites 0
+# pass 161
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11138.2706
+TAP version 13
+# Subtest: permanently deletes a managed profile only through the dedicated lifecycle
+ok 1 - permanently deletes a managed profile only through the dedicated lifecycle
+  ---
+  duration_ms: 42.5007
+  type: 'test'
+  ...
+# Subtest: leaves no quarantine directory behind inside the profile root
+ok 2 - leaves no quarantine directory behind inside the profile root
+  ---
+  duration_ms: 40.5089
+  type: 'test'
+  ...
+# Subtest: refuses a database row that points outside the owned profile root
+ok 3 - refuses a database row that points outside the owned profile root
+  ---
+  duration_ms: 44.4062
+  type: 'test'
+  ...
+# Subtest: refuses a profile directory link that escapes the owned profile root
+ok 4 - refuses a profile directory link that escapes the owned profile root
+  ---
+  duration_ms: 35.0979
+  type: 'test'
+  ...
+# Subtest: retries safely when files were removed but the database delete failed
+ok 5 - retries safely when files were removed but the database delete failed
+  ---
+  duration_ms: 5.9083
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 422.0069
+TAP version 13
+# Subtest: bootstrap reuses a signed Relay activation without downloading its authenticated URL
+ok 1 - bootstrap reuses a signed Relay activation without downloading its authenticated URL
+  ---
+  duration_ms: 90.9707
+  type: 'test'
+  ...
+# Subtest: recognizes the Relay-installed pinned runtime without a Browser download index
+ok 2 - recognizes the Relay-installed pinned runtime without a Browser download index
+  ---
+  duration_ms: 30.7091
+  type: 'test'
+  ...
+# Subtest: requires the signed version even if the directory contains an executable
+ok 3 - requires the signed version even if the directory contains an executable
+  ---
+  duration_ms: 6.0663
+  type: 'test'
+  ...
+# Subtest: rejects missing or malformed runtime metadata and missing executable
+ok 4 - rejects missing or malformed runtime metadata and missing executable
+  ---
+  duration_ms: 24.399
+  type: 'test'
+  ...
+# Subtest: normalizes Windows engine installs to a stable runtime path
+ok 5 - normalizes Windows engine installs to a stable runtime path
+  ---
+  duration_ms: 2.1584
+  type: 'test'
+  ...
+# Subtest: packaged engine bootstrap consumes only a compatibility-set pin
+ok 6 - packaged engine bootstrap consumes only a compatibility-set pin
+  ---
+  duration_ms: 1.9016
+  type: 'test'
+  ...
+# Subtest: packaged verification isolates disposable engine state from the installed compatibility set
+ok 7 - packaged verification isolates disposable engine state from the installed compatibility set
+  ---
+  duration_ms: 1.1906
+  type: 'test'
+  ...
+# Subtest: locks engine selection while a signed compatibility set is active
+ok 8 - locks engine selection while a signed compatibility set is active
+  ---
+  duration_ms: 1.6442
+  type: 'test'
+  ...
+# Subtest: switches a failed CloakBrowser bootstrap to CFT through the settings boundary
+ok 9 - switches a failed CloakBrowser bootstrap to CFT through the settings boundary
+  ---
+  duration_ms: 1.1268
+  type: 'test'
+  ...
+# Subtest: renders unknown download totals as an indeterminate connecting state
+ok 10 - renders unknown download totals as an indeterminate connecting state
+  ---
+  duration_ms: 0.3396
+  type: 'test'
+  ...
+# Subtest: redacts signed download URLs from operator-facing bootstrap errors
+ok 11 - redacts signed download URLs from operator-facing bootstrap errors
+  ---
+  duration_ms: 0.6329
+  type: 'test'
+  ...
+# Subtest: reads the active engine pin from the shared MKTTool compatibility root
+ok 12 - reads the active engine pin from the shared MKTTool compatibility root
+  ---
+  duration_ms: 13.076
+  type: 'test'
+  ...
+# Subtest: blocks Browser startup while a durable activation marker exists
+ok 13 - blocks Browser startup while a durable activation marker exists
+  ---
+  duration_ms: 23.0909
+  type: 'test'
+  ...
+# Subtest: allows unpinned engines only for explicit disposable development runs
+ok 14 - allows unpinned engines only for explicit disposable development runs
+  ---
+  duration_ms: 0.2427
+  type: 'test'
+  ...
+# Subtest: rejects a cached runtime whose version differs from the signed engine pin
+ok 15 - rejects a cached runtime whose version differs from the signed engine pin
+  ---
+  duration_ms: 0.2161
+  type: 'test'
+  ...
+# Subtest: activation block attempts pinned Relay once (started) and never falls through to profiles
+ok 16 - activation block attempts pinned Relay once (started) and never falls through to profiles
+  ---
+  duration_ms: 46.1052
+  type: 'test'
+  ...
+# Subtest: activation block attempts pinned Relay once (blocked) and never falls through to profiles
+ok 17 - activation block attempts pinned Relay once (blocked) and never falls through to profiles
+  ---
+  duration_ms: 1.1634
+  type: 'test'
+  ...
+# Subtest: activation block attempts pinned Relay once (starting) and never falls through to profiles
+ok 18 - activation block attempts pinned Relay once (starting) and never falls through to profiles
+  ---
+  duration_ms: 1.2502
+  type: 'test'
+  ...
+# Subtest: disposable/development activation blocks do not start the installed Relay
+ok 19 - disposable/development activation blocks do not start the installed Relay
+  ---
+  duration_ms: 1.0141
+  type: 'test'
+  ...
+# Subtest: claims a short-lived authorization once and binds it to the smoke marker
+ok 20 - claims a short-lived authorization once and binds it to the smoke marker
+  ---
+  duration_ms: 20.8206
+  type: 'test'
+  ...
+# Subtest: consumes and rejects an authorization whose marker is not in smoke phase
+ok 21 - consumes and rejects an authorization whose marker is not in smoke phase
+  ---
+  duration_ms: 13.9331
+  type: 'test'
+  ...
+# Subtest: rejects expired and overlong authorizations
+ok 22 - rejects expired and overlong authorizations
+  ---
+  duration_ms: 33.9371
+  type: 'test'
+  ...
+# Subtest: runs health, list, open, cookie, proxy, and close in order
+ok 23 - runs health, list, open, cookie, proxy, and close in order
+  ---
+  duration_ms: 3.5898
+  type: 'test'
+  ...
+# Subtest: refuses an arbitrary managed profile without the dedicated tag
+ok 24 - refuses an arbitrary managed profile without the dedicated tag
+  ---
+  duration_ms: 0.8753
+  type: 'test'
+  ...
+# Subtest: closes the profile when cookie or proxy verification fails
+ok 25 - closes the profile when cookie or proxy verification fails
+  ---
+  duration_ms: 0.6214
+  type: 'test'
+  ...
+# Subtest: uses the browser-readable IP-only observer with the independent proxy IP
+ok 26 - uses the browser-readable IP-only observer with the independent proxy IP
+  ---
+  duration_ms: 0.5126
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: ipapi.co\\nPerforming 
+ok 27 - fails closed and closes the profile for an unusable IP response: ipapi.co\\nPerforming 
+  ---
+  duration_ms: 1.8562
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: {invalid-json-privat
+ok 28 - fails closed and closes the profile for an unusable IP response: {invalid-json-privat
+  ---
+  duration_ms: 0.29
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: null
+ok 29 - fails closed and closes the profile for an unusable IP response: null
+  ---
+  duration_ms: 0.3447
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: {"ip":null}
+ok 30 - fails closed and closes the profile for an unusable IP response: {"ip":null}
+  ---
+  duration_ms: 0.2554
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: {"ip":123}
+ok 31 - fails closed and closes the profile for an unusable IP response: {"ip":123}
+  ---
+  duration_ms: 0.6238
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: {"ip":"invalid-addre
+ok 32 - fails closed and closes the profile for an unusable IP response: {"ip":"invalid-addre
+  ---
+  duration_ms: 6.3212
+  type: 'test'
+  ...
+# Subtest: fails closed and closes the profile for an unusable IP response: {}
+ok 33 - fails closed and closes the profile for an unusable IP response: {}
+  ---
+  duration_ms: 0.4855
+  type: 'test'
+  ...
+# Subtest: rejects a redirected IP observer even if its body reports the expected IP
+ok 34 - rejects a redirected IP observer even if its body reports the expected IP
+  ---
+  duration_ms: 0.5297
+  type: 'test'
+  ...
+# Subtest: Pro checksums fail closed before exchanging the licence key for an archive URL
+    # Subtest: HTTP 503
+    ok 1 - HTTP 503
+      ---
+      duration_ms: 48.0228
+      type: 'test'
+      ...
+    # Subtest: network
+    ok 2 - network
+      ---
+      duration_ms: 1.0254
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 3 - malformed
+      ---
+      duration_ms: 1.8941
+      type: 'test'
+      ...
+    # Subtest: missing digest
+    ok 4 - missing digest
+      ---
+      duration_ms: 1.227
+      type: 'test'
+      ...
+    # Subtest: empty
+    ok 5 - empty
+      ---
+      duration_ms: 1.2071
+      type: 'test'
+      ...
+    # Subtest: duplicate
+    ok 6 - duplicate
+      ---
+      duration_ms: 1.0885
+      type: 'test'
+      ...
+    # Subtest: trailing data
+    ok 7 - trailing data
+      ---
+      duration_ms: 0.5848
+      type: 'test'
+      ...
+    # Subtest: wrong version
+    ok 8 - wrong version
+      ---
+      duration_ms: 0.6611
+      type: 'test'
+      ...
+    # Subtest: body transfer
+    ok 9 - body transfer
+      ---
+      duration_ms: 1.5835
+      type: 'test'
+      ...
+    1..9
+ok 35 - Pro checksums fail closed before exchanging the licence key for an archive URL
+  ---
+  duration_ms: 63.1843
+  type: 'test'
+  ...
+# Subtest: Pro accepts one valid archive checksum and never forwards auth to the redirected URL
+ok 36 - Pro accepts one valid archive checksum and never forwards auth to the redirected URL
+  ---
+  duration_ms: 2.661
+  type: 'test'
+  ...
+# Subtest: bootstrap refuses absent or invalid digests before download or extraction
+    # Subtest: cloakbrowser: absent
+    ok 1 - cloakbrowser: absent
+      ---
+      duration_ms: 18.0765
+      type: 'test'
+      ...
+    # Subtest: cloakbrowser: 
+    ok 2 - cloakbrowser: 
+      ---
+      duration_ms: 3.0384
+      type: 'test'
+      ...
+    # Subtest: cloakbrowser: not-a-sha256
+    ok 3 - cloakbrowser: not-a-sha256
+      ---
+      duration_ms: 2.5358
+      type: 'test'
+      ...
+    # Subtest: cft: absent
+    ok 4 - cft: absent
+      ---
+      duration_ms: 2.3356
+      type: 'test'
+      ...
+    # Subtest: cft: 
+    ok 5 - cft: 
+      ---
+      duration_ms: 2.4559
+      type: 'test'
+      ...
+    # Subtest: cft: not-a-sha256
+    ok 6 - cft: not-a-sha256
+      ---
+      duration_ms: 2.2975
+      type: 'test'
+      ...
+    1..6
+ok 37 - bootstrap refuses absent or invalid digests before download or extraction
+  ---
+  duration_ms: 67.7431
+  type: 'test'
+  ...
+# Subtest: bootstrap rejects mismatched archive bytes without extraction
+ok 38 - bootstrap rejects mismatched archive bytes without extraction
+  ---
+  duration_ms: 27.2912
+  type: 'test'
+  ...
+# Subtest: keyless CloakBrowser also refuses absent sums instead of selecting an older release
+ok 39 - keyless CloakBrowser also refuses absent sums instead of selecting an older release
+  ---
+  duration_ms: 2.3824
+  type: 'test'
+  ...
+# Subtest: unpinned CFT retains its explicitly limited development checksum behavior
+ok 40 - unpinned CFT retains its explicitly limited development checksum behavior
+  ---
+  duration_ms: 1.6727
+  type: 'test'
+  ...
+# Subtest: requires the exact typed confirmation and refuses active lifecycle work
+ok 41 - requires the exact typed confirmation and refuses active lifecycle work
+  ---
+  duration_ms: 1.6944
+  type: 'test'
+  ...
+# Subtest: allows a managed profile only after the Browser confirmation boundary
+ok 42 - allows a managed profile only after the Browser confirmation boundary
+  ---
+  duration_ms: 0.2518
+  type: 'test'
+  ...
+# Subtest: keeps permanent deletion inside the Browser UI and out of MCP
+ok 43 - keeps permanent deletion inside the Browser UI and out of MCP
+  ---
+  duration_ms: 1.7678
+  type: 'test'
+  ...
+# Subtest: reports nothing when the product and the disk agree
+ok 44 - reports nothing when the product and the disk agree
+  ---
+  duration_ms: 2.5287
+  type: 'test'
+  ...
+# Subtest: separates a directory nobody owns from a profile with no data
+ok 45 - separates a directory nobody owns from a profile with no data
+  ---
+  duration_ms: 0.4797
+  type: 'test'
+  ...
+# Subtest: does not mistake the deletion staging directory for a profile
+ok 46 - does not mistake the deletion staging directory for a profile
+  ---
+  duration_ms: 0.2081
+  type: 'test'
+  ...
+# Subtest: separates browsing data from engine scaffolding, and refuses to guess
+ok 47 - separates browsing data from engine scaffolding, and refuses to guess
+  ---
+  duration_ms: 0.3011
+  type: 'test'
+  ...
+# Subtest: carries the classification through the audit
+ok 48 - carries the classification through the audit
+  ---
+  duration_ms: 0.6079
+  type: 'test'
+  ...
+# Subtest: only engine scaffolding is ever offered for removal
+ok 49 - only engine scaffolding is ever offered for removal
+  ---
+  duration_ms: 0.2831
+  type: 'test'
+  ...
+# Subtest: pending Relay error leaves the caller and event loop available without duplicate dialogs
+ok 50 - pending Relay error leaves the caller and event loop available without duplicate dialogs
+  ---
+  duration_ms: 6.0668
+  type: 'test'
+  ...
+# Subtest: background failure uses the tray without opening a dialog
+ok 51 - background failure uses the tray without opening a dialog
+  ---
+  duration_ms: 0.272
+  type: 'test'
+  ...
+# Subtest: dialog throw falls back without an unhandled rejection and allows retry
+ok 52 - dialog throw falls back without an unhandled rejection and allows retry
+  ---
+  duration_ms: 2.3551
+  type: 'test'
+  ...
+# Subtest: dialog reject falls back without an unhandled rejection and allows retry
+ok 53 - dialog reject falls back without an unhandled rejection and allows retry
+  ---
+  duration_ms: 0.8522
+  type: 'test'
+  ...
+# Subtest: packaged companion failure is wired to the asynchronous Electron dialog API
+ok 54 - packaged companion failure is wired to the asynchronous Electron dialog API
+  ---
+  duration_ms: 0.9955
+  type: 'test'
+  ...
+# Subtest: uses a supported Electron line consistently
+ok 55 - uses a supported Electron line consistently
+  ---
+  duration_ms: 2.1701
+  type: 'test'
+  ...
+# Subtest: sandboxes the renderer
+ok 56 - sandboxes the renderer
+  ---
+  duration_ms: 0.511
+  type: 'test'
+  ...
+# Subtest: background startup changes visibility without changing renderer security
+ok 57 - background startup changes visibility without changing renderer security
+  ---
+  duration_ms: 1.4054
+  type: 'test'
+  ...
+# Subtest: refuses renderer-initiated navigation and window opening
+ok 58 - refuses renderer-initiated navigation and window opening
+  ---
+  duration_ms: 0.9689
+  type: 'test'
+  ...
+# Subtest: applies a restrictive CSP
+ok 59 - applies a restrictive CSP
+  ---
+  duration_ms: 1.6414
+  type: 'test'
+  ...
+# Subtest: constructs exactly one BrowserWindow, through the audited options builder
+ok 60 - constructs exactly one BrowserWindow, through the audited options builder
+  ---
+  duration_ms: 1.4978
+  type: 'test'
+  ...
+# Subtest: keeps preload and main IPC channels inside the classified inventory
+ok 61 - keeps preload and main IPC channels inside the classified inventory
+  ---
+  duration_ms: 1.1224
+  type: 'test'
+  ...
+# Subtest: classifies every exposed MCP definition and dispatch case
+ok 62 - classifies every exposed MCP definition and dispatch case
+  ---
+  duration_ms: 0.9527
+  type: 'test'
+  ...
+# Subtest: binds the discovered Relay token to profile management only
+ok 63 - binds the discovered Relay token to profile management only
+  ---
+  duration_ms: 1.299
+  type: 'test'
+  ...
+# Subtest: packaged verification exercises the profile lifecycle
+ok 64 - packaged verification exercises the profile lifecycle
+  ---
+  duration_ms: 1.7169
+  type: 'test'
+  ...
+# Subtest: fingerprint measurement reports cleanup failures
+ok 65 - fingerprint measurement reports cleanup failures
+  ---
+  duration_ms: 0.3817
+  type: 'test'
+  ...
+# Subtest: normal Windows session excludes development, disposable roots, and smoke
+ok 66 - normal Windows session excludes development, disposable roots, and smoke
+  ---
+  duration_ms: 1.6917
+  type: 'test'
+  ...
+# Subtest: explicit canonical Windows root cannot bypass the normal instance lock
+ok 67 - explicit canonical Windows root cannot bypass the normal instance lock
+  ---
+  duration_ms: 0.3769
+  type: 'test'
+  ...
+# Subtest: close hides the manager without quitting or retrying Relay; notice appears once
+ok 68 - close hides the manager without quitting or retrying Relay; notice appears once
+  ---
+  duration_ms: 1.3877
+  type: 'test'
+  ...
+# Subtest: tray reopen restores the existing window and explicitly retries Relay
+ok 69 - tray reopen restores the existing window and explicitly retries Relay
+  ---
+  duration_ms: 0.4769
+  type: 'test'
+  ...
+# Subtest: explicit Quit bypasses hide and is requested once
+ok 70 - explicit Quit bypasses hide and is requested once
+  ---
+  duration_ms: 0.5492
+  type: 'test'
+  ...
+# Subtest: external quit and Windows logout query do not intercept window close
+ok 71 - external quit and Windows logout query do not intercept window close
+  ---
+  duration_ms: 0.2788
+  type: 'test'
+  ...
+# Subtest: logout query requests real shutdown even when Windows logout is later cancelled
+ok 72 - logout query requests real shutdown even when Windows logout is later cancelled
+  ---
+  duration_ms: 0.2855
+  type: 'test'
+  ...
+# Subtest: committed session end invokes cleanup even if Electron skips before-quit
+ok 73 - committed session end invokes cleanup even if Electron skips before-quit
+  ---
+  duration_ms: 0.2272
+  type: 'test'
+  ...
+# Subtest: tray failure keeps the window visible and normal close available
+ok 74 - tray failure keeps the window visible and normal close available
+  ---
+  duration_ms: 0.464
+  type: 'test'
+  ...
+# Subtest: status update is visible but never automatically starts Relay
+ok 75 - status update is visible but never automatically starts Relay
+  ---
+  duration_ms: 0.5609
+  type: 'test'
+  ...
+# Subtest: disposed controller stops tray actions and does not block shutdown
+ok 76 - disposed controller stops tray actions and does not block shutdown
+  ---
+  duration_ms: 0.2961
+  type: 'test'
+  ...
+# Subtest: runs the packaged detector in runtime mode and caches a passing verdict
+ok 77 - runs the packaged detector in runtime mode and caches a passing verdict
+  ---
+  duration_ms: 1.5943
+  type: 'test'
+  ...
+# Subtest: fails closed when the detector is unavailable or reports a conflict
+ok 78 - fails closed when the detector is unavailable or reports a conflict
+  ---
+  duration_ms: 0.3929
+  type: 'test'
+  ...
+# Subtest: uses only the packaged helper and fixed arguments, then probes loopback without redirects
+ok 79 - uses only the packaged helper and fixed arguments, then probes loopback without redirects
+  ---
+  duration_ms: 28.6048
+  type: 'test'
+  ...
+# Subtest: HTTP 400 unconfigured or retirement health still proves a responsive Relay
+ok 80 - HTTP 400 unconfigured or retirement health still proves a responsive Relay
+  ---
+  duration_ms: 0.8613
+  type: 'test'
+  ...
+# Subtest: coalesces concurrent requests but permits later explicit retries
+ok 81 - coalesces concurrent requests but permits later explicit retries
+  ---
+  duration_ms: 1.0415
+  type: 'test'
+  ...
+# Subtest: dispose aborts execution, prevents health requests and permanently disables launch
+ok 82 - dispose aborts execution, prevents health requests and permanently disables launch
+  ---
+  duration_ms: 0.6687
+  type: 'test'
+  ...
+# Subtest: blocked and starting processes never cause a retry or health probe
+ok 83 - blocked and starting processes never cause a retry or health probe
+  ---
+  duration_ms: 0.6765
+  type: 'test'
+  ...
+# Subtest: dispose aborts an in-flight health request without a restart
+ok 84 - dispose aborts an in-flight health request without a restart
+  ---
+  duration_ms: 1.1852
+  type: 'test'
+  ...
+# Subtest: missing prerequisites and malformed/helper errors fail closed without raw diagnostics
+ok 85 - missing prerequisites and malformed/helper errors fail closed without raw diagnostics
+  ---
+  duration_ms: 0.9042
+  type: 'test'
+  ...
+# Subtest: unverified health stays starting without spawning another process
+ok 86 - unverified health stays starting without spawning another process
+  ---
+  duration_ms: 1.621
+  type: 'test'
+  ...
+1..86
+# tests 101
+# suites 0
+# pass 101
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 502.6633
+TAP version 13
+# (node:24272) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shutdown tracks a launch waiting for the orphan sweep and refuses new launches
+ok 1 - shutdown tracks a launch waiting for the orphan sweep and refuses new launches
+  ---
+  duration_ms: 2.0413
+  type: 'test'
+  ...
+# Subtest: closeAll joins an already started launch, coalesces drains, then permits later reuse
+ok 2 - closeAll joins an already started launch, coalesces drains, then permits later reuse
+  ---
+  duration_ms: 0.4824
+  type: 'test'
+  ...
+# Subtest: a failed close waits for the other closes before reporting failure
+ok 3 - a failed close waits for the other closes before reporting failure
+  ---
+  duration_ms: 0.3587
+  type: 'test'
+  ...
+# (node:21836) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: driver admission observes capacity, reserves durably, and makes one engine attempt
+ok 4 - driver admission observes capacity, reserves durably, and makes one engine attempt
+  ---
+  duration_ms: 16.6448
+  type: 'test'
+  ...
+# Subtest: reservation persistence failure prevents the engine attempt and releases memory capacity
+ok 5 - reservation persistence failure prevents the engine attempt and releases memory capacity
+  ---
+  duration_ms: 3.5985
+  type: 'test'
+  ...
+# Subtest: vendor refusal invalidates the observation and never retries the engine
+ok 6 - vendor refusal invalidates the observation and never retries the engine
+  ---
+  duration_ms: 25.6229
+  type: 'test'
+  ...
+# Subtest: close invalidates admission while capacity observation is pending
+ok 7 - close invalidates admission while capacity observation is pending
+  ---
+  duration_ms: 6.5303
+  type: 'test'
+  ...
+# Subtest: Browser.close persists cooling and prevents any engine attempt before the deadline
+ok 8 - Browser.close persists cooling and prevents any engine attempt before the deadline
+  ---
+  duration_ms: 13.5065
+  type: 'test'
+  ...
+# Subtest: refusal never rotates to another free key and survives restart with a longer wait
+ok 9 - refusal never rotates to another free key and survives restart with a longer wait
+  ---
+  duration_ms: 7.466
+  type: 'test'
+  ...
+# Subtest: pre-spawn failure releases only its unstarted reservation immediately
+ok 10 - pre-spawn failure releases only its unstarted reservation immediately
+  ---
+  duration_ms: 5.3819
+  type: 'test'
+  ...
+# Subtest: a transient refusal-write failure cannot downgrade the cooldown during cleanup
+ok 11 - a transient refusal-write failure cannot downgrade the cooldown during cleanup
+  ---
+  duration_ms: 14.4464
+  type: 'test'
+  ...
+# [mkt-browser] durable license release failed; cooling seat: Error: License lease journal terminal-refused failed.
+#     at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:61:13)
+#     at async LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:5)
+#     at async LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:46)
+#     at async ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1334:10)
+#     at async ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1273:9)
+#     at async attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:294:11)
+#     at async ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:329:12)
+#     at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:254:14)
+#     at async waitForActual (node:assert:644:5)
+#     at async Function.rejects (node:assert:767:25) {
+#   [cause]: Error: storage unavailable
+#       at LicenseLeaseJournal.f.journal.transition (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-driver-cooldown.test.ts:258:49)
+#       at <anonymous> (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:160:20)
+#       at LicenseLeaseRecorder.attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:56:13)
+#       at LicenseLeaseRecorder.refused (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:159:16)
+#       at LicenseLeaseRecorder.released (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\license-lease-recorder.ts:98:57)
+#       at ChromiumBrowserDriver.releaseLicenseKey (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1334:43)
+#       at ChromiumBrowserDriver.cleanupFailedLaunch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:1273:20)
+#       at attempt (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:294:22)
+#       at async ChromiumBrowserDriver.launchWithLicenseSeat (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:329:12)
+#       at async ChromiumBrowserDriver.launch (E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\src\\main\\ChromiumBrowserDriver.ts:254:14)
+# }
+# Subtest: repeated refusal-write failure keeps a conservative wait across two restarts
+ok 12 - repeated refusal-write failure keeps a conservative wait across two restarts
+  ---
+  duration_ms: 16.5191
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2672.7152
+TAP version 13
+# Subtest: retries transient rcedit commit failures with bounded delays
+ok 1 - retries transient rcedit commit failures with bounded delays
+  ---
+  duration_ms: 2.8941
+  type: 'test'
+  ...
+# Subtest: does not retry unrelated rcedit failures
+ok 2 - does not retry unrelated rcedit failures
+  ---
+  duration_ms: 0.793
+  type: 'test'
+  ...
+# Subtest: stops after the configured transient retry budget
+ok 3 - stops after the configured transient retry budget
+  ---
+  duration_ms: 0.4112
+  type: 'test'
+  ...
+# Subtest: reads the pinned contract versions mechanically from the runtime source
+ok 4 - reads the pinned contract versions mechanically from the runtime source
+  ---
+  duration_ms: 2.045
+  type: 'test'
+  ...
+# Subtest: requires a complete immutable engine release record
+ok 5 - requires a complete immutable engine release record
+  ---
+  duration_ms: 0.4481
+  type: 'test'
+  ...
+# Subtest: ships a valid pinned engine release beside the pinned Relay release
+ok 6 - ships a valid pinned engine release beside the pinned Relay release
+  ---
+  duration_ms: 0.7483
+  type: 'test'
+  ...
+# Subtest: accepts a licensed engine identified by digest alone
+ok 7 - accepts a licensed engine identified by digest alone
+  ---
+  duration_ms: 9.8914
+  type: 'test'
+  ...
+# Subtest: rejects a licensed engine that carries a URL
+ok 8 - rejects a licensed engine that carries a URL
+  ---
+  duration_ms: 13.4599
+  type: 'test'
+  ...
+# Subtest: rejects a licensed marker on a Chrome for Testing record
+ok 9 - rejects a licensed marker on a Chrome for Testing record
+  ---
+  duration_ms: 21.1787
+  type: 'test'
+  ...
+# Subtest: still requires an https URL for a publicly fetchable engine
+ok 10 - still requires an https URL for a publicly fetchable engine
+  ---
+  duration_ms: 48.1041
+  type: 'test'
+  ...
+# Subtest: downloads the immutable URL and verifies SHA-256
+ok 11 - downloads the immutable URL and verifies SHA-256
+  ---
+  duration_ms: 100.4853
+  type: 'test'
+  ...
+# Subtest: resumes a partial download with Range
+ok 12 - resumes a partial download with Range
+  ---
+  duration_ms: 32.9492
+  type: 'test'
+  ...
+# Subtest: fails closed before hashing when the downloaded size is wrong
+ok 13 - fails closed before hashing when the downloaded size is wrong
+  ---
+  duration_ms: 25.4113
+  type: 'test'
+  ...
+# Subtest: fails closed when the checksum is wrong
+ok 14 - fails closed when the checksum is wrong
+  ---
+  duration_ms: 35.7484
+  type: 'test'
+  ...
+# Subtest: rejects a manifest without a pinned size
+ok 15 - rejects a manifest without a pinned size
+  ---
+  duration_ms: 23.0658
+  type: 'test'
+  ...
+# Subtest: compiles fresh application bundles before every official installer package
+ok 16 - compiles fresh application bundles before every official installer package
+  ---
+  duration_ms: 1.4819
+  type: 'test'
+  ...
+# Subtest: quotes the live Windows gate so Yarn does not expand PowerShell environment syntax
+ok 17 - quotes the live Windows gate so Yarn does not expand PowerShell environment syntax
+  ---
+  duration_ms: 0.2645
+  type: 'test'
+  ...
+# Subtest: runs bundled Corepack through node.exe on Windows
+ok 18 - runs bundled Corepack through node.exe on Windows
+  ---
+  duration_ms: 4.5177
+  type: 'test'
+  ...
+# Subtest: fails clearly when the Node 22 Corepack entrypoint is missing
+ok 19 - fails clearly when the Node 22 Corepack entrypoint is missing
+  ---
+  duration_ms: 0.8374
+  type: 'test'
+  ...
+# Subtest: keeps the native Corepack command on non-Windows platforms
+ok 20 - keeps the native Corepack command on non-Windows platforms
+  ---
+  duration_ms: 0.4858
+  type: 'test'
+  ...
+# Subtest: enables Authenticode signing only when a certificate is configured
+ok 21 - enables Authenticode signing only when a certificate is configured
+  ---
+  duration_ms: 0.3031
+  type: 'test'
+  ...
+# Subtest: stream-verifies exact executable pin and rejects wrong bytes, duplicate, missing and invalid metadata
+ok 22 - stream-verifies exact executable pin and rejects wrong bytes, duplicate, missing and invalid metadata
+  ---
+  duration_ms: 83.1273
+  type: 'test'
+  ...
+# LOCALAPPDATA is unavailable.
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-engine-cache-cleanup.ps1:27 char:3
+# +   throw "LOCALAPPDATA is unavailable."
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (LOCALAPPDATA is unavailable.:String) [], RuntimeException
+#     + FullyQualifiedErrorId : LOCALAPPDATA is unavailable.
+#  
+# LOCALAPPDATA is unavailable.
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-engine-cache-cleanup.ps1:27 char:3
+# +   throw "LOCALAPPDATA is unavailable."
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (LOCALAPPDATA is unavailable.:String) [], RuntimeException
+#     + FullyQualifiedErrorId : LOCALAPPDATA is unavailable.
+#  
+# Subtest: removes the engine cache and keeps operator data from the native host
+ok 23 - removes the engine cache and keeps operator data from the native host
+  ---
+  duration_ms: 535.5448
+  type: 'test'
+  ...
+# Subtest: succeeds with nothing to remove from the native host
+ok 24 - succeeds with nothing to remove from the native host
+  ---
+  duration_ms: 311.6131
+  type: 'test'
+  ...
+# Subtest: refuses to delete anything when LOCALAPPDATA is unusable from the native host
+ok 25 - refuses to delete anything when LOCALAPPDATA is unusable from the native host
+  ---
+  duration_ms: 466.2244
+  type: 'test'
+  ...
+# Subtest: removes the engine cache and keeps operator data from the 32-bit host, as NSIS launches it
+ok 26 - removes the engine cache and keeps operator data from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1452.5926
+  type: 'test'
+  ...
+# Subtest: succeeds with nothing to remove from the 32-bit host, as NSIS launches it
+ok 27 - succeeds with nothing to remove from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1363.2325
+  type: 'test'
+  ...
+# Subtest: refuses to delete anything when LOCALAPPDATA is unusable from the 32-bit host, as NSIS launches it
+ok 28 - refuses to delete anything when LOCALAPPDATA is unusable from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1159.2165
+  type: 'test'
+  ...
+# Subtest: runs installer PowerShell from explicit script files instead of a staged command
+ok 29 - runs installer PowerShell from explicit script files instead of a staged command
+  ---
+  duration_ms: 2.0739
+  type: 'test'
+  ...
+# Subtest: removes only owned stale rules after verification and on uninstall
+ok 30 - removes only owned stale rules after verification and on uninstall
+  ---
+  duration_ms: 0.416
+  type: 'test'
+  ...
+# Subtest: clears the engine cache last and never aborts uninstall over it
+ok 31 - clears the engine cache last and never aborts uninstall over it
+  ---
+  duration_ms: 1.0496
+  type: 'test'
+  ...
+# Subtest: keeps the engine cache when the uninstaller is running as part of an upgrade
+ok 32 - keeps the engine cache when the uninstaller is running as part of an upgrade
+  ---
+  duration_ms: 0.3876
+  type: 'test'
+  ...
+# Subtest: rejects another Windows user's firewall ownership before any mutation
+ok 33 - rejects another Windows user's firewall ownership before any mutation
+  ---
+  duration_ms: 0.3695
+  type: 'test'
+  ...
+# Subtest: runs Relay uninstall cleanup from a parser-safe script file
+ok 34 - runs Relay uninstall cleanup from a parser-safe script file
+  ---
+  duration_ms: 0.6499
+  type: 'test'
+  ...
+# Subtest: Relay installer failures remain retryable without uninstalling local state
+ok 35 - Relay installer failures remain retryable without uninstalling local state
+  ---
+  duration_ms: 0.4395
+  type: 'test'
+  ...
+# Subtest: repairs an installed legacy uninstaller without losing Relay ownership
+ok 36 - repairs an installed legacy uninstaller without losing Relay ownership
+  ---
+  duration_ms: 0.2414
+  type: 'test'
+  ...
+# Subtest: inherits the companion resource once and adds only installer payloads
+ok 37 - inherits the companion resource once and adds only installer payloads
+  ---
+  duration_ms: 0.5491
+  type: 'test'
+  ...
+# Subtest: resolves a running 64-bit process from the native host
+ok 38 - resolves a running 64-bit process from the native host
+  ---
+  duration_ms: 1076.8176
+  type: 'test'
+  ...
+# Subtest: reports an unknown process id as unresolved from the native host
+ok 39 - reports an unknown process id as unresolved from the native host
+  ---
+  duration_ms: 525.0988
+  type: 'test'
+  ...
+# Subtest: resolves a running 64-bit process from the 32-bit host, as NSIS launches it
+ok 40 - resolves a running 64-bit process from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 2177.5453
+  type: 'test'
+  ...
+# Subtest: reports an unknown process id as unresolved from the 32-bit host, as NSIS launches it
+ok 41 - reports an unknown process id as unresolved from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1579.4783
+  type: 'test'
+  ...
+# Subtest: runs conflict inspection before any install mutation
+ok 42 - runs conflict inspection before any install mutation
+  ---
+  duration_ms: 1.6832
+  type: 'test'
+  ...
+# Subtest: detects fixed-port, running Browser path, MultiZen, and startup conflicts without privileged CIM
+ok 43 - detects fixed-port, running Browser path, MultiZen, and startup conflicts without privileged CIM
+  ---
+  duration_ms: 0.5015
+  type: 'test'
+  ...
+# Subtest: canonical shortcut preflight precedes both early mutations and the bundled Relay installer
+ok 44 - canonical shortcut preflight precedes both early mutations and the bundled Relay installer
+  ---
+  duration_ms: 0.4802
+  type: 'test'
+  ...
+# Subtest: packages the shared detector for setup-time runtime inspection
+ok 45 - packages the shared detector for setup-time runtime inspection
+  ---
+  duration_ms: 0.2744
+  type: 'test'
+  ...
+# Subtest: repairs only exact-target owned shortcut duplicates after all conflict checks
+ok 46 - repairs only exact-target owned shortcut duplicates after all conflict checks
+  ---
+  duration_ms: 0.3578
+  type: 'test'
+  ...
+# Subtest: resolves a 64-bit process path from the 32-bit NSIS host without privileged CIM
+ok 47 - resolves a 64-bit process path from the 32-bit NSIS host without privileged CIM
+  ---
+  duration_ms: 0.36
+  type: 'test'
+  ...
+# relay-archive-checksum-mismatch
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:75 char:3
+# +   throw "relay-archive-checksum-mismatch"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-checksum-mismatch:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-checksum-mismatch
+#  
+# relay-archive-size-mismatch
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:61 char:3
+# +   throw "relay-archive-size-mismatch"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-size-mismatch:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-size-mismatch
+#  
+# relay-manifest-missing
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:43 char:3
+# +   throw "relay-manifest-missing"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-missing:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-missing
+#  
+# relay-manifest-invalid
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:55 char:3
+# +   throw "relay-manifest-invalid"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-invalid:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-invalid
+#  
+# relay-archive-entry-escapes-staging
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:102 char:7
+# +       throw "relay-archive-entry-escapes-staging"
+# +       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-entry-escapes-staging:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-entry-escapes-staging
+#  
+# relay-archive-entry-escapes-staging
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:102 char:7
+# +       throw "relay-archive-entry-escapes-staging"
+# +       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-entry-escapes-staging:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-entry-escapes-staging
+#  
+# relay-manifest-invalid
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:49 char:3
+# +   throw "relay-manifest-invalid"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-invalid:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-invalid
+#  
+# relay-archive-checksum-mismatch
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:75 char:3
+# +   throw "relay-archive-checksum-mismatch"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-checksum-mismatch:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-checksum-mismatch
+#  
+# relay-archive-size-mismatch
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:61 char:3
+# +   throw "relay-archive-size-mismatch"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-size-mismatch:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-size-mismatch
+#  
+# relay-manifest-missing
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:43 char:3
+# +   throw "relay-manifest-missing"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-missing:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-missing
+#  
+# relay-manifest-invalid
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:55 char:3
+# +   throw "relay-manifest-invalid"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-invalid:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-invalid
+#  
+# relay-archive-entry-escapes-staging
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:102 char:7
+# +       throw "relay-archive-entry-escapes-staging"
+# +       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-entry-escapes-staging:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-entry-escapes-staging
+#  
+# relay-archive-entry-escapes-staging
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:102 char:7
+# +       throw "relay-archive-entry-escapes-staging"
+# +       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-archive-entry-escapes-staging:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-archive-entry-escapes-staging
+#  
+# relay-manifest-invalid
+# At E:\\MKTWorkspace\\MKTBrowser\\apps\\desktop\\build\\windows-install-relay-payload.ps1:49 char:3
+# +   throw "relay-manifest-invalid"
+# +   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     + CategoryInfo          : OperationStopped: (relay-manifest-invalid:String) [], RuntimeException
+#     + FullyQualifiedErrorId : relay-manifest-invalid
+#  
+# Subtest: installs a payload matching its pinned manifest from the native host
+ok 48 - installs a payload matching its pinned manifest from the native host
+  ---
+  duration_ms: 1422.2475
+  type: 'test'
+  ...
+# Subtest: refuses an archive whose bytes no longer match the pin from the native host
+ok 49 - refuses an archive whose bytes no longer match the pin from the native host
+  ---
+  duration_ms: 1069.2013
+  type: 'test'
+  ...
+# Subtest: refuses an archive whose size does not match the pin from the native host
+ok 50 - refuses an archive whose size does not match the pin from the native host
+  ---
+  duration_ms: 1030.2117
+  type: 'test'
+  ...
+# Subtest: refuses to install when the pinned manifest is absent from the native host
+ok 51 - refuses to install when the pinned manifest is absent from the native host
+  ---
+  duration_ms: 1005.7486
+  type: 'test'
+  ...
+# Subtest: refuses a manifest without a usable pin from the native host
+ok 52 - refuses a manifest without a usable pin from the native host
+  ---
+  duration_ms: 917.8415
+  type: 'test'
+  ...
+# Subtest: refuses an archive entry that escapes the staging directory from the native host
+ok 53 - refuses an archive entry that escapes the staging directory from the native host
+  ---
+  duration_ms: 615.6866
+  type: 'test'
+  ...
+# Subtest: refuses a traversal entry before writing any part of the archive from the native host
+ok 54 - refuses a traversal entry before writing any part of the archive from the native host
+  ---
+  duration_ms: 565.0021
+  type: 'test'
+  ...
+# Subtest: refuses a manifest that is not readable JSON from the native host
+ok 55 - refuses a manifest that is not readable JSON from the native host
+  ---
+  duration_ms: 756.3678
+  type: 'test'
+  ...
+# Subtest: installs a payload matching its pinned manifest from the 32-bit host, as NSIS launches it
+ok 56 - installs a payload matching its pinned manifest from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 2223.7835
+  type: 'test'
+  ...
+# Subtest: refuses an archive whose bytes no longer match the pin from the 32-bit host, as NSIS launches it
+ok 57 - refuses an archive whose bytes no longer match the pin from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1864.5377
+  type: 'test'
+  ...
+# Subtest: refuses an archive whose size does not match the pin from the 32-bit host, as NSIS launches it
+ok 58 - refuses an archive whose size does not match the pin from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1878.3322
+  type: 'test'
+  ...
+# Subtest: refuses to install when the pinned manifest is absent from the 32-bit host, as NSIS launches it
+ok 59 - refuses to install when the pinned manifest is absent from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1783.1934
+  type: 'test'
+  ...
+# Subtest: refuses a manifest without a usable pin from the 32-bit host, as NSIS launches it
+ok 60 - refuses a manifest without a usable pin from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1847.5654
+  type: 'test'
+  ...
+# Subtest: refuses an archive entry that escapes the staging directory from the 32-bit host, as NSIS launches it
+ok 61 - refuses an archive entry that escapes the staging directory from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1615.5444
+  type: 'test'
+  ...
+# Subtest: refuses a traversal entry before writing any part of the archive from the 32-bit host, as NSIS launches it
+ok 62 - refuses a traversal entry before writing any part of the archive from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1625.8343
+  type: 'test'
+  ...
+# Subtest: refuses a manifest that is not readable JSON from the 32-bit host, as NSIS launches it
+ok 63 - refuses a manifest that is not readable JSON from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 2186.0677
+  type: 'test'
+  ...
+# Subtest: standard-user conflict inspection and owned shortcut repair stay non-destructive
+ok 64 - standard-user conflict inspection and owned shortcut repair stay non-destructive
+  ---
+  duration_ms: 4295.0079
+  type: 'test'
+  ...
+# Subtest: rejects firewall rules owned by another Windows user without mutation
+ok 65 - rejects firewall rules owned by another Windows user without mutation
+  ---
+  duration_ms: 868.843
+  type: 'test'
+  ...
+# Subtest: explicit machine integration gate inspects live Windows process, listener, and startup state
+ok 66 - explicit machine integration gate inspects live Windows process, listener, and startup state # SKIP
+  ---
+  duration_ms: 0.2553
+  type: 'test'
+  ...
+# Subtest: owned Relay cleanup stops only its exact executable and preserves local state
+ok 67 - owned Relay cleanup stops only its exact executable and preserves local state
+  ---
+  duration_ms: 2253.1123
+  type: 'test'
+  ...
+# Subtest: removes a running owned Relay from the native host
+ok 68 - removes a running owned Relay from the native host
+  ---
+  duration_ms: 2564.2995
+  type: 'test'
+  ...
+# Subtest: removes an idle owned Relay from the native host
+ok 69 - removes an idle owned Relay from the native host
+  ---
+  duration_ms: 782.4543
+  type: 'test'
+  ...
+# Subtest: succeeds when the owned Relay is already gone, from the native host
+ok 70 - succeeds when the owned Relay is already gone, from the native host
+  ---
+  duration_ms: 781.1637
+  type: 'test'
+  ...
+# Subtest: removes a running owned Relay from the 32-bit host, as NSIS launches it
+ok 71 - removes a running owned Relay from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 2353.6102
+  type: 'test'
+  ...
+# Subtest: removes an idle owned Relay from the 32-bit host, as NSIS launches it
+ok 72 - removes an idle owned Relay from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1489.0737
+  type: 'test'
+  ...
+# Subtest: succeeds when the owned Relay is already gone, from the 32-bit host, as NSIS launches it
+ok 73 - succeeds when the owned Relay is already gone, from the 32-bit host, as NSIS launches it
+  ---
+  duration_ms: 1418.4807
+  type: 'test'
+  ...
+# Subtest: complete packaged helper scripts parse under Windows PowerShell without executing them
+ok 74 - complete packaged helper scripts parse under Windows PowerShell without executing them
+  ---
+  duration_ms: 522.7682
+  type: 'test'
+  ...
+# Subtest: isolated PowerShell orchestration waits, starts once, rejects conflicts and refuses recreated direct login
+ok 75 - isolated PowerShell orchestration waits, starts once, rejects conflicts and refuses recreated direct login
+  ---
+  duration_ms: 8919.4982
+  type: 'test'
+  ...
+# Subtest: launcher is packaged, bounded, path/hash guarded and never mutates Relay identity
+ok 76 - launcher is packaged, bounded, path/hash guarded and never mutates Relay identity
+  ---
+  duration_ms: 0.7863
+  type: 'test'
+  ...
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Startup coordination could not be changed safely. Inspect current-user Startup entries, then run MKT Browser installer repair.
+# Subtest: takes over only canonical Relay login entry and restores retained standalone Relay idempotently
+ok 77 - takes over only canonical Relay login entry and restores retained standalone Relay idempotently
+  ---
+  duration_ms: 866.7229
+  type: 'test'
+  ...
+# Subtest: read-only preflight verifies canonical targets and arguments before any link can be overwritten
+ok 78 - read-only preflight verifies canonical targets and arguments before any link can be overwritten
+  ---
+  duration_ms: 764.7546
+  type: 'test'
+  ...
+# Subtest: foreign Relay or nonempty arguments prevent takeover before Browser shortcut mutation
+ok 79 - foreign Relay or nonempty arguments prevent takeover before Browser shortcut mutation
+  ---
+  duration_ms: 559.7753
+  type: 'test'
+  ...
+# Subtest: foreign Browser startup or foreign retained Relay entry is never overwritten
+ok 80 - foreign Browser startup or foreign retained Relay entry is never overwritten
+  ---
+  duration_ms: 601.1536
+  type: 'test'
+  ...
+# Subtest: uninstall skips restoring a separately removed Relay but still rejects a foreign canonical link
+ok 81 - uninstall skips restoring a separately removed Relay but still rejects a foreign canonical link
+  ---
+  duration_ms: 506.8193
+  type: 'test'
+  ...
+# Subtest: Browser removal tolerates an absent Startup directory but refuses an existing file
+ok 82 - Browser removal tolerates an absent Startup directory but refuses an existing file
+  ---
+  duration_ms: 371.9962
+  type: 'test'
+  ...
+# Subtest: Browser removal refuses a Startup junction and preserves the target shortcut
+ok 83 - Browser removal refuses a Startup junction and preserves the target shortcut
+  ---
+  duration_ms: 536.2478
+  type: 'test'
+  ...
+# Subtest: installer tracks takeover separately from Relay executable cleanup ownership
+ok 84 - installer tracks takeover separately from Relay executable cleanup ownership
+  ---
+  duration_ms: 0.8939
+  type: 'test'
+  ...
+1..84
+# tests 84
+# suites 0
+# pass 83
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 22711.7579
+TAP version 13
+# Subtest: an interrupted temporary write preserves the previous settings file
+ok 1 - an interrupted temporary write preserves the previous settings file
+  ---
+  duration_ms: 24.8142
+  type: 'test'
+  ...
+# Subtest: concurrent setting changes preserve both patches in memory and on disk
+ok 2 - concurrent setting changes preserve both patches in memory and on disk
+  ---
+  duration_ms: 8.4371
+  type: 'test'
+  ...
+# Subtest: failed atomic replacement leaves cache unchanged, removes its temp file and permits retry
+ok 3 - failed atomic replacement leaves cache unchanged, removes its temp file and permits retry
+  ---
+  duration_ms: 7.4009
+  type: 'test'
+  ...
+# Subtest: does not publish settings to memory when persistence fails
+ok 4 - does not publish settings to memory when persistence fails
+  ---
+  duration_ms: 2.7588
+  type: 'test'
+  ...
+# Subtest: fresh installations use the unlicensed compatibility engine
+ok 5 - fresh installations use the unlicensed compatibility engine
+  ---
+  duration_ms: 1.3402
+  type: 'test'
+  ...
+# Subtest: preserves an explicit saved cft selection without rewriting settings
+ok 6 - preserves an explicit saved cft selection without rewriting settings
+  ---
+  duration_ms: 7.44
+  type: 'test'
+  ...
+# Subtest: preserves an explicit saved cloakbrowser selection without rewriting settings
+ok 7 - preserves an explicit saved cloakbrowser selection without rewriting settings
+  ---
+  duration_ms: 7.0455
+  type: 'test'
+  ...
+# Subtest: missing or unsupported saved engine falls back to CFT without rewriting settings
+ok 8 - missing or unsupported saved engine falls back to CFT without rewriting settings
+  ---
+  duration_ms: 8.1897
+  type: 'test'
+  ...
+# Subtest: folds the primary key into the list, first, so an older install keeps working
+ok 9 - folds the primary key into the list, first, so an older install keeps working
+  ---
+  duration_ms: 6.8488
+  type: 'test'
+  ...
+# Subtest: drops a key listed twice, because the engine still grants it one seat
+ok 10 - drops a key listed twice, because the engine still grants it one seat
+  ---
+  duration_ms: 7.5059
+  type: 'test'
+  ...
+# Subtest: keeps a retired primary that is still listed, which is why replacing one must remove it
+ok 11 - keeps a retired primary that is still listed, which is why replacing one must remove it
+  ---
+  duration_ms: 6.6339
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 165.1544
+TAP version 13
+# Subtest: roundtrips into an absent root and preserves metadata and cookies
+ok 1 - roundtrips into an absent root and preserves metadata and cookies
+  ---
+  duration_ms: 155.3778
+  type: 'test'
+  ...
+# Subtest: case-alias and orphan-directory collisions mint a new id without overwriting
+ok 2 - case-alias and orphan-directory collisions mint a new id without overwriting
+  ---
+  duration_ms: 135.2619
+  type: 'test'
+  ...
+# Subtest: imports legacy v1 metadata without the later lifecycle fields
+ok 3 - imports legacy v1 metadata without the later lifecycle fields
+  ---
+  duration_ms: 136.3017
+  type: 'test'
+  ...
+# Subtest: checks skipped extension payloads before creating profile files
+ok 4 - checks skipped extension payloads before creating profile files
+  ---
+  duration_ms: 129.8961
+  type: 'test'
+  ...
+# Subtest: rejects null fingerprint before creating a destination
+ok 5 - rejects null fingerprint before creating a destination
+  ---
+  duration_ms: 130.9201
+  type: 'test'
+  ...
+# Subtest: rejects array fingerprint before creating a destination
+ok 6 - rejects array fingerprint before creating a destination
+  ---
+  duration_ms: 127.4452
+  type: 'test'
+  ...
+# Subtest: rejects incomplete fingerprint before creating a destination
+ok 7 - rejects incomplete fingerprint before creating a destination
+  ---
+  duration_ms: 131.0325
+  type: 'test'
+  ...
+# Subtest: rejects non-string tags before creating a destination
+ok 8 - rejects non-string tags before creating a destination
+  ---
+  duration_ms: 128.9743
+  type: 'test'
+  ...
+# Subtest: rejects invalid extension metadata before creating a destination
+ok 9 - rejects invalid extension metadata before creating a destination
+  ---
+  duration_ms: 130.611
+  type: 'test'
+  ...
+# Subtest: rejects unsafe file path ../outside before writing
+ok 10 - rejects unsafe file path ../outside before writing
+  ---
+  duration_ms: 127.0116
+  type: 'test'
+  ...
+# Subtest: rejects unsafe file path Default/../outside before writing
+ok 11 - rejects unsafe file path Default/../outside before writing
+  ---
+  duration_ms: 126.0543
+  type: 'test'
+  ...
+# Subtest: rejects unsafe file path Default:stream before writing
+ok 12 - rejects unsafe file path Default:stream before writing
+  ---
+  duration_ms: 130.9094
+  type: 'test'
+  ...
+# Subtest: rejects unsafe file path NUL before writing
+ok 13 - rejects unsafe file path NUL before writing
+  ---
+  duration_ms: 131.1212
+  type: 'test'
+  ...
+# Subtest: rejects unsafe file path Default/cookies. before writing
+ok 14 - rejects unsafe file path Default/cookies. before writing
+  ---
+  duration_ms: 128.0538
+  type: 'test'
+  ...
+# Subtest: rejects duplicate and file-directory aliases before writing
+ok 15 - rejects duplicate and file-directory aliases before writing
+  ---
+  duration_ms: 387.9171
+  type: 'test'
+  ...
+# Subtest: checks all framing, sizes and checksums before writing
+ok 16 - checks all framing, sizes and checksums before writing
+  ---
+  duration_ms: 637.8435
+  type: 'test'
+  ...
+# Subtest: rolls back profile and newly restored extensions when persistence fails
+ok 17 - rolls back profile and newly restored extensions when persistence fails
+  ---
+  duration_ms: 210.47
+  type: 'test'
+  ...
+# Subtest: does not write through an existing extension path that is a file
+ok 18 - does not write through an existing extension path that is a file
+  ---
+  duration_ms: 131.7997
+  type: 'test'
+  ...
+# Subtest: staging keeps incomplete extensions private and preserves a competing install on rollback
+ok 19 - staging keeps incomplete extensions private and preserves a competing install on rollback
+  ---
+  duration_ms: 138.5571
+  type: 'test'
+  ...
+# Subtest: failed persistence unpublishes extensions before another event-loop task can adopt them
+ok 20 - failed persistence unpublishes extensions before another event-loop task can adopt them
+  ---
+  duration_ms: 135.5693
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3765.1998
+[package-windows-directory] rebuilt better-sqlite3 for Electron 42.8.1.
+[package-windows-directory] moved workspace links to E:\MKTWorkspace\MKTBrowser\apps\desktop\.mktbrowser-workspace-links-d5ad6377-f9d3-4402-b25a-83b304b8a086.
+  • electron-builder  version=26.15.7 os=10.0.26200
+  • loaded configuration  file=E:\MKTWorkspace\MKTBrowser\apps\desktop\electron-builder.yml
+  • @electron/rebuild already used by electron-builder, please consider to remove excess dependency from devDependencies
+
+To ensure your native dependencies are always matched electron version, simply add script `"postinstall": "electron-builder install-app-deps" to your `package.json`
+  • packageManager not detected by file, falling back to environment detection  resolvedPackageManager=yarn detected=E:\MKTWorkspace\MKTBrowser\apps\desktop
+  • detected workspace root for project using packageManager field  pm=yarn-berry config=yarn@4.5.0 resolved=E:\MKTWorkspace\MKTBrowser projectDir=E:\MKTWorkspace\MKTBrowser\apps\desktop
+  • skipped dependencies rebuild  reason=npmRebuild is set to false
+  • packaging       platform=win32 arch=x64 electron=42.8.1 appOutDir=release\win-unpacked
+  • downloaded      label=electron progress=100%
+  • downloaded electron zip extracted successfully  output=E:\MKTWorkspace\MKTBrowser\apps\desktop\release\win-unpacked
+  • searching for node modules  pm=yarn-berry searchDir=E:\MKTWorkspace\MKTBrowser\apps\desktop
+  • no node modules found in collection, trying next search directory  pm=yarn-berry searchDir=E:\MKTWorkspace\MKTBrowser\apps\desktop
+  • searching for node modules  pm=yarn-berry searchDir=E:\MKTWorkspace\MKTBrowser
+  • no node modules found in collection, trying next search directory  pm=yarn-berry searchDir=E:\MKTWorkspace\MKTBrowser
+  • searching for node modules  pm=traversal searchDir=E:\MKTWorkspace\MKTBrowser\apps\desktop
+  • using manual traversal of node_modules to build dependency tree
+  • updating asar integrity executable resource  executablePath=release\win-unpacked\MKTBrowser.exe
+  • executable resource editing and code signing skipped — signAndEditExecutable is false. To skip only code signing while keeping icon and metadata applied, use signExecutable: false instead.  exe=release\win-unpacked\MKTBrowser.exe
+[package-windows-directory] restored workspace links.
+built types
+Done in 2m 12s

@@ -1,0 +1,2637 @@
+{
+  "schemaVersion": 1,
+  "label": "R28 CloakBrowser native fingerprint acceptance",
+  "measuredAt": "2026-09-21T18:35:25.025Z",
+  "engine": {
+    "appVersion": "0.3.23",
+    "kind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "runtimeSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+    "executableSha256": "38b6bdfa186b296652956c43b93a5db2bb2b4cf56b0a0b6c46a98182001552c7",
+    "localPinSequence": 2
+  },
+  "stock": {
+    "version": "153.0.8010.50",
+    "sha256": "be70c6ef3a171b4619a61f9488d9b8f3b337edca318877f77d9ab488de444195"
+  },
+  "pool": {
+    "profiles": 5,
+    "runsPerProfile": 2,
+    "oneAtATime": true
+  },
+  "profileLabels": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5"
+  ],
+  "coverage": {
+    "document": {
+      "fonts": 11,
+      "audio": 11,
+      "webgl1": 11,
+      "webgl2": 11,
+      "webgpu": 11,
+      "canvas": 11,
+      "clientRects": 11,
+      "uaClientHints": 11,
+      "screenLocale": 11,
+      "aggregate": 11
+    },
+    "iframe": {
+      "fonts": 11,
+      "audio": 11,
+      "webgl1": 11,
+      "webgl2": 11,
+      "webgpu": 11,
+      "canvas": 11,
+      "clientRects": 11,
+      "uaClientHints": 11,
+      "screenLocale": 11,
+      "aggregate": 11
+    },
+    "worker": {
+      "fonts": 11,
+      "audio": 0,
+      "webgl1": 11,
+      "webgl2": 11,
+      "webgpu": 11,
+      "canvas": 11,
+      "clientRects": 0,
+      "uaClientHints": 11,
+      "screenLocale": 11,
+      "aggregate": 11
+    },
+    "offscreenCanvas": {
+      "fonts": 0,
+      "audio": 0,
+      "webgl1": 11,
+      "webgl2": 11,
+      "webgpu": 0,
+      "canvas": 11,
+      "clientRects": 0,
+      "uaClientHints": 0,
+      "screenLocale": 0,
+      "aggregate": 11
+    }
+  },
+  "lifecycle": {
+    "expectedCloses": 10,
+    "completedCloses": 10,
+    "browserClose": 10,
+    "signalEscalations": 0
+  },
+  "analysis": {
+    "criterionA": {
+      "verdict": "FAIL",
+      "restartMismatches": [],
+      "contextMismatches": [
+        {
+          "profile": "P1",
+          "run": 1,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P1",
+          "run": 1,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P1",
+          "run": 1,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P1",
+          "run": 1,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P1",
+          "run": 2,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P1",
+          "run": 2,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P1",
+          "run": 2,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P1",
+          "run": 2,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P2",
+          "run": 1,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P2",
+          "run": 1,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P2",
+          "run": 1,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P2",
+          "run": 1,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P2",
+          "run": 2,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P2",
+          "run": 2,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P2",
+          "run": 2,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P2",
+          "run": 2,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P3",
+          "run": 1,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P3",
+          "run": 1,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P3",
+          "run": 1,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P3",
+          "run": 1,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P3",
+          "run": 2,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P3",
+          "run": 2,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P3",
+          "run": 2,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P3",
+          "run": 2,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P4",
+          "run": 1,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P4",
+          "run": 1,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P4",
+          "run": 1,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P4",
+          "run": 1,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P4",
+          "run": 2,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P4",
+          "run": 2,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P4",
+          "run": 2,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P4",
+          "run": 2,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P5",
+          "run": 1,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P5",
+          "run": 1,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P5",
+          "run": 1,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P5",
+          "run": 1,
+          "context": "worker",
+          "surface": "uaClientHints"
+        },
+        {
+          "profile": "P5",
+          "run": 2,
+          "context": "iframe",
+          "surface": "clientRects"
+        },
+        {
+          "profile": "P5",
+          "run": 2,
+          "context": "worker",
+          "surface": "fonts"
+        },
+        {
+          "profile": "P5",
+          "run": 2,
+          "context": "worker",
+          "surface": "canvas"
+        },
+        {
+          "profile": "P5",
+          "run": 2,
+          "context": "worker",
+          "surface": "uaClientHints"
+        }
+      ],
+      "coverageGaps": []
+    },
+    "criterionB": {
+      "verdict": "FAIL",
+      "runs": [
+        {
+          "run": 1,
+          "stableSubset": [
+            "audio.analyserByteFrequencyHash",
+            "audio.analyserByteTimeHash",
+            "audio.analyserFloatFrequencyHash",
+            "audio.analyserFloatTimeHash",
+            "audio.channelHash",
+            "audio.channels",
+            "audio.copyFromChannelHash",
+            "audio.duration",
+            "audio.latency.base",
+            "audio.latency.output",
+            "audio.length",
+            "audio.sampleRate",
+            "fonts.detectedCount",
+            "fonts.detectedHash",
+            "fonts.fontFaceSetHash",
+            "fonts.fontFaceSetStatus",
+            "fonts.localLoadHash",
+            "screenLocale.calendar",
+            "screenLocale.dateSample",
+            "screenLocale.devicePixelRatio",
+            "screenLocale.language",
+            "screenLocale.languages",
+            "screenLocale.numberSample",
+            "screenLocale.numberingSystem",
+            "screenLocale.screen.availHeight",
+            "screenLocale.screen.availWidth",
+            "screenLocale.screen.colorDepth",
+            "screenLocale.screen.height",
+            "screenLocale.screen.pixelDepth",
+            "screenLocale.screen.width",
+            "screenLocale.timezone",
+            "uaClientHints.deviceMemory",
+            "uaClientHints.hardwareConcurrency",
+            "uaClientHints.highEntropyHash",
+            "uaClientHints.mimeTypesHash",
+            "uaClientHints.platform",
+            "uaClientHints.pluginsHash",
+            "uaClientHints.userAgent",
+            "uaClientHints.webdriver",
+            "webgl1.extensionsHash",
+            "webgl1.fragmentPrecisionHash",
+            "webgl1.limitsHash",
+            "webgl1.renderer",
+            "webgl1.unmaskedRenderer",
+            "webgl1.unmaskedVendor",
+            "webgl1.vendor",
+            "webgl1.vertexPrecisionHash",
+            "webgl2.extensionsHash",
+            "webgl2.fragmentPrecisionHash",
+            "webgl2.limitsHash",
+            "webgl2.renderer",
+            "webgl2.unmaskedRenderer",
+            "webgl2.unmaskedVendor",
+            "webgl2.vendor",
+            "webgl2.vertexPrecisionHash",
+            "webgpu.featuresCount",
+            "webgpu.featuresHash",
+            "webgpu.infoHash",
+            "webgpu.infoPresent",
+            "webgpu.limitsCount",
+            "webgpu.limitsHash"
+          ],
+          "stableSubsetCollisions": [
+            [
+              "P1",
+              "P2"
+            ],
+            [
+              "P1",
+              "P3"
+            ],
+            [
+              "P1",
+              "P4"
+            ],
+            [
+              "P1",
+              "P5"
+            ],
+            [
+              "P2",
+              "P3"
+            ],
+            [
+              "P2",
+              "P4"
+            ],
+            [
+              "P2",
+              "P5"
+            ],
+            [
+              "P3",
+              "P4"
+            ],
+            [
+              "P3",
+              "P5"
+            ],
+            [
+              "P4",
+              "P5"
+            ]
+          ],
+          "fullTupleComponents": [
+            "aggregate.hash",
+            "audio.analyserByteFrequencyHash",
+            "audio.analyserByteTimeHash",
+            "audio.analyserFloatFrequencyHash",
+            "audio.analyserFloatTimeHash",
+            "audio.channelHash",
+            "audio.channels",
+            "audio.copyFromChannelHash",
+            "audio.duration",
+            "audio.latency.base",
+            "audio.latency.output",
+            "audio.length",
+            "audio.sampleRate",
+            "canvas.imageHash",
+            "canvas.textMetrics.actualBoundingBoxAscent",
+            "canvas.textMetrics.actualBoundingBoxDescent",
+            "canvas.textMetrics.actualBoundingBoxLeft",
+            "canvas.textMetrics.actualBoundingBoxRight",
+            "canvas.textMetrics.width",
+            "clientRects.bounding",
+            "clientRects.clientRectsHash",
+            "fonts.detectedCount",
+            "fonts.detectedHash",
+            "fonts.fontFaceSetHash",
+            "fonts.fontFaceSetStatus",
+            "fonts.localLoadHash",
+            "fonts.metricsHash",
+            "screenLocale.calendar",
+            "screenLocale.dateSample",
+            "screenLocale.devicePixelRatio",
+            "screenLocale.language",
+            "screenLocale.languages",
+            "screenLocale.numberSample",
+            "screenLocale.numberingSystem",
+            "screenLocale.screen.availHeight",
+            "screenLocale.screen.availWidth",
+            "screenLocale.screen.colorDepth",
+            "screenLocale.screen.height",
+            "screenLocale.screen.pixelDepth",
+            "screenLocale.screen.width",
+            "screenLocale.timezone",
+            "uaClientHints.deviceMemory",
+            "uaClientHints.hardwareConcurrency",
+            "uaClientHints.highEntropyHash",
+            "uaClientHints.mimeTypesHash",
+            "uaClientHints.platform",
+            "uaClientHints.pluginsHash",
+            "uaClientHints.userAgent",
+            "uaClientHints.webdriver",
+            "webgl1.extensionsHash",
+            "webgl1.fragmentPrecisionHash",
+            "webgl1.imageHash",
+            "webgl1.limitsHash",
+            "webgl1.renderer",
+            "webgl1.unmaskedRenderer",
+            "webgl1.unmaskedVendor",
+            "webgl1.vendor",
+            "webgl1.vertexPrecisionHash",
+            "webgl2.extensionsHash",
+            "webgl2.fragmentPrecisionHash",
+            "webgl2.imageHash",
+            "webgl2.limitsHash",
+            "webgl2.renderer",
+            "webgl2.unmaskedRenderer",
+            "webgl2.unmaskedVendor",
+            "webgl2.vendor",
+            "webgl2.vertexPrecisionHash",
+            "webgpu.featuresCount",
+            "webgpu.featuresHash",
+            "webgpu.infoHash",
+            "webgpu.infoPresent",
+            "webgpu.limitsCount",
+            "webgpu.limitsHash"
+          ],
+          "fullTupleCollisions": []
+        },
+        {
+          "run": 2,
+          "stableSubset": [
+            "audio.analyserByteFrequencyHash",
+            "audio.analyserByteTimeHash",
+            "audio.analyserFloatFrequencyHash",
+            "audio.analyserFloatTimeHash",
+            "audio.channelHash",
+            "audio.channels",
+            "audio.copyFromChannelHash",
+            "audio.duration",
+            "audio.latency.base",
+            "audio.latency.output",
+            "audio.length",
+            "audio.sampleRate",
+            "fonts.detectedCount",
+            "fonts.detectedHash",
+            "fonts.fontFaceSetHash",
+            "fonts.fontFaceSetStatus",
+            "fonts.localLoadHash",
+            "screenLocale.calendar",
+            "screenLocale.dateSample",
+            "screenLocale.devicePixelRatio",
+            "screenLocale.language",
+            "screenLocale.languages",
+            "screenLocale.numberSample",
+            "screenLocale.numberingSystem",
+            "screenLocale.screen.availHeight",
+            "screenLocale.screen.availWidth",
+            "screenLocale.screen.colorDepth",
+            "screenLocale.screen.height",
+            "screenLocale.screen.pixelDepth",
+            "screenLocale.screen.width",
+            "screenLocale.timezone",
+            "uaClientHints.deviceMemory",
+            "uaClientHints.hardwareConcurrency",
+            "uaClientHints.highEntropyHash",
+            "uaClientHints.mimeTypesHash",
+            "uaClientHints.platform",
+            "uaClientHints.pluginsHash",
+            "uaClientHints.userAgent",
+            "uaClientHints.webdriver",
+            "webgl1.extensionsHash",
+            "webgl1.fragmentPrecisionHash",
+            "webgl1.limitsHash",
+            "webgl1.renderer",
+            "webgl1.unmaskedRenderer",
+            "webgl1.unmaskedVendor",
+            "webgl1.vendor",
+            "webgl1.vertexPrecisionHash",
+            "webgl2.extensionsHash",
+            "webgl2.fragmentPrecisionHash",
+            "webgl2.limitsHash",
+            "webgl2.renderer",
+            "webgl2.unmaskedRenderer",
+            "webgl2.unmaskedVendor",
+            "webgl2.vendor",
+            "webgl2.vertexPrecisionHash",
+            "webgpu.featuresCount",
+            "webgpu.featuresHash",
+            "webgpu.infoHash",
+            "webgpu.infoPresent",
+            "webgpu.limitsCount",
+            "webgpu.limitsHash"
+          ],
+          "stableSubsetCollisions": [
+            [
+              "P1",
+              "P2"
+            ],
+            [
+              "P1",
+              "P3"
+            ],
+            [
+              "P1",
+              "P4"
+            ],
+            [
+              "P1",
+              "P5"
+            ],
+            [
+              "P2",
+              "P3"
+            ],
+            [
+              "P2",
+              "P4"
+            ],
+            [
+              "P2",
+              "P5"
+            ],
+            [
+              "P3",
+              "P4"
+            ],
+            [
+              "P3",
+              "P5"
+            ],
+            [
+              "P4",
+              "P5"
+            ]
+          ],
+          "fullTupleComponents": [
+            "aggregate.hash",
+            "audio.analyserByteFrequencyHash",
+            "audio.analyserByteTimeHash",
+            "audio.analyserFloatFrequencyHash",
+            "audio.analyserFloatTimeHash",
+            "audio.channelHash",
+            "audio.channels",
+            "audio.copyFromChannelHash",
+            "audio.duration",
+            "audio.latency.base",
+            "audio.latency.output",
+            "audio.length",
+            "audio.sampleRate",
+            "canvas.imageHash",
+            "canvas.textMetrics.actualBoundingBoxAscent",
+            "canvas.textMetrics.actualBoundingBoxDescent",
+            "canvas.textMetrics.actualBoundingBoxLeft",
+            "canvas.textMetrics.actualBoundingBoxRight",
+            "canvas.textMetrics.width",
+            "clientRects.bounding",
+            "clientRects.clientRectsHash",
+            "fonts.detectedCount",
+            "fonts.detectedHash",
+            "fonts.fontFaceSetHash",
+            "fonts.fontFaceSetStatus",
+            "fonts.localLoadHash",
+            "fonts.metricsHash",
+            "screenLocale.calendar",
+            "screenLocale.dateSample",
+            "screenLocale.devicePixelRatio",
+            "screenLocale.language",
+            "screenLocale.languages",
+            "screenLocale.numberSample",
+            "screenLocale.numberingSystem",
+            "screenLocale.screen.availHeight",
+            "screenLocale.screen.availWidth",
+            "screenLocale.screen.colorDepth",
+            "screenLocale.screen.height",
+            "screenLocale.screen.pixelDepth",
+            "screenLocale.screen.width",
+            "screenLocale.timezone",
+            "uaClientHints.deviceMemory",
+            "uaClientHints.hardwareConcurrency",
+            "uaClientHints.highEntropyHash",
+            "uaClientHints.mimeTypesHash",
+            "uaClientHints.platform",
+            "uaClientHints.pluginsHash",
+            "uaClientHints.userAgent",
+            "uaClientHints.webdriver",
+            "webgl1.extensionsHash",
+            "webgl1.fragmentPrecisionHash",
+            "webgl1.imageHash",
+            "webgl1.limitsHash",
+            "webgl1.renderer",
+            "webgl1.unmaskedRenderer",
+            "webgl1.unmaskedVendor",
+            "webgl1.vendor",
+            "webgl1.vertexPrecisionHash",
+            "webgl2.extensionsHash",
+            "webgl2.fragmentPrecisionHash",
+            "webgl2.imageHash",
+            "webgl2.limitsHash",
+            "webgl2.renderer",
+            "webgl2.unmaskedRenderer",
+            "webgl2.unmaskedVendor",
+            "webgl2.vendor",
+            "webgl2.vertexPrecisionHash",
+            "webgpu.featuresCount",
+            "webgpu.featuresHash",
+            "webgpu.infoHash",
+            "webgpu.infoPresent",
+            "webgpu.limitsCount",
+            "webgpu.limitsHash"
+          ],
+          "fullTupleCollisions": []
+        }
+      ]
+    },
+    "criterionC": {
+      "verdict": "FAIL",
+      "surfaces": {
+        "aggregate": {
+          "verdict": "PASS",
+          "classifications": {
+            "varies-by-profile": 1
+          },
+          "components": [
+            "aggregate.hash"
+          ]
+        },
+        "audio": {
+          "verdict": "FAIL",
+          "classifications": {
+            "matches-stock": 8,
+            "invariant-differs-from-stock": 4
+          },
+          "components": [
+            "audio.analyserByteFrequencyHash",
+            "audio.analyserByteTimeHash",
+            "audio.analyserFloatFrequencyHash",
+            "audio.analyserFloatTimeHash",
+            "audio.channelHash",
+            "audio.channels",
+            "audio.copyFromChannelHash",
+            "audio.duration",
+            "audio.latency.base",
+            "audio.latency.output",
+            "audio.length",
+            "audio.sampleRate"
+          ]
+        },
+        "canvas": {
+          "verdict": "PASS",
+          "classifications": {
+            "varies-by-profile": 6
+          },
+          "components": [
+            "canvas.imageHash",
+            "canvas.textMetrics.actualBoundingBoxAscent",
+            "canvas.textMetrics.actualBoundingBoxDescent",
+            "canvas.textMetrics.actualBoundingBoxLeft",
+            "canvas.textMetrics.actualBoundingBoxRight",
+            "canvas.textMetrics.width"
+          ]
+        },
+        "clientRects": {
+          "verdict": "PASS",
+          "classifications": {
+            "varies-by-profile": 2
+          },
+          "components": [
+            "clientRects.bounding",
+            "clientRects.clientRectsHash"
+          ]
+        },
+        "fonts": {
+          "verdict": "FAIL",
+          "classifications": {
+            "invariant-differs-from-stock": 2,
+            "matches-stock": 3,
+            "varies-by-profile": 1
+          },
+          "components": [
+            "fonts.detectedCount",
+            "fonts.detectedHash",
+            "fonts.fontFaceSetHash",
+            "fonts.fontFaceSetStatus",
+            "fonts.localLoadHash",
+            "fonts.metricsHash"
+          ]
+        },
+        "screenLocale": {
+          "verdict": "FAIL",
+          "classifications": {
+            "matches-stock": 10,
+            "invariant-differs-from-stock": 4
+          },
+          "components": [
+            "screenLocale.calendar",
+            "screenLocale.dateSample",
+            "screenLocale.devicePixelRatio",
+            "screenLocale.language",
+            "screenLocale.languages",
+            "screenLocale.numberSample",
+            "screenLocale.numberingSystem",
+            "screenLocale.screen.availHeight",
+            "screenLocale.screen.availWidth",
+            "screenLocale.screen.colorDepth",
+            "screenLocale.screen.height",
+            "screenLocale.screen.pixelDepth",
+            "screenLocale.screen.width",
+            "screenLocale.timezone"
+          ]
+        },
+        "uaClientHints": {
+          "verdict": "FAIL",
+          "classifications": {
+            "invariant-differs-from-stock": 4,
+            "matches-stock": 4
+          },
+          "components": [
+            "uaClientHints.deviceMemory",
+            "uaClientHints.hardwareConcurrency",
+            "uaClientHints.highEntropyHash",
+            "uaClientHints.mimeTypesHash",
+            "uaClientHints.platform",
+            "uaClientHints.pluginsHash",
+            "uaClientHints.userAgent",
+            "uaClientHints.webdriver"
+          ]
+        },
+        "webgl1": {
+          "verdict": "FAIL",
+          "classifications": {
+            "matches-stock": 7,
+            "varies-by-profile": 1,
+            "invariant-differs-from-stock": 1
+          },
+          "components": [
+            "webgl1.extensionsHash",
+            "webgl1.fragmentPrecisionHash",
+            "webgl1.imageHash",
+            "webgl1.limitsHash",
+            "webgl1.renderer",
+            "webgl1.unmaskedRenderer",
+            "webgl1.unmaskedVendor",
+            "webgl1.vendor",
+            "webgl1.vertexPrecisionHash"
+          ]
+        },
+        "webgl2": {
+          "verdict": "FAIL",
+          "classifications": {
+            "matches-stock": 7,
+            "varies-by-profile": 1,
+            "invariant-differs-from-stock": 1
+          },
+          "components": [
+            "webgl2.extensionsHash",
+            "webgl2.fragmentPrecisionHash",
+            "webgl2.imageHash",
+            "webgl2.limitsHash",
+            "webgl2.renderer",
+            "webgl2.unmaskedRenderer",
+            "webgl2.unmaskedVendor",
+            "webgl2.vendor",
+            "webgl2.vertexPrecisionHash"
+          ]
+        },
+        "webgpu": {
+          "verdict": "FAIL",
+          "classifications": {
+            "invariant-differs-from-stock": 2,
+            "matches-stock": 4
+          },
+          "components": [
+            "webgpu.featuresCount",
+            "webgpu.featuresHash",
+            "webgpu.infoHash",
+            "webgpu.infoPresent",
+            "webgpu.limitsCount",
+            "webgpu.limitsHash"
+          ]
+        }
+      },
+      "components": {
+        "aggregate.hash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "audio.analyserByteFrequencyHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.analyserByteTimeHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.analyserFloatFrequencyHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "audio.analyserFloatTimeHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "audio.channelHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "audio.channels": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.copyFromChannelHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "audio.duration": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.latency.base": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.latency.output": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.length": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "audio.sampleRate": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "canvas.imageHash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "canvas.textMetrics.actualBoundingBoxAscent": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "canvas.textMetrics.actualBoundingBoxDescent": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "canvas.textMetrics.actualBoundingBoxLeft": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "canvas.textMetrics.actualBoundingBoxRight": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "canvas.textMetrics.width": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "clientRects.bounding": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "clientRects.clientRectsHash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "fonts.detectedCount": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "fonts.detectedHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "fonts.fontFaceSetHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "fonts.fontFaceSetStatus": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "fonts.localLoadHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "fonts.metricsHash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "screenLocale.calendar": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.dateSample": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "screenLocale.devicePixelRatio": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.language": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "screenLocale.languages": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "screenLocale.numberSample": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "screenLocale.numberingSystem": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.availHeight": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.availWidth": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.colorDepth": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.height": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.pixelDepth": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.screen.width": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "screenLocale.timezone": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "uaClientHints.deviceMemory": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "uaClientHints.hardwareConcurrency": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "uaClientHints.highEntropyHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "uaClientHints.mimeTypesHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "uaClientHints.platform": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "uaClientHints.pluginsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "uaClientHints.userAgent": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "uaClientHints.webdriver": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "webgl1.extensionsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.fragmentPrecisionHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.imageHash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "webgl1.limitsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.renderer": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.unmaskedRenderer": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "webgl1.unmaskedVendor": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.vendor": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl1.vertexPrecisionHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.extensionsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.fragmentPrecisionHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.imageHash": {
+          "classification": "varies-by-profile",
+          "verdict": "PASS"
+        },
+        "webgl2.limitsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.renderer": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.unmaskedRenderer": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "webgl2.unmaskedVendor": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.vendor": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgl2.vertexPrecisionHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgpu.featuresCount": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "webgpu.featuresHash": {
+          "classification": "invariant-differs-from-stock",
+          "verdict": "FAIL"
+        },
+        "webgpu.infoHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgpu.infoPresent": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgpu.limitsCount": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        },
+        "webgpu.limitsHash": {
+          "classification": "matches-stock",
+          "verdict": "PASS"
+        }
+      }
+    },
+    "aliases": {
+      "run1": {
+        "aggregate.hash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6"
+          ]
+        },
+        "audio.analyserByteFrequencyHash": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.analyserByteTimeHash": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.analyserFloatFrequencyHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.analyserFloatTimeHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.channelHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.channels": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.copyFromChannelHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.duration": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.latency.base": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.latency.output": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.length": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.sampleRate": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "canvas.imageHash": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxAscent": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxDescent": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxLeft": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxRight": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.width": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "clientRects.bounding": {
+          "stock": "CR1",
+          "profiles": [
+            "CR2",
+            "CR3",
+            "CR4",
+            "CR5",
+            "CR6"
+          ]
+        },
+        "clientRects.clientRectsHash": {
+          "stock": "CR1",
+          "profiles": [
+            "CR2",
+            "CR3",
+            "CR4",
+            "CR5",
+            "CR6"
+          ]
+        },
+        "fonts.detectedCount": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F2",
+            "F2",
+            "F2",
+            "F2"
+          ]
+        },
+        "fonts.detectedHash": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F2",
+            "F2",
+            "F2",
+            "F2"
+          ]
+        },
+        "fonts.fontFaceSetHash": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.fontFaceSetStatus": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.localLoadHash": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.metricsHash": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ]
+        },
+        "screenLocale.calendar": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.dateSample": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.devicePixelRatio": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.language": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.languages": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.numberSample": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.numberingSystem": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.availHeight": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.availWidth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.colorDepth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.height": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.pixelDepth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.width": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.timezone": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "uaClientHints.deviceMemory": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.hardwareConcurrency": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.highEntropyHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.mimeTypesHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.platform": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.pluginsHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.userAgent": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.webdriver": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "webgl1.extensionsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.fragmentPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.imageHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W3",
+            "W4",
+            "W5",
+            "W6"
+          ]
+        },
+        "webgl1.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.renderer": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.unmaskedRenderer": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgl1.unmaskedVendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.vendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.vertexPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.extensionsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.fragmentPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.imageHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W3",
+            "W4",
+            "W5",
+            "W6"
+          ]
+        },
+        "webgl2.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.renderer": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.unmaskedRenderer": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgl2.unmaskedVendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.vendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.vertexPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.featuresCount": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgpu.featuresHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgpu.infoHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.infoPresent": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.limitsCount": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        }
+      },
+      "run2": {
+        "aggregate.hash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6"
+          ]
+        },
+        "audio.analyserByteFrequencyHash": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.analyserByteTimeHash": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.analyserFloatFrequencyHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.analyserFloatTimeHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.channelHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.channels": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.copyFromChannelHash": {
+          "stock": "A1",
+          "profiles": [
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2"
+          ]
+        },
+        "audio.duration": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.latency.base": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.latency.output": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.length": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "audio.sampleRate": {
+          "stock": "A1",
+          "profiles": [
+            "A1",
+            "A1",
+            "A1",
+            "A1",
+            "A1"
+          ]
+        },
+        "canvas.imageHash": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxAscent": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxDescent": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxLeft": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.actualBoundingBoxRight": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "canvas.textMetrics.width": {
+          "stock": "C1",
+          "profiles": [
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6"
+          ]
+        },
+        "clientRects.bounding": {
+          "stock": "CR1",
+          "profiles": [
+            "CR2",
+            "CR3",
+            "CR4",
+            "CR5",
+            "CR6"
+          ]
+        },
+        "clientRects.clientRectsHash": {
+          "stock": "CR1",
+          "profiles": [
+            "CR2",
+            "CR3",
+            "CR4",
+            "CR5",
+            "CR6"
+          ]
+        },
+        "fonts.detectedCount": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F2",
+            "F2",
+            "F2",
+            "F2"
+          ]
+        },
+        "fonts.detectedHash": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F2",
+            "F2",
+            "F2",
+            "F2"
+          ]
+        },
+        "fonts.fontFaceSetHash": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.fontFaceSetStatus": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.localLoadHash": {
+          "stock": "F1",
+          "profiles": [
+            "F1",
+            "F1",
+            "F1",
+            "F1",
+            "F1"
+          ]
+        },
+        "fonts.metricsHash": {
+          "stock": "F1",
+          "profiles": [
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ]
+        },
+        "screenLocale.calendar": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.dateSample": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.devicePixelRatio": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.language": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.languages": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.numberSample": {
+          "stock": "SL1",
+          "profiles": [
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2",
+            "SL2"
+          ]
+        },
+        "screenLocale.numberingSystem": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.availHeight": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.availWidth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.colorDepth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.height": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.pixelDepth": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.screen.width": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "screenLocale.timezone": {
+          "stock": "SL1",
+          "profiles": [
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1",
+            "SL1"
+          ]
+        },
+        "uaClientHints.deviceMemory": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.hardwareConcurrency": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.highEntropyHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.mimeTypesHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.platform": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.pluginsHash": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1",
+            "UCH1"
+          ]
+        },
+        "uaClientHints.userAgent": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "uaClientHints.webdriver": {
+          "stock": "UCH1",
+          "profiles": [
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2",
+            "UCH2"
+          ]
+        },
+        "webgl1.extensionsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.fragmentPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.imageHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W3",
+            "W4",
+            "W5",
+            "W6"
+          ]
+        },
+        "webgl1.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.renderer": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.unmaskedRenderer": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgl1.unmaskedVendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.vendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl1.vertexPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.extensionsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.fragmentPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.imageHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W3",
+            "W4",
+            "W5",
+            "W6"
+          ]
+        },
+        "webgl2.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.renderer": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.unmaskedRenderer": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgl2.unmaskedVendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.vendor": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgl2.vertexPrecisionHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.featuresCount": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgpu.featuresHash": {
+          "stock": "W1",
+          "profiles": [
+            "W2",
+            "W2",
+            "W2",
+            "W2",
+            "W2"
+          ]
+        },
+        "webgpu.infoHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.infoPresent": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.limitsCount": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        },
+        "webgpu.limitsHash": {
+          "stock": "W1",
+          "profiles": [
+            "W1",
+            "W1",
+            "W1",
+            "W1",
+            "W1"
+          ]
+        }
+      }
+    }
+  },
+  "evidenceNote": "Aliases preserve equality and difference relationships without retaining host-identifying fingerprint values."
+}

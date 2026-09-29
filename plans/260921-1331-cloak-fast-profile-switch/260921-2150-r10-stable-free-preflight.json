@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "scope": "R10 stable-free count-only preflight",
+  "engineLaunches": 0,
+  "status": "passed",
+  "samples": [
+    {
+      "sample": 1,
+      "completedAt": "2026-09-21T14:50:40.538Z",
+      "observedAt": "2026-09-21T14:50:36.023Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "sample": 2,
+      "completedAt": "2026-09-21T14:51:17.281Z",
+      "observedAt": "2026-09-21T14:51:10.548Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "sample": 3,
+      "completedAt": "2026-09-21T14:51:53.455Z",
+      "observedAt": "2026-09-21T14:51:47.284Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    }
+  ]
+}

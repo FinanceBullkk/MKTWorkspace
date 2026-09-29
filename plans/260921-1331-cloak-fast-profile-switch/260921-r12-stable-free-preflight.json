@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "scope": "R12 stable-free count-only preflight",
+  "engineLaunches": 0,
+  "status": "failed",
+  "samples": [
+    {
+      "sample": 1,
+      "requestedAt": "2026-09-21T15:57:34.018Z",
+      "completedAt": "2026-09-21T15:57:35.646Z",
+      "observedAt": "2026-09-21T15:57:35.646Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "sample": 2,
+      "requestedAt": "2026-09-21T15:58:05.647Z",
+      "completedAt": "2026-09-21T15:58:06.215Z",
+      "observedAt": "2026-09-21T15:58:06.215Z",
+      "active": 0,
+      "limit": 1,
+      "state": "available",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "sample": 3,
+      "requestedAt": "2026-09-21T15:58:36.225Z",
+      "completedAt": "2026-09-21T15:58:41.228Z",
+      "observedAt": "2026-09-21T15:58:41.228Z",
+      "active": null,
+      "limit": null,
+      "state": "timeout",
+      "reason": "REQUEST_TIMEOUT"
+    }
+  ]
+}

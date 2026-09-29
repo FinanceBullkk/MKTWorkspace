@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "scope": "R17 official SDK admission with only stealthArgs=false added to the R16 baseline",
+  "hypothesis": "Disabling the SDK default stealth argument set causes the product-path admission refusal.",
+  "engineAttempts": 1,
+  "countRequests": 4,
+  "capacity": [
+    {
+      "label": "before-launch",
+      "observedAt": "2026-09-21T17:08:16.803Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "active-after-3s",
+      "observedAt": "2026-09-21T17:08:20.225Z",
+      "httpStatus": 200,
+      "active": 1,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "after-close-0ms",
+      "observedAt": "2026-09-21T17:08:21.277Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    },
+    {
+      "label": "final",
+      "observedAt": "2026-09-21T17:08:21.885Z",
+      "httpStatus": 200,
+      "active": 0,
+      "limit": 1,
+      "state": "ok"
+    }
+  ],
+  "engine": {
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "sdkVersion": "0.5.10",
+  "playwrightVersion": "1.62.0",
+  "initialEngineProcesses": [],
+  "launchRequestedAt": "2026-09-21T17:08:17.214Z",
+  "externalCdpConnected": true,
+  "readyAt": "2026-09-21T17:08:18.091Z",
+  "validHypothesisTrial": true,
+  "externalCdpHeldDuringClose": true,
+  "closeRequestedAt": "2026-09-21T17:08:20.508Z",
+  "closedAt": "2026-09-21T17:08:20.930Z",
+  "closeDurationMs": 422,
+  "remainingProcesses": [],
+  "vendorFreeDelayMs": 347,
+  "finalEngineProcesses": [],
+  "finalCapacity": {
+    "label": "final",
+    "observedAt": "2026-09-21T17:08:21.885Z",
+    "httpStatus": 200,
+    "active": 0,
+    "limit": 1,
+    "state": "ok"
+  },
+  "finishedAt": "2026-09-21T17:08:22.160Z"
+}

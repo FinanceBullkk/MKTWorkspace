@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "preparedAt": "2026-09-21T18:28:55.008Z",
+  "attemptBudget": 4,
+  "attemptsUsed": 4,
+  "stopOnFirstFailure": true,
+  "automaticRetry": false,
+  "minimumOpenMs": 0,
+  "sequence": [
+    "P1",
+    "P2",
+    "P1",
+    "P2"
+  ],
+  "productPath": "packaged-mkt-browser-mcp",
+  "proxyGate": "OPEN-localhost-only",
+  "artifact": {
+    "browserHead": "06fe257c7ee615b156d776cfd10d415a933c23b2",
+    "sourceDirty": true,
+    "sourceStatusSha256": "71bcbe6e4dbf22b9536de158612fd85b46b4aff65a9e3d73e5e7ec24681d112b",
+    "executableVersion": "0.3.23",
+    "executableSha256": "38b6bdfa186b296652956c43b93a5db2bb2b4cf56b0a0b6c46a98182001552c7",
+    "appAsarSha256": "4a90b1538878e04351fec3172482b674ddf38f92294a4e719f29723d7c8614e8",
+    "yarnLockSha256": "6dd698a892036b4c910fac19e28d4eb31769d897a81cd046b941fd5c8fa7d1f6",
+    "packageManager": "yarn@4.5.0"
+  },
+  "engine": {
+    "pinSequence": 2,
+    "kind": "cloakbrowser",
+    "version": "151.0.7922.108.6",
+    "archiveSha256": "5bd3951f470fff79998a437a139e3e8d68478bc2663402aca1666faf4eadac37",
+    "archiveSizeBytes": 540036860,
+    "runtimeSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v22.23.2",
+    "totalMemoryMb": 16307,
+    "freeMemoryMbBefore": 3172
+  },
+  "profiles": {
+    "P1": {
+      "seedConfigured": true,
+      "fingerprintSeedDigest": "868d8309fbd53499f603dad006c3c02a5d66ed1de923f21675c92caf4ed6e23a"
+    },
+    "P2": {
+      "seedConfigured": true,
+      "fingerprintSeedDigest": "10d36d5bf352377f81eeafe10f8fc3bf87b054c78580c7608308cd1263d67ebd"
+    }
+  },
+  "capacityChecks": [
+    {
+      "stage": "initial",
+      "requestStartedAt": "2026-09-21T18:28:57.215Z",
+      "requestCompletedAt": "2026-09-21T18:28:57.959Z",
+      "observationCompletedAt": "2026-09-21T18:28:57.956Z",
+      "freshUntil": "2026-09-21T18:29:02.956Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "after-P1-1",
+      "requestStartedAt": "2026-09-21T18:29:02.429Z",
+      "requestCompletedAt": "2026-09-21T18:29:02.801Z",
+      "observationCompletedAt": "2026-09-21T18:29:02.797Z",
+      "freshUntil": "2026-09-21T18:29:07.797Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "after-P2-2",
+      "requestStartedAt": "2026-09-21T18:29:06.721Z",
+      "requestCompletedAt": "2026-09-21T18:29:06.988Z",
+      "observationCompletedAt": "2026-09-21T18:29:06.982Z",
+      "freshUntil": "2026-09-21T18:29:11.982Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "after-P1-3",
+      "requestStartedAt": "2026-09-21T18:29:10.826Z",
+      "requestCompletedAt": "2026-09-21T18:29:11.105Z",
+      "observationCompletedAt": "2026-09-21T18:29:11.101Z",
+      "freshUntil": "2026-09-21T18:29:16.101Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    },
+    {
+      "stage": "after-P2-4",
+      "requestStartedAt": "2026-09-21T18:29:14.937Z",
+      "requestCompletedAt": "2026-09-21T18:29:15.220Z",
+      "observationCompletedAt": "2026-09-21T18:29:15.215Z",
+      "freshUntil": "2026-09-21T18:29:20.215Z",
+      "local": {
+        "total": 1,
+        "free": 1,
+        "active": 0,
+        "pendingRecovery": 0,
+        "cooling": 0
+      },
+      "vendor": {
+        "active": 0,
+        "limit": 1
+      },
+      "availability": "ready",
+      "reason": "CAPACITY_AVAILABLE"
+    }
+  ],
+  "launches": [
+    {
+      "sequence": 1,
+      "profile": "P1",
+      "status": "passed",
+      "launchRequestedAt": "2026-09-21T18:28:57.965Z",
+      "launchResolvedAt": "2026-09-21T18:28:58.321Z",
+      "usableAt": "2026-09-21T18:29:01.894Z",
+      "usableMsFromPriorClose": 3929,
+      "openDurationMs": 3573,
+      "closeRequestedAt": "2026-09-21T18:29:01.894Z",
+      "closeCompletedAt": "2026-09-21T18:29:02.428Z",
+      "processExited": true,
+      "shutdown": {
+        "completed": true,
+        "shutdownMethod": "Browser.close",
+        "childExitObserved": false,
+        "childExitCode": null,
+        "childExitSignalled": false
+      },
+      "runningCount": 1,
+      "storageBefore": null,
+      "storageAfter": "P1",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "868d8309fbd53499f603dad006c3c02a5d66ed1de923f21675c92caf4ed6e23a",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    },
+    {
+      "sequence": 2,
+      "profile": "P2",
+      "status": "passed",
+      "launchRequestedAt": "2026-09-21T18:29:02.809Z",
+      "launchResolvedAt": "2026-09-21T18:29:03.167Z",
+      "usableAt": "2026-09-21T18:29:06.148Z",
+      "usableMsFromPriorClose": 3720,
+      "openDurationMs": 2981,
+      "closeRequestedAt": "2026-09-21T18:29:06.148Z",
+      "closeCompletedAt": "2026-09-21T18:29:06.719Z",
+      "processExited": true,
+      "shutdown": {
+        "completed": true,
+        "shutdownMethod": "Browser.close",
+        "childExitObserved": false,
+        "childExitCode": null,
+        "childExitSignalled": false
+      },
+      "runningCount": 1,
+      "storageBefore": null,
+      "storageAfter": "P2",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "10d36d5bf352377f81eeafe10f8fc3bf87b054c78580c7608308cd1263d67ebd",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    },
+    {
+      "sequence": 3,
+      "profile": "P1",
+      "status": "passed",
+      "launchRequestedAt": "2026-09-21T18:29:06.994Z",
+      "launchResolvedAt": "2026-09-21T18:29:07.345Z",
+      "usableAt": "2026-09-21T18:29:10.374Z",
+      "usableMsFromPriorClose": 3655,
+      "openDurationMs": 3029,
+      "closeRequestedAt": "2026-09-21T18:29:10.374Z",
+      "closeCompletedAt": "2026-09-21T18:29:10.822Z",
+      "processExited": true,
+      "shutdown": {
+        "completed": true,
+        "shutdownMethod": "Browser.close",
+        "childExitObserved": false,
+        "childExitCode": null,
+        "childExitSignalled": false
+      },
+      "runningCount": 1,
+      "storageBefore": "P1",
+      "storageAfter": "P1",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "868d8309fbd53499f603dad006c3c02a5d66ed1de923f21675c92caf4ed6e23a",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    },
+    {
+      "sequence": 4,
+      "profile": "P2",
+      "status": "passed",
+      "launchRequestedAt": "2026-09-21T18:29:11.113Z",
+      "launchResolvedAt": "2026-09-21T18:29:11.479Z",
+      "usableAt": "2026-09-21T18:29:14.469Z",
+      "usableMsFromPriorClose": 3647,
+      "openDurationMs": 2990,
+      "closeRequestedAt": "2026-09-21T18:29:14.469Z",
+      "closeCompletedAt": "2026-09-21T18:29:14.934Z",
+      "processExited": true,
+      "shutdown": {
+        "completed": true,
+        "shutdownMethod": "Browser.close",
+        "childExitObserved": false,
+        "childExitCode": null,
+        "childExitSignalled": false
+      },
+      "runningCount": 1,
+      "storageBefore": "P2",
+      "storageAfter": "P2",
+      "process": {
+        "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e",
+        "executableMatchesPinnedRuntime": true,
+        "profileDataRootOwned": true,
+        "nativeFingerprintFlagCount": 13,
+        "missingNativeFlags": [],
+        "fingerprintSeedDigest": "10d36d5bf352377f81eeafe10f8fc3bf87b054c78580c7608308cd1263d67ebd",
+        "fingerprintDisabledFlagPresent": false,
+        "proxyFlagPresent": false
+      }
+    }
+  ],
+  "cleanup": {
+    "completed": true,
+    "disposableRootRemoved": true,
+    "preservedForRecovery": false
+  },
+  "runtime": {
+    "appVersion": "0.3.23",
+    "contractVersion": 5,
+    "profileSchemaVersion": 3,
+    "engineKind": "cloakbrowser",
+    "engineVersion": "151.0.7922.108.6"
+  },
+  "lifecycle": {
+    "expectedCloses": 4,
+    "completedCloses": 4,
+    "browserClose": 4,
+    "signalEscalations": 0
+  },
+  "completedAt": "2026-09-21T18:29:15.225Z"
+}

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 2,
+  "status": "failed",
+  "scope": "Loopback-only licence simulator; synthetic key; no vendor requests",
+  "supersedesDiagnosticReceipt": "local-license-launch-comparison.json",
+  "preparedAt": "2026-09-21T12:40:29.415Z",
+  "launchBudget": 4,
+  "launchesUsed": 4,
+  "modes": [
+    {
+      "mode": "product-exact-observed",
+      "launchModel": "product",
+      "startedAt": "2026-09-21T12:40:29.445Z",
+      "completedAt": "2026-09-21T12:40:32.481Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "59d008c7fc0cbffe"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "unexpectedRequests": [],
+      "cleanupComplete": true,
+      "finalOwnedProcessCount": 0,
+      "childExitCode": 78,
+      "licenseStatusCode": 78,
+      "stderr": "DevTools listening on ws://127.0.0.1:61671/devtools/browser/4e3cf68e-6d75-4694-8ae3-aa6848bb954e",
+      "failure": {
+        "type": "Error",
+        "reason": "Direct engine exited with code 78 after licence start."
+      },
+      "invariantFailures": [
+        "launch-or-close-failed",
+        "expected-one-end-got-0"
+      ],
+      "passed": false
+    },
+    {
+      "mode": "product-plus-system-drive",
+      "launchModel": "product",
+      "startedAt": "2026-09-21T12:40:32.486Z",
+      "completedAt": "2026-09-21T12:40:35.497Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "8f444dfd65094a57"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "unexpectedRequests": [],
+      "cleanupComplete": true,
+      "finalOwnedProcessCount": 0,
+      "childExitCode": 78,
+      "licenseStatusCode": 78,
+      "stderr": "DevTools listening on ws://127.0.0.1:63657/devtools/browser/fadaf829-7415-494f-a281-81d4cd1e083e",
+      "failure": {
+        "type": "Error",
+        "reason": "Direct engine exited with code 78 after licence start."
+      },
+      "invariantFailures": [
+        "launch-or-close-failed",
+        "expected-one-end-got-0"
+      ],
+      "passed": false
+    },
+    {
+      "mode": "historical-working-direct",
+      "launchModel": "historical",
+      "startedAt": "2026-09-21T12:40:35.501Z",
+      "completedAt": "2026-09-21T12:40:37.115Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "e86767fd18f44789"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "unexpectedRequests": [],
+      "cleanupComplete": true,
+      "finalOwnedProcessCount": 0,
+      "childExitCode": 78,
+      "licenseStatusCode": 78,
+      "stderr": "DevTools listening on ws://127.0.0.1:53153/devtools/browser/42e1bc9c-9f0b-4b57-82d0-c5f63e16febe",
+      "failure": {
+        "type": "Error",
+        "reason": "Direct engine exited with code 78."
+      },
+      "invariantFailures": [
+        "launch-or-close-failed",
+        "expected-one-end-got-0"
+      ],
+      "passed": false
+    },
+    {
+      "mode": "official-sdk",
+      "launchModel": "sdk",
+      "startedAt": "2026-09-21T12:40:37.120Z",
+      "completedAt": "2026-09-21T12:40:38.316Z",
+      "requestCounts": {
+        "start": 1,
+        "heartbeat": 0,
+        "end": 0
+      },
+      "startInstances": [
+        "ed0fdfabf5df32be"
+      ],
+      "installIdentities": [
+        "e7e9a5864acfebc0"
+      ],
+      "requestFields": [
+        "install_id",
+        "instance_id",
+        "license_key",
+        "platform",
+        "version"
+      ],
+      "unexpectedRequests": [],
+      "cleanupComplete": true,
+      "finalOwnedProcessCount": 0,
+      "childExitCode": null,
+      "licenseStatusCode": null,
+      "stderr": null,
+      "failure": {
+        "type": "CloakBrowserLicenseError",
+        "reason": "CloakBrowser Pro: couldn't verify your license (license server unreachable or a connection problem)."
+      },
+      "invariantFailures": [
+        "launch-or-close-failed",
+        "expected-one-end-got-0"
+      ],
+      "passed": false
+    }
+  ],
+  "engine": {
+    "version": "151.0.7922.108.6",
+    "executableSha256": "484ab0e66600a3b0a8c4848ccaef38ce65b69e87687a68a3b2b68d5db1f0455e"
+  },
+  "failedModes": [
+    "product-exact-observed",
+    "product-plus-system-drive",
+    "historical-working-direct",
+    "official-sdk"
+  ],
+  "completedAt": "2026-09-21T12:40:38.319Z"
+}

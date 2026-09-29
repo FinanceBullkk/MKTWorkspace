@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "endpoint": "https://cloakbrowser.dev/api/license/session/count",
+  "engineLaunches": 0,
+  "observedAt": "2026-09-21T06:17:27.493Z",
+  "httpStatus": 200,
+  "active": 0,
+  "limit": 1,
+  "state": "ok"
+}
