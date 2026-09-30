@@ -34,7 +34,7 @@ manager with proxy binding; this work makes no identity-isolation or real-accoun
 |-------|------|--------|
 | 1 | [Secure operator-key self-enrollment](./phase-01-secure-operator-key-self-enrollment.md) | Pending |
 | 2 | [Complete setup and Browser distribution](./phase-02-complete-setup-and-browser-distribution.md) | Pending |
-| 3 | [Build and publish replacement tuple](./phase-03-build-and-publish-replacement-tuple.md) | Pending |
+| 3 | [Build and publish replacement tuple](./phase-03-build-and-publish-replacement-tuple.md) | In progress |
 | 4 | [Validate unfamiliar-operator onboarding](./phase-04-validate-unfamiliar-operator-onboarding.md) | Pending |
 
 ## Dependencies

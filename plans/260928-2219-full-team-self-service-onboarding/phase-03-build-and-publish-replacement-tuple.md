@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Build and publish replacement tuple"
-status: pending
+status: in-progress
 priority: P1
 effort: "4-7h"
 dependencies: [1, 2]
@@ -52,3 +52,9 @@ self-enrollment protocol. Preserve v20/0.3.27 as historical accepted bytes.
 
 Pushing MKTTool deploys production. Do not push before local gates and exact artifact freeze. Do not
 run heavy Browser builds while a VM is active or host RAM is below the existing release threshold.
+
+## Current Checkpoint
+
+See [30 September candidate checkpoint](./checkpoint-20260930-browser-0330-relay22.md). The Relay
+artifact is frozen and published, but PostgreSQL 16 contracts, Browser build/package, VM, deploy,
+and operator acceptance gates are not closed.
