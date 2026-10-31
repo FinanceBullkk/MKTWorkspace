@@ -49,30 +49,25 @@ Boundaries that remain, because they protect the owner rather than gate the owne
   stale: if one produces no output within a few minutes, stop it and continue inline rather than
   blocking on it.
 
-## Release Gate - Local Validation and Clean VM
+## Release Gate - Internal Tool (simplified 31 October 2026)
 
-On 8 September 2026 the owner selected a release path independent of GitHub Actions quotas.
-GitHub hosts source; local checks and a restored disposable VM are the authoritative technical
-release gate. Actions remains optional manual diagnostics, not a required publication dependency.
-This replaces the previous hosted-only policy prospectively; historical failed/skipped runs stay
-failed/skipped. See plans/260908-0740-local-vm-product-release/plan.md for current implementation.
+This is an internal tool for a handful of known users. The previous release ceremony (8 September
+2026: clean-VM snapshot acceptance, dual reproducible builds, hash-bound receipts, canary days,
+exact-tuple promotion) is retired. It produced twelve unpromoted candidates, blocked on a VM this
+host cannot run, and shipped nothing through it. The old gate reports under `plans/` and the moved
+artifacts under `D:\MKTRelease\_surgery-archive-261031` are historical records; they no longer
+bind new work. Do not recreate artifact forests or receipt pipelines inside the workspace.
 
-- Commit reviewed implementation before freezing source. Record both repository commits/trees,
-  dependency locks, exact Node/Yarn/npm identities and the fixed command logs with SHA-256.
-- Run local quality, security, database contracts and packaged Relay checks through the committed
-  local runners. A required failure, missing result or unexplained skip blocks promotion.
-  A runner's successful command receipt is not a product-readiness or clean-VM verdict.
-- Build twice from isolated clean inputs and compare normalized delivered payloads. Keep the
-  raw hashes and retain one exact installer; never rebuild it between acceptance and publication.
-- Restore the clean Defender-enabled VM snapshot. Test the exact installer through normal first
-  run, signed CFT activation, packaged Relay lifecycle, proxy failure/recovery, repair, uninstall
-  and cleanup. Bind receipts to the installer/Browser/Relay/engine/control-contract hashes.
-- Sign candidate metadata after building. Authenticated candidate-only testing precedes operator
-  promotion; public/operator availability remains gated by explicit exact-tuple approval. Preserve
-  immutable storage, full GET/hash read-back, anti-downgrade, revocation and rollback controls.
-- A VM on this host is not independent physical hardware. Missing browser-page network,
-  unfamiliar-operator, second-PC and elapsed seven-day canary evidence stays OPEN. Do not
-  call local tests, a Chrome fixture, or a policy change proof of full product readiness.
-- Do not launch heavy builds while the VM runs; measure RAM first and never close user apps.
-- Keep local, VM, optional Actions, deploy and human acceptance results separate. GitHub source
-  integration may still trigger Railway deployment independently of Actions; verify exact deployed SHA.
+A change is releasable when:
+
+1. The work is committed as reviewed code.
+2. Local checks are green for the repository touched: typecheck, lint, tests, and build (each
+   repo's `AGENTS.md` names the exact commands).
+3. One manual smoke on this machine exercises the touched flow end to end. For MKTBrowser that
+   means: create a profile, launch it on the CloakBrowser engine with its proxy, and close it.
+4. Push. Note that a push to MKTTool `master` auto-deploys Railway; after such a push, verify
+   `/api/healthz` reports ready.
+
+Report every result honestly, including failures and skips. Never present a skipped or failed
+check as a pass. Engine of record for MKTBrowser is CloakBrowser; the Chrome-for-Testing path is
+removed. Relay updates ship by reinstalling from the web app's `/setup`, not by self-update.
