@@ -1,3 +1,13 @@
+# Owner decision — 31 October 2026: free seat only
+
+No paid CloakBrowser seat will be purchased for now. Capacity stays at the vendor's free-seat
+limit (one concurrent session per key; vendor-down days fail closed with exit 78). Consequence:
+effectively one operator launches at a time. This is accepted as part of running the tool as a
+solo/small internal setup. Revisit this decision only when a second operator genuinely needs to
+launch concurrently.
+
+---
+
 # Licence seat retry and engine integrity policy
 
 **Source checkpoint:** 21 September 2026. The conservative baseline is recorded in the

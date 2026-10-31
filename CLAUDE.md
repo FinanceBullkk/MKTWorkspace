@@ -12,9 +12,8 @@ reports under `plans/` are historical records. Never present a skipped or failed
 Repositories live at `github.com/FinanceBullkk/*` (public). The old `Techieslab-app` remotes are
 kept as `techieslab` for history only — do not push to them.
 
-Keep local, deploy, and human-acceptance results separate. An MKTTool push to `master` still
-auto-deploys Railway when a service is wired, so verify `/api/healthz` after such a push rather
-than assuming it.
+Keep local and human-acceptance results separate. Railway is retired (31 October 2026): the web
+app runs on the owner's machine over Tailscale, and a push to `master` deploys nothing.
 
 The Standing Authorization lifts the ask-first gate on git, release, deploy, and CI actions taken to
 carry out work the user asked for. It is not licence to widen that work unasked: confirm before

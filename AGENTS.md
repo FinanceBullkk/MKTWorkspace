@@ -65,8 +65,8 @@ A change is releasable when:
    repo's `AGENTS.md` names the exact commands).
 3. One manual smoke on this machine exercises the touched flow end to end. For MKTBrowser that
    means: create a profile, launch it on the CloakBrowser engine with its proxy, and close it.
-4. Push. Note that a push to MKTTool `master` auto-deploys Railway; after such a push, verify
-   `/api/healthz` reports ready.
+4. Push. GitHub is backup and history only: Railway was retired on 31 October 2026 and the web
+   app runs on the owner's machine over Tailscale.
 
 Report every result honestly, including failures and skips. Never present a skipped or failed
 check as a pass. Engine of record for MKTBrowser is CloakBrowser; the Chrome-for-Testing path is
